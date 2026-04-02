@@ -23,8 +23,8 @@ services:
       - ./environment/${PROJECT}.env
     container_name: ${PROJECT}-api-auth
     volumes:
-      - ./Project/api/auth/app:/src/app
-      - ./Project/api/auth/package.json:/src/package.json
+      - ./Project/backend/app:/src/app
+      - ./Project/backend/package.json:/src/package.json
       - ./Project/utils:/src/utils
       - ./defaultData:/data
   api-email-template:

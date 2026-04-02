@@ -42,7 +42,7 @@ class API {
     }
 
     const response = await fetch(url, config);
-
+    
     if (!response.ok) {
       let errorData;
       try {
@@ -65,7 +65,7 @@ class API {
           },
         })
       )
-      return errorData;//throw new Error(errorData.message || 'Request failed');
+      return errorData;
     }
     try {
       let output = await response.json();
