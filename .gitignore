@@ -5,6 +5,7 @@ defaultData
 public
 .env
 *.md
+!README.md
 *.todo
 services/storage/uploads/*
 services/gateway/logs/*
