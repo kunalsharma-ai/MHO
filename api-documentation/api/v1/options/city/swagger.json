@@ -1,0 +1,18 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Documentation - /api/v1/options/city",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/options/city": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

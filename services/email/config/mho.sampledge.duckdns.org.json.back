@@ -1,0 +1,12 @@
+{
+  "from":"om.tiwari@frequentresearch.com",
+  "name":"My Health Opinions",
+  "replyTo":"om.tiwari@frequentresearch.com",
+  "host": "smtppro.zoho.in",
+  "port": 465,
+  "secure": true,
+  "auth": {
+    "user": "om.tiwari@frequentresearch.com",
+    "pass": "BtnkueqsUmqm"
+  }
+}

@@ -1,0 +1,12 @@
+db
+environment
+ollama-agent
+defaultData
+public
+.env
+*.md
+*.todo
+services/storage/uploads/*
+services/gateway/logs/*
+Project/api/auth/app/logs
+tasks

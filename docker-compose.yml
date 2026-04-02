@@ -1,0 +1,136 @@
+networks:
+  db:
+    external: false
+  mho:
+    external: false
+  publicweb:
+    external: true
+  security:
+    external: true
+  validators:
+    external: true
+  common-utils:
+    external: true
+
+services:
+  backend:
+    image: optiwariindia/express:api-module-1.0.1
+    restart: unless-stopped
+    networks:
+      - db
+      - mho
+    env_file:
+      - ./environment/${PROJECT}.env
+    container_name: ${PROJECT}-api-auth
+    volumes:
+      - ./Project/api/auth/app:/src/app
+      - ./Project/api/auth/package.json:/src/package.json
+      - ./Project/utils:/src/utils
+      - ./defaultData:/data
+  api-email-template:
+    image: registry.sampledge.com/microservice/email-template
+    container_name: ${PROJECT}-api-email-template
+    restart: unless-stopped
+    volumes:
+      - ./Project/mailer:/app/mailer
+    networks:
+      - mho
+  db:
+    image: mongo
+    container_name: ${PROJECT}-mongodb
+    restart: always
+    ports:
+      - '27016:27017'
+    volumes:
+      - ./db/storage:/data/db
+      - ./db/dump:/backup
+    networks:
+      - db
+  email:
+    image: registry.sampledge.com/microservice/email:smtp-1.0.0
+    build:
+      context: services/email
+      target: development
+    container_name: ${PROJECT}-email
+    env_file:
+      - environment/${PROJECT}.env
+    volumes:
+      - ./services/email/server.js:/app/server.js
+      - ./services/email/utils:/app/utils
+      - ./services/email/config:/app/config
+    networks:
+      - mho
+      - publicweb
+    restart: always
+  email-scheduler:
+    image: registry.sampledge.com/microservice/email-scheduler:smtp-1.0.0
+    build:
+      context: services/email-scheduler
+      target: development
+    container_name: ${PROJECT}-email-scheduler
+    env_file:
+      - environment/${PROJECT}.env
+    volumes:
+      - ./services/email-scheduler/server.js:/app/server.js
+      - ./services/email-scheduler/src:/app/src
+      - ./services/email-scheduler/public:/app/public
+      - ./services/email-scheduler/views:/app/views
+    networks:
+      - db
+      - publicweb
+    restart: always
+  mho:
+    image: registry.sampledge.com/microservice/api-gateway:1.0.0
+    container_name: ${PROJECT}-gateway
+    restart: always
+    networks:
+      - publicweb
+      - mho
+      - security
+      - common-utils
+      - validators
+    volumes:
+      - ./services/gateway/config:/etc/nginx/http.d
+      - ./services/gateway/logs:/data/logs
+    dns:
+      - 8.8.8.8
+  storage:
+    image: registry.sampledge.com/microservice/storage:1.0.0
+    container_name: ${PROJECT}-service-storage
+    volumes:
+      - ./services/storage/uploads:/data
+      - ./services/storage/hosts:/app/hosts
+    environment:
+      - public=/data
+    networks:
+      - mho
+    restart: unless-stopped
+  web-dev:
+    image: ${PROJECT}-web-dev
+    build:
+      context: ./Project/web
+      target: development
+    container_name: ${PROJECT}-web
+    restart: always
+    env_file:
+      - environment/${PROJECT}.env
+    networks:
+      - mho
+    volumes:
+      - ./Project/web/src:/app/src
+      - ./Project/web/public:/app/public
+      - ./Project/web/jsconfig.json:/app/jsconfig.json
+      - ./Project/web/next.config.mjs:/app/next.config.mjs
+      - ./Project/web/package.json:/app/package.json
+  web-prod:
+    image: registry.sampledge.com/${PROJECT}/web:prod-0.0.1
+    build:
+      context: ./Project/web
+      dockerfile: Dockerfile
+      target: production
+    container_name: ${PROJECT}-web-prod
+    restart: always
+    env_file:
+      - environment/${PROJECT}.env
+    networks:
+      - mho
