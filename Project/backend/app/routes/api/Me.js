@@ -14,7 +14,8 @@ import {
     fsLogger,
     getMailer,
     sendMail,
-    Token
+    Token,
+    eventStream
 } from "../../../utils/index.js"
 Date.prototype.resetTime = function (type = "start") {
     if (type === "end") {
@@ -27,6 +28,11 @@ Date.prototype.resetTime = function (type = "start") {
         this.setSeconds(0);
     }
 }
+const special = {
+    "address-practice": "stringify",
+    "age": "skip",
+    "respID": "skip"
+}
 const router = express.Router();
 router
     .route('/')
@@ -36,7 +42,7 @@ router
             answerController.request = req;
             let message = "";
             let data = Mutate(await userController.read(req.user._id))
-            data.fullname=data.fullName;
+            data.fullname = data.fullName;
             let navbar = [
                 {
                     link: "/admin/dashboard",
@@ -92,14 +98,21 @@ router
             const { oldPassword, newPassword, cnfPassword } = req.body;
             if (newPassword !== cnfPassword) throw new Error("Invalid request")
             await userController.changePassword(oldPassword, newPassword);
+            eventStream.emitEvent("user-changed-password", { user: req.user })
             return { message, data }
         },
         userController
     ))
     .put(expressRoute(
         async req => {
+            const { terms } = req.body;
             const [message, data] = ["Updated successfully", []];
             await userController.update(req.user._id, req.body);
+            if (!!terms) {
+                eventStream.emitEvent("user-accepted-terms", { ...req.user, terms })
+            } else {
+                eventStream.emitEvent("user-updated", { ...req.user, ...req.body })
+            }
             return { message, data };
         },
         userController
@@ -178,6 +191,11 @@ router
                 "Payment Method Updated",
                 await userController.changePaymentMethod(req.body)
             ];
+            eventStream.emitEvent("user-changed-payment-method", {
+                ...req.user, info: {
+                    ...req.body
+                }
+            })
             return { message, data };
         },
         userController
@@ -185,27 +203,12 @@ router
     .patch("/parent-details",
         expressRoute(
             async req => {
-                await userController.update(req.user._id, {...req.body});
+                await userController.update(req.user._id, { ...req.body });
                 let user = Mutate(await userController.read(req.user._id))
-
-                let mailer = await getMailer(
-                    "register",
-                    "minor",
-                    {
-                        user
-                    }
-                )
-                const emailStatus = await sendMail(
-                    { origin: req.origin, "content-type": "application/json" },
-                    user?.parent?.email,
-                    "My Health Opinions: Child Registration",
-                    mailer.data
-                )
-                console.log(emailStatus)
                 return {
-                    status:"success",
-                    message:"",
-                    data:user
+                    status: "success",
+                    message: "",
+                    data: user
                 }
             },
             userController
@@ -257,7 +260,6 @@ router
             let users = Mutate(await userController.list({
                 mail: { $in: mails }
             })).map(u => u.mail)
-            console.log({ users });
             const emails = mails.filter(e => !users.includes(e));
             // /*
             let mailer = await getMailer(
@@ -284,6 +286,10 @@ router
                 )
             }
             await userController.addInvites(emails);
+            eventStream.emitEvent("user-invited-friends", {
+                invited: emails,
+                alreadyRegistered: users
+            })
             return {
                 message: "E-Mail Sent Successfully", data: {
                     invited: emails,
@@ -310,7 +316,6 @@ router
             // const { questions, answers } = req.body;
             const questions = Object.keys(req.body);
             const answers = req.body;
-            console.log(req.body)
             if (!user || !questions || !(questions instanceof Array) || questions.length < 1) throw new Error("Invalid request");
             const updatedAnswers = questions.map(fld => {
                 if (!(fld in answers || answers[fld] === null)) return false;
@@ -320,7 +325,6 @@ router
                     answer: answers[fld]
                 }
             }).filter(q => Boolean(q))
-            // console.log(updatedAnswers)
             await answerController.save(updatedAnswers)
             return { message: "Profile updated successfully", data: [] }
         },
@@ -406,6 +410,10 @@ router
                 points: data.points
             }))
 
+            eventStream.emitEvent("survey-internal-started", {
+                user: req.user,
+                response: resp
+            })
             return { message, data: { ...data, respID: resp._id, userInfo: req.user } }
         },
         responseController
@@ -418,17 +426,28 @@ router
             let data = []
             let response = await responseController.read(req.body.respID);
 
-            // if (response.status !== "dropout") throw new Error("Invalid request");
+            if (response.status !== "dropout") throw new Error("Invalid request");
 
-            let questions = await surveyController.getQuestions(response.survey.slug);
-
-            const answers = questions.filter(fld => Boolean(req.body[fld])).filter(fld => !(["age"].includes(fld))).map(fld => {
+            const answers = Object.entries(req.body).map(([fld, value]) => {
+                let answer = value;
+                switch (special[fld]) { //special fields
+                    case "stringify":
+                        answer = JSON.stringify(value);
+                        break;
+                    case "skip":
+                        return null;
+                    default:
+                        break;
+                }
                 return {
                     user: req.user._id,
                     question: fld,
-                    answer: ("address-practice" === fld) ? JSON.stringify(req.body[fld]) : req.body[fld]
+                    answer
                 }
-            })
+            }).filter(val => Boolean(val))
+            // console.log(answers);
+            const questions = Object.keys(answers);
+            // throw new Error("On Hold");
             const me = questions.filter(fld => typeof req.body[fld] === "object" && !Array.isArray(req.body[fld])).map(
                 fld => {
                     let temp = fld.split("-")
@@ -462,6 +481,10 @@ router
                 const element = me[index];
                 let resp = await userController.update(req.user._id, element)
             }
+            eventStream.emitEvent("survey-internal-completed", {
+                user:req.user,
+                response
+            })
             await answerController.save(answers)
             response.status = "complete";
             response.timeline.end = new Date();

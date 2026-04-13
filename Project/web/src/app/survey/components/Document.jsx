@@ -23,7 +23,7 @@ export default function DocumentElement({ question, form }) {
         <Form.Upload
           endpoint="/api/v1/upload/pdf"
           name={question.name}
-          control={control}
+          control={form.control}
           form={form}
           rules={{
             required: question.required ? "This field is required" : false,

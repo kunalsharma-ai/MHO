@@ -91,8 +91,10 @@ export default function () {
     enabled: !!user?.category || !editMode,
   });
   if (profilesLoading || profiles.length === 0) return <></>
-  const activeTab = 1 + profiles.map(profile => profile.slug).indexOf(query.profile);
-  if(!activeTab)router.push(`?profile=${profiles?.[0]?.slug}`, { scroll: false });
+  const activeTab =(!query.profile)?1: 1 + profiles.map(profile => profile.slug).indexOf(query.profile);
+  // if(!activeTab){
+  //   router.push(`?profile=${profiles?.[0]?.slug}`, { scroll: false });
+  // }
   const selectedProfile = (activeTab) ? profiles.at(activeTab - 1) : profiles[0];
 
   return <Grid container size={ 12 } px={ 1 } mt={ 2 } justifyContent="center">
@@ -191,9 +193,10 @@ function ProfileTabs({
       !(profiles instanceof Array) ||
       profiles.length === 0
     )
-      return;
+      return 0;
     return profiles.map((p) => p.slug).indexOf(query.profile);
   }, [profiles, query]);
+if([undefined,null].includes(activeTab))return <></>
   return <Tabs
     value={ activeTab }
     onChange={ (_, v) => {

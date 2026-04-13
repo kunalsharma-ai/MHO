@@ -12,7 +12,7 @@ router
             async req => {
                 // Read all entries matching filter
                 let message = "";
-                let filters=Object.fromEntries(Object.entries({ question: req.params.parent, ...req.body }).map(val=>{
+                let filters=Object.fromEntries(Object.entries(req.body).map(val=>{
                     if(val[1] instanceof Array)
                         return [val[0],{$in:val[1]}]
                     return val;

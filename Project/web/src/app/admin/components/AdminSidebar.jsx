@@ -16,31 +16,37 @@ const sidebarItems = [
     icon: "icon-drawer",
     label: "Dashboard",
     link: "/admin/dashboard",
+    hasNotification: false,
   },
   {
     icon: "icon-user",
     label: "Panellists",
     link: "/admin/panelists",
+    hasNotification: true,
   },
   {
     icon: "icon-wallet",
     label: "Redemptions",
     link: "/admin/redemptions",
+    hasNotification: true,
   },
   {
     icon: "icon-people",
     label: "Profiles",
     link: "/admin/profiles",
+    hasNotification: false,
   },
   {
     icon: "icon-notebook",
     label: "Surveys",
     link: "/admin/surveys",
+    hasNotification: true,
   },
   {
     icon: "icon-support",
     label: "Support",
     link: "/admin/support",
+    hasNotification: true,
   },
   // {
   //   icon: "icon-speech",
@@ -51,6 +57,7 @@ const sidebarItems = [
     icon: "icon-settings",
     label: "Categories",
     link: "/admin/category",
+    hasNotification: false,
   },
 ];
 export default function AdminSidebar({ children }) {
@@ -98,9 +105,7 @@ export default function AdminSidebar({ children }) {
                 alignItems: "center",
                 justifyContent: "center",
                 border: "1px solid #e0e0e0",
-
                 color: isActive ? "secondary.main" : "inherit",
-
                 bgcolor: isActive ? "#d9eee3a2" : "transparent",
                 gap: 0.5,
                 "&:hover": {
@@ -110,15 +115,32 @@ export default function AdminSidebar({ children }) {
                 },
               }}
             >
-              <i className={item.icon} style={{ fontSize: "26px" }} />
+              <Box sx={{ position: "relative", display: "inline-flex" }}>
+                <i className={item.icon} style={{ fontSize: "26px" }} />
+
+                {item.hasNotification && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 2,
+                      right: -2,
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      bgcolor: "error.main",
+                    }}
+                  />
+                )}
+              </Box>
+
               <Typography
                 sx={{
                   display: {
                     xs: "none",
                     lg: "inline",
-                    fontWeight: 500,
-                    fontSize: { xs: 12, xl: 14 },
                   },
+                  fontWeight: 500,
+                  fontSize: { xs: 12, xl: 14 },
                 }}
               >
                 {item.label}

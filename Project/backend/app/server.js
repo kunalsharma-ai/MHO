@@ -3,12 +3,16 @@ import cors from "cors";
 import fileUpload from "express-fileupload";
 import pureIP from "express-pureip";
 import mongoose from "mongoose";
-import Twig from "twig";
-
+import "./events/index.js";
 import {
     default as routes
 } from "./routes/index.js";
-import {setOrigin, expressRoute,fsLogger} from "../utils/index.js";
+import {
+    setOrigin, 
+    expressRoute,
+    fsLogger,
+    eventStream
+} from "../utils/index.js";
 
 (async () => {
     const env = {
@@ -38,15 +42,15 @@ import {setOrigin, expressRoute,fsLogger} from "../utils/index.js";
         ])
         .use(expressRoute(
             async (req) => {
-                fsLogger.Log("Fallback route",{
-                    ...req.headers,
-                    origin:req.origin
+                eventStream.emitEvent("server-fallback",{
+                    headers:req.headers,
+                    message:"Fallback route called"
                 })
                 return {message: "Fallback route", status: "error"}
             },
             {}
         ))
     .listen(env.port,()=>{
-        fsLogger.Log(`Server started at port ${env.port}`)
+        eventStream.emitEvent("server-started",{port:env.port});
     })
 })();

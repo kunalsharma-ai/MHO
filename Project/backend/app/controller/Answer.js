@@ -6,33 +6,29 @@ import {
 
 class Answer extends CrudController {
     async save(data) {
-        console.log(data)
-        const origin = this.request.origin;
-        const user = this.request.user._id;
-        let temp = data.map(info => {
-            console.log(info);
-            return {
-                updateOne: {
-                    filter: {
-                        question: info.question,
-                        user,
-                        origin
-                    },
-                    update: {
-                        ...info,
-                        user,
-                        origin
-                    },
-                    upsert: true
-                }
-            }
-        })
+    const origin = this.request.origin;
+    const user = this.request.user._id;
 
-        return await answerModel.bulkWrite(temp)
-        // await answerModel.update
-        throw new Error("Unable to save data")
-        return true;
-    }
+    const ops = data.map(info => ({
+        updateOne: {
+            filter: {
+                question: info.question,
+                user,
+                origin
+            },
+            update: {
+                $set: {
+                    question: info.question,
+                    answer: info.answer,   // overwrite every time
+                    user,
+                    origin
+                }
+            },
+            upsert: true
+        }
+    }));
+    return await answerModel.bulkWrite(ops);
+}
     async getAnswers(data) {
         let query = this.commonFilters;
         let questions = Mutate(await questionModel.find({ ...query, type: "multiselect", name: data.question })).map(que => que.name);
@@ -62,8 +58,8 @@ class Answer extends CrudController {
                     return a;
                 }
                 a[c] = {
-                    $in: filters[c].map(fltr=>{
-                        let temp=fltr.split(" | ")
+                    $in: filters[c].map(fltr => {
+                        let temp = fltr.split(" | ")
                         return temp[0]
                     })
                 }
@@ -159,9 +155,9 @@ class Answer extends CrudController {
                 gender: "$userInfo.gender",
                 timezone: "$userInfo.timezone",
                 category: "$userInfo.category",
-                name:"$userInfo.name",
-                mail:"$userInfo.mail",
-                qualityScore:"$userInfo.qualityScore",
+                name: "$userInfo.name",
+                mail: "$userInfo.mail",
+                qualityScore: "$userInfo.qualityScore",
                 data: 1
             }
         })
@@ -175,9 +171,9 @@ class Answer extends CrudController {
                             gender: "$gender",
                             timezone: "$timezone",
                             category: "$category",
-                            name:"$name",
-                            mail:"$mail",
-                            qualityScore:"$qualityScore"
+                            name: "$name",
+                            mail: "$mail",
+                            qualityScore: "$qualityScore"
                         },
                         "$data"
                     ]
@@ -280,6 +276,79 @@ class Answer extends CrudController {
         }, {});
     }
     async summarize() {
+        const data = await answerModel.aggregate([
+            // Normalize answer (same as your logic but simpler)
+            {
+                $project: {
+                    question: 1,
+                    answer: {
+                        $cond: [
+                            { $isArray: "$answer" },
+                            {
+                                $cond: [
+                                    { $eq: [{ $size: "$answer" }, 0] },
+                                    null,
+                                    "$answer"
+                                ]
+                            },
+                            "$answer"
+                        ]
+                    }
+                }
+            },
+
+            // Remove null answers
+            {
+                $match: {
+                    answer: { $ne: null }
+                }
+            },
+
+            // Flatten array answers
+            {
+                $unwind: {
+                    path: "$answer",
+                    preserveNullAndEmptyArrays: false
+                }
+            },
+
+            // Count per question + answer
+            {
+                $group: {
+                    _id: {
+                        question: "$question",
+                        answer: "$answer"
+                    },
+                    count: { $sum: 1 }
+                }
+            },
+
+            // Regroup per question
+            {
+                $group: {
+                    _id: "$_id.question",
+                    answers: {
+                        $push: {
+                            k: "$_id.answer",
+                            v: "$count"
+                        }
+                    }
+                }
+            },
+
+            // Convert to object
+            {
+                $project: {
+                    _id: 0,
+                    question: "$_id",
+                    answers: { $arrayToObject: "$answers" }
+                }
+            }
+        ]);
+
+        return data;
+    }
+    async oldsummarize() {
         const data = await answerModel.aggregate([
             {
                 $group: {

@@ -26,7 +26,7 @@ function weeks(n) {
     return days(7) * Number(n);
 }
 
-class fsLogger {
+export class FSLogger {
     #path;
     #timezone;
     #locale
@@ -100,7 +100,8 @@ class fsLogger {
     }
 }
 
-export default new fsLogger("app/logs/activities", {
+const fsLogger=new FSLogger("app/logs/activities", {
     locale: "en-IN",
     timezone: "IST"
 })
+export default fsLogger;

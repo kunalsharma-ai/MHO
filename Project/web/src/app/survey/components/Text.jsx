@@ -39,7 +39,7 @@ export default function TextElement({ question, form, disabled }) {
       px: 2,
       py: 1,
       // backgroundColor:hide?"red":"green"
-      display: hide ? "none" : "grid"
+      visibility: hide ? "hidden" : ""
     } }
   >
     <Page.Text

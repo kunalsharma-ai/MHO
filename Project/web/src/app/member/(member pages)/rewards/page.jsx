@@ -237,6 +237,8 @@ function RewardStatus() {
           container
           justifyContent={ { xs: "center", md: "space-between" } }
           mt={ 2 }
+          // todo: Hiding till management decides what to do with this section
+          
         >
           <Typography
             fontSize="15px"

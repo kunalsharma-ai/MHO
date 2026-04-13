@@ -52,6 +52,6 @@ export default async function isAuthenticated(req, res, next) {
 }
 
 async function getUserDetails(user) {
-    let usr=await userModel.findById(user._id);
+    let usr=await userModel.findById(user._id).select("+role");
     return usr;
 }

@@ -41,7 +41,7 @@ router
                 filters["$or"]=temp;
             }
             let data = await answerController.feasibility(filters)
-            return { message, data:data.length };
+            return { message, data}//:data.length };
         },
         answerController
     ))
