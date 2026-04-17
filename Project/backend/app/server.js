@@ -8,7 +8,7 @@ import {
     default as routes
 } from "./routes/index.js";
 import {
-    setOrigin, 
+    setOrigin,
     expressRoute,
     fsLogger,
     eventStream
@@ -27,9 +27,10 @@ import {
         .use([
             express.static("/src/public"),
             cors({
-                origin:function(origin,callback){
-                    return callback(null,origin)
-                }
+                origin: ["https://mho.sampledge.duckdns.org", "https://admin.sampledge.duckdns.org"],
+                credentials: true,
+                allowedHeaders: ["Content-Type", "Authorization", "test"],
+                methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
             }),
             express.json(),
             express.urlencoded({
@@ -42,15 +43,15 @@ import {
         ])
         .use(expressRoute(
             async (req) => {
-                eventStream.emitEvent("server-fallback",{
-                    headers:req.headers,
-                    message:"Fallback route called"
+                eventStream.emitEvent("server-fallback", {
+                    headers: req.headers,
+                    message: "Fallback route called"
                 })
-                return {message: "Fallback route", status: "error"}
+                return { message: "Fallback route", status: "error" }
             },
             {}
         ))
-    .listen(env.port,()=>{
-        eventStream.emitEvent("server-started",{port:env.port});
-    })
+        .listen(env.port, () => {
+            eventStream.emitEvent("server-started", { port: env.port });
+        })
 })();
