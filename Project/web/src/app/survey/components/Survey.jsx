@@ -64,6 +64,7 @@ export default function Survey({
     },
     enabled: ![null, undefined].includes(currentPage) && Boolean(pages?.[currentPage]?.length),
   });
+  
   const saveOrUpdateAnswers = useMutation({
     mutationFn: (data) =>
       api.patch(endpage, {
@@ -83,6 +84,7 @@ export default function Survey({
     saveOrUpdateAnswers.mutate(data);
   }
   async function onNext() {
+    console.log(survey)
     if ([null, undefined].includes(currentPage))
       return setCurrentPage(0)
     const isValid = await form.trigger(pages[currentPage]);
@@ -120,9 +122,7 @@ export default function Survey({
     console.log("sab theek hai, Next page load kar lete hain")
     setCurrentPage(currentPage + 1)
   }
-  console.log({
-    errors:form.formState.errors
-  })
+  
   return <>
     {
       (hideSteps || [undefined, null].includes(currentPage))

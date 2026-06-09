@@ -1,4 +1,5 @@
 import express from "express";
+import authRouter from "./api/Auth.js";
 import categoryRouter from "./api/Category.js";
 import questionRouter from "./api/Question.js";
 import optionRouter from "./api/Option.js";
@@ -24,6 +25,7 @@ const router = express.Router();
 router
     // .use("/api/v1/llm", llmRouter)
     .use("/api/v1/answers", ansRouter)
+    .use("/api/v1/auth", authRouter)
     .use("/api/v1/category", categoryRouter)
     .use("/api/v1/survey", surveyRouter)
     .use("/api/v1/question", questionRouter)

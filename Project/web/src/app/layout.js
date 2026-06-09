@@ -5,6 +5,7 @@ import Providers from "./providers";
 import { Toast } from "@/components";
 import "@/lib/enhancements.js";
 import { ContextProviders } from "@/Context";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 export default function RootLayout({ children }) {
   return (
@@ -13,50 +14,36 @@ export default function RootLayout({ children }) {
         <link rel="preload" href="/css/style.css" as="style" />
         <link rel="stylesheet" href="/css/style.css" />
 
-        <title>My Health Opinions – Earn Rewards for Sharing Your Voice</title>
+        <title>
+          My Health Opinions | Healthcare Surveys & Rewards Community
+        </title>
         <meta
           name="description"
-          content="Join My Health Opinions — a trusted platform where doctors and patients share insights and earn rewards for participating in surveys that shape better healthcare."
+          content="Join My Health Opinions, a trusted healthcare survey community where patients and consumers participate in medical research surveys and earn exciting rewards for sharing their opinions. "
         />
         <meta
           name="keywords"
-          content="health survey, doctors, patients, rewards, healthcare opinions, medical surveys, healthcare research"
+          content="healthcare surveys, 
+          medical research surveys, 
+          patient opinion surveys, 
+          healthcare rewards platform, 
+          online health surveys, 
+          medical survey panel, 
+          patient research community, 
+          health opinion platform, 
+          healthcare market research, 
+          paid healthcare surveys, 
+          medical research community, 
+          health survey rewards, 
+          patient feedback surveys, 
+          healthcare consumer panel, 
+          medical opinion surveys, 
+          online patient surveys, 
+          healthcare research panel, 
+          consumer healthcare surveys, 
+          pharma market research, 
+          healthcare insights platform "
         />
-        <meta name="author" content="My Health Opinions" />
-
-        <meta
-          property="og:title"
-          content="My Health Opinions – Earn Rewards for Sharing Your Voice"
-        />
-        <meta
-          property="og:description"
-          content="Join doctors and patients in shaping healthcare by sharing your insights. Earn rewards for your valuable opinions."
-        />
-        <meta property="og:url" content="https://myhealthopinions.com/" />
-        <meta property="og:site_name" content="My Health Opinions" />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:image"
-          content="https://myhealthopinions.com/images/logo/My-Health-Opinions.png"
-        />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="480" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="My Health Opinions – Earn Rewards for Sharing Your Voice"
-        />
-        <meta
-          name="twitter:description"
-          content="Doctors and patients share insights and earn rewards for surveys that improve healthcare outcomes."
-        />
-        <meta
-          name="twitter:image"
-          content="https://myhealthopinions.com/images/logo/My-Health-Opinions.png"
-        />
-
-        {/* <link rel="canonical" href="https://myhealthopinions.com/" /> */}
       </head>
       <body>
         <Providers>
@@ -76,6 +63,7 @@ export default function RootLayout({ children }) {
           src="https://downloads-global.3cx.com/downloads/livechatandtalk/v1/callus.js"
           id="tcx-callus-js"
         ></script> */}
+         <GoogleTagManager gtmId="GTM-549KJ2GG" />
       </body>
     </html>
   );

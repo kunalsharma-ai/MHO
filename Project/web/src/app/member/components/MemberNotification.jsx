@@ -50,7 +50,7 @@ export default function MemberNotification() {
   const [user] = [useMember()];
   const [notifAnchorEl, setNotifAnchorEl] = React.useState();
   const [notificationMessages, setNotificationMessages] = React.useState([
-    ...mockupNotifications,
+    // ...mockupNotifications,
   ]);
   const { messages, emit } = useSharedSocket(user);
   const notificationCount = notificationMessages.length ?? 0;

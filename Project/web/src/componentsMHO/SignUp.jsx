@@ -28,6 +28,17 @@ import {
   Error as ErrorIcon,
 } from "@mui/icons-material";
 
+import {
+  Facebook,
+  GitHub,
+  Google,
+  LinkedIn,
+  X,
+  Apple,
+  Microsoft,
+  Login as LoginIcon,
+} from "@mui/icons-material";
+
 import PopUp from "./PopUp";
 import { Form, RequiredLabel } from "@/components";
 import { api, Page } from "@/util";
@@ -130,6 +141,33 @@ export default function SignUp({
     reset,
     formState: { errors, isDirty },
   } = form;
+
+  const [providers, setProviders] = React.useState([]);
+  React.useEffect(() => {
+    api.post("/api/v1/auth/socials", {}).then((resp) => {
+      setProviders(resp?.data ?? []);
+    });
+  }, []);
+
+  const providerIcons = {
+    google: <Google />,
+    github: <GitHub />,
+    facebook: <Facebook />,
+    linkedin: <LinkedIn />,
+    twitter: <X />,
+    x: <X />,
+    apple: <Apple />,
+    microsoft: <Microsoft />,
+  };
+
+  const authProviders = providers.map((provider) => ({
+    label: `Continue with ${
+      provider.name.charAt(0).toUpperCase() + provider.name.slice(1)
+    }`,
+    icon: providerIcons[provider.name?.toLowerCase()] || <LoginIcon />,
+    href: provider.authUrl,
+  }));
+
   React.useEffect(() => {
     if (!telemetry) return;
     telemetry.timezone().then((timezone) => {
@@ -182,18 +220,16 @@ export default function SignUp({
 
   const category = form.watch("category");
 
-React.useEffect(() => {
-  if (status === "success") {
-    const timer = setTimeout(() => {
-      onClose(); 
-      router.replace("/");
-    }, 60000); 
+  React.useEffect(() => {
+    if (status === "success") {
+      const timer = setTimeout(() => {
+        onClose();
+        router.replace("/");
+      }, 60000);
 
-    return () => clearTimeout(timer);
-  }
-}, [status]);
-
-
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
 
   return (
     <>
@@ -475,7 +511,8 @@ React.useEffect(() => {
                         disabled={!Boolean(form.watch("agreedtoterms"))}
                         sx={{
                           bgcolor: "#016550",
-                          my: 2,
+                          mt: 2,
+                          mb: 1,
                           p: 1,
                           fontSize: 14,
                           fontWeight: 600,
@@ -485,11 +522,114 @@ React.useEffect(() => {
                       >
                         Sign Up
                       </Page.MuiButton>
+                      {!query?.email && (
+                        <>
+                          {authProviders.length > 0 && (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 2,
+                                my: 0.5,
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  flex: 1,
+                                  height: "1px",
+                                  bgcolor: "divider",
+                                }}
+                              />
+
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  color: "text.secondary",
+                                  fontSize: 13,
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                or continue with
+                              </Typography>
+
+                              <Box
+                                sx={{
+                                  flex: 1,
+                                  height: "1px",
+                                  bgcolor: "divider",
+                                }}
+                              />
+                            </Box>
+                          )}
+                          {authProviders.length <= 2 ? (
+                            <Box display="flex" flexDirection="column" gap={1}>
+                              {authProviders.map((provider, i) => (
+                                <Page.MuiButton
+                                  component={"a"}
+                                  href={provider.href}
+                                  key={i}
+                                  fullWidth
+                                  variant="outlined"
+                                  color="primary"
+                                  startIcon={provider.icon}
+                                  sx={{
+                                    borderRadius: "8px",
+                                    padding: "9px",
+                                    fontWeight: 600,
+                                    textTransform: "none",
+                                    borderWidth: "1px",
+                                    "&:hover": {
+                                      borderWidth: "1px",
+                                      backgroundColor: "transparent",
+                                    },
+                                  }}
+                                >
+                                  {provider.label}
+                                </Page.MuiButton>
+                              ))}
+                            </Box>
+                          ) : (
+                            <Box
+                              display="flex"
+                              justifyContent="center"
+                              alignItems="center"
+                              gap={{ xs: 0.8, sm: 1.5 }}
+                              flexWrap="wrap"
+                              mb={0.5}
+                            >
+                              {authProviders.map((provider, i) => (
+                                <IconButton
+                                  component={"a"}
+                                  href={provider.href}
+                                  onClick={provider.onClick}
+                                  key={i}
+                                  title={provider?.label}
+                                  sx={{
+                                    border: "1px solid",
+                                    borderColor: "primary.main",
+                                    color: "primary.main",
+                                    width: 42,
+                                    height: 42,
+                                    transition: "all 0.2s ease",
+                                    "&:hover": {
+                                      backgroundColor: "action.hover",
+                                      transform: "translateY(-1px)",
+                                    },
+                                  }}
+                                >
+                                  {provider.icon}
+                                </IconButton>
+                              ))}
+                            </Box>
+                          )}
+                        </>
+                      )}
                       <Grid
                         size={12}
                         container
                         justifyContent="center"
                         alignItems="center"
+                        mt={1}
                       >
                         <Page.Text>Already have an account?</Page.Text>
                         <Page.Text
