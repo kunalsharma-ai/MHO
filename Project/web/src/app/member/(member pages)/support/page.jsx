@@ -7,6 +7,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import {
   Grid,
+  Box,
   Tabs,
   Tab,
   Fade,
@@ -22,6 +23,60 @@ import { Datatable, Form, SectionTitle } from "@/components";
 import { DateRangeSelector } from "@/components/Form";
 import { api, Page } from "@/util";
 import { useToast } from "@/hooks";
+
+import { motion, AnimatePresence } from "framer-motion";
+
+const MotionBox = motion.create(Box);
+const MotionGrid = motion.create(Grid);
+
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
+    },
+  },
+};
+
+const fadeUp = {
+  hidden: {
+    opacity: 0,
+    y: 30,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const pageTransition = {
+  initial: {
+    opacity: 0,
+    y: 24,
+    scale: 0.98,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.35,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -24,
+    scale: 0.98,
+    transition: {
+      duration: 0.25,
+    },
+  },
+};
 
 function TabPanel({ children, value, index }) {
   return (
@@ -113,69 +168,97 @@ function ContactSupport() {
       justifyContent="center"
       sx={{ border: `1px solid #e0e0e0` }}
     >
-      {createTicket ? (
-        <CreateTicket
-          setCreateTicket={setCreateTicket}
-          setActiveTicket={setActiveTicket}
-          reloadData={reloadData}
-        />
-      ) : activeTicket ? (
-        <TicketList
-          setCreateTicket={setCreateTicket}
-          reload={reload}
-          setActiveTicket={setActiveTicket}
-        />
-      ) : (
-        <Grid size={12}>
-          <Grid
-            size={12}
-            container
-            justifyContent="space-between"
-            alignItems="center"
-            mb={1}
+      <AnimatePresence mode="wait">
+        {createTicket ? (
+          <motion.div
+            key="create-ticket"
+            variants={pageTransition}
+            initial="initial"
+            animate="animate"
+            exit="exit"
           >
-            <Page.Text
-              sx={{
-                fontSize: "16px",
-                display: "inline-block",
-                fontWeight: "600",
-                borderBottom: "2px solid #59AC77",
-                pb: 0.5,
-                my: 1,
-              }}
-            >
-              Support Tickets
-            </Page.Text>
-            <Page.MuiButton
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                setCreateTicket(true);
-              }}
-              sx={{
-                fontWeight: "bold",
-              }}
-            >
-              Create Ticket
-            </Page.MuiButton>
-          </Grid>
-          <Grid
-            container
-            size={12}
-            justifyContent="center"
-            alignItems="center"
-            p={2}
-            mb={1}
-            sx={{
-              minHeight: "300px",
-              border: "1px solid rgba(89, 172, 119, 0.6)",
-              borderRadius: 2,
-            }}
+            <CreateTicket
+              setCreateTicket={setCreateTicket}
+              setActiveTicket={setActiveTicket}
+              reloadData={reloadData}
+            />
+          </motion.div>
+        ) : activeTicket ? (
+          <motion.div
+            key="ticket-list"
+            variants={pageTransition}
+            initial="initial"
+            animate="animate"
+            exit="exit"
           >
-            No Active Support Tickets
-          </Grid>
-        </Grid>
-      )}
+            <TicketList
+              setCreateTicket={setCreateTicket}
+              reload={reload}
+              setActiveTicket={setActiveTicket}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="empty-ticket"
+            variants={pageTransition}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            <Grid size={12}>
+              <Grid
+                size={12}
+                container
+                justifyContent="space-between"
+                alignItems="center"
+                mb={1}
+              >
+                <Page.Text
+                  sx={{
+                    fontSize: 16,
+                    display: "inline-block",
+                    fontWeight: 600,
+                    color: "primary.main",
+                    borderBottom: (theme) =>
+                      `2px solid ${theme.palette.secondary.dark}`,
+                    pb: 0.5,
+                    my: 1,
+                  }}
+                >
+                  Support Tickets
+                </Page.Text>
+
+                <Page.MuiButton
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => setCreateTicket(true)}
+                  sx={{ fontWeight: "bold" }}
+                >
+                  Create Ticket
+                </Page.MuiButton>
+              </Grid>
+
+              <Grid
+                container
+                size={12}
+                justifyContent="center"
+                alignItems="center"
+                p={2}
+                mb={1}
+                sx={{
+                  minHeight: 300,
+                  bgcolor: "primary.light",
+                  border: (theme) =>
+                    `1px solid ${theme.palette.secondary.light}`,
+                  borderRadius: 2,
+                }}
+              >
+                No Active Support Tickets
+              </Grid>
+            </Grid>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Grid>
   );
 }
@@ -361,7 +444,9 @@ function TicketList({ setCreateTicket, setActiveTicket, reload }) {
               fontSize: "16px",
               display: "inline-block",
               fontWeight: "600",
-              borderBottom: "2px solid #59AC77",
+              color: "primary.main",
+              borderBottom: (theme) =>
+                `2px solid ${theme.palette.secondary.dark}`,
               pb: 0.5,
               my: 1,
             }}
@@ -417,7 +502,7 @@ function CreateTicket({ reloadData, setCreateTicket, setActiveTicket }) {
         pb: 2,
         my: 1,
         alignSelf: "flex-start",
-        border: "1px solid rgba(89, 172, 119, 0.6)",
+        border: (theme) => `1px solid ${theme.palette.secondary.light}`,
       }}
     >
       <SectionTitle title="Create Ticket" />
@@ -482,23 +567,9 @@ function CreateTicket({ reloadData, setCreateTicket, setActiveTicket }) {
 }
 
 const faqs = [
-  //   {
-  //     title: "How do I become a member?",
-  //     content: `My Health Opinions is dedicated healthcare panel for Doctors, Caregiver and Patient category.
-
-  // To register on My Health Opinions, You need to choose the respective category before registration. You will be asked to provide some basic questions while creating your account, as well as the option to provide some more in-depth information about yourself in order to participate in our surveys. After completing the signup form, My Health Opinions panel will send a confirmation email into your registered email ID in order to confirm the profile validity and finalize your registration process. Alternatively, You may click the link in your email to confirm your registration over panel and to receive the survey access.`,
-  //   },
-  //   {
-  //     title: "Any hidden charges while registration?",
-  //     content: `Registration to My Health Opinions is completely free - you will not be asked for any payment. On the contrary, it is you who earns points that can be exchanged for PayPal, UPI, Wire Transfer, Gift vouchers etc., by taking participation in our sponsored surveys.`,
-  //   },
-  //   {
-  //     title: "Why should I become a member of My Health Opinions?",
-  //     content: `Becoming a member lets you take part in surveys on different topics. You can then start to accumulate the rewards after achieving the minimum threshold points. You can redeem for an incentive of your choice from “Redeem Now” button from Dashboard.`,
-  //   },
   {
     title: "How do I change my email address and password?",
-    content: `Due to security, My Health Opinions don’t allow updating the primary email ID for the profile. You may contact support team at support@frequentresearch.com for any type of email update request.
+    content: `Due to security, My Health Opinions don’t allow updating the primary email ID for the profile. You may contact support team at support@myhealthopinions.com for any type of email update request.
 
 You can change your password after login to the My Health Opinions Dashboard, Go to “Change Password” section after selecting Settings option in Sidebar.`,
   },
@@ -537,7 +608,7 @@ The number of surveys you receive will vary depending on what personal settings 
     title: "Technical difficulties with a survey, and why does this happen?",
     content: `One of the major reasons behind technical issues is that survey respondents are using a variety of operating systems, browsers, Internet connection types, and hardware, and not all are necessarily compatible with the technology of all surveys that may be available.
 
-If you encounter a technical difficulty during any survey. Usually, if you wait for a while, and try again later, the problem will be resolved and the survey resumed where the user left. Otherwise, if you are still seeing an error after waiting a while, please report it to support team at support@frequentresearch.com along with error information screenshot, if possible. We apologize for any inconvenience caused by technical errors. We will do our best to get them resolved.`,
+If you encounter a technical difficulty during any survey. Usually, if you wait for a while, and try again later, the problem will be resolved and the survey resumed where the user left. Otherwise, if you are still seeing an error after waiting a while, please report it to support team at support@myhealthopinions.com along with error information screenshot, if possible. We apologize for any inconvenience caused by technical errors. We will do our best to get them resolved.`,
   },
   {
     title:
@@ -591,64 +662,150 @@ function FAQ() {
         alignItems={"center"}
         sx={{ border: `1px solid #e0e0e0` }}
       >
-        <Grid
+        <MotionGrid
           size={{ xs: 11, xl: 8 }}
           container
-          justifyContent={"center"}
+          justifyContent="center"
           py={5}
           px={0.5}
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
         >
-          <Typography fontWeight={"bold"} fontSize={"24px"}>
-            Do You Have{" "}
-            <Page.Box component="span" color="secondary.main">
-              Any Question?
-            </Page.Box>
-          </Typography>
-
-          <Grid size={12} container direction="column" spacing={2} mt={4}>
-            {faqs.map((faq, index) => (
-              <Accordion
-                key={index}
-                disableGutters
+          <MotionBox variants={fadeUp}>
+            <Typography
+              sx={{
+                fontSize: { xs: "2rem", md: "2.8rem" },
+                fontWeight: 800,
+                color: "text.primary",
+                mb: 2,
+              }}
+            >
+              Have{" "}
+              <Typography
+                component="span"
                 sx={{
-                  boxShadow: 0,
-                  bgcolor: "#d5eeea",
-                  border: `1px solid #e0e0e0`,
-                  p: { xs: 0, md: 1.5 },
-                  borderRadius: 3,
-                  minHeight: "50px",
-                  "&:first-of-type": {
-                    borderTopLeftRadius: 12,
-                    borderTopRightRadius: 12,
-                  },
-                  "&:last-of-type": {
-                    borderBottomLeftRadius: 12,
-                    borderBottomRightRadius: 12,
-                  },
+                  color: "primary.main",
+                  fontSize: "inherit",
+                  fontWeight: "inherit",
                 }}
               >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  sx={{ borderRadius: 3 }}
+                Questions?
+              </Typography>
+            </Typography>
+          </MotionBox>
+
+          <MotionBox variants={fadeUp}>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                fontSize: 17,
+                lineHeight: 1.8,
+                textAlign: "center",
+                mx: "auto",
+              }}
+            >
+              Find answers to the most commonly asked questions about our
+              healthcare research community, participating in surveys, rewards,
+              profile management, and account security.
+            </Typography>
+          </MotionBox>
+
+          <MotionGrid
+            size={12}
+            container
+            direction="column"
+            spacing={2}
+            mt={4}
+            variants={staggerContainer}
+          >
+            {faqs.map((faq, index) => (
+              <MotionBox
+                key={index}
+                variants={fadeUp}
+                whileHover={{
+                  y: -2,
+                  transition: { duration: 0.2 },
+                }}
+              >
+                <Accordion
+                  disableGutters
+                  sx={{
+                    overflow: "hidden",
+                    borderRadius: 3,
+                    border: "1px solid",
+                    borderColor: "grey.200",
+                    boxShadow: "0 10px 25px rgba(0,0,0,.06)",
+                    transition: ".25s",
+
+                    "&:before": {
+                      display: "none",
+                    },
+
+                    "&.Mui-expanded": {
+                      borderColor: "secondary.main",
+                      boxShadow: "0 18px 35px rgba(0,0,0,.08)",
+                    },
+                  }}
                 >
-                  <Typography fontSize={"18px"} fontWeight="500">
-                    {faq.title}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails sx={{ bgcolor: "white", borderRadius: 2 }}>
-                  <Typography
-                    fontSize={"15px"}
-                    textAlign={"justify"}
-                    fontWeight={500}
-                    p={{ xs: 0, md: 1 }}
+                  <AccordionSummary
+                    expandIcon={
+                      <ExpandMoreIcon
+                        sx={{
+                          color: "secondary.main",
+                          fontSize: 30,
+                        }}
+                      />
+                    }
+                    sx={{
+                      bgcolor: "grey.50",
+                      px: 3,
+                      minHeight: 72,
+
+                      "&.Mui-expanded": {
+                        bgcolor: "secondary.light",
+                      },
+
+                      "& .MuiAccordionSummary-content": {
+                        my: 1.5,
+                      },
+                    }}
                   >
-                    {faq.content}
-                  </Typography>
-                </AccordionDetails>
-              </Accordion>
+                    <Typography
+                      sx={{
+                        fontSize: 19,
+                        fontWeight: 700,
+                        color: "primary.main",
+                        pr: 2,
+                      }}
+                    >
+                      {faq.title}
+                    </Typography>
+                  </AccordionSummary>
+
+                  <AccordionDetails
+                    sx={{
+                      bgcolor: "background.paper",
+                      px: { xs: 3, md: 4 },
+                      py: 3,
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontSize: 16,
+                        lineHeight: 1.9,
+                        color: "text.secondary",
+                        whiteSpace: "pre-line",
+                      }}
+                    >
+                      {faq.content}
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
+              </MotionBox>
             ))}
-          </Grid>
-        </Grid>
+          </MotionGrid>
+        </MotionGrid>
       </Grid>
     </Grid>
   );

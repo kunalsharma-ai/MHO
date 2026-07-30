@@ -177,9 +177,9 @@ function page() {
             fontSize={"16px"}
             color="secondary.main"
             fontWeight={"bold"}
-            href="mailto:support@frequentresearch.com."
+            href="mailto:support@myhealthopinions.com."
           >
-            support@frequentresearch.com.
+            support@myhealthopinions.com.
           </Typography>
         </Typography>
       </Grid>

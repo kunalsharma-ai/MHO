@@ -75,7 +75,6 @@ export default function page() {
   React.useEffect(() => {
     setIsLoading(true);
     api.get(endpoint).then((resp) => {
-      
       setSurvey(resp.data);
       setIsLoading(false);
     });
@@ -90,7 +89,7 @@ export default function page() {
       .then((resp) => {
         if ("data" in resp) setBatches(resp.data);
       });
-  }, [survey,openFilters.open]);
+  }, [survey, openFilters.open]);
 
   return (
     <Page.Box
@@ -215,7 +214,7 @@ export default function page() {
                         "completed",
                         "overquota",
                         "dropout",
-                      ].includes(u?.status)
+                      ].includes(u?.status),
                     ).length
                   }
                 </Page.MuiButton>
@@ -262,7 +261,7 @@ export default function page() {
                         "completed",
                         "overquota",
                         "dropout",
-                      ].includes(u?.status)
+                      ].includes(u?.status),
                     ).length
                   }
                 </Page.MuiButton>
@@ -285,7 +284,7 @@ export default function page() {
                 >
                   {
                     info.qualified.filter((u) =>
-                      ["disqualified"].includes(u?.status)
+                      ["disqualified"].includes(u?.status),
                     ).length
                   }
                 </Page.MuiButton>
@@ -308,7 +307,7 @@ export default function page() {
                 >
                   {
                     info.qualified.filter((u) =>
-                      ["overquota"].includes(u?.status)
+                      ["overquota"].includes(u?.status),
                     ).length
                   }
                 </Page.MuiButton>
@@ -331,7 +330,7 @@ export default function page() {
                 >
                   {
                     info.qualified.filter((u) =>
-                      ["dropout"].includes(u?.status)
+                      ["dropout"].includes(u?.status),
                     ).length
                   }
                 </Page.MuiButton>
@@ -402,7 +401,8 @@ function BatchesHistory({ setShowFilteredUsers, survey, batches, setBatches }) {
           fontSize: "16px",
           display: "inline-block",
           fontWeight: "600",
-          borderBottom: "2px solid #59AC77",
+          color: "primary.main",
+          borderBottom: (theme) => `2px solid ${theme.palette.secondary.dark}`,
           pb: 0.5,
         }}
       >
@@ -421,8 +421,9 @@ function BatchesHistory({ setShowFilteredUsers, survey, batches, setBatches }) {
                 justifyContent="space-between"
                 spacing={1}
                 sx={{
-                  border: "1px solid rgba(89, 172, 119, 0.6)",
-                  bgcolor: "#ecfcf5",
+                  border: (theme) =>
+                    `1px solid ${theme.palette.secondary.main}`,
+                  bgcolor: "primary.light",
                   borderRadius: 4,
                   px: { xs: 3, xl: 5 },
                   py: 3,
@@ -635,7 +636,8 @@ function SendInvites({ users, survey, market, onClose }) {
           container
           justifyContent="space-between"
           sx={{
-            border: "1px solid rgba(89, 172, 119, 0.6)",
+            border: (theme) => `1px solid ${theme.palette.secondary.main}`,
+
             p: 1,
             borderRadius: 1,
           }}
@@ -654,7 +656,8 @@ function SendInvites({ users, survey, market, onClose }) {
               container
               justifyContent="space-between"
               sx={{
-                border: "1px solid rgba(89, 172, 119, 0.6)",
+                border: (theme) => `1px solid ${theme.palette.secondary.main}`,
+
                 p: 1,
                 borderRadius: 1,
               }}
@@ -667,7 +670,8 @@ function SendInvites({ users, survey, market, onClose }) {
               container
               justifyContent="space-between"
               sx={{
-                border: "1px solid rgba(89, 172, 119, 0.6)",
+                border: (theme) => `1px solid ${theme.palette.secondary.main}`,
+
                 p: 1,
                 borderRadius: 1,
               }}
@@ -681,7 +685,8 @@ function SendInvites({ users, survey, market, onClose }) {
               container
               justifyContent="space-between"
               sx={{
-                border: "1px solid rgba(89, 172, 119, 0.6)",
+                border: (theme) => `1px solid ${theme.palette.secondary.main}`,
+
                 p: 1,
                 borderRadius: 1,
               }}
@@ -689,7 +694,7 @@ function SendInvites({ users, survey, market, onClose }) {
               <Page.Text fontWeight={600}>Total Batches:</Page.Text>
               {Math.ceil(
                 Number(market?.completes ?? 0) /
-                  Number(market?.schedule?.batch ?? 1)
+                  Number(market?.schedule?.batch ?? 1),
               )}
             </Grid>
           </>

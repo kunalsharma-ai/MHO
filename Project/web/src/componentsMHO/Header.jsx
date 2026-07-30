@@ -1,6 +1,6 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import {
   AppBar,
   Toolbar,
@@ -16,631 +16,748 @@ import {
   Avatar,
   Menu,
   MenuItem,
+  Fade,
 } from "@mui/material";
+
 import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import CloseIcon from "@mui/icons-material/CloseRounded";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import { usePathname } from "next/navigation";
+import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
+
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useMember, useQuery } from "@/Context";
-import { Page } from "@/util";
 
 export default function Header({ sections = [], open, setOpen }) {
-  const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
-  const [showLogin, setShowLogin] = React.useState(true);
-  const user = useMember();
+  const router = useRouter();
   const pathname = usePathname();
   const query = useQuery();
-  const router = useRouter();
+  const user = useMember();
+
   const searchParams = useSearchParams();
-  const [mobileOpen, setMobileOpen] = useState(false);
+
   const [mounted, setMounted] = useState(false);
+
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
+
+  const [showLogin, setShowLogin] = useState(true);
+
+  const [scrolled, setScrolled] = useState(false);
+
+  const [activeSection, setActiveSection] = React.useState("HOME");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!query) return;
+
     if (![null, undefined].includes(query.login)) {
       setOpen(true);
     }
   }, [query]);
 
   useEffect(() => {
-    setMounted(true);
+    const container = document.getElementById("scroll-container") || window;
+
+    const handleScrollEvent = () => {
+      const y = container === window ? window.scrollY : container.scrollTop;
+
+      setScrolled(y > 20);
+    };
+
+    handleScrollEvent();
+
+    container.addEventListener("scroll", handleScrollEvent);
+
+    return () => container.removeEventListener("scroll", handleScrollEvent);
   }, []);
 
-  const handleScroll = (ref) => {
-    if (ref?.current) {
-      const element = ref.current;
-      setTimeout(() => {
-        element.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-          inline: "nearest",
-        });
-      }, 5);
-    }
+  const handleScroll = (ref, label) => {
+    if (!ref?.current) return;
+
+    setActiveSection(label);
+
+    setTimeout(() => {
+      ref.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 50);
   };
 
   const handleNavigation = (path, sectionLabel = null) => {
     if (pathname === path) {
-      // If already on the target page
       if (path === "/") {
         const scrollContainer = document.getElementById("scroll-container");
-        if (scrollContainer) {
-          scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
-        }
-        // Scroll to section if on home page
+
+        scrollContainer?.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+
         if (sectionLabel) {
           const section = sections.find((s) => s.label === sectionLabel);
-          if (section) handleScroll(section.ref);
+
+          if (section) handleScroll(section.ref, section.label);
         }
       }
+
       return;
     }
 
-    // If navigating to home with a section
     if (path === "/" && sectionLabel) {
       router.push(`/?section=${encodeURIComponent(sectionLabel)}`);
     } else {
-      router.push(path); // Regular navigation for other pages
+      router.push(path);
     }
   };
 
   useEffect(() => {
-    if (pathname === "/") {
-      const sectionLabel = searchParams.get("section");
-      if (sectionLabel) {
-        const section = sections.find(
-          (s) => s.label === decodeURIComponent(sectionLabel)
-        );
-        if (section) {
-          handleScroll(section.ref);
-          router.replace("/", { scroll: false });
-        }
-      }
+    if (pathname !== "/") return;
+
+    const sectionLabel = searchParams.get("section");
+
+    if (!sectionLabel) return;
+
+    const section = sections.find(
+      (s) => s.label === decodeURIComponent(sectionLabel),
+    );
+
+    if (section) {
+      handleScroll(section.ref, section.label);
+
+      router.replace("/", {
+        scroll: false,
+      });
     }
-  }, [pathname, searchParams, sections, router]);
+  }, [pathname, searchParams, sections]);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  const handleDrawerToggle = () => setMobileOpen((v) => !v);
 
-  const handleDrawerClose = () => {
-    setMobileOpen(false);
-  };
+  const handleDrawerClose = () => setMobileOpen(false);
+
+  useEffect(() => {
+    if (pathname !== "/") return;
+
+    const observers = [];
+
+    sections.forEach((section) => {
+      if (!section.ref?.current) return;
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setActiveSection(section.label);
+          }
+        },
+        {
+          threshold: 0.2,
+          rootMargin: "-120px 0px -45% 0px",
+        },
+      );
+
+      observer.observe(section.ref.current);
+      observers.push(observer);
+    });
+
+    return () => {
+      observers.forEach((o) => o.disconnect());
+    };
+  }, [pathname, sections]);
 
   const getNavigationItems = () => {
     if (pathname === "/") {
-      // Home page - use sections with scroll functionality
-      // Override "CONTACT" to navigate to /contact page
       return sections.map((section) => ({
-        label: section.label, // Already uppercase
+        label: section.label,
+
         onClick: () => {
           if (section.label === "CONTACT") {
             handleNavigation("/contact");
           } else {
-            handleScroll(section.ref);
+            handleScroll(section.ref, section.label);
           }
+
           handleDrawerClose();
         },
+
         isExternalPage: section.label === "CONTACT",
+
         path: section.label === "CONTACT" ? "/contact" : "/",
       }));
-    } else {
-      // Other pages - navigate to home sections or other pages, with uppercase labels
-      return [
-        {
-          label: "HOME",
-          onClick: () => {
-            handleNavigation("/", "HOME");
-            handleDrawerClose();
-          },
-          path: "/",
-          sectionLabel: "HOME",
-        },
-        {
-          label: "ABOUT US",
-          onClick: () => {
-            handleNavigation("/", "ABOUT US");
-            handleDrawerClose();
-          },
-          path: "/",
-          sectionLabel: "ABOUT US",
-        },
-        {
-          label: "OUR PROFESSIONALS",
-          onClick: () => {
-            handleNavigation("/", "OUR PROFESSIONALS");
-            handleDrawerClose();
-          },
-          path: "/",
-          sectionLabel: "OUR PROFESSIONALS",
-        },
-        {
-          label: "OUR SPECIALTIES",
-          onClick: () => {
-            handleNavigation("/", "OUR SPECIALTIES");
-            handleDrawerClose();
-          },
-          path: "/",
-          sectionLabel: "OUR SPECIALTIES",
-        },
-        {
-          label: "SOLUTIONS",
-          onClick: () => {
-            handleNavigation("/", "SOLUTIONS");
-            handleDrawerClose();
-          },
-          path: "/",
-          sectionLabel: "SOLUTIONS",
-        },
-        {
-          label: "TESTIMONIALS",
-          onClick: () => {
-            handleNavigation("/", "TESTIMONIALS");
-            handleDrawerClose();
-          },
-          path: "/",
-          sectionLabel: "TESTIMONIALS",
-        },
-        {
-          label: "CONTACT",
-          onClick: () => {
-            handleNavigation("/contact");
-            handleDrawerClose();
-          },
-          path: "/contact",
-          sectionLabel: null, // Not a home section
-        },
-      ];
     }
+
+    return [
+      {
+        label: "HOME",
+        onClick: () => {
+          handleNavigation("/", "HOME");
+          handleDrawerClose();
+        },
+        path: "/",
+      },
+      {
+        label: "ABOUT US",
+        onClick: () => {
+          handleNavigation("/", "ABOUT US");
+          handleDrawerClose();
+        },
+        path: "/",
+      },
+      {
+        label: "OUR PROFESSIONALS",
+        onClick: () => {
+          handleNavigation("/", "OUR PROFESSIONALS");
+
+          handleDrawerClose();
+        },
+        path: "/",
+      },
+      {
+        label: "OUR SPECIALTIES",
+        onClick: () => {
+          handleNavigation("/", "OUR SPECIALTIES");
+
+          handleDrawerClose();
+        },
+        path: "/",
+      },
+      {
+        label: "SOLUTIONS",
+        onClick: () => {
+          handleNavigation("/", "SOLUTIONS");
+          handleDrawerClose();
+        },
+        path: "/",
+      },
+      {
+        label: "TESTIMONIALS",
+        onClick: () => {
+          handleNavigation("/", "TESTIMONIALS");
+
+          handleDrawerClose();
+        },
+        path: "/",
+      },
+      {
+        label: "CONTACT",
+        onClick: () => {
+          handleNavigation("/contact");
+          handleDrawerClose();
+        },
+        path: "/contact",
+      },
+    ];
   };
+
   const navigationItems = getNavigationItems();
 
-  const drawer = (
-    <Box
-      sx={ {
-        display: "flex",
-        flexDirection: "column",
-        width: "100vw",
-        height: "100vh",
-        bgcolor: "#A8FBD3",
-        color: "black",
-        pt: 2,
-        pb: 2,
-        position: "relative",
-      } }
-    >
-      <Box
-        sx={ {
-          px: 3,
-          pb: 2,
-          mb: 2,
-          borderBottom: 1,
-          borderColor: "divider",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        } }
-      >
-        <img
-          src="/images/logo/My-Health-Opinions1500-500.png"
-          alt="logo"
-          height="60px"
-          width="180px"
-          style={ { cursor: "pointer" } }
-          onClick={ () => {
-            handleNavigation("/");
-            handleDrawerClose();
-          } }
-        />
-        <IconButton
-          aria-label="close drawer"
-          onClick={ handleDrawerClose }
-          sx={ {
-            color: "black",
-            "&:hover": {
-              bgcolor: "rgba(0, 0, 0, 0.04)",
-            },
-          } }
-        >
-          <CloseIcon />
-        </IconButton>
-      </Box>
-
-      <Box
-        sx={ {
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          flex: 1,
-        } }
-      >
-        <List>
-          { navigationItems.map((item, index) => (
-            <ListItem
-              key={ index }
-              onClick={ item.onClick }
-              sx={ {
-                cursor: "pointer",
-                fontWeight: 500,
-
-                px: 3,
-                py: 1.5,
-                "&:hover": {
-                  bgcolor: "rgba(0, 0, 0, 0.04)",
-                  borderRadius: 1,
-                },
-                position: "relative",
-                // "&::after": {
-                //   content: '""',
-                //   position: "absolute",
-                //   width: 0,
-                //   height: "2px",
-                //   bottom: 0,
-                //   left: 24,
-                //   bgcolor: "primary.main",
-                //   transition: "width 0.3s ease",
-                // },
-                // "&:hover::after": {
-                //   width: "calc(100% - 48px)",
-                // },
-              } }
-            >
-              <ListItemText
-                primary={ item.label }
-                primaryTypographyProps={ {
-                  fontWeight: "bold",
-                  fontSize: "16px",
-                } }
-              />
-            </ListItem>
-          )) }
-        </List>
-
-        <Box sx={ { px: 3, mt: 3 } } position="absolute" bottom="20px">
-          {/* <Button
-          fullWidth
-          variant="outlined"
-          color="black"
-          onClick={() => {
-            setOpen(!open);
-
-            handleDrawerClose();
-          }}
-          sx={{
-            fontSize: "16px",
-            borderRadius: 1,
-            fontWeight: "bold",
-            height: "45px",
-            "&:hover": {
-              boxShadow: 12,
-            },
-          }}
-        >
-          Login
-        </Button> */}
-          { user === null ? (
-            <Button
-              variant="outlined"
-              color="black"
-              onClick={ () => {
-                setOpen(!open);
-              } }
-              sx={ {
-                boxShadow: 2,
-                fontSize: "16px",
-                borderRadius: 1,
-                fontWeight: "bold",
-                height: "36px",
-
-                "&:hover": {
-                  boxShadow: 5,
-                },
-              } }
-            >
-              Login
-            </Button>
-          ) : (
-            <Box
-              display={ "flex" }
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Box display="flex" alignItems="center">
-                <Avatar
-                  sx={ {
-                    width: "40px",
-                    height: "40px",
-                    bgcolor: user?.profilePicture
-                      ? "transparent"
-                      : "primary.main",
-                  } }
-                  src={ user?.profilePicture || "" }
-                  alt={ user?.name?.first ?? "U" }
-                />
-                <Typography
-                  sx={ {
-                    ml: 1,
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                  } }
-                >
-                  { user?.name?.first ?? "User" }
-                </Typography>
-              </Box>
-              <Box display={ "flex" } alignItems="center" gap={ 2 } ml={ 3 }>
-                <Tooltip
-                  title="Dashboard"
-                  enterTouchDelay={ 0 }
-                  leaveTouchDelay={ 1500 }
-                  placement="top"
-                >
-                  <IconButton
-                    sx={ { fontSize: "26px", color: "black" } }
-                    onClick={ () => {
-                      handleNavigation("/member/dashboard");
-                      handleDrawerClose();
-                    } }
-                  >
-                    <DashboardIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip
-                  title="Log Out"
-                  enterTouchDelay={ 0 }
-                  leaveTouchDelay={ 1500 }
-                  placement="top"
-                >
-                  <IconButton
-                    sx={ { fontSize: "26px", color: "black" } }
-                    onClick={ async () => {
-                      localStorage.removeItem("token");
-                      user.Reload();
-                      window.location.pathname = "/";
-                      handleDrawerClose();
-                    } }
-                  >
-                    <PowerSettingsNewIcon />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </Box>
-          ) }
-        </Box>
-      </Box>
-    </Box>
-  );
-  // return <pre>{ JSON.stringify(user, null, 2) }</pre>
   return (
-    <AppBar
-      position="sticky"
-      elevation={ 0 }
-      sx={ {
-        bgcolor: "#A8FBD3",
-        color: "black",
-        py: { xs: 0, lg: 0.5 },
-        boxShadow: 3,
-      } }
-    >
-      <Toolbar
-        sx={ {
-          justifyContent: "space-between",
-          alignItems: "center",
-          height: "70px",
-        } }
+    <>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{
+          bgcolor: "transparent",
+          boxShadow: "none",
+          pt: 2,
+        }}
       >
-        <img
-          src="/images/logo/My-Health-Opinions.png"
-          alt="logo"
-          height="90px"
-          width="225px"
-          style={ {
-            cursor: "pointer",
-            scale: 1.1,
-          } }
-          onClick={ () => {
-            handleNavigation("/");
-          } }
-        />
-
-        <Box
-          sx={ { display: { xs: "none", lg: "flex" }, gap: { xs: 2, xl: 4 } } }
+        <Toolbar
+          sx={{
+            maxWidth: 1400,
+            width: "100%",
+            mx: "auto",
+            px: { xs: 2, lg: 5 },
+          }}
         >
-          { navigationItems.map((item, index) => (
-            <Box
-              component="button"
-              tabIndex={ 0 }
-              key={ index }
-              className="hover-line"
-              onClick={ item.onClick }
-              sx={ {
-                fontFamily: "inherit",
-                bgcolor: "transparent",
-                border: "none",
+          <Box
+            sx={{
+              width: "100%",
+              height: 68,
 
-                "&:focus-visible": {
-                  outline: "2px solid",
-                  outlineColor: "primary.main",
-                  outlineOffset: "2px",
-                },
-                cursor: "pointer",
-                fontWeight: "bold",
-                fontSize: { xs: "12px", lg: "13px", xl: "14px" },
-                position: "relative",
-                "&:after": {
-                  content: '""',
-                  position: "absolute",
-                  width:
-                    mounted && pathname === item.path && !item.isExternalPage
-                      ? "100%"
-                      : 0,
-                  height: "2px",
-                  bottom: -4,
-                  left: 0,
-                  bgcolor: "primary.main",
-                  transition: "width 0.3s ease",
-                },
-                "&:hover": {
-                  color: "secondary.main",
-                  "&:after": {
-                    width: "100%",
-                  },
-                },
-              } }
-            >
-              { item.label }
-            </Box>
-          )) }
-        </Box>
+              px: 3,
 
-        <Box sx={ { display: { xs: "flex", lg: "none" }, alignItems: "center" } }>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="end"
-            onClick={ handleDrawerToggle }
-            sx={ { mx: 0.5 } }
+              borderRadius: 100,
+
+              bgcolor: "rgba(255,255,255,.96)",
+
+              backdropFilter: "blur(18px)",
+
+              border: "1px solid rgba(255,255,255,.6)",
+
+              boxShadow: `
+          0 12px 35px rgba(0,0,0,.08),
+          0 3px 12px rgba(0,0,0,.05)
+        `,
+
+              display: "flex",
+
+              alignItems: "center",
+
+              justifyContent: "space-between",
+            }}
           >
-            <MenuIcon fontSize="large" />
-          </IconButton>
-        </Box>
-        <Box
-          sx={ {
-            display: { xs: "none", lg: "block" },
-            alignItems: "center",
-            mr: 7,
-            minWidth: "145px",
-          } }
-        >
-          { showLogin &&
-            (user === null ? (
-              <Button
-                variant="outlined"
-                color="black"
-                onClick={ () => {
-                  setOpen(!open);
-                } }
-                sx={ {
-                  boxShadow: 2,
-                  fontSize: "16px",
-                  borderRadius: 1,
-                  fontWeight: "bold",
-                  height: "36px",
+            {/* Logo */}
 
-                  "&:hover": {
-                    boxShadow: 5,
-                  },
-                } }
-              >
-                Login
-              </Button>
-            ) : (
-              <Button
-                onClick={ (event) => setProfileAnchorEl(event.currentTarget) }
-                color="inherit"
-                sx={ { textTransform: "none", px: 2 } }
-              >
-                <Avatar
-                  sx={ {
-                    width: "40px",
-                    height: "40px",
-                    bgcolor: user?.profilePicture
-                      ? "transparent"
-                      : "primary.main",
-                  } }
-                  src={ user?.profilePicture || "" }
-                  alt={ "user photo" }
-                />
-                <Typography
-                  sx={ {
-                    display: { xs: "none", lg: "block" },
-                    ml: 1,
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                  } }
+            <Box
+              component="img"
+              src="/images/logo/My-Health-Opinions.png"
+              sx={{
+                width: 175,
+                cursor: "pointer",
+              }}
+              onClick={() => handleNavigation("/")}
+            />
+
+            {/* Desktop Nav */}
+
+            <Box
+              sx={{
+                display: {
+                  xs: "none",
+                  lg: "flex",
+                },
+
+                gap: 4,
+
+                alignItems: "center",
+              }}
+            >
+              {navigationItems.map((item) => {
+                const active =
+                  pathname === "/"
+                    ? item.label === "CONTACT"
+                      ? false
+                      : activeSection === item.label
+                    : pathname === item.path;
+
+                return (
+                  <Box
+                    key={item.label}
+                    component="button"
+                    onClick={item.onClick}
+                    sx={{
+                      border: 0,
+                      bgcolor: active ? "secondary.main" : "transparent",
+
+                      color: active ? "#fff" : "primary.dark",
+
+                      px: active ? 2.8 : 0.5,
+
+                      py: active ? 1 : 0,
+
+                      borderRadius: 100,
+
+                      fontWeight: 700,
+
+                      fontSize: { md: 12, xl: 14 },
+
+                      cursor: "pointer",
+
+                      transition: ".3s",
+
+                      position: "relative",
+
+                      "&::after": active
+                        ? {}
+                        : {
+                            content: '""',
+                            position: "absolute",
+                            bottom: -8,
+                            left: 0,
+                            width: 0,
+                            height: 2,
+                            backgroundColor: "secondary.main",
+                            transition: ".3s",
+                          },
+
+                      "&:hover::after": active
+                        ? {}
+                        : {
+                            width: "100%",
+                          },
+
+                      "&:hover": {
+                        color: active ? "#fff" : "secondary.main",
+                      },
+                    }}
+                  >
+                    {item.label}
+                  </Box>
+                );
+              })}
+            </Box>
+
+            {/* Right */}
+
+            <Box
+              sx={{
+                display: {
+                  xs: "none",
+                  lg: "block",
+                },
+              }}
+            >
+              {user == null ? (
+                <Button
+                  variant="outlined"
+                  onClick={() => setOpen(true)}
+                  sx={{
+                    borderRadius: 100,
+                    px: 4,
+                    py: 0.7,
+                    fontSize: 16,
+                    textTransform: "none",
+                    fontWeight: 700,
+                    borderWidth: 2,
+                    borderColor: "secondary.main",
+                    color: "secondary.main",
+                    "&:hover": {
+                      borderWidth: 2,
+                      bgcolor: "secondary.main",
+                      color: "#fff",
+                    },
+                  }}
                 >
-                  { user?.name?.first ?? "User" }
-                </Typography>
-              </Button>
-            )) }
-        </Box>
-      </Toolbar>
+                  Sign in
+                </Button>
+              ) : (
+                <Button
+                  onClick={(e) => setProfileAnchorEl(e.currentTarget)}
+                  sx={{
+                    borderRadius: 100,
+
+                    px: 1,
+
+                    textTransform: "none",
+
+                    color: "primary.dark",
+
+                    "&:hover": {
+                      bgcolor: "primary.light",
+                    },
+                  }}
+                >
+                  <Avatar
+                    src={user?.profilePicture || ""}
+                    sx={{
+                      width: 42,
+                      height: 42,
+                      mr: 1.2,
+                    }}
+                  />
+
+                  <Typography fontWeight={700}>
+                    {user?.name?.first ?? "User"}
+                  </Typography>
+                </Button>
+              )}
+            </Box>
+
+            {/* Mobile */}
+
+            <IconButton
+              onClick={handleDrawerToggle}
+              sx={{
+                display: {
+                  xs: "flex",
+                  lg: "none",
+                },
+
+                color: "primary.main",
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
       <Menu
-        anchorEl={ profileAnchorEl }
-        open={ Boolean(profileAnchorEl) }
-        onClose={ () => setProfileAnchorEl(null) }
-        transformOrigin={ { horizontal: "left", vertical: "top" } }
-        anchorOrigin={ { horizontal: "left", vertical: "bottom" } }
-        PaperProps={ {
+        anchorEl={profileAnchorEl}
+        open={Boolean(profileAnchorEl)}
+        onClose={() => setProfileAnchorEl(null)}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        PaperProps={{
           sx: {
-            // bgcolor: "#016550",
-            color: "white",
-            boxShadow: 24,
             mt: 1.5,
+            minWidth: 240,
+            borderRadius: 4,
             overflow: "visible",
-            "::before": {
+            bgcolor: "#fff",
+            boxShadow: "0 25px 60px rgba(0,0,0,.18)",
+
+            "&:before": {
               content: '""',
-              display: "block",
               position: "absolute",
-              width: 10,
-              height: 10,
-              bgcolor: "white",
+              top: -8,
+              right: 26,
+              width: 16,
+              height: 16,
+              bgcolor: "#fff",
               transform: "rotate(45deg)",
-              top: -5,
-              left: 16,
-              zIndex: 0,
             },
           },
-        } }
+        }}
       >
-        { user?.navbar?.map(link => <MenuItem
-          key={ link?.text }
-          onClick={ () => {
-            setProfileAnchorEl(null);
-            router.replace(link?.link ?? "/");
-          } }
-          sx={ { gap: 1, px: 3, py: 1, color: "black", fontWeight: 500 } }
-        >
-          { link?.icon && <i className={ link.icon } /> }
-          { link?.text }
-        </MenuItem>) }
+        {user?.navbar?.map((link) => (
+          <MenuItem
+            key={link.text}
+            onClick={() => {
+              setProfileAnchorEl(null);
+              router.replace(link.link ?? "/");
+            }}
+            sx={{
+              py: 1.4,
+              px: 2.5,
+              gap: 1.5,
+              borderRadius: 2,
+              mx: 1,
+              my: 0.5,
+              fontWeight: 600,
+
+              "&:hover": {
+                bgcolor: "primary.light",
+              },
+            }}
+          >
+            {link.icon && <i className={link.icon} />}
+            {link.text}
+          </MenuItem>
+        ))}
+
         <MenuItem
-          onClick={ async () => {
+          onClick={() => {
             setProfileAnchorEl(null);
+
             localStorage.removeItem("token");
+
             user.Reload();
-          } }
-          sx={ {
-            gap: 1,
-            px: 3,
-            py: 1,
-            borderTop: "1px solid whitesmoke",
-            color: "black",
-            fontWeight: 500,
-          } }
+          }}
+          sx={{
+            mt: 1,
+
+            borderTop: "1px solid",
+
+            borderColor: "grey.200",
+
+            py: 1.5,
+            px: 2.5,
+            mx: 1,
+            gap: 1.5,
+
+            color: "error.main",
+
+            fontWeight: 700,
+          }}
         >
           <i className="icon-power" />
-          Logout
+          Sign out
         </MenuItem>
       </Menu>
 
       <Drawer
-        variant="temporary"
-        open={ mobileOpen }
-        onClose={ handleDrawerToggle }
-        ModalProps={ {
-          keepMounted: true,
-        } }
-        sx={ {
-          display: { xs: "block", lg: "none" },
-          "& .MuiDrawer-paper": {
-            boxSizing: "border-box",
-            position: "relative",
+        anchor="right"
+        open={mobileOpen}
+        onClose={handleDrawerClose}
+        sx={{
+          display: {
+            xs: "block",
+            lg: "none",
           },
-        } }
+
+          "& .MuiDrawer-paper": {
+            width: 330,
+
+            borderTopLeftRadius: 28,
+
+            borderBottomLeftRadius: 28,
+
+            overflow: "hidden",
+
+            background:
+              "linear-gradient(180deg,#0C4EBA 0%,#184FBB 65%,#D06A24 100%)",
+
+            color: "#fff",
+          },
+        }}
       >
-        { drawer }
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+          }}
+        >
+          {/* Header */}
+
+          <Box
+            sx={{
+              display: "flex",
+
+              justifyContent: "space-between",
+
+              alignItems: "center",
+
+              px: 3,
+
+              py: 3,
+            }}
+          >
+            <Box
+              component="img"
+              src="/images/logo/My-Health-Opinions.png"
+              sx={{
+                width: 175,
+              }}
+            />
+
+            <IconButton
+              onClick={handleDrawerClose}
+              sx={{
+                color: "#fff",
+              }}
+            >
+              <CloseRoundedIcon />
+            </IconButton>
+          </Box>
+
+          {/* Navigation */}
+
+          <List sx={{ px: 2 }}>
+            {navigationItems.map((item) => (
+              <ListItem
+                key={item.label}
+                onClick={item.onClick}
+                sx={{
+                  borderRadius: 3,
+
+                  mb: 0.5,
+
+                  cursor: "pointer",
+
+                  transition: ".3s",
+
+                  "&:hover": {
+                    bgcolor: "rgba(255,255,255,.12)",
+                  },
+                }}
+              >
+                <ListItemText
+                  primary={item.label}
+                  primaryTypographyProps={{
+                    fontWeight: 700,
+                    letterSpacing: 0.5,
+                  }}
+                />
+              </ListItem>
+            ))}
+          </List>
+
+          <Box flexGrow={1} />
+
+          {/* Bottom */}
+
+          <Box
+            sx={{
+              p: 3,
+            }}
+          >
+            {user == null ? (
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => {
+                  setOpen(true);
+                  handleDrawerClose();
+                }}
+                sx={{
+                  borderRadius: 100,
+
+                  py: 1.5,
+
+                  bgcolor: "secondary.main",
+
+                  fontWeight: 700,
+
+                  color: "#fff",
+
+                  "&:hover": {
+                    bgcolor: "secondary.main",
+                  },
+                }}
+              >
+                Sign in
+              </Button>
+            ) : (
+              <>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    mb: 3,
+                  }}
+                >
+                  <Avatar
+                    src={user?.profilePicture || ""}
+                    sx={{
+                      width: 52,
+                      height: 52,
+                      mr: 2,
+                    }}
+                  />
+
+                  <Typography fontWeight={700}>
+                    {user?.name?.first ?? "User"}
+                  </Typography>
+                </Box>
+
+                <Button
+                  fullWidth
+                  startIcon={<DashboardRoundedIcon />}
+                  onClick={() => {
+                    handleNavigation("/member/dashboard");
+                    handleDrawerClose();
+                  }}
+                  sx={{
+                    justifyContent: "flex-start",
+                    color: "#fff",
+                    mb: 1,
+                  }}
+                >
+                  Dashboard
+                </Button>
+
+                <Button
+                  fullWidth
+                  startIcon={<PowerSettingsNewIcon />}
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    user.Reload();
+                    handleDrawerClose();
+                  }}
+                  sx={{
+                    justifyContent: "flex-start",
+                    color: "#fff",
+                  }}
+                >
+                  Sign out
+                </Button>
+              </>
+            )}
+          </Box>
+        </Box>
       </Drawer>
-    </AppBar>
+    </>
   );
 }

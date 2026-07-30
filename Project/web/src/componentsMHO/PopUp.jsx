@@ -8,6 +8,7 @@ import {
   CircularProgress,
   Box,
   Fade,
+  Grow,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -31,9 +32,10 @@ export default function PopUp({ hideTitle = false, sx, ...attr }) {
         if (attr.onClose) attr.onClose();
         else setOpen(false);
       }}
-      slots={{ transition: Fade }}
+      slots={{ transition: Grow }}
       slotProps={{
         transition: {
+          timeout: 250,
           onExited: () => {
             if (attr?.onExited) {
               attr.onExited();
@@ -47,7 +49,7 @@ export default function PopUp({ hideTitle = false, sx, ...attr }) {
         zIndex: 3300,
         boxShadow: 24,
         overflowY: "auto",
-        border: `1px solid rgba(51, 169, 202, 0.4)`,
+        border: (theme) => `1px solid ${theme.palette.secondary.light}`,
         borderRadius: attr.noBorder ? 0 : 4,
         ...attr?.DialogSx,
       }}
@@ -62,7 +64,7 @@ export default function PopUp({ hideTitle = false, sx, ...attr }) {
       }}
       PaperProps={{
         sx: {
-          borderRadius: attr.noBorder ? 0 : 2,
+          borderRadius: attr.noBorder ? 0 : 4,
           maxHeight: attr.maxHeight ?? "95vh",
         },
       }}
@@ -95,8 +97,8 @@ export default function PopUp({ hideTitle = false, sx, ...attr }) {
             title={attr?.title}
             sx={{
               justifyContent: "space-between",
-              background: "#bddec9",
-              // color: "white",
+              // background: (theme) => theme.palette.primary.main,
+              color: "primary.main",
             }}
           >
             <Box>
@@ -105,7 +107,7 @@ export default function PopUp({ hideTitle = false, sx, ...attr }) {
                   aria-label="Edit"
                   onClick={attr.onEdit}
                   sx={{
-                    color: attr.color ?? "white",
+                    color: attr.color ?? "primary.main",
                     mr: 2,
                     "&:hover": { color: "info.light" },
                   }}
@@ -135,7 +137,7 @@ export default function PopUp({ hideTitle = false, sx, ...attr }) {
                   else setOpen(false);
                 }}
                 sx={{
-                  // color: attr.color ?? "white",
+                  color: attr.color ?? "primary.main",
                   "&:hover": { color: "error.light" },
                 }}
                 size="small"
@@ -157,7 +159,8 @@ export default function PopUp({ hideTitle = false, sx, ...attr }) {
       >
         <Box
           sx={{
-            bgcolor: "#f1f4f9",
+            background:
+              "linear-gradient(180deg,#ffffff 0%,#fafcff 35%,#f4f7fb 100%)",
           }}
         >
           {children}

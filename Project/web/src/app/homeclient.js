@@ -113,14 +113,14 @@ export default function Home() {
             <HealthcareProfessionals />
           </Reveal>
         </div>
-        <div ref={solutionsRef} className="scroll-target">
-          <Reveal>
-            <Solutions />
-          </Reveal>
-        </div>
         <div ref={specialitiesRef} className="scroll-target">
           <Reveal>
             <HealthcareSpecialities />
+          </Reveal>
+        </div>
+        <div ref={solutionsRef} className="scroll-target">
+          <Reveal>
+            <Solutions />
           </Reveal>
         </div>
         <div ref={testimonialsRef} className="scroll-target">
@@ -140,7 +140,7 @@ export default function Home() {
             sx={{
               position: "fixed",
               bottom: 35,
-              left: 35,
+              right: 35,
               boxShadow: 4,
               zIndex: 999,
               color: "white",

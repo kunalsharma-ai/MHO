@@ -28,6 +28,33 @@ import { api, Page } from "@/util";
 import { Datatable } from "@/components";
 import { useMember } from "@/Context";
 import { useToast } from "@/hooks";
+import { motion, AnimatePresence } from "framer-motion";
+
+const MotionGrid = motion.create(Grid);
+
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
+    },
+  },
+};
+
+const fadeUp = {
+  hidden: {
+    opacity: 0,
+    y: 24,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.45,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
 
 export default function page() {
   const [user] = [useMember()];
@@ -99,6 +126,10 @@ export default function page() {
 
   return (
     <Grid
+      component={motion.div}
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
       size={12}
       container
       spacing={2}
@@ -117,7 +148,9 @@ export default function page() {
             fontSize: "18px",
             display: "inline-block",
             fontWeight: "600",
-            borderBottom: "2px solid #59AC77",
+            color: "primary.main",
+            borderBottom: (theme) =>
+              `2px solid ${theme.palette.secondary.dark}`,
             pb: 0.5,
             my: 2,
           }}
@@ -125,7 +158,7 @@ export default function page() {
           Refer a Friend and Earn Rewards!
         </Typography>
       </Grid>
-      <Grid size={12} container spacing={2} mt={1}>
+      <MotionGrid variants={fadeUp} size={12} container spacing={2} mt={1}>
         <Box width={"100%"}>
           <Typography
             color="secondary"
@@ -151,8 +184,8 @@ export default function page() {
             <ContentCopyIcon />
           </IconButton>
         </Box>
-      </Grid>{" "}
-      <Grid size={12} container>
+      </MotionGrid>
+      <MotionGrid variants={fadeUp} size={12} container>
         <Grid size={{ xs: 12, lg: 6 }} container spacing={2} mt={2}>
           <Box width={"100%"}>
             <Typography
@@ -254,8 +287,8 @@ export default function page() {
                 emails.filter((email) => {
                   return Boolean(
                     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@([A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/.test(
-                      email
-                    )
+                      email,
+                    ),
                   );
                 }).length === 0
               }
@@ -272,8 +305,8 @@ export default function page() {
         </Grid>
 
         <InvitedEmails sentInvites={sentInvites} />
-      </Grid>
-      <Grid size={12}>
+      </MotionGrid>
+      <MotionGrid variants={fadeUp} size={12}>
         <Datatable
           isLoading={false}
           pagination={[10, 20, 50, 100]}
@@ -292,7 +325,9 @@ export default function page() {
                 fontSize: "18px",
                 display: "inline-block",
                 fontWeight: "600",
-                borderBottom: "2px solid #59AC77",
+                color: "primary.main",
+                borderBottom: (theme) =>
+                  `2px solid ${theme.palette.secondary.dark}`,
                 pb: 0.5,
                 my: 1,
               }}
@@ -303,7 +338,7 @@ export default function page() {
           columns={columns}
           data={referrals}
         />
-      </Grid>
+      </MotionGrid>
       <Snackbar
         open={toastOpen}
         autoHideDuration={3000}
@@ -331,7 +366,7 @@ function InvitedEmails({ sentInvites }) {
   if (!users || users.length === 0) return null;
   return (
     <Grid
-      size={{ xs: 12, lg: 6 }}
+      size={{ xs: 12, md: 6 }}
       container
       mt={2}
       alignSelf="flex-start"
@@ -351,8 +386,8 @@ function InvitedEmails({ sentInvites }) {
 
       <TableContainer
         sx={{
-          bgcolor: "#ecfcf5",
-          border: "1px solid rgba(89, 172, 119, 0.6)",
+          bgcolor: "primary.light",
+          border: (theme) => `1px solid ${theme.palette.secondary.light}`,
           borderRadius: 2,
           maxHeight: { xs: "400px", lg: "132px" },
           minWidth: "500px",
@@ -397,7 +432,7 @@ function InvitedEmails({ sentInvites }) {
                 key={user.id}
                 sx={{
                   "&:hover": {
-                    bgcolor: "#dff7e1ff",
+                    bgcolor: "#f4f4f4",
                   },
                 }}
               >

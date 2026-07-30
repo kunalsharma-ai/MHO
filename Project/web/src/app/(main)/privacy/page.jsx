@@ -625,9 +625,9 @@ function page() {
           {" "}
           For any inquiries or concerns related to this Privacy Policy or the
           handling of your Personal Information, you can reach us through the
-          following means: Email: support@frequentresearch.com Phone: 9810459700
+          following means: Email: support@myhealthopinions.com Phone: 9810459700
           My Health Opinions, C/O Frequent Research Fieldwork Solution Private
-          Limited, B 96, Pushpanjali Enclave, Pitampura, Delhi - 110034 We
+          Limited, Mangolpur Kalan, New Delhi - 110085. We
           encourage you to contact us if you have any questions, requests, or
           feedback regarding your privacy and data protection. Our team will be
           happy to assist you and address any concerns you may have.

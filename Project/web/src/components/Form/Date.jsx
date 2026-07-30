@@ -25,10 +25,12 @@ export default function DateField({
   validations,
   disabled,
   dateRange = [null, null],
+  sx = {},
 }) {
   const [validate, setValidate] = React.useState(validations);
   const [minDate, setMinDate] = React.useState(new Date().toString());
   const [maxDate, setMaxDate] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
 
   let pValue;
   if (parent) {
@@ -74,6 +76,9 @@ export default function DateField({
           return (
             <DatePicker
               {...field}
+              open={open}
+              onOpen={() => setOpen(true)}
+              onClose={() => setOpen(false)}
               disabled={disabled}
               value={field.value ? dayjs(field.value) : null}
               label={
@@ -118,15 +123,20 @@ export default function DateField({
                   error: !!errors,
                   helperText: errors?.message,
                   onBlur: handleBlur,
-                  sx: {
-                    backgroundColor: "white",
-                    "& .MuiInputBase-input": {
+                  onFocus: !disabled ? () => setOpen(true) : undefined,
+                  onClick: !disabled ? () => setOpen(true) : undefined,
+                  sx: [
+                    {
                       backgroundColor: "white",
+                      "& .MuiInputBase-input": {
+                        backgroundColor: "white",
+                      },
+                      "& .MuiFormHelperText-root": {
+                        fontWeight: "bold",
+                      },
                     },
-                    "& .MuiFormHelperText-root": {
-                      fontWeight: "bold",
-                    },
-                  },
+                    sx,
+                  ],
                 },
               }}
             />

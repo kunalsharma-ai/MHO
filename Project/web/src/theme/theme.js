@@ -3,21 +3,74 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#59AC77",
+      main: "#0D5CC7",
+      light: "#EAF3FF",
+      dark: "#0A4DA5",
+      contrastText: "#FFFFFF",
     },
+
     secondary: {
-      main: "#06923E",
+      main: "#FF7A00",
+      light: "#FFD199",
+      dark: "#E66400",
+      contrastText: "#FFFFFF",
     },
+
+    success: {
+      main: "#22C55E",
+    },
+
+    warning: {
+      main: "#F59E0B",
+    },
+
+    error: {
+      main: "#EF4444",
+    },
+
+    background: {
+      default: "#F7F9FC",
+      paper: "#FFFFFF",
+    },
+
+    text: {
+      primary: "#1A2B49",
+      secondary: "#5F6C7B",
+    },
+
+    divider: "#E5EAF2",
+
     page: {
       main: "#f4f4f4",
     },
+
     card: {
       main: "#ffffff",
     },
     cardbg: {
-      main: "#dffff1", // "#c2f5d7"// "#c6e3f4"  //   "#8cb2f333",
+      main: "#EAF3FF", // #FFE4CC
+    },
+    cardtext: {
+      main: "#001B66",
     },
   },
+  // palette: {
+  //   primary: {
+  //     main: "#59AC77",
+  //   },
+  //   secondary: {
+  //     main: "#06923E",
+  //   },
+  //   page: {
+  //     main: "#f4f4f4",
+  //   },
+  //   card: {
+  //     main: "#ffffff",
+  //   },
+  //   cardbg: {
+  //     main: "#dffff1", // "#c2f5d7"// "#c6e3f4"  //   "#8cb2f333",
+  //   },
+  // },
   typography: {
     color: "black",
     fontSize: 14,
@@ -42,7 +95,7 @@ const theme = createTheme({
         },
         "*": {
           scrollbarWidth: "thin",
-          scrollbarColor: "#06923E transparent",
+          scrollbarColor: "#E66400 transparent",
         },
         "*::-webkit-scrollbar": {
           width: "8px",
@@ -52,13 +105,13 @@ const theme = createTheme({
           background: "transparent",
         },
         "*::-webkit-scrollbar-thumb": {
-          backgroundColor: "#06923E",
+          backgroundColor: "#E66400",
           borderRadius: "8px",
           border: "2px solid transparent",
           backgroundClip: "content-box",
         },
         "*::-webkit-scrollbar-thumb:hover": {
-          backgroundColor: "#59AC77",
+          backgroundColor: "#FFD199",
         },
       },
     },
@@ -107,11 +160,11 @@ const theme = createTheme({
           fontWeight: "bold",
           fontSize: "14px",
           "&.Mui-selected": {
-            color: "#06923E",
+            color: "#0D5CC7",
           },
         },
         indicator: {
-          backgroundColor: "#06923E",
+          backgroundColor: "#0D5CC7",
         },
       },
     },
@@ -143,7 +196,7 @@ const theme = createTheme({
           fontWeight: "500",
           border: "1px solid #ccc",
           borderRadius: 4,
-          background: "#effeff",
+          background: "#EAF3FF",
           color: "black",
           px: 3,
           py: 5,
@@ -152,7 +205,7 @@ const theme = createTheme({
           maxWidth: 350,
         },
         arrow: {
-          color: "#effeff",
+          color: "#EAF3FF",
         },
       },
       defaultProps: {

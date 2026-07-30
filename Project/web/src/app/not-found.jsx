@@ -17,7 +17,8 @@ export default function page() {
       sx={{
         textAlign: "center",
         minHeight: "100vh",
-        background: "linear-gradient(90deg, #ffffff 0%, #c8fee9ff 100%)",
+        background: (theme) =>
+          `linear-gradient(90deg, ${theme.palette.primary.light} 0%, ${theme.palette.secondary.light} 100%)`,
       }}
     >
       <Container maxWidth="lg">

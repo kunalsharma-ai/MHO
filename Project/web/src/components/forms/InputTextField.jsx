@@ -28,6 +28,7 @@ const FormTextField = React.forwardRef((props, ref) => {
     multiline,
     maxRows,
     disabled,
+    size,
     ...rest
   } = props;
 
@@ -64,7 +65,7 @@ const FormTextField = React.forwardRef((props, ref) => {
       onChange={onChange}
       maxRows={maxRows}
       multiline={multiline}
-      size="small"
+      size={size ?? "small"}
       disabled={disabled}
       {...rest} // Spread any additional props
     >

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import {
   Avatar,
+  Stack,
   Box,
   IconButton,
   Typography,
@@ -15,6 +16,7 @@ import {
   RadioGroup,
   FormHelperText,
   Tooltip,
+  Collapse,
   ToggleButtonGroup,
   ToggleButton,
 } from "@mui/material";
@@ -37,7 +39,9 @@ import {
   Apple,
   Microsoft,
   Login as LoginIcon,
+  YouTube,
 } from "@mui/icons-material";
+import { motion, AnimatePresence } from "framer-motion";
 
 import PopUp from "./PopUp";
 import { Form, RequiredLabel } from "@/components";
@@ -46,6 +50,9 @@ import user from "@/validators/user";
 import { useToast } from "@/hooks";
 import { useMember, useQuery, useTelemetry } from "@/Context";
 import MapComponent from "@/components/Map"; //Temporary Import
+import Captcha from "./Captcha";
+const MotionBox = motion.create(Box);
+const MotionGrid = motion.create(Grid);
 function capitalizeName(str) {
   if (!str) return "";
 
@@ -63,6 +70,29 @@ function capitalizeName(str) {
 }
 const today = new Date();
 
+const socials = [
+  {
+    name: "linkedin",
+    link: "https://www.linkedin.com/company/my-health-opinions/",
+    icon: <LinkedIn sx={{ color: "#0077B5", fontSize: "28px" }} />,
+  },
+  {
+    name: "facebook",
+    link: "https://www.facebook.com/frequentrfs/",
+    icon: <Facebook sx={{ color: "#1877F2", fontSize: "28px" }} />,
+  },
+  {
+    name: "youtube",
+    link: "https://www.youtube.com/channel/UCLxmn2kq4aACAHaL2eT6QIQ",
+    icon: <YouTube sx={{ color: "#FF0000", fontSize: "28px" }} />,
+  },
+  {
+    name: "twitter",
+    link: "https://twitter.com/frequentrfs",
+    icon: <X sx={{ color: "black", fontSize: "22px" }} />,
+  },
+];
+
 export default function SignUp({
   open,
   onClose,
@@ -77,6 +107,7 @@ export default function SignUp({
   const [categoryOptions, setCategoryOptions] = React.useState([]);
   const [query, member] = [useQuery(), useMember()];
   const [isInvalidUser, setIsInvalidUser] = React.useState(false);
+  const [btnDisabled, setBtnDisabled] = React.useState(true);
 
   const RESEND_SECONDS = 60;
 
@@ -91,6 +122,7 @@ export default function SignUp({
 
     return () => clearInterval(interval);
   }, [cooldown]);
+
   const progress = ((RESEND_SECONDS - cooldown) / RESEND_SECONDS) * 100;
 
   React.useEffect(() => {
@@ -246,16 +278,19 @@ export default function SignUp({
         sx={{
           width: "100vw",
           height: "100vh",
-          bgcolor: "#a5f4ce",
+          // bgcolor: "#a5f4ce",
+          bgcolor: "transparent",
           color: "white",
         }}
         DialogSx={{
           "& .MuiDialog-paper": {
-            width: "100vw",
-            margin: {
-              xs: 1,
-              sm: "32px",
-            },
+            width: "min(1320px,96vw)",
+            // height: { md: "88vh" },
+            maxHeight: "98vh",
+            margin: 0,
+            borderRadius: 4,
+            overflow: "hidden",
+            boxShadow: "0 35px 80px rgba(0,0,0,.25)",
           },
         }}
         maxWidth={status !== "signup" ? "md" : "xl"}
@@ -266,110 +301,330 @@ export default function SignUp({
                 size={12}
                 container
                 sx={{
-                  maxHeight: { xs: "90vh", lg: "75vh" },
+                  width: "100%",
+                  height: { xs: "90vh", lg: "88vh" },
                   overflow: "hidden",
-                  border: 1.5,
-                  borderColor: "#33aaca",
+                  bgcolor: "#fff",
+                  borderRadius: 4,
                 }}
               >
-                <Grid size={{ xs: 0, md: 7.5 }} container>
-                  <img
-                    width={"100%"}
-                    // src="images/Professional/personnel-department-specialist.jpg"
-                    src="images/home/signup-image5.jpg"
-                    loading="eager"
+                <MotionGrid
+                  initial={{
+                    opacity: 0,
+                    x: -40,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                  }}
+                  transition={{
+                    duration: 0.6,
+                  }}
+                  size={{ xs: 0, md: 7 }}
+                  sx={{
+                    display: { xs: "none", md: "block" },
+                    position: "relative",
+                    overflow: "hidden",
+                    background: `
+                    linear-gradient(
+                    180deg,
+                    rgba(1,35,98,.25) 0%,
+                    rgba(1,35,98,.45) 35%,
+                    rgba(1,35,98,.82) 100%
+                    )
+                    `,
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src="/images/home/signup-image5.jpg"
                     alt=""
-                    style={{
+                    sx={{
+                      width: "100%",
+                      height: "100%",
                       objectFit: "cover",
-                      backgroundColor: "white",
-                      filter: "brightness(85%)",
                     }}
                   />
-                </Grid>
+
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      inset: 0,
+                      background:
+                        "linear-gradient(180deg,rgba(1,35,98,.35),rgba(1,35,98,.82))",
+                    }}
+                  />
+
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      inset: 0,
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      p: 6,
+                      py: 4,
+                      color: "#fff",
+                    }}
+                  >
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <Box>
+                        <Box
+                          sx={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            px: 4,
+                            py: 2.5,
+                            borderRadius: 3,
+                            backdropFilter: "blur(20px)",
+                            background: "rgba(255,255,255,.88)",
+                            border: "1px solid rgba(255,255,255,.95)",
+                            boxShadow: `
+                       0 8px 18px rgba(0,0,0,.12),
+                       0 20px 45px rgba(1,35,98,.18)
+                       `,
+                            mb: 5,
+                            width: "fit-content",
+                          }}
+                        >
+                          <Box
+                            component="img"
+                            src="/images/logo/My-Health-Opinions.png"
+                            sx={{
+                              height: 60,
+                            }}
+                          />
+                        </Box>
+                      </Box>
+                      <Box>
+                        <Typography
+                          sx={{
+                            fontSize: { xs: 30, xl: 48 },
+                            fontWeight: 800,
+                            lineHeight: 1.15,
+                            maxWidth: 660,
+                          }}
+                        >
+                          Your Voice Shapes the Future of Healthcare
+                        </Typography>
+
+                        <Typography
+                          sx={{
+                            mt: { xs: 2, xl: 3 },
+                            fontSize: { lg: 15, xl: 18 },
+                            lineHeight: 1.8,
+                            maxWidth: 520,
+                            opacity: 0.92,
+                          }}
+                        >
+                          Join a global community of healthcare professionals,
+                          patients and caregivers contributing to research that
+                          improves lives while earning rewards for every
+                          completed study.
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Grid container spacing={2}>
+                      {[
+                        {
+                          number: "30K+",
+                          label: "Members Worldwide",
+                        },
+                        {
+                          number: "40+",
+                          label: "Countries",
+                        },
+                        {
+                          number: "1000+",
+                          label: "Research Studies",
+                        },
+                        {
+                          number: "100%",
+                          label: "Confidential",
+                        },
+                      ].map((item, index) => (
+                        <MotionGrid
+                          initial={{
+                            opacity: 0,
+                            y: 20,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            y: 0,
+                          }}
+                          transition={{
+                            delay: 0.5 + index * 0.08,
+                          }}
+                          key={item.label}
+                          size={6}
+                        >
+                          <Box
+                            sx={{
+                              py: { md: 1, xl: 2.5 },
+                              px: 2.5,
+                              borderRadius: 3,
+                              bgcolor: "rgba(255,255,255,.04)",
+                              backdropFilter: "blur(2px)",
+                              border: "1px solid rgba(255,255,255,.18)",
+                            }}
+                          >
+                            <Typography
+                              sx={{
+                                fontSize: 28,
+                                fontWeight: 800,
+                              }}
+                            >
+                              {item.number}
+                            </Typography>
+
+                            <Typography
+                              sx={{
+                                opacity: 0.8,
+                              }}
+                            >
+                              {item.label}
+                            </Typography>
+                          </Box>
+                        </MotionGrid>
+                      ))}
+                    </Grid>
+                  </Box>
+                </MotionGrid>
+
                 <Grid
-                  size={{ xs: 12, md: 4.5 }}
+                  size={{ xs: 12, md: 5 }}
                   container
                   sx={{
-                    maxHeight: { xs: "90vh", lg: "75vh" },
+                    height: "100%",
+                    borderLeft: "1px solid #eef2f7",
+                    bgcolor: "#fff",
                     overflowY: "auto",
+                    overflowX: "hidden",
                     position: "relative",
                   }}
                 >
                   <Grid
                     size={12}
                     container
-                    justifyContent="space-between"
-                    alignItems="center"
                     sx={{
                       position: "sticky",
-                      bgcolor: "#f1f4f9",
-                      zIndex: 4444,
                       top: 0,
-                      right: 0,
-                      px: 2,
+                      zIndex: 20,
+                      px: 4,
+                      py: 2,
+                      mb: 1,
+                      bgcolor: "rgba(255,255,255,.92)",
+                      backdropFilter: "blur(16px)",
+                      borderBottom: "1px solid #eef2f7",
                     }}
                   >
-                    <Page.Box
-                      sx={{
-                        height: { xs: "60px", lg: "100px" },
-                        width: { xs: "180px", lg: "300px" },
+                    {" "}
+                    <MotionBox
+                      initial={{ opacity: 0, x: 30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.45 }}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        marginTop: 3,
                       }}
                     >
-                      <img
-                        src="/images/logo/My-Health-Opinions1500-500.png"
-                        alt="logo"
-                        height="100%"
-                        width="100%"
+                      <Box
+                        component="img"
+                        src="/images/logo/logo.png"
+                        sx={{
+                          display: { xs: "block", md: "none" },
+                          height: 50,
+                        }}
                       />
-                    </Page.Box>
-                    <IconButton
-                      sx={{
-                        "&:hover": { color: "red" },
-                      }}
-                      onClick={onClose}
+                      <Box>
+                        <Typography
+                          sx={{
+                            fontSize: {
+                              xs: 24,
+                              xl: 28,
+                            },
+                            fontWeight: 700,
+                            color: "primary.main",
+                            lineHeight: 1.1,
+                            mt: 1,
+                            mb: 0.5,
+                          }}
+                        >
+                          Create your account
+                        </Typography>
+
+                        <Typography
+                          sx={{
+                            mt: 0.5,
+                            color: "text.secondary",
+                            fontSize: { xs: 12, xl: 14 },
+                          }}
+                        >
+                          Create your free account to start participating in
+                          paid healthcare research.
+                        </Typography>
+                      </Box>
+                    </MotionBox>
+                    <motion.div
+                      whileHover={{ rotate: 90 }}
+                      whileTap={{ scale: 0.9 }}
+                      style={{ position: "absolute", top: 20, right: 30 }}
                     >
-                      <CloseIcon
-                        sx={{ fontSize: { xs: "16px", md: "26px" } }}
-                      />
-                    </IconButton>
+                      <IconButton
+                        onClick={onClose}
+                        sx={{
+                          border: "1px solid #e3e8ef",
+                          bgcolor: "#fff",
+
+                          "&:hover": {
+                            bgcolor: "#f8fafc",
+                          },
+                        }}
+                      >
+                        <CloseIcon />
+                      </IconButton>
+                    </motion.div>
                   </Grid>
-                  <Grid
+                  <MotionGrid
+                    initial={{
+                      opacity: 0,
+                      x: 30,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                    }}
+                    transition={{
+                      duration: 0.5,
+                      delay: 0.2,
+                    }}
                     component="form"
                     size={12}
                     container
-                    direction="column"
-                    alignItems="center"
-                    onSubmit={handleSubmit(onSubmit, (errors) => {
-                      console.log(errors);
-                    })}
-                    spacing={0}
+                    onSubmit={handleSubmit(onSubmit)}
                     sx={{
-                      px: { xs: 2, md: 4 },
+                      flex: 1,
+                      overflowY: "auto",
+                      overflowX: "hidden",
+                      px: { xs: 3, md: 4 },
                       pb: 4,
+                      pt: 2,
                     }}
                   >
-                    <Page.Text
-                      sx={{
-                        alignSelf: "flex-start",
-                        textAlign: "center",
-                        fontSize: { xs: "18px", md: "26px" },
-                        fontWeight: 600,
-                        color: "#016550",
-
-                        my: 2,
-                      }}
-                    >
-                      Signup
-                    </Page.Text>
-                    <Grid size={12} container direction="column" spacing={1.2}>
+                    <Grid container size={12} spacing={2.5}>
                       {!userType && (
                         <Grid size={12}>
-                          <Page.Text
-                            sx={{ fontWeight: 500, color: "#555", mb: 0.5 }}
+                          <Typography
+                            sx={{
+                              mb: 1,
+                              fontWeight: 600,
+                              color: "text.primary",
+                            }}
                           >
-                            Please select your identity{" "}
-                            <span style={{ color: "red" }}>*</span>
-                          </Page.Text>
+                            Select your profile
+                          </Typography>
                           <AccountTypeButtonGroup
                             control={control}
                             name="category"
@@ -379,7 +634,8 @@ export default function SignUp({
                           />
                         </Grid>
                       )}
-                      <Grid size={12}>
+
+                      <Grid size={{ xs: 12, md: 6 }}>
                         <Form.Select
                           {...register("name.salutation")}
                           control={control}
@@ -392,9 +648,37 @@ export default function SignUp({
                             { value: "Mx. ", label: "Mx." },
                           ]}
                           labelText="Salutation"
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              height: 54,
+
+                              borderRadius: 3,
+
+                              background: "#fff",
+
+                              transition: ".25s",
+
+                              "&:hover": {
+                                boxShadow: "0 3px 12px rgba(0,0,0,.04)",
+                              },
+
+                              "&.Mui-focused": {
+                                boxShadow: "0 8px 24px rgba(1,35,98,.08)",
+                              },
+                            },
+                          }}
                         />
                       </Grid>
-                      <Grid size={12}>
+                      <Grid size={{ xs: 12, md: 6 }}>
+                        <GenderRadioGroup
+                          name={"gender"}
+                          control={control}
+                          label="Gender"
+                          errors={errors?.gender}
+                          validations={user.gender}
+                        />
+                      </Grid>
+                      <Grid size={{ xs: 12, md: 6 }}>
                         <Form.Input
                           {...register("name.first")}
                           control={control}
@@ -402,9 +686,28 @@ export default function SignUp({
                           required={true}
                           errors={errors?.name?.first}
                           validations={user.name.first}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              height: 54,
+
+                              borderRadius: 3,
+
+                              background: "#fff",
+
+                              transition: ".25s",
+
+                              "&:hover": {
+                                boxShadow: "0 3px 12px rgba(0,0,0,.04)",
+                              },
+
+                              "&.Mui-focused": {
+                                boxShadow: "0 8px 24px rgba(1,35,98,.08)",
+                              },
+                            },
+                          }}
                         />
                       </Grid>
-                      <Grid size={12}>
+                      <Grid size={{ xs: 12, md: 6 }}>
                         <Form.Input
                           {...register("name.last")}
                           control={control}
@@ -412,38 +715,57 @@ export default function SignUp({
                           required={true}
                           errors={errors?.name?.last}
                           validations={user.name.last}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              height: 54,
+
+                              borderRadius: 3,
+
+                              background: "#fff",
+
+                              transition: ".25s",
+
+                              "&:hover": {
+                                boxShadow: "0 3px 12px rgba(0,0,0,.04)",
+                              },
+
+                              "&.Mui-focused": {
+                                boxShadow: "0 8px 24px rgba(1,35,98,.08)",
+                              },
+                            },
+                          }}
                         />
                       </Grid>
-                      <GenderRadioGroup
-                        name={"gender"}
-                        control={control}
-                        label="Gender"
-                        errors={errors?.gender}
-                        validations={user.gender}
-                      />
-                      <Grid size={12}>
+
+                      <Grid size={{ xs: 12, md: 6 }}>
                         <Form.Date
                           {...register("dob")}
                           control={control}
                           labelText="Date of Birth"
-                          required={true}
+                          required
                           dateRange={[minDOB, maxDOB]}
                           errors={errors?.dob}
                           validations={user.dob}
-                        />
-                      </Grid>
-                      <Grid size={12}>
-                        <Form.Input
-                          {...register("mail")}
-                          control={control}
-                          labelText="Email"
-                          required={true}
-                          errors={errors?.mail}
-                          validations={user.email}
+                          sx={{
+                            "& .MuiPickersInputBase-root": {
+                              height: 54,
+                              borderRadius: 3,
+                              backgroundColor: "#fff",
+                              transition: ".25s",
+
+                              "&:hover": {
+                                boxShadow: "0 3px 12px rgba(0,0,0,.04)",
+                              },
+
+                              "&.Mui-focused": {
+                                boxShadow: "0 8px 24px rgba(1,35,98,.08)",
+                              },
+                            },
+                          }}
                         />
                       </Grid>
 
-                      <Grid size={12}>
+                      <Grid size={{ xs: 12, md: 6 }}>
                         <Form.Phone
                           {...register("phone")}
                           control={control}
@@ -456,199 +778,385 @@ export default function SignUp({
                           onBlur={(e) => {
                             console.log(form.getValues());
                           }}
+                          sx={{
+                            inputStyle: {
+                              height: "54px",
+                              borderRadius: "12px",
+                              background: "#fff",
+                              transition: ".25s",
+                              boxShadow: "none",
+                            },
+                            buttonStyle: {
+                              borderTopLeftRadius: "12px",
+                              borderBottomLeftRadius: "12px",
+                            },
+                          }}
+                        />
+                      </Grid>
+                      <Grid size={12}>
+                        <Form.Input
+                          {...register("mail")}
+                          control={control}
+                          labelText="Email"
+                          required={true}
+                          errors={errors?.mail}
+                          validations={user.email}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              height: 54,
+
+                              borderRadius: 3,
+
+                              background: "#fff",
+
+                              transition: ".25s",
+
+                              "&:hover": {
+                                boxShadow: "0 3px 12px rgba(0,0,0,.04)",
+                              },
+
+                              "&.Mui-focused": {
+                                boxShadow: "0 8px 24px rgba(1,35,98,.08)",
+                              },
+                            },
+                          }}
                         />
                       </Grid>
 
-                      <Grid
-                        size={12}
-                        container
-                        spacing={0}
-                        alignItems="flex-start"
-                        mt={3}
-                      >
-                        <Form.Checkbox
-                          size="medium"
-                          {...register("agreedtoterms")}
-                          control={control}
-                        />
-                        <Typography sx={{ flex: 1, ml: -1.5 }}>
-                          I agree for My Health Opinions Panel to use my
-                          information for the purposes of determining my
-                          eligibility and for contacting me in relation to
-                          participation in market research surveys. Also, I am
-                          agreeing to{" "}
-                          <Typography
-                            component={"a"}
-                            href="/terms"
-                            target="_blank"
+                      <Collapse in={!!btnDisabled} sx={{ width: "100%" }}>
+                        <Grid
+                          sx={{
+                            py: 1,
+                            my: 1,
+                            px: 2,
+                            border: "1px solid",
+                            borderColor: "divider",
+                            bgcolor: "#fff",
+                            borderRadius: 2,
+                          }}
+                          size={12}
+                          container
+                          direction="row"
+                          alignItems="center"
+                        >
+                          <Captcha
+                            onVerified={() => {
+                              setBtnDisabled(false);
+                            }}
+                          />
+                        </Grid>
+                      </Collapse>
+                      <Grid size={12} mt={1}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            gap: 1.5,
+                            p: 2,
+                            border: "1px solid",
+                            borderColor: "divider",
+                            borderRadius: 3,
+                            bgcolor: "#fafbfc",
+                            transition: ".25s",
+
+                            "&:hover": {
+                              borderColor: "secondary.light",
+                              bgcolor: "#fff",
+                            },
+                          }}
+                        >
+                          <Form.Checkbox
+                            size="medium"
+                            {...register("agreedtoterms")}
+                            control={control}
                             sx={{
-                              textDecoration: "underline",
-                              color: "#016550",
+                              mt: 0.25,
+                            }}
+                          />
+
+                          <Typography
+                            sx={{
+                              flex: 1,
+                              fontSize: 14,
+                              color: "text.secondary",
+                              lineHeight: 1.8,
                             }}
                           >
-                            Terms & Conditions
-                          </Typography>{" "}
-                          and{" "}
-                          <Typography
-                            component={"a"}
-                            href="/privacy"
-                            target="_blank"
-                            sx={{
-                              textDecoration: "underline",
-                              color: "#016550",
-                            }}
-                          >
-                            Privacy Policy.
+                            I agree for{" "}
+                            <Typography
+                              component="span"
+                              sx={{
+                                fontWeight: 600,
+                                color: "primary.main",
+                              }}
+                            >
+                              MyHealth
+                            </Typography>
+                            <Typography
+                              component="span"
+                              sx={{
+                                fontWeight: 600,
+                                color: "secondary.main",
+                              }}
+                            >
+                              Opinions
+                            </Typography>{" "}
+                            to use my information for determining my eligibility
+                            and contacting me regarding market research surveys.
+                            I also agree to the{" "}
+                            <Typography
+                              component="a"
+                              href="/terms"
+                              target="_blank"
+                              sx={{
+                                color: "secondary.main",
+                                fontWeight: 600,
+                                textDecoration: "none",
+
+                                "&:hover": {
+                                  textDecoration: "underline",
+                                },
+                              }}
+                            >
+                              Terms & Conditions
+                            </Typography>{" "}
+                            and{" "}
+                            <Typography
+                              component="a"
+                              href="/privacy"
+                              target="_blank"
+                              sx={{
+                                color: "secondary.main",
+                                fontWeight: 600,
+                                textDecoration: "none",
+
+                                "&:hover": {
+                                  textDecoration: "underline",
+                                },
+                              }}
+                            >
+                              Privacy Policy
+                            </Typography>
+                            .
                           </Typography>
-                        </Typography>
+                        </Box>
                       </Grid>
-                      <Page.MuiButton
-                        type="submit"
-                        variant="contained"
-                        color="secondary"
-                        loading={isLoading}
-                        loadingIndicator="Signing Up..."
-                        disabled={!Boolean(form.watch("agreedtoterms"))}
-                        sx={{
-                          bgcolor: "#016550",
-                          mt: 2,
-                          mb: 1,
-                          p: 1,
-                          fontSize: 14,
-                          fontWeight: 600,
-                          textTransform: "none",
-                          color: "white",
-                        }}
+                      <motion.div
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                        style={{ width: "100%" }}
                       >
-                        Sign Up
-                      </Page.MuiButton>
+                        <Page.MuiButton
+                          fullWidth
+                          type="submit"
+                          variant="contained"
+                          color="primary"
+                          loading={isLoading}
+                          loadingIndicator="Creating your account..."
+                          disabled={btnDisabled || !form.watch("agreedtoterms")}
+                          sx={{
+                            mt: 3,
+                            height: 56,
+                            borderRadius: 3,
+                            fontSize: 16,
+                            fontWeight: 700,
+                            textTransform: "none",
+                            color: "#fff",
+
+                            background:
+                              "linear-gradient(135deg,#012362 0%,#0b4bb3 100%)",
+
+                            boxShadow: "0 12px 30px rgba(1,35,98,.22)",
+
+                            transition: ".3s",
+
+                            "&:hover": {
+                              background:
+                                "linear-gradient(135deg,#001b55 0%,#063686 100%)",
+                              transform: "translateY(-2px)",
+                              boxShadow: "0 18px 40px rgba(1,35,98,.30)",
+                            },
+
+                            "&:active": {
+                              transform: "translateY(0)",
+                            },
+
+                            "&.Mui-disabled": {
+                              color: "#fff",
+                              background: "#cbd5e1",
+                              boxShadow: "none",
+                            },
+                          }}
+                        >
+                          Sign Up
+                        </Page.MuiButton>
+                      </motion.div>
                       {!query?.email && (
                         <>
                           {authProviders.length > 0 && (
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 2,
-                                my: 0.5,
+                                mt: 1,
+                                p: 2.5,
+                                border: "1px solid",
+                                borderColor: "divider",
+                                borderRadius: 3,
+                                bgcolor: "#fafbfc",
                               }}
                             >
-                              <Box
-                                sx={{
-                                  flex: 1,
-                                  height: "1px",
-                                  bgcolor: "divider",
-                                }}
-                              />
-
                               <Typography
-                                variant="body2"
                                 sx={{
+                                  textAlign: "center",
+                                  fontWeight: 600,
                                   color: "text.secondary",
-                                  fontSize: 13,
-                                  whiteSpace: "nowrap",
+                                  mb: 2,
                                 }}
                               >
-                                or continue with
+                                Continue with
                               </Typography>
 
-                              <Box
-                                sx={{
-                                  flex: 1,
-                                  height: "1px",
-                                  bgcolor: "divider",
-                                }}
-                              />
-                            </Box>
-                          )}
-                          {authProviders.length <= 2 ? (
-                            <Box display="flex" flexDirection="column" gap={1}>
-                              {authProviders.map((provider, i) => (
-                                <Page.MuiButton
-                                  component={"a"}
-                                  href={provider.href}
-                                  key={i}
-                                  fullWidth
-                                  variant="outlined"
-                                  color="primary"
-                                  startIcon={provider.icon}
-                                  sx={{
-                                    borderRadius: "8px",
-                                    padding: "9px",
-                                    fontWeight: 600,
-                                    textTransform: "none",
-                                    borderWidth: "1px",
-                                    "&:hover": {
-                                      borderWidth: "1px",
-                                      backgroundColor: "transparent",
-                                    },
-                                  }}
-                                >
-                                  {provider.label}
-                                </Page.MuiButton>
-                              ))}
-                            </Box>
-                          ) : (
-                            <Box
-                              display="flex"
-                              justifyContent="center"
-                              alignItems="center"
-                              gap={{ xs: 0.8, sm: 1.5 }}
-                              flexWrap="wrap"
-                              mb={0.5}
-                            >
-                              {authProviders.map((provider, i) => (
-                                <IconButton
-                                  component={"a"}
-                                  href={provider.href}
-                                  onClick={provider.onClick}
-                                  key={i}
-                                  title={provider?.label}
-                                  sx={{
-                                    border: "1px solid",
-                                    borderColor: "primary.main",
-                                    color: "primary.main",
-                                    width: 42,
-                                    height: 42,
-                                    transition: "all 0.2s ease",
-                                    "&:hover": {
-                                      backgroundColor: "action.hover",
-                                      transform: "translateY(-1px)",
-                                    },
-                                  }}
-                                >
-                                  {provider.icon}
-                                </IconButton>
-                              ))}
+                              <Grid container spacing={1.5}>
+                                {authProviders.map((provider, i) => (
+                                  <MotionGrid
+                                    initial={{ opacity: 0, y: 12 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.08 }}
+                                    key={i}
+                                    size={{ xs: 6, sm: 4 }}
+                                  >
+                                    <motion.div
+                                      whileHover={{ y: -2 }}
+                                      whileTap={{ scale: 0.98 }}
+                                    >
+                                      <Page.MuiButton
+                                        component="a"
+                                        href={provider.href}
+                                        fullWidth
+                                        variant="outlined"
+                                        startIcon={provider.icon}
+                                        sx={{
+                                          height: 48,
+                                          borderRadius: 2.5,
+                                          textTransform: "none",
+                                          fontWeight: 600,
+                                          bgcolor: "#fff",
+                                          borderColor: "#d9e2ec",
+
+                                          "&:hover": {
+                                            bgcolor: "#fff",
+                                            borderColor: "secondary.main",
+                                            boxShadow:
+                                              "0 8px 20px rgba(0,0,0,.08)",
+                                            transform: "translateY(-2px)",
+                                          },
+                                        }}
+                                      >
+                                        {provider.name ??
+                                          provider.label.replace(
+                                            "Continue with ",
+                                            "",
+                                          )}
+                                      </Page.MuiButton>
+                                    </motion.div>
+                                  </MotionGrid>
+                                ))}
+                              </Grid>
                             </Box>
                           )}
                         </>
                       )}
-                      <Grid
-                        size={12}
-                        container
-                        justifyContent="center"
-                        alignItems="center"
-                        mt={1}
-                      >
-                        <Page.Text>Already have an account?</Page.Text>
-                        <Page.Text
+                      <Grid size={12} mt={2}>
+                        <Box
                           sx={{
-                            color: "secondary.main",
-                            cursor: "pointer",
-                            "&:hover": {
-                              textDecoration: "underline",
-                            },
-                          }}
-                          onClick={() => {
-                            (onClose(), setOpenLogin(true));
+                            py: 2.5,
+                            // borderTop: "1px solid",
+                            // borderColor: "divider",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: 1,
                           }}
                         >
-                          Log in
-                        </Page.Text>
+                          <Typography
+                            sx={{
+                              color: "text.secondary",
+                              fontSize: 14,
+                            }}
+                          >
+                            Already have an account?
+                          </Typography>
+
+                          <Typography
+                            onClick={() => {
+                              onClose();
+                              setOpenLogin(true);
+                            }}
+                            sx={{
+                              color: "secondary.main",
+                              fontWeight: 700,
+                              cursor: "pointer",
+                              transition: ".2s",
+
+                              "&:hover": {
+                                color: "secondary.dark",
+                                textDecoration: "underline",
+                              },
+                            }}
+                          >
+                            Sign In
+                          </Typography>
+                        </Box>
                       </Grid>
                     </Grid>
-                  </Grid>
+                    <Grid
+                      container
+                      size={12}
+                      alignItems="center"
+                      justifyContent="center"
+                      spacing={4}
+                      sx={{
+                        // position: "absolute",
+                        // bottom: 10,
+                        // left: 0,
+                        // right: 0,
+                        // zIndex: 2,
+                        borderTop: "1px solid",
+                        borderColor: "divider",
+                        pt: 2,
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Page.Text
+                        sx={{ fontSize: "13px", color: "text.secondary" }}
+                      >
+                        Follow us on
+                      </Page.Text>
+                      <Page.Box
+                        sx={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: "20px",
+
+                          justifyContent: "center",
+                          alignItems: "center",
+                          listStyle: "none",
+                          textDecoration: "none",
+                        }}
+                      >
+                        {socials.map((social) => (
+                          <Page.Link
+                            key={social.name}
+                            href={social.link}
+                            underline="none"
+                            target="_blank"
+                          >
+                            {social.icon}
+                          </Page.Link>
+                        ))}
+                      </Page.Box>
+                    </Grid>
+                  </MotionGrid>
                 </Grid>
               </Grid>
             )}
@@ -656,189 +1164,305 @@ export default function SignUp({
               <Grid
                 size={12}
                 container
+                justifyContent="center"
                 alignItems="center"
-                sx={{
-                  minHeight: { xs: "90vh", lg: "80vh" },
-                  p: { xs: 1, md: 6 },
-                  border: 1.5,
-                  borderColor: "#33aaca",
-                }}
               >
-                <Grid
-                  size={12}
-                  container
-                  spacing={4}
-                  alignItems="center"
-                  direction="column"
+                <Box
+                  sx={{
+                    width: "100%",
+                    // maxWidth: 720,
+                    textAlign: "center",
+                    p: { xs: 3, md: 5 },
+                    borderRadius: 4,
+                    border: "1px solid",
+                    borderColor: "#e8edf5",
+                    boxShadow: "0 20px 60px rgba(0,0,0,.08)",
+                    bgcolor: "#fff",
+                  }}
                 >
-                  <CheckCircleIcon color="primary" sx={{ fontSize: "80px" }} />
-                  <Page.Text
+                  <Avatar
                     sx={{
-                      fontSize: { xs: "18px", md: "26px" },
-                      fontWeight: 600,
-                      textAlign: "center",
+                      width: 90,
+                      height: 90,
+                      bgcolor: "#eafaf2",
+                      color: "#1ba96b",
+                      mx: "auto",
+                      mb: 3,
                     }}
                   >
-                    Thanks for signing up with{" "}
-                    <Page.Text
+                    <CheckCircleIcon sx={{ fontSize: 54 }} />
+                  </Avatar>
+
+                  <Typography
+                    sx={{
+                      fontSize: { xs: 28, md: 34 },
+                      fontWeight: 700,
+                      color: "primary.main",
+                    }}
+                  >
+                    Registration Successful!
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      mt: 1,
+                      fontSize: 17,
+                      color: "text.secondary",
+                    }}
+                  >
+                    Welcome to{" "}
+                    <Box
                       component="span"
                       sx={{
                         color: "secondary.main",
-                        fontSize: { xs: "18px", md: "26px" },
-                        fontWeight: 600,
+                        fontWeight: 700,
                       }}
                     >
-                      MyHealthOpinions
-                    </Page.Text>{" "}
-                    - A Frequent Research Healthcare Panel Community.{" "}
-                  </Page.Text>
-                  <Page.Text
+                      My Health Opinions
+                    </Box>
+                  </Typography>
+
+                  <Box
                     sx={{
-                      fontSize: "16px",
-                      fontWeight: 500,
-                      textAlign: "center",
-                      borderRadius: 5,
-                      bgcolor: "rgba(163, 243, 206, 0.21)",
-                      border: "1px solid #f4f4f4",
-                      p: 4,
+                      mt: 4,
+                      p: 3,
+                      borderRadius: 3,
+                      bgcolor: "#f8fafc",
+                      border: "1px solid #e5e7eb",
+                      textAlign: "left",
                     }}
                   >
-                    Please check your inbox/Spam and{" "}
-                    <strong>click the verification link</strong> to confirm your
-                    email and <strong>activate your account.</strong> Once
-                    verified, you will be able to create your password and
-                    access available surveys and research opportunities surveys
-                    made just for you!
-                  </Page.Text>
+                    <Typography
+                      sx={{
+                        fontWeight: 700,
+                        mb: 2,
+                      }}
+                    >
+                      What's next?
+                    </Typography>
+
+                    <Stack spacing={2}>
+                      {[
+                        "Check your Inbox or Spam folder.",
+                        "Click the verification link in the email.",
+                        "Create your password.",
+                        "Start participating in paid healthcare surveys.",
+                      ].map((item) => (
+                        <Box
+                          key={item}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1.5,
+                          }}
+                        >
+                          <CheckCircleIcon
+                            sx={{
+                              color: "secondary.main",
+                              fontSize: 20,
+                            }}
+                          />
+
+                          <Typography>{item}</Typography>
+                        </Box>
+                      ))}
+                    </Stack>
+                  </Box>
+
                   <Page.MuiButton
                     variant="contained"
-                    color="secondary"
-                    sx={{ fontWeight: "bold", mt: 2, color: "white" }}
+                    color="primary"
                     onClick={onClose}
+                    sx={{
+                      mt: 4,
+                      px: 5,
+                      height: 54,
+                      borderRadius: 3,
+                      fontWeight: 700,
+                      textTransform: "none",
+                      color: "#fff",
+                    }}
                   >
-                    Go To Home
+                    Go to Home
                   </Page.MuiButton>
-                </Grid>
+
+                  <Typography
+                    sx={{
+                      mt: 3,
+                      fontSize: 13,
+                      color: "text.secondary",
+                    }}
+                  >
+                    This window will automatically close in 60 seconds.
+                  </Typography>
+                </Box>
               </Grid>
             )}
             {status == "duplicate" && (
               <Grid
                 size={12}
                 container
+                justifyContent="center"
                 alignItems="center"
-                sx={{
-                  minHeight: { xs: "90vh", lg: "80vh" },
-                  p: { xs: 1, md: 6 },
-                  border: 1.5,
-                  borderColor: "#33aaca",
-                }}
               >
-                <Grid
-                  size={12}
-                  container
-                  spacing={4}
-                  alignItems="center"
-                  direction="column"
+                <Box
+                  sx={{
+                    width: "100%",
+                    p: { xs: 3, md: 5 },
+                    borderRadius: 4,
+                    border: "1px solid",
+                    borderColor: "#e8edf5",
+                    boxShadow: "0 20px 60px rgba(0,0,0,.08)",
+                    textAlign: "center",
+                  }}
                 >
-                  <ErrorIcon color="primary" sx={{ fontSize: "80px" }} />
-                  <Page.Text
-                    component="span"
+                  <Avatar
                     sx={{
-                      color: "secondary.main",
-                      fontSize: { xs: "18px", md: "26px" },
-                      fontWeight: 600,
+                      width: 90,
+                      height: 90,
+                      mx: "auto",
+                      mb: 3,
+                      bgcolor: "#fff7e6",
+                      color: "#fe7e00",
+                    }}
+                  >
+                    <ErrorIcon sx={{ fontSize: 52 }} />
+                  </Avatar>
+
+                  <Typography
+                    sx={{
+                      fontSize: { xs: 28, md: 34 },
+                      fontWeight: 700,
+                      color: "primary.main",
                     }}
                   >
                     Email Already Registered
-                  </Page.Text>{" "}
-                  <Page.Box
+                  </Typography>
+
+                  <Typography
                     sx={{
-                      textAlign: "center",
-                      borderRadius: 5,
-                      bgcolor: "rgba(163, 243, 206, 0.21)",
-                      border: "1px solid #f4f4f4",
-                      p: 4,
+                      mt: 1,
+                      color: "text.secondary",
+                      fontSize: 16,
+                      lineHeight: 1.8,
                     }}
                   >
-                    <Page.Text
+                    We found an account associated with this email address.
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      mt: 4,
+                      p: 3,
+                      borderRadius: 3,
+                      bgcolor: "#fafbfc",
+                      border: "1px solid #e5e7eb",
+                      textAlign: "left",
+                    }}
+                  >
+                    <Typography
                       sx={{
-                        fontSize: "16px",
-                        fontWeight: 500,
+                        fontWeight: 700,
+                        mb: 2,
                       }}
                     >
-                      Please check your inbox/Spam and{" "}
-                      <strong>click the verification link</strong> to confirm
-                      your email and <strong>activate your account.</strong>{" "}
-                      Once verified, you will be able to create your password
-                      and access available surveys and research opportunities
-                      surveys made just for you!
-                    </Page.Text>
-                    <Page.Text
-                      sx={{
-                        mt: 2,
-                        fontSize: "16px",
-                        fontWeight: 500,
-                      }}
+                      What should you do?
+                    </Typography>
+
+                    <Stack spacing={2}>
+                      <Box display="flex" gap={1.5}>
+                        <CheckCircleIcon color="secondary" />
+                        <Typography>
+                          Check your Inbox or Spam folder for your verification
+                          email.
+                        </Typography>
+                      </Box>
+
+                      <Box display="flex" gap={1.5}>
+                        <CheckCircleIcon color="secondary" />
+                        <Typography>
+                          If the verification link has expired, request a new
+                          verification email below.
+                        </Typography>
+                      </Box>
+
+                      <Box display="flex" gap={1.5}>
+                        <CheckCircleIcon color="secondary" />
+                        <Typography>
+                          Once verified, you'll be able to create your password
+                          and sign in.
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  </Box>
+
+                  <Stack
+                    direction={{ xs: "column", sm: "row" }}
+                    spacing={2}
+                    justifyContent="center"
+                    mt={4}
+                  >
+                    <motion.div
+                      whileHover={{ y: -2 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      In case, verification link is expired, please request a
-                      new one by clicking on{" "}
-                      <strong>Resend Verification Email</strong> button below.
-                    </Page.Text>
-                  </Page.Box>
-                  <Page.Box sx={{ display: "flex", gap: 2 }}>
-                    <Page.MuiButton
-                      variant="contained"
-                      color="secondary"
-                      disabled={cooldown > 0}
-                      sx={{
-                        position: "relative",
-                        fontWeight: "bold",
-                        mt: 2,
-                        color: "white",
-                        background:
-                          cooldown > 0
-                            ? `linear-gradient(to right,
-                              #00c896 ${progress}%,
-                              rgba(255,255,255,0.2) ${progress}%
-                            )`
-                            : undefined,
-                        padding: "12px 24px",
-                        "&::before": {
-                          content: '""',
-                          position: "absolute",
-                          inset: 3,
-                          backgroundColor: "#016550",
-                          borderRadius: "999px",
-                          zIndex: -1,
-                        },
-                        "& > span": {
-                          position: "relative",
-                          zIndex: 1,
-                        },
-                      }}
-                      onClick={async () => {
-                        let resp = await api.post(`/api/v1/user/resend`, {
-                          ...form.watch(),
-                          action: "resend-otp",
-                        });
-                        useToast(resp);
-                        setCooldown(RESEND_SECONDS);
-                      }}
-                    >
-                      {cooldown > 0
-                        ? `Resend Email Again in ${cooldown}s`
-                        : "Resend Verification Email"}
-                    </Page.MuiButton>{" "}
+                      <Page.MuiButton
+                        variant="contained"
+                        color="secondary"
+                        disabled={cooldown > 0}
+                        onClick={async () => {
+                          let resp = await api.post(`/api/v1/user/resend`, {
+                            ...form.watch(),
+                            action: "resend-otp",
+                          });
+
+                          useToast(resp);
+                          setCooldown(RESEND_SECONDS);
+                        }}
+                        sx={{
+                          minWidth: 260,
+                          height: 54,
+                          borderRadius: 3,
+                          color: "#fff",
+                          fontWeight: 700,
+                          textTransform: "none",
+                        }}
+                      >
+                        {cooldown > 0
+                          ? `Resend in ${cooldown}s`
+                          : "Resend Verification Email"}
+                      </Page.MuiButton>
+                    </motion.div>
+
                     <Page.MuiButton
                       variant="outlined"
-                      color="secondary"
-                      sx={{ fontWeight: "bold", mt: 2, borderWidth: 3 }}
+                      color="primary"
                       onClick={onClose}
+                      sx={{
+                        minWidth: 180,
+                        height: 54,
+                        borderRadius: 3,
+                        fontWeight: 700,
+                        textTransform: "none",
+                      }}
                     >
-                      Go To Home
+                      Go Home
                     </Page.MuiButton>
-                  </Page.Box>
-                </Grid>
+                  </Stack>
+
+                  {cooldown > 0 && (
+                    <Typography
+                      sx={{
+                        mt: 2,
+                        color: "text.secondary",
+                        fontSize: 13,
+                      }}
+                    >
+                      You can request another verification email once the
+                      countdown finishes.
+                    </Typography>
+                  )}
+                </Box>
               </Grid>
             )}
           </>
@@ -886,7 +1510,7 @@ function GenderRadioGroup({
             display: "flex",
           }}
         >
-          <Grid size={12} container direction="column" spacing={0.5}>
+          <Grid size={12} container direction="column" spacing={0}>
             <Typography sx={{ fontWeight: 500, color: "#555" }}>
               {validations?.required ? <RequiredLabel label={label} /> : label}:
             </Typography>
@@ -896,65 +1520,84 @@ function GenderRadioGroup({
               value={field.value || ""}
               onChange={(e) => field.onChange(e.target.value)}
               sx={{
-                display: "flex",
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
                 gap: 1.5,
-                minHeight: 36,
-                alignItems: "center",
+                width: "100%",
               }}
             >
-              {options.map((option) => (
-                <Page.Box
-                  key={option.value}
-                  sx={{
-                    border:
-                      field.value === option.value
-                        ? "none"
-                        : "2px solid #9fefc9",
-                    backgroundColor:
-                      field.value === option.value ? "#016550" : "transparent",
-                    borderRadius: 1,
-                    transition: "background-color 0.2s ease",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: 32,
-                    height: 32,
-                    "&:hover": {
-                      backgroundColor:
-                        field.value === option.value
-                          ? "primary.main"
-                          : "action.hover",
-                    },
-                  }}
-                >
-                  <Tooltip title={option.label} placement="top">
-                    <FormControlLabel
+              {options.map((option) => {
+                const selected = field.value === option.value;
+
+                return (
+                  <Box
+                    key={option.value}
+                    onClick={() => field.onChange(option.value)}
+                    sx={{
+                      cursor: "pointer",
+                      width: "100%",
+                    }}
+                  >
+                    <Radio
                       value={option.value}
-                      control={
-                        <Radio
-                          checked={field.value === option.value}
-                          icon={option.icon}
-                          checkedIcon={option.icon}
-                          aria-label={option.label}
+                      checked={selected}
+                      sx={{ display: "none" }}
+                    />
+                    <Tooltip title={option.value} placement="top">
+                      <Box
+                        sx={{
+                          height: 54,
+                          width: "100%",
+                          borderRadius: 2,
+                          border: (theme) =>
+                            `1px solid ${
+                              selected
+                                ? theme.palette.secondary.main
+                                : theme.palette.secondary.light
+                            }`,
+                          bgcolor: selected ? "secondary.dark" : "#fff",
+
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+
+                          transition: ".25s",
+
+                          "&:hover": {
+                            borderColor: "secondary.main",
+                            bgcolor: selected
+                              ? "secondary.main"
+                              : "secondary.light",
+                          },
+                        }}
+                      >
+                        <Box
                           sx={{
-                            "& .MuiSvgIcon-root": {
-                              fontSize: 22,
-                              color: hasError
-                                ? "error.main"
-                                : field.value === option.value
-                                  ? "white"
-                                  : "secondary.main",
+                            color: selected ? "#fff" : "secondary.main",
+                            "& svg": {
+                              fontSize: 28,
                             },
                           }}
-                        />
-                      }
-                      sx={{
-                        m: 0,
-                      }}
-                    />
-                  </Tooltip>
-                </Page.Box>
-              ))}
+                        >
+                          {option.icon}
+                        </Box>
+
+                        {/* <Typography
+                        sx={{
+                          mt: 0.5,
+                          fontWeight: 600,
+                          fontSize: 13,
+                          color: selected ? "#fff" : "text.primary",
+                          }}
+                          >
+                          {option.label}
+                      </Typography> */}
+                      </Box>
+                    </Tooltip>
+                  </Box>
+                );
+              })}
             </RadioGroup>
           </Grid>
           {hasError && errorMessage && (
@@ -973,17 +1616,17 @@ function AccountTypeButtonGroup({
   control,
   validations,
   errors,
-  isDisabled = false,
   options,
+  isDisabled = false,
 }) {
   const hasError = !!errors;
-  const errorMessage = errors?.message;
 
-  // const options = [
-  //   { label: "Healthcare Professional", value: "Professional" },
-  //   { label: "Patient", value: "Patient" },
-  //   { label: "Caregiver", value: "Care Giver" },
-  // ];
+  const icons = {
+    "healthcare professional": "/images/home/forms/doctor-type.png",
+    patient: "/images/home/forms/patient-type.png",
+    caregiver: "/images/home/forms/caregiver.png",
+    "care giver": "/images/home/forms/caregiver.png",
+  };
 
   return (
     <Controller
@@ -992,68 +1635,82 @@ function AccountTypeButtonGroup({
       rules={validations}
       render={({ field }) => (
         <FormControl fullWidth error={hasError} disabled={isDisabled}>
-          <ToggleButtonGroup
-            value={field.value || ""}
-            size="small"
-            exclusive
-            onChange={(_, value) => {
-              if (value !== null) field.onChange(value);
-            }}
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
-              flexWrap: "nowrap",
-              "& .MuiToggleButton-root": {
-                textTransform: "none",
-                fontWeight: 600,
-                fontSize: 13,
-                px: 2,
-                py: 0.5,
-                color: errorMessage ? "red" : "secondary.main",
-                borderColor: errorMessage ? "red" : "secondary.main",
-              },
-              "& .Mui-selected": {
-                backgroundColor: "#016550 !important",
-                color: "#fff !important",
-                "&:hover": {
-                  backgroundColor: "primary.dark",
-                },
-              },
+          <Grid container spacing={2}>
+            {options.map((option) => {
+              const selected = field.value === option.value;
 
-              // xs only rounded corners
-              "@media (max-width: 600px)": {
-                "& .MuiToggleButton-root": {
-                  borderRadius: 0,
-                  flex: 1,
-                  width: "100%",
-                  justifyContent: "center",
-                },
-                "& .MuiToggleButton-root:first-of-type": {
-                  borderTopLeftRadius: 4,
-                  borderTopRightRadius: 4,
-                },
-                "& .MuiToggleButton-root:last-of-type": {
-                  borderBottomLeftRadius: 4,
-                  borderBottomRightRadius: 4,
-                },
-                "& .MuiToggleButton-root:not(:first-of-type)": {
-                  borderTop: "none",
-                },
-              },
-            }}
-          >
-            {options.map((option) => (
-              <ToggleButton key={option.value} value={option.value}>
-                {option.label}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
+              return (
+                <Grid key={option.value} size={{ xs: 12, lg: 4 }}>
+                  <MotionBox
+                    whileHover={{
+                      y: -4,
+                      scale: 1.02,
+                    }}
+                    whileTap={{
+                      scale: 0.98,
+                    }}
+                    onClick={() => field.onChange(option.value)}
+                    sx={{
+                      cursor: "pointer",
+                      borderRadius: 3,
+                      border: selected ? "2px solid" : "1px solid",
+                      borderColor: selected ? "secondary.main" : "#e5e7eb",
 
-          {errorMessage && (
-            <Page.Text sx={{ color: "red", fontSize: "11px" }}>
-              {errorMessage}
-            </Page.Text>
-          )}
+                      bgcolor: selected ? "rgba(254,126,0,.08)" : "#fff",
+
+                      transition: ".3s",
+
+                      p: 2.5,
+
+                      height: "100%",
+
+                      "&:hover": {
+                        borderColor: "secondary.main",
+                        transform: "translateY(-3px)",
+                        boxShadow: "0 12px 35px rgba(0,0,0,.08)",
+                      },
+                    }}
+                  >
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                    >
+                      <Avatar
+                        src={icons[option.value.toLowerCase()]}
+                        sx={{
+                          width: 58,
+                          height: 58,
+                          bgcolor: "#fff",
+                        }}
+                      />
+
+                      {selected && <CheckCircleIcon color="secondary" />}
+                    </Box>
+
+                    <Typography mt={2} fontWeight={700} fontSize={17}>
+                      {option.label}
+                    </Typography>
+
+                    <Typography
+                      mt={0.5}
+                      color="text.secondary"
+                      fontSize={13}
+                      lineHeight={1.6}
+                    >
+                      {option.value.toLowerCase().includes("professional")
+                        ? "Participate as a medical professional."
+                        : option.value.toLowerCase().includes("patient")
+                          ? "Share your healthcare experience."
+                          : "Provide valuable caregiver insights."}
+                    </Typography>
+                  </MotionBox>
+                </Grid>
+              );
+            })}
+          </Grid>
+
+          {errors?.message && <FormHelperText>{errors.message}</FormHelperText>}
         </FormControl>
       )}
     />

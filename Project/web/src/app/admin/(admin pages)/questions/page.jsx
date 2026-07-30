@@ -177,8 +177,9 @@ export default function () {
               fontSize: "18px",
               display: "inline-block",
               fontWeight: "600",
+              color: "primary.main",
               borderBottom: (theme) =>
-                `2px solid ${theme.palette.primary.main}`,
+                `2px solid ${theme.palette.secondary.dark}`,
               pb: 0.5,
               my: 1,
             }}

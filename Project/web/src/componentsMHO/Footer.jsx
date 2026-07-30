@@ -9,6 +9,24 @@ import XIcon from "@mui/icons-material/X";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
+
+const MotionBox = motion.create(Box);
+const MotionGrid = motion.create(Grid);
+const footerItem = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
 
 function Footer({ sections = [] }) {
   const pathname = usePathname();
@@ -54,7 +72,7 @@ function Footer({ sections = [] }) {
       const sectionLabel = searchParams.get("section");
       if (sectionLabel) {
         const section = sections.find(
-          (s) => s.label === decodeURIComponent(sectionLabel)
+          (s) => s.label === decodeURIComponent(sectionLabel),
         );
         if (section) {
           handleScroll(section.ref);
@@ -82,18 +100,152 @@ function Footer({ sections = [] }) {
   return (
     <Grid
       size={12}
-      sx={{ bgcolor: "#111111", color: "white" }}
+      sx={{
+        background: `
+radial-gradient(circle at top left, rgba(255,255,255,.08) 0, transparent 22%),
+radial-gradient(circle at bottom right, rgba(255,255,255,.06) 0, transparent 18%),
+linear-gradient(135deg,#061B4A 0%,#0A2E73 35%,#12489D 70%,#1B59B5 100%)
+`,
+        position: "relative",
+        overflow: "hidden",
+        color: "white",
+      }}
       container
       justifyContent="center"
-      px={3}
     >
+      <MotionBox
+        animate={{
+          x: [0, 20, 0],
+          y: [0, -20, 0],
+          scale: [1, 1.08, 1],
+        }}
+        transition={{
+          duration: 14,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        sx={{
+          position: "absolute",
+          top: -120,
+          left: -120,
+          width: 280,
+          height: 280,
+          borderRadius: "50%",
+          bgcolor: "rgba(255,255,255,.04)",
+        }}
+      />
+
+      <MotionBox
+        animate={{
+          x: [0, -20, 0],
+          y: [0, 20, 0],
+          scale: [1, 1.12, 1],
+        }}
+        transition={{
+          duration: 18,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        sx={{
+          position: "absolute",
+          bottom: -100,
+          right: -80,
+          width: 220,
+          height: 220,
+          borderRadius: "50%",
+          bgcolor: "rgba(255,255,255,.04)",
+        }}
+      />
+      <MotionBox
+        animate={{ rotate: [0, 360] }}
+        transition={{
+          duration: 50,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        sx={{
+          position: "absolute",
+          top: 80,
+          right: "18%",
+          width: 180,
+          height: 180,
+          borderRadius: "50%",
+          border: "1px solid rgba(255,255,255,.06)",
+        }}
+      />
+      <MotionBox
+        animate={{
+          scale: [1, 1.4, 1],
+          opacity: [0.15, 0.4, 0.15],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+        }}
+        sx={{
+          position: "absolute",
+          left: "40%",
+          bottom: 120,
+          width: 26,
+          height: 26,
+          borderRadius: "50%",
+          bgcolor: "secondary.main",
+          opacity: 0.2,
+        }}
+      />
+      <MotionBox
+        animate={{
+          x: [0, 15, 0],
+          opacity: [0.08, 0.16, 0.08],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+        }}
+        sx={{
+          position: "absolute",
+          right: "28%",
+          bottom: 60,
+          width: 140,
+          height: 80,
+          backgroundImage:
+            "radial-gradient(circle,#fff 1.4px,transparent 1.4px)",
+          backgroundSize: "14px 14px",
+          opacity: 0.12,
+        }}
+      />
+      <MotionBox
+        animate={{
+          scale: [1, 1.1, 1],
+          opacity: [0.05, 0.12, 0.05],
+        }}
+        transition={{
+          duration: 12,
+          repeat: Infinity,
+        }}
+        sx={{
+          position: "absolute",
+          left: "45%",
+          top: -120,
+          width: 420,
+          height: 420,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(255,255,255,.12), transparent 70%)",
+          filter: "blur(10px)",
+        }}
+      />
       <Grid
         size={{ xs: 12, md: 8 }}
         container
         justifyContent="center"
-        spacing={3}
+        maxWidth={1400}
+        px={{ xs: 3, md: 5 }}
+        py={7}
+        spacing={6}
       >
-        <Grid
+        <MotionGrid
+          variants={footerItem}
           size={{ xs: 12, sm: 6, lg: 4 }}
           container
           order={{ xs: 2, lg: 1 }}
@@ -102,7 +254,14 @@ function Footer({ sections = [] }) {
           py={{ xs: 2, lg: 4 }}
         >
           <Typography
-            sx={{ fontWeight: "bold", fontSize: "18px", color: "#888" }}
+            sx={{
+              color: "secondary.main",
+              fontWeight: 700,
+              fontSize: 15,
+              letterSpacing: 2,
+              textTransform: "uppercase",
+              mb: 2,
+            }}
           >
             QUICK LINKS
           </Typography>
@@ -116,14 +275,33 @@ function Footer({ sections = [] }) {
               handleKeyDown(e, () => handleNavigation("/", "ABOUT US"))
             }
             sx={{
+              color: "rgba(255,255,255,.82)",
+              transition: ".3s",
               "&:hover": {
                 cursor: "pointer",
-                color: "primary.main",
+                color: "secondary.main",
+                transform: "translateX(8px)",
               },
               "&:focus-visible": {
                 outline: "2px solid",
-                outlineColor: "primary.main",
+                outlineColor: "secondary.dark",
                 outlineOffset: "2px",
+              },
+              position: "relative",
+
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                left: -18,
+                top: "50%",
+                width: 0,
+                height: 2,
+                bgcolor: "secondary.main",
+                transition: ".3s",
+              },
+
+              "&:hover::before": {
+                width: 10,
               },
             }}
           >
@@ -137,11 +315,33 @@ function Footer({ sections = [] }) {
               handleKeyDown(e, () => handleNavigation("/cookies"))
             }
             sx={{
-              "&:hover": { cursor: "pointer", color: "primary.main" },
+              color: "rgba(255,255,255,.82)",
+              transition: ".3s",
+              "&:hover": {
+                cursor: "pointer",
+                color: "secondary.main",
+                transform: "translateX(8px)",
+              },
               "&:focus-visible": {
                 outline: "2px solid",
-                outlineColor: "primary.main",
+                outlineColor: "secondary.dark",
                 outlineOffset: "2px",
+              },
+              position: "relative",
+
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                left: -18,
+                top: "50%",
+                width: 0,
+                height: 2,
+                bgcolor: "secondary.main",
+                transition: ".3s",
+              },
+
+              "&:hover::before": {
+                width: 10,
               },
             }}
           >
@@ -155,11 +355,33 @@ function Footer({ sections = [] }) {
               handleKeyDown(e, () => handleNavigation("/terms"))
             }
             sx={{
-              "&:hover": { cursor: "pointer", color: "primary.main" },
+              color: "rgba(255,255,255,.82)",
+              transition: ".3s",
+              "&:hover": {
+                cursor: "pointer",
+                color: "secondary.main",
+                transform: "translateX(8px)",
+              },
               "&:focus-visible": {
                 outline: "2px solid",
-                outlineColor: "primary.main",
+                outlineColor: "secondary.dark",
                 outlineOffset: "2px",
+              },
+              position: "relative",
+
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                left: -18,
+                top: "50%",
+                width: 0,
+                height: 2,
+                bgcolor: "secondary.main",
+                transition: ".3s",
+              },
+
+              "&:hover::before": {
+                width: 10,
               },
             }}
           >
@@ -173,11 +395,33 @@ function Footer({ sections = [] }) {
               handleKeyDown(e, () => handleNavigation("/profiling"))
             }
             sx={{
-              "&:hover": { cursor: "pointer", color: "primary.main" },
+              color: "rgba(255,255,255,.82)",
+              transition: ".3s",
+              "&:hover": {
+                cursor: "pointer",
+                color: "secondary.main",
+                transform: "translateX(8px)",
+              },
               "&:focus-visible": {
                 outline: "2px solid",
-                outlineColor: "primary.main",
+                outlineColor: "secondary.dark",
                 outlineOffset: "2px",
+              },
+              position: "relative",
+
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                left: -18,
+                top: "50%",
+                width: 0,
+                height: 2,
+                bgcolor: "secondary.main",
+                transition: ".3s",
+              },
+
+              "&:hover::before": {
+                width: 10,
               },
             }}
           >
@@ -191,11 +435,33 @@ function Footer({ sections = [] }) {
               handleKeyDown(e, () => handleNavigation("/privacy"))
             }
             sx={{
-              "&:hover": { cursor: "pointer", color: "primary.main" },
+              color: "rgba(255,255,255,.82)",
+              transition: ".3s",
+              "&:hover": {
+                cursor: "pointer",
+                color: "secondary.main",
+                transform: "translateX(8px)",
+              },
               "&:focus-visible": {
                 outline: "2px solid",
-                outlineColor: "primary.main",
+                outlineColor: "secondary.dark",
                 outlineOffset: "2px",
+              },
+              position: "relative",
+
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                left: -18,
+                top: "50%",
+                width: 0,
+                height: 2,
+                bgcolor: "secondary.main",
+                transition: ".3s",
+              },
+
+              "&:hover::before": {
+                width: 10,
               },
             }}
           >
@@ -207,11 +473,33 @@ function Footer({ sections = [] }) {
             onClick={() => handleNavigation("/gdpr")}
             onKeyDown={(e) => handleKeyDown(e, () => handleNavigation("/gdpr"))}
             sx={{
-              "&:hover": { cursor: "pointer", color: "primary.main" },
+              color: "rgba(255,255,255,.82)",
+              transition: ".3s",
+              "&:hover": {
+                cursor: "pointer",
+                color: "secondary.main",
+                transform: "translateX(8px)",
+              },
               "&:focus-visible": {
                 outline: "2px solid",
-                outlineColor: "primary.main",
+                outlineColor: "secondary.dark",
                 outlineOffset: "2px",
+              },
+              position: "relative",
+
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                left: -18,
+                top: "50%",
+                width: 0,
+                height: 2,
+                bgcolor: "secondary.main",
+                transition: ".3s",
+              },
+
+              "&:hover::before": {
+                width: 10,
               },
             }}
           >
@@ -225,15 +513,37 @@ function Footer({ sections = [] }) {
             }
             onKeyDown={(e) =>
               handleKeyDown(e, () =>
-                handleExternalNavigation("//panels.frequentresearch.com/")
+                handleExternalNavigation("//panels.frequentresearch.com/"),
               )
             }
             sx={{
-              "&:hover": { cursor: "pointer", color: "primary.main" },
+              color: "rgba(255,255,255,.82)",
+              transition: ".3s",
+              "&:hover": {
+                cursor: "pointer",
+                color: "secondary.main",
+                transform: "translateX(8px)",
+              },
               "&:focus-visible": {
                 outline: "2px solid",
-                outlineColor: "primary.main",
+                outlineColor: "secondary.dark",
                 outlineOffset: "2px",
+              },
+              position: "relative",
+
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                left: -18,
+                top: "50%",
+                width: 0,
+                height: 2,
+                bgcolor: "secondary.main",
+                transition: ".3s",
+              },
+
+              "&:hover::before": {
+                width: 10,
               },
             }}
           >
@@ -245,19 +555,42 @@ function Footer({ sections = [] }) {
             onClick={() => handleNavigation("/faq")}
             onKeyDown={(e) => handleKeyDown(e, () => handleNavigation("/faq"))}
             sx={{
-              "&:hover": { cursor: "pointer", color: "primary.main" },
+              color: "rgba(255,255,255,.82)",
+              transition: ".3s",
+              "&:hover": {
+                cursor: "pointer",
+                color: "secondary.main",
+                transform: "translateX(8px)",
+              },
               "&:focus-visible": {
                 outline: "2px solid",
-                outlineColor: "primary.main",
+                outlineColor: "secondary.dark",
                 outlineOffset: "2px",
+              },
+              position: "relative",
+
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                left: -18,
+                top: "50%",
+                width: 0,
+                height: 2,
+                bgcolor: "secondary.main",
+                transition: ".3s",
+              },
+
+              "&:hover::before": {
+                width: 10,
               },
             }}
           >
             FAQ
           </Typography>
-        </Grid>
+        </MotionGrid>
 
-        <Grid
+        <MotionGrid
+          variants={footerItem}
           size={{ xs: 12, lg: 4 }}
           container
           order={{ xs: 1, lg: 3 }}
@@ -266,97 +599,197 @@ function Footer({ sections = [] }) {
           spacing={{ xs: 2, sm: 6, lg: 2 }}
           py={4}
         >
-          <img src="/images/logo/mho-logo-white.png" alt="logo" width="250px" />
+          <MotionBox
+            animate={{
+              y: [0, -6, 0],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <Box
+              component="img"
+              src="/images/logo/My-Health-Opinions.png"
+              alt="logo"
+              width={{ xs: "240px", xl: "280px" }}
+            />
+          </MotionBox>
           <Box display="flex" alignItems="center" gap={2} mt={1} pl={1}>
-            <IconButton
-              component="a"
-              href="https://in.linkedin.com/company/frequentresearch"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="linkedin"
-              sx={{
-                color: "white",
-                "&:hover": { color: "primary.main" },
-                "&:focus-visible": {
-                  outline: "2px solid",
-                  outlineColor: "primary.main",
-                  outlineOffset: "2px",
-                },
+            <MotionBox
+              whileHover={{
+                y: -6,
+                scale: 1.15,
+                rotate: 8,
               }}
+              transition={{ duration: 0.25 }}
             >
-              <LinkedInIcon sx={{ fontSize: 36 }} />
-            </IconButton>
-            <IconButton
-              component="a"
-              target="_blank"
-              href="https://www.facebook.com/frequentrfs/"
-              rel="noopener noreferrer"
-              aria-label="facebook"
-              sx={{
-                color: "white",
-                "&:hover": { color: "primary.main" },
-                "&:focus-visible": {
-                  outline: "2px solid",
-                  outlineColor: "primary.main",
-                  outlineOffset: "2px",
-                },
-              }}
-            >
-              <FacebookIcon
+              <IconButton
+                component="a"
+                href="https://in.linkedin.com/company/frequentresearch"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="linkedin"
                 sx={{
-                  fontSize: "36px",
+                  width: 50,
+                  height: 50,
+                  borderRadius: "50%",
+                  bgcolor: "rgba(255,255,255,.08)",
+                  color: "white",
+                  transition: ".35s",
+                  "&:hover": {
+                    bgcolor: "secondary.main",
+                    color: "#fff",
+                    transform: "translateY(-4px)",
+                    boxShadow: (theme) => `
+                0 0 18px ${theme.palette.secondary.main}88
+                `,
+                  },
+                  "&:focus-visible": {
+                    outline: "2px solid",
+                    outlineColor: "secondary.dark",
+                    outlineOffset: "2px",
+                  },
                 }}
-              />
-            </IconButton>
-            <IconButton
-              component="a"
-              target="_blank"
-              href="https://twitter.com/frequentrfs"
-              rel="noopener noreferrer"
-              aria-label="twitter"
-              sx={{
-                color: "white",
-                "&:hover": { color: "primary.main" },
-                "&:focus-visible": {
-                  outline: "2px solid",
-                  outlineColor: "primary.main",
-                  outlineOffset: "2px",
-                },
+              >
+                <LinkedInIcon sx={{ fontSize: 36 }} />
+              </IconButton>
+            </MotionBox>
+            <MotionBox
+              whileHover={{
+                y: -6,
+                scale: 1.15,
+                rotate: 8,
               }}
+              transition={{ duration: 0.25 }}
             >
-              <XIcon
+              <IconButton
+                component="a"
+                target="_blank"
+                href="https://www.facebook.com/frequentrfs/"
+                rel="noopener noreferrer"
+                aria-label="facebook"
                 sx={{
-                  fontSize: "30px",
+                  width: 50,
+                  height: 50,
+                  borderRadius: "50%",
+                  bgcolor: "rgba(255,255,255,.08)",
+                  color: "white",
+                  transition: ".35s",
+                  "&:hover": {
+                    bgcolor: "secondary.main",
+                    color: "#fff",
+                    transform: "translateY(-4px)",
+                    boxShadow: (theme) => `
+                0 0 18px ${theme.palette.secondary.main}88
+                `,
+                  },
+                  "&:focus-visible": {
+                    outline: "2px solid",
+                    outlineColor: "secondary.dark",
+                    outlineOffset: "2px",
+                  },
                 }}
-              />
-            </IconButton>
-
-            <IconButton
-              component="a"
-              target="_blank"
-              href="https://www.youtube.com/channel/UCLxmn2kq4aACAHaL2eT6QIQ"
-              rel="noopener noreferrer"
-              aria-label="youtube"
-              sx={{
-                color: "white",
-                "&:hover": { color: "primary.main" },
-                "&:focus-visible": {
-                  outline: "2px solid",
-                  outlineColor: "primary.main",
-                  outlineOffset: "2px",
-                },
+              >
+                <FacebookIcon
+                  sx={{
+                    fontSize: "36px",
+                  }}
+                />
+              </IconButton>
+            </MotionBox>
+            <MotionBox
+              whileHover={{
+                y: -6,
+                scale: 1.15,
+                rotate: 8,
               }}
+              transition={{ duration: 0.25 }}
             >
-              <YouTubeIcon
+              <IconButton
+                component="a"
+                target="_blank"
+                href="https://twitter.com/frequentrfs"
+                rel="noopener noreferrer"
+                aria-label="twitter"
                 sx={{
-                  fontSize: "36px",
+                  width: 50,
+                  height: 50,
+                  borderRadius: "50%",
+                  bgcolor: "rgba(255,255,255,.08)",
+                  color: "white",
+                  transition: ".35s",
+                  "&:hover": {
+                    bgcolor: "secondary.main",
+                    color: "#fff",
+                    transform: "translateY(-4px)",
+                    boxShadow: (theme) => `
+                0 0 18px ${theme.palette.secondary.main}88
+                `,
+                  },
+                  "&:focus-visible": {
+                    outline: "2px solid",
+                    outlineColor: "secondary.dark",
+                    outlineOffset: "2px",
+                  },
                 }}
-              />
-            </IconButton>
+              >
+                <XIcon
+                  sx={{
+                    fontSize: "30px",
+                  }}
+                />
+              </IconButton>
+            </MotionBox>
+            <MotionBox
+              whileHover={{
+                y: -6,
+                scale: 1.15,
+                rotate: 8,
+              }}
+              transition={{ duration: 0.25 }}
+            >
+              <IconButton
+                component="a"
+                target="_blank"
+                href="https://www.youtube.com/channel/UCLxmn2kq4aACAHaL2eT6QIQ"
+                rel="noopener noreferrer"
+                aria-label="youtube"
+                sx={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: "50%",
+                  bgcolor: "rgba(255,255,255,.08)",
+                  color: "white",
+                  transition: ".35s",
+                  "&:hover": {
+                    bgcolor: "secondary.main",
+                    color: "#fff",
+                    transform: "translateY(-4px)",
+                    boxShadow: (theme) => `
+                0 0 18px ${theme.palette.secondary.main}88
+                `,
+                  },
+                  "&:focus-visible": {
+                    outline: "2px solid",
+                    outlineColor: "secondary.dark",
+                    outlineOffset: "2px",
+                  },
+                }}
+              >
+                <YouTubeIcon
+                  sx={{
+                    fontSize: "36px",
+                  }}
+                />
+              </IconButton>
+            </MotionBox>
           </Box>
-        </Grid>
+        </MotionGrid>
 
-        <Grid
+        <MotionGrid
+          variants={footerItem}
           size={{ xs: 12, sm: 6, lg: 4 }}
           order={3}
           container
@@ -365,10 +798,18 @@ function Footer({ sections = [] }) {
           py={{ xs: 2, lg: 4 }}
         >
           <Typography
-            sx={{ fontWeight: "bold", fontSize: "18px", color: "#888" }}
+            sx={{
+              color: "secondary.main",
+              fontWeight: 700,
+              fontSize: 15,
+              letterSpacing: 2,
+              textTransform: "uppercase",
+              mb: 2,
+            }}
           >
             CONTACT US
           </Typography>
+
           <Box
             display="flex"
             component="a"
@@ -376,12 +817,20 @@ function Footer({ sections = [] }) {
             target="_blank"
             rel="noopener noreferrer"
             sx={{
+              display: "flex",
+              alignItems: "center",
+              p: 1.5,
+              borderRadius: 3,
+              bgcolor: "rgba(255,255,255,.04)",
+              transition: ".3s",
               "&:hover": {
-                color: "primary.main",
+                bgcolor: "rgba(255,255,255,.08)",
+                transform: "translateX(8px)",
+                boxShadow: "0 12px 25px rgba(0,0,0,.15)",
               },
               "&:focus-visible": {
                 outline: "2px solid",
-                outlineColor: "primary.main",
+                outlineColor: "secondary.dark",
                 outlineOffset: "2px",
               },
             }}
@@ -409,12 +858,20 @@ function Footer({ sections = [] }) {
             component="a"
             href="tel:+919810459700"
             sx={{
+              display: "flex",
+              alignItems: "center",
+              p: 1.5,
+              borderRadius: 3,
+              bgcolor: "rgba(255,255,255,.04)",
+              transition: ".3s",
               "&:hover": {
-                color: "primary.main",
+                bgcolor: "rgba(255,255,255,.08)",
+                transform: "translateX(8px)",
+                boxShadow: "0 12px 25px rgba(0,0,0,.15)",
               },
               "&:focus-visible": {
                 outline: "2px solid",
-                outlineColor: "primary.main",
+                outlineColor: "secondary.dark",
                 outlineOffset: "2px",
               },
             }}
@@ -434,14 +891,22 @@ function Footer({ sections = [] }) {
             display="flex"
             alignItems="center"
             component="a"
-            href="mailto:support@frequentresearch.com"
+            href="mailto:support@myhealthopinions.com"
             sx={{
+              display: "flex",
+              alignItems: "center",
+              p: 1.5,
+              borderRadius: 3,
+              bgcolor: "rgba(255,255,255,.04)",
+              transition: ".3s",
               "&:hover": {
-                color: "primary.main",
+                bgcolor: "rgba(255,255,255,.08)",
+                transform: "translateX(8px)",
+                boxShadow: "0 12px 25px rgba(0,0,0,.15)",
               },
               "&:focus-visible": {
                 outline: "2px solid",
-                outlineColor: "primary.main",
+                outlineColor: "secondary.dark",
                 outlineOffset: "2px",
               },
             }}
@@ -454,18 +919,25 @@ function Footer({ sections = [] }) {
               }}
             />
             <Typography sx={{ fontSize: { xs: "14px", xl: "16px" } }}>
-              support@frequentresearch.com
+              support@myhealthopinions.com
             </Typography>
           </Box>
-        </Grid>
+        </MotionGrid>
       </Grid>
       <Grid
         size={12}
         sx={{
           textAlign: "center",
-          borderTop: "1px solid #333",
+          borderTop: "1px solid #777",
           py: 0.5,
-          color: "#888",
+          background: `
+linear-gradient(
+90deg,
+#041332 0%,
+#061B4A 100%
+)
+`,
+          color: "#ccc",
           fontWeight: 500,
           fontSize: 13,
         }}
@@ -476,13 +948,14 @@ function Footer({ sections = [] }) {
           href="https://frequentresearch.com/"
           target="_blank"
           rel="noopener noreferrer"
-          color="primary.main"
+          color="secondary.main"
+          fontWeight={700}
           fontSize={13}
           sx={{
             "&:hover": { textDecoration: "underline" },
             "&:focus-visible": {
               outline: "2px solid",
-              outlineColor: "primary.main",
+              outlineColor: "secondary.dark",
               outlineOffset: "2px",
             },
           }}

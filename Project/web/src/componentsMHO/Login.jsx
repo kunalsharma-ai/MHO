@@ -3,6 +3,7 @@ import PopUp from "./PopUp";
 import {
   Typography,
   Card,
+  Collapse,
   Box,
   Grid,
   Dialog,
@@ -10,6 +11,7 @@ import {
   DialogContent,
   IconButton,
   Fade,
+  Grow,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
@@ -26,6 +28,7 @@ import {
   Apple,
   Microsoft,
   Login as LoginIcon,
+  YouTube,
 } from "@mui/icons-material";
 import { api, Page, submitWithAjax } from "@/util";
 import { useForm } from "react-hook-form";
@@ -35,6 +38,34 @@ import "react-phone-input-2/lib/material.css";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTelemetry } from "@/Context";
 import { useToast } from "@/hooks";
+import Captcha from "./Captcha";
+import { motion, AnimatePresence } from "framer-motion";
+
+const MotionBox = motion.create(Box);
+const MotionGrid = motion.create(Grid);
+
+const socials = [
+  {
+    name: "linkedin",
+    link: "https://www.linkedin.com/company/my-health-opinions/",
+    icon: <LinkedIn sx={{ color: "#0077B5", fontSize: "28px" }} />,
+  },
+  {
+    name: "facebook",
+    link: "https://www.facebook.com/frequentrfs/",
+    icon: <Facebook sx={{ color: "#1877F2", fontSize: "28px" }} />,
+  },
+  {
+    name: "youtube",
+    link: "https://www.youtube.com/channel/UCLxmn2kq4aACAHaL2eT6QIQ",
+    icon: <YouTube sx={{ color: "#FF0000", fontSize: "28px" }} />,
+  },
+  {
+    name: "twitter",
+    link: "https://twitter.com/frequentrfs",
+    icon: <X sx={{ color: "black", fontSize: "22px" }} />,
+  },
+];
 
 function Login({ open, onClose, setOpenSignUp }) {
   const [cardType, setCardType] = React.useState("login");
@@ -47,66 +78,118 @@ function Login({ open, onClose, setOpenSignUp }) {
       open={open}
       onClose={() => {
         onClose();
+
         const params = new URLSearchParams(searchParams.toString());
         params.delete("login");
+
         router.replace(`${pathname}?${params.toString()}`, {
           scroll: false,
         });
       }}
-      sx={{
-        zIndex: 3300,
-        boxShadow: 24,
-        overflowY: "auto",
-        "& .MuiDialog-paper": {
-          margin: 1,
-          maxWidth: "unset",
-        },
-      }}
-      slots={{ transition: Fade }}
+      slots={{ transition: Grow }}
       slotProps={{
         transition: {
+          timeout: 250,
           onExited: () => setCardType("login"),
+        },
+      }}
+      maxWidth={false}
+      PaperProps={{
+        elevation: 0,
+        sx: {
+          overflow: "hidden",
+          width: {
+            xs: "96vw",
+            sm: cardType === "login" ? 1200 : 500,
+          },
+          maxWidth: "96vw",
+          maxHeight: "95vh",
+          height: {
+            xs: "95vh",
+            md: "90vh",
+          },
+          margin: 0,
+          borderRadius: 5,
+
+          background:
+            "linear-gradient(145deg,#ffffff 0%,#f8fbff 55%,#eef5ff 100%)",
+
+          border: "1px solid rgba(255,255,255,.65)",
+
+          boxShadow: `
+        0 40px 100px rgba(0,0,0,.20),
+        0 8px 30px rgba(1,35,98,.12)
+      `,
         },
       }}
       BackdropProps={{
         sx: {
-          backgroundColor: "rgba(0, 0, 0, 0.1)",
-          backdropFilter: "blur(5px)",
-        },
-      }}
-      PaperProps={{
-        sx: {
-          borderRadius: 2,
+          background:
+            "radial-gradient(circle at top, rgba(1,35,98,.18), rgba(0,0,0,.45))",
+
+          backdropFilter: "blur(10px)",
         },
       }}
     >
-      {cardType === "login" ? (
-        <LoginCard
-          onClose={() => {
-            onClose();
-            const params = new URLSearchParams(searchParams.toString());
-            params.delete("login");
-            router.replace(`${pathname}?${params.toString()}`, {
-              scroll: false,
-            });
-          }}
-          setCardType={setCardType}
-          setOpenSignUp={setOpenSignUp}
-        />
-      ) : (
-        <ForgotCard
-          onClose={() => {
-            onClose();
-            const params = new URLSearchParams(searchParams.toString());
-            params.delete("login");
-            router.replace(`${pathname}?${params.toString()}`, {
-              scroll: false,
-            });
-          }}
-          setCardType={setCardType}
-          setOpenSignUp={setOpenSignUp}
-        />
-      )}
+      <AnimatePresence mode="wait">
+        {cardType === "login" ? (
+          <MotionBox
+            key="login"
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -40 }}
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+            }}
+          >
+            <LoginCard
+              onClose={() => {
+                onClose();
+
+                const params = new URLSearchParams(searchParams.toString());
+
+                params.delete("login");
+
+                router.replace(`${pathname}?${params.toString()}`, {
+                  scroll: false,
+                });
+              }}
+              setCardType={setCardType}
+              setOpenSignUp={setOpenSignUp}
+            />
+          </MotionBox>
+        ) : (
+          <MotionBox
+            key="forgot"
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -40 }}
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+            }}
+          >
+            <ForgotCard
+              onClose={() => {
+                onClose();
+
+                const params = new URLSearchParams(searchParams.toString());
+
+                params.delete("login");
+
+                router.replace(`${pathname}?${params.toString()}`, {
+                  scroll: false,
+                });
+              }}
+              setCardType={setCardType}
+              setOpenSignUp={setOpenSignUp}
+            />
+          </MotionBox>
+        )}
+      </AnimatePresence>
     </Dialog>
   );
 }
@@ -120,6 +203,7 @@ function LoginCard({ onClose, setCardType, setOpenSignUp }) {
   const [loading, setLoading] = React.useState(false);
   const [loginType, setLoginType] = React.useState("mail");
   const [phone, setPhone] = React.useState("");
+  const [btnDisabled, setBtnDisabled] = React.useState(true);
 
   const [providers, setProviders] = React.useState([]);
   React.useEffect(() => {
@@ -162,335 +246,758 @@ function LoginCard({ onClose, setCardType, setOpenSignUp }) {
   }));
 
   return (
-    <Card
+    <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignSelf: "center",
-        minHeight: authProviders.length > 0 ? "620px" : "520px",
-        width: { xs: "95vw", sm: "440px" },
-        px: { xs: 1.5, md: 3 },
-        position: "relative",
+        display: "grid",
+        gridTemplateColumns: {
+          xs: "1fr",
+          md: "1.05fr .95fr",
+        },
+        width: "100%",
+        height: "100%",
+        minHeight: 0,
+        bgcolor: "#fff",
       }}
     >
-      <IconButton
-        sx={{
-          position: "absolute",
-          right: 25,
-          top: 20,
-          "&:hover": { color: "red" },
-        }}
-        onClick={onClose}
-      >
-        <CloseIcon />
-      </IconButton>
-      <Typography
-        sx={{
-          width: "100%",
-          fontSize: "30px",
-          textAlign: "center",
-          pt: 9,
-          pb: 3,
-          fontWeight: 500,
-        }}
-      >
-        Log in
-      </Typography>
       <Box
-        component="form"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          // console.log(e);
-          // let resp = await submitWithAjax(e);
-          // console.log(resp);
-
-          setLoading(true);
-          try {
-            const resp = await submitWithAjax(e);
-            if ("token" in resp) {
-              localStorage.setItem("token", resp.token);
-              router.replace("/member/dashboard");
-            } else {
-              setErrorMessage("Invalid credentials");
-              setLoading(false);
-            }
-          } catch (error) {
-            console.log({ error });
-            setErrorMessage("Something went wrong.");
-            setLoading(false);
-          }
+        sx={{
+          display: {
+            xs: "none",
+            md: "flex",
+          },
+          position: "relative",
+          overflow: "hidden",
         }}
-        method="post"
-        action="/api/v1/user/login"
+      >
+        <Box
+          component="img"
+          src="/images/home/signup-image6.jpg"
+          sx={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            transform: "scale(1.3)",
+            objectPosition: "10px 50px",
+          }}
+        />
+
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+
+            background:
+              "linear-gradient(180deg,rgba(1,35,98,.12),rgba(1,35,98,.72))",
+          }}
+        />
+
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+
+            p: 6,
+
+            color: "#fff",
+          }}
+        >
+          <MotionBox
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.45 }}
+          >
+            <Box>
+              <Box
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  px: 4,
+                  py: 2.5,
+                  borderRadius: 3,
+                  backdropFilter: "blur(20px)",
+                  background: "rgba(255,255,255,.88)",
+                  border: "1px solid rgba(255,255,255,.95)",
+                  boxShadow: `
+0 8px 18px rgba(0,0,0,.12),
+0 20px 45px rgba(1,35,98,.18)
+`,
+                  mb: 5,
+                  width: "fit-content",
+                }}
+              >
+                <Box
+                  component="img"
+                  src="/images/logo/My-Health-Opinions.png"
+                  sx={{
+                    height: 60,
+                  }}
+                />
+              </Box>
+            </Box>
+            <Typography
+              sx={{
+                fontSize: { xs: 30, xl: 48 },
+                fontWeight: 800,
+                lineHeight: 1.15,
+              }}
+            >
+              Welcome Back
+            </Typography>
+
+            <Typography
+              sx={{
+                mt: { xs: 2, xl: 3 },
+                fontSize: { lg: 15, xl: 18 },
+                opacity: 0.92,
+                lineHeight: 1.8,
+              }}
+            >
+              Access your healthcare research dashboard, manage your profile,
+              participate in surveys and earn rewards.
+            </Typography>
+          </MotionBox>
+
+          <Grid container spacing={2}>
+            {[
+              {
+                number: "30K+",
+                label: "Members Worldwide",
+              },
+              {
+                number: "40+",
+                label: "Countries",
+              },
+              {
+                number: "1000+",
+                label: "Studies",
+              },
+              {
+                number: "100%",
+                label: "Secure",
+              },
+            ].map((item, index) => (
+              <MotionGrid
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: 0.45 + index * 0.08,
+                }}
+                size={6}
+                key={item.label}
+              >
+                <Box
+                  sx={{
+                    py: { md: 1, xl: 2.5 },
+                    px: 2.5,
+                    borderRadius: 3,
+                    bgcolor: "rgba(255,255,255,.04)",
+                    backdropFilter: "blur(3px)",
+                    border: "1px solid rgba(255,255,255,.18)",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: 28,
+                      fontWeight: 800,
+                    }}
+                  >
+                    {item.number}
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      opacity: 0.8,
+                    }}
+                  >
+                    {item.label}
+                  </Typography>
+                </Box>
+              </MotionGrid>
+            ))}
+          </Grid>
+        </Box>
+      </Box>
+      <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          width: "100%",
-          gap: 1.8,
+          height: "100%",
+          minHeight: 0,
+          bgcolor: "#fff",
+          position: "relative",
         }}
       >
-        <Grid direction="column" container size={12} gap={2.5}>
-          <ToggleButtonGroup
-            value={loginType || ""}
-            size="small"
-            exclusive
-            fullWidth
-            onChange={(_, value) => {
-              if (value !== null) setLoginType(value);
-            }}
-            sx={{
-              display: "flex",
-              // flexDirection: { xs: "column", sm: "row" },
-              flexWrap: "nowrap",
-              "& .MuiToggleButton-root": {
-                textTransform: "none",
-                fontWeight: 600,
-                fontSize: 13,
-                px: 2,
-                py: 0.5,
-                color: "secondary.main",
-                borderColor: "secondary.main",
-              },
-              "& .Mui-selected": {
-                backgroundColor: "#016550 !important",
-                color: "#fff !important",
-                "&:hover": {
-                  backgroundColor: "primary.dark",
-                },
-              },
-            }}
-          >
-            {options.map((option) => (
-              <ToggleButton key={option.value} value={option.value}>
-                {option.label}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
-
-          {loginType === "mail" ? (
-            <Page.Input
-              label="E-Mail Address"
-              type="email"
-              name="mail"
-              variant="outlined"
-              required
-              autoFocus
-              onFocus={(e) => {
-                setErrorMessage(null);
-              }}
-            />
-          ) : (
-            <PhoneInput
-              country={country}
-              // onlyCountries={onlyCountries}
-              // disableDropdown={true}
-              name="phone"
-              // value={phone}
-              // onChange={(value) => setPhone(value)}
-              inputProps={{
-                name: "phone",
-              }}
-              inputStyle={{
-                width: "100%",
-                height: "34px",
-                color: "grey",
-                fontSize: "14px",
-                borderColor: " #0000003b",
-              }}
-              inputClass="custom-phone-font"
-              specialLabel={""}
-            />
-          )}
-          <Page.Input
-            onFocus={(e) => {
-              setErrorMessage(null);
-            }}
-            label="Password"
-            type="password"
-            name="password"
-          />
-        </Grid>
-        <Grid
-          container
+        <Box
           sx={{
+            position: "sticky",
+            top: 0,
+            zIndex: 20,
+            display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            px: 0.5,
-            mt: -1,
+            px: 4,
+            py: 2,
+            mb: 1,
+            bgcolor: "rgba(255,255,255,.92)",
+            backdropFilter: "blur(18px)",
+            borderBottom: "1px solid #eef2f7",
           }}
         >
-          <Page.Input label="Remember me" type="checkbox" name="remember" />
-          <Box
-            sx={{ width: "100%" }}
-            display="flex"
-            justifyContent={{ xs: "center", md: "flex-end" }}
-            mt={{ xs: 1, md: -1 }}
+          <MotionBox
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.45 }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              marginTop: 3,
+            }}
           >
-            <Page.MuiButton
-              color="secondary"
+            <Box
+              component="img"
+              src="/images/logo/logo.png"
               sx={{
-                fontWeight: 500,
-                textTransform: "none",
-                fontSize: 13,
+                display: { xs: "block", md: "none" },
+                height: 50,
+              }}
+            />
+            <Box>
+              <Typography
+                sx={{
+                  fontSize: {
+                    xs: 24,
+                    xl: 28,
+                  },
+                  fontWeight: 700,
+                  color: "primary.main",
+                  lineHeight: 1.1,
+                  mt: 1,
+                  mb: 0.5,
+                }}
+              >
+                Sign In
+              </Typography>
+
+              <Typography
+                sx={{
+                  mt: 0.5,
+                  color: "text.secondary",
+                  fontSize: { xs: 12, xl: 14 },
+                }}
+              >
+                Welcome back. Sign in to continue participating in healthcare
+                research.
+              </Typography>
+            </Box>
+          </MotionBox>
+          <motion.div
+            whileHover={{ rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
+            style={{ position: "absolute", top: 20, right: 30 }}
+          >
+            <IconButton
+              onClick={onClose}
+              sx={{
+                border: "1px solid #e3e8ef",
+                bgcolor: "#fff",
+
                 "&:hover": {
-                  cursor: "pointer",
-                  textDecoration: "underline",
+                  bgcolor: "#f8fafc",
                 },
               }}
-              onClick={() => {
-                setCardType("forgot");
-              }}
             >
-              Forgot your password?
-            </Page.MuiButton>
-          </Box>
-        </Grid>
-        {errorMessage && <Page.Error message={errorMessage} />}
-        <Page.MuiButton
-          type="submit"
-          fullWidth
-          variant="contained"
-          loading={loading}
-          loadingIndicator="Signing in..."
-          sx={{
-            borderRadius: "8px",
-            padding: "9px",
-            backgroundColor: "#016550",
+              <CloseIcon />
+            </IconButton>
+          </motion.div>
+        </Box>
+        <MotionBox
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.45 }}
+          component="form"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            // console.log(e);
+            // let resp = await submitWithAjax(e);
+            // console.log(resp);
 
-            color: "white",
-            boxShadow: "none",
-            fontWeight: "bold",
-            transition: "box-shadow 0.3s ease",
-            "&:hover": {
-              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.25)",
+            setLoading(true);
+            try {
+              const resp = await submitWithAjax(e);
+              if ("token" in resp) {
+                localStorage.setItem("token", resp.token);
+                router.replace("/member/dashboard");
+              } else {
+                setErrorMessage("Invalid credentials");
+                setLoading(false);
+              }
+            } catch (error) {
+              console.log({ error });
+              setErrorMessage("Something went wrong.");
+              setLoading(false);
+            }
+          }}
+          method="post"
+          action="/api/v1/user/login"
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            minHeight: 0,
+            overflowY: "auto",
+            px: 4,
+            py: 1,
+            gap: 2,
+            justifyContent: "flex-start",
+            "&::-webkit-scrollbar": {
+              width: 6,
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#d6dde8",
+              borderRadius: 10,
             },
           }}
         >
-          Log in
-        </Page.MuiButton>
-         {authProviders.length > 0 && (
           <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              my: 0.5,
-            }}
+            sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 2 }}
           >
             <Box
               sx={{
-                flex: 1,
-                height: "1px",
-                bgcolor: "divider",
-              }}
-            />
-
-            <Typography
-              variant="body2"
-              sx={{
-                color: "text.secondary",
-                fontSize: 13,
-                whiteSpace: "nowrap",
+                px: 2,
+                py: 1.5,
+                borderRadius: 3,
+                border: "1px solid",
+                borderColor: "divider",
+                bgcolor: "#fafbfc",
               }}
             >
-              or continue with
-            </Typography>
+              <Typography
+                sx={{
+                  mb: 1,
+                  fontWeight: 600,
+                  color: "text.primary",
+                }}
+              >
+                Choose how you'd like to sign in
+              </Typography>
+              <Box
+                sx={{
+                  p: 0.5,
+                  borderRadius: 3,
+                  bgcolor: "#f3f6fb",
+                  border: "1px solid #e4ebf3",
+                }}
+              >
+                <ToggleButtonGroup
+                  value={loginType}
+                  exclusive
+                  fullWidth
+                  onChange={(_, value) => {
+                    if (value) setLoginType(value);
+                  }}
+                  sx={{
+                    gap: 0.5,
+                    border: 0,
 
+                    "& .MuiToggleButtonGroup-grouped": {
+                      border: 0,
+                      borderRadius: "10px !important",
+                    },
+
+                    "& .MuiToggleButton-root": {
+                      flex: 1,
+                      height: 48,
+                      textTransform: "none",
+                      fontWeight: 600,
+                      color: "text.secondary",
+                      position: "relative",
+                      overflow: "hidden",
+                      transition:
+                        "background-color .35s ease, color .35s ease, transform .25s ease, box-shadow .35s ease",
+
+                      "&:hover": {
+                        bgcolor: "rgba(1,35,98,.05)",
+                      },
+
+                      "&.Mui-selected": {
+                        color: "#fff",
+                        background:
+                          "linear-gradient(135deg,#012362 0%,#0b4bb3 100%)",
+                        boxShadow: "0 8px 22px rgba(1,35,98,.18)",
+
+                        "&:hover": {
+                          background:
+                            "linear-gradient(135deg,#001b55 0%,#063686 100%)",
+                        },
+                      },
+                    },
+                  }}
+                >
+                  {options.map((option) => (
+                    <ToggleButton key={option.value} value={option.value}>
+                      {option.label}
+                    </ToggleButton>
+                  ))}
+                </ToggleButtonGroup>
+              </Box>
+            </Box>
             <Box
               sx={{
-                flex: 1,
-                height: "1px",
-                bgcolor: "divider",
+                p: 3,
+                borderRadius: 3,
+                border: "1px solid",
+                borderColor: "#e8edf5",
+                bgcolor: "#fff",
+                boxShadow: "0 10px 30px rgba(0,0,0,.04)",
               }}
-            />
-          </Box>
-        )}
-        {authProviders.length <= 2 ? (
-          <Box display="flex" flexDirection="column" gap={1}>
-            {authProviders.map((provider, i) => (
-              <Page.MuiButton
-                component={"a"}
-                href={provider.href}
-                key={i}
-                fullWidth
-                variant="outlined"
-                color="primary"
-                startIcon={provider.icon}
+            >
+              <Grid container direction="column" spacing={2.5}>
+                {loginType === "mail" ? (
+                  <Page.Input
+                    label="E-Mail Address"
+                    type="email"
+                    name="mail"
+                    variant="outlined"
+                    size="normal"
+                    required
+                    autoFocus
+                    onFocus={(e) => {
+                      setErrorMessage(null);
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: 3,
+                        background: "#fff",
+                        transition: ".25s",
+                        "&:hover": {
+                          boxShadow: "0 3px 12px rgba(0,0,0,.04)",
+                        },
+                        "&.Mui-focused": {
+                          boxShadow: "0 8px 24px rgba(1,35,98,.08)",
+                        },
+                      },
+                    }}
+                  />
+                ) : (
+                  <PhoneInput
+                    country={country}
+                    // onlyCountries={onlyCountries}
+                    // disableDropdown={true}
+                    name="phone"
+                    // value={phone}
+                    // onChange={(value) => setPhone(value)}
+                    inputProps={{
+                      name: "phone",
+                    }}
+                    inputStyle={{
+                      width: "100%",
+                      height: "54px",
+                      borderRadius: "12px",
+                      background: "#fff",
+                    }}
+                    inputClass="custom-phone-font"
+                    specialLabel={""}
+                  />
+                )}
+                <Page.Input
+                  onFocus={(e) => {
+                    setErrorMessage(null);
+                  }}
+                  label="Password"
+                  type="password"
+                  name="password"
+                  size="normal"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      // height: 54,
+                      borderRadius: 3,
+                      background: "#fff",
+                      transition: ".25s",
+                      "&:hover": {
+                        boxShadow: "0 3px 12px rgba(0,0,0,.04)",
+                      },
+                      "&.Mui-focused": {
+                        boxShadow: "0 8px 24px rgba(1,35,98,.08)",
+                      },
+                    },
+                  }}
+                />
+              </Grid>
+              <Box
                 sx={{
-                  borderRadius: "8px",
-                  padding: "9px",
-                  fontWeight: 600,
-                  textTransform: "none",
-                  borderWidth: "1px",
-                  "&:hover": {
-                    borderWidth: "1px",
-                    backgroundColor: "transparent",
-                  },
-                }}
-              >
-                {provider.label}
-              </Page.MuiButton>
-            ))}
-          </Box>
-        ) : (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            gap={{ xs: 0.8, sm: 1.5 }}
-            flexWrap="wrap"
-            mb={0.5}
-          >
-            {authProviders.map((provider, i) => (
-              <IconButton
-                component={"a"}
-                href={provider.href}
-                onClick={provider.onClick}
-                key={i}
-                title={provider?.label}
-                sx={{
+                  mt: 2,
+                  px: 1.5,
+                  py: 1,
+                  borderRadius: 3,
+                  bgcolor: "#fff",
                   border: "1px solid",
-                  borderColor: "primary.main",
-                  color: "primary.main",
-                  width: 42,
-                  height: 42,
-                  transition: "all 0.2s ease",
-                  "&:hover": {
-                    backgroundColor: "action.hover",
-                    transform: "translateY(-1px)",
-                  },
+                  borderColor: "#e8edf5",
+                  boxShadow: "0 8px 24px rgba(0,0,0,.03)",
+                  border: "1px solid",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: 1,
                 }}
               >
-                {provider.icon}
-              </IconButton>
-            ))}
+                <Page.Input
+                  label="Remember me"
+                  type="checkbox"
+                  name="remember"
+                  size="medium"
+                />
+                <Page.MuiButton
+                  color="secondary"
+                  onClick={() => setCardType("forgot")}
+                  sx={{
+                    p: 0,
+                    minWidth: 0,
+                    fontWeight: 700,
+                    textTransform: "none",
+                    fontSize: 14,
+                    "&:hover": {
+                      bgcolor: "transparent",
+                      textDecoration: "underline",
+                    },
+                  }}
+                >
+                  Forgot Password?
+                </Page.MuiButton>
+              </Box>
+            </Box>
+            <Collapse in={!!btnDisabled} sx={{ width: "100%" }}>
+              <Box
+                sx={{
+                  px: 3,
+                  py: 2,
+                  border: "1px solid",
+                  borderColor: "divider",
+                  bgcolor: "#fff",
+                  borderRadius: 3,
+                  boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
+                }}
+              >
+                <Captcha
+                  onVerified={() => {
+                    setBtnDisabled(false);
+                  }}
+                />
+              </Box>
+            </Collapse>
+            {errorMessage && <Page.Error message={errorMessage} />}
           </Box>
-        )}
-        <Box display="flex" alignItems="center" justifyContent="center">
-          <Typography>Don&apos;t have an account?&nbsp;</Typography>
-          <Page.MuiButton
-            component={"span"}
-            color="secondary"
+          <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
+            <Page.MuiButton
+              type="submit"
+              fullWidth
+              variant="contained"
+              // disabled={btnDisabled}
+              loading={loading}
+              loadingIndicator="Signing in..."
+              sx={{
+                height: 48,
+                borderRadius: 3,
+                fontSize: 16,
+                fontWeight: 700,
+                textTransform: "none",
+                color: "#fff",
+                background: "linear-gradient(135deg,#012362,#0b4bb3)",
+                boxShadow: "0 12px 30px rgba(1,35,98,.20)",
+                transition: ".3s",
+                "&:hover": {
+                  background: "linear-gradient(135deg,#001b55,#063686)",
+                  boxShadow: "0 18px 40px rgba(1,35,98,.28)",
+                },
+                "&:active": {
+                  transform: "translateY(0)",
+                },
+                "&:disabled": {
+                  background: "#01236273",
+                },
+              }}
+            >
+              Sign In
+            </Page.MuiButton>
+          </motion.div>
+
+          {authProviders.length > 0 && (
+            <>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  my: 1,
+                }}
+              >
+                <Box
+                  sx={{
+                    flex: 1,
+                    height: 1,
+                    bgcolor: "divider",
+                  }}
+                />
+
+                <Typography
+                  sx={{
+                    px: 1,
+                    fontSize: 13,
+                    color: "text.secondary",
+                    fontWeight: 500,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  or continue with
+                </Typography>
+
+                <Box
+                  sx={{
+                    flex: 1,
+                    height: 1,
+                    bgcolor: "divider",
+                  }}
+                />
+              </Box>
+
+              <Grid container spacing={1.5}>
+                {authProviders.map((provider, i) => (
+                  <MotionGrid
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.08 }}
+                    key={i}
+                    size={
+                      authProviders.length <= 3 ? { xs: 12 } : { xs: 6, sm: 4 }
+                    }
+                  >
+                    <Page.MuiButton
+                      component="a"
+                      href={provider.href}
+                      fullWidth
+                      startIcon={provider.icon}
+                      variant="outlined"
+                      sx={{
+                        height: 48,
+                        borderRadius: 3,
+                        textTransform: "none",
+                        fontWeight: 600,
+                        bgcolor: "#fff",
+                        borderColor: "#d9e2ec",
+                        color: "text.primary",
+
+                        "&:hover": {
+                          bgcolor: "#fff",
+                          borderColor: "secondary.main",
+                          transform: "translateY(-2px)",
+                          boxShadow: "0 10px 22px rgba(0,0,0,.08)",
+                        },
+                      }}
+                    >
+                      {provider.name ??
+                        provider.label.replace("Continue with ", "")}
+                    </Page.MuiButton>
+                  </MotionGrid>
+                ))}
+              </Grid>
+            </>
+          )}
+
+          <Box
             sx={{
-              px: 0,
-              fontWeight: 500,
-              fontSize: 13,
-              textTransform: "none",
-              "&:hover": {
-                cursor: "pointer",
-                textDecoration: "underline",
-              },
-            }}
-            onClick={() => {
-              onClose();
-              setOpenSignUp(true);
+              pt: 2,
+              // borderTop: "1px solid",
+              // borderColor: "divider",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 1,
             }}
           >
-            Sign up
-          </Page.MuiButton>
-        </Box>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                fontSize: 14,
+              }}
+            >
+              Don't have an account?
+            </Typography>
+
+            <Typography
+              onClick={() => {
+                onClose();
+                setOpenSignUp(true);
+              }}
+              sx={{
+                color: "secondary.main",
+                fontWeight: 700,
+                cursor: "pointer",
+                transition: ".2s",
+
+                "&:hover": {
+                  color: "secondary.dark",
+                  textDecoration: "underline",
+                },
+              }}
+            >
+              Create Account
+            </Typography>
+          </Box>
+
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="center"
+            spacing={4}
+            sx={{
+              // position: "absolute",
+              // bottom: 10,
+              // left: 0,
+              // right: 0,
+              // zIndex: 2,
+              borderTop: "1px solid",
+              borderColor: "divider",
+              pt: 2,
+              pb: 1,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Page.Text sx={{ fontSize: "13px", color: "text.secondary" }}>
+              Follow us on
+            </Page.Text>
+            <Page.Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "20px",
+
+                justifyContent: "center",
+                alignItems: "center",
+                listStyle: "none",
+                textDecoration: "none",
+              }}
+            >
+              {socials.map((social) => (
+                <Page.Link
+                  key={social.name}
+                  href={social.link}
+                  underline="none"
+                  target="_blank"
+                >
+                  {social.icon}
+                </Page.Link>
+              ))}
+            </Page.Box>
+          </Grid>
+        </MotionBox>
       </Box>
-    </Card>
+    </Box>
   );
 }
 
@@ -519,39 +1026,82 @@ function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
     <Page.Card
       sx={{
         position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        alignSelf: "center",
-        height: "520px",
-        width: { xs: "95vw", sm: "430px" },
-        px: 3,
-
-        position: "relative",
+        width: { xs: "95vw", md: "auto" },
+        borderRadius: 4,
+        overflow: "hidden",
+        boxShadow: "0 30px 70px rgba(0,0,0,.18)",
+        bgcolor: "#fff",
       }}
     >
       <IconButton
+        onClick={onClose}
         sx={{
           position: "absolute",
-          right: 25,
-          top: 20,
-          "&:hover": { color: "red" },
+          top: 18,
+          right: 18,
+          zIndex: 5,
+          border: "1px solid #e3e8ef",
+          bgcolor: "rgba(255,255,255,.92)",
+          backdropFilter: "blur(12px)",
+          transition: ".3s",
+
+          "&:hover": {
+            bgcolor: "#fff",
+            transform: "rotate(90deg)",
+          },
         }}
-        onClick={onClose}
       >
         <CloseIcon />
       </IconButton>
 
-      <Page.Text
+      <Box
         sx={{
-          width: "100%",
-          fontSize: "30px",
+          px: 4,
+          py: 6,
+          background: "linear-gradient(135deg,#012362 0%,#0b4bb3 100%)",
+          color: "#fff",
           textAlign: "center",
-          mt: 9,
-          fontWeight: 500,
         }}
       >
-        Reset Password
-      </Page.Text>
+        <Box
+          sx={{
+            width: 72,
+            height: 72,
+            borderRadius: "50%",
+            bgcolor: "rgba(255,255,255,.14)",
+            border: "1px solid rgba(255,255,255,.18)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            mx: "auto",
+            mb: 2,
+            backdropFilter: "blur(12px)",
+          }}
+        >
+          <SendIcon sx={{ fontSize: 34 }} />
+        </Box>
+
+        <Typography
+          sx={{
+            fontSize: 30,
+            fontWeight: 700,
+          }}
+        >
+          Reset Password
+        </Typography>
+
+        <Typography
+          sx={{
+            mt: 1,
+            opacity: 0.9,
+            lineHeight: 1.7,
+            fontSize: 15,
+          }}
+        >
+          Enter your registered email address and we'll send you a secure
+          password reset link.
+        </Typography>
+      </Box>
       <Page.Box
         component="form"
         action="/api/v1/forgot-password"
@@ -561,107 +1111,348 @@ function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
           //   submitWithAjax(e);
         }}
         sx={{
+          p: 4,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          width: "100%",
-          height: "100%",
-          gap: 2,
-          py: 6,
+          gap: 4,
         }}
       >
         <Grid container flexDirection="column" gap={2} size={12}>
           {stage === "user" && (
             <>
-              <Page.Input
-                name="user"
-                label="Registered E-mail"
-                onChange={(e) => setUser(e.target.value)}
-                control={form.control}
-              />
+              <Box>
+                <Typography
+                  sx={{
+                    mb: 1,
+                    fontWeight: 600,
+                    color: "text.primary",
+                  }}
+                >
+                  Registered Email Address
+                </Typography>
+                <Page.Input
+                  name="user"
+                  // label="Registered E-mail"
+                  onChange={(e) => setUser(e.target.value)}
+                  control={form.control}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      height: 54,
+                      borderRadius: 3,
+                      background: "#fff",
+                      transition: ".25s",
+
+                      "&:hover": {
+                        boxShadow: "0 3px 12px rgba(0,0,0,.04)",
+                      },
+
+                      "&.Mui-focused": {
+                        boxShadow: "0 8px 24px rgba(1,35,98,.08)",
+                      },
+                    },
+                  }}
+                />
+              </Box>
+              <Box
+                sx={{
+                  p: 2.5,
+                  borderRadius: 3,
+                  bgcolor: "#f8fafc",
+                  border: "1px solid #e8edf5",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    mb: 1,
+                    color: "primary.main",
+                  }}
+                >
+                  What happens next?
+                </Typography>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1.25,
+                  }}
+                >
+                  {[
+                    "We'll verify your email address.",
+                    "A secure reset link will be sent.",
+                    "Create your new password.",
+                    "Sign back into your account.",
+                  ].map((item) => (
+                    <Box
+                      key={item}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.25,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 7,
+                          height: 7,
+                          borderRadius: "50%",
+                          bgcolor: "secondary.main",
+                          flexShrink: 0,
+                        }}
+                      />
+
+                      <Typography
+                        sx={{
+                          fontSize: 14,
+                          color: "text.secondary",
+                        }}
+                      >
+                        {item}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
 
               <Page.MuiButton
                 variant="contained"
+                color="primary"
                 disabled={!user}
                 onClick={sendOTP}
+                endIcon={<SendIcon />}
                 sx={{
-                  color: "white",
-                  borderRadius: "8px",
-                  padding: 1,
-                  backgroundColor: "#016550",
-                  boxShadow: "none",
-                  fontWeight: "bold",
-                  transition: "box-shadow 0.3s ease",
+                  mt: 1,
+                  height: 54,
+                  borderRadius: 3,
+                  fontWeight: 700,
+                  textTransform: "none",
+                  color: "#fff",
+
+                  background: "linear-gradient(135deg,#012362 0%,#0b4bb3 100%)",
+
+                  boxShadow: "0 12px 30px rgba(1,35,98,.22)",
+
                   "&:hover": {
-                    boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.25)",
+                    background:
+                      "linear-gradient(135deg,#001b55 0%,#063686 100%)",
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 18px 40px rgba(1,35,98,.30)",
+                  },
+
+                  "&.Mui-disabled": {
+                    background: "#cbd5e1",
+                    color: "#fff",
                   },
                 }}
-                endIcon={<SendIcon />}
               >
-                Send OTP
+                Send Reset Link
               </Page.MuiButton>
             </>
           )}
 
           {stage === "otp" && (
-            <Page.Box
+            <Box
               sx={{
                 textAlign: "center",
-                borderRadius: 5,
-                bgcolor: "rgba(163, 243, 206, 0.21)",
-                border: "1px solid #f4f4f4",
                 p: 4,
+                borderRadius: 4,
+                border: "1px solid #e8edf5",
+                bgcolor: "#fff",
+                boxShadow: "0 12px 35px rgba(0,0,0,.05)",
               }}
             >
-              <Page.Text sx={{ fontWeight: 500, color: "secondary.main" }}>
-                A link has been sent to you on your email. Please check your
-                inbox and spam folders, find the link and reset your password.
-              </Page.Text>
-            </Page.Box>
+              <Typography
+                sx={{
+                  fontSize: 26,
+                  fontWeight: 700,
+                  color: "primary.main",
+                }}
+              >
+                Reset Link Sent
+              </Typography>
+
+              <Typography
+                sx={{
+                  mt: 1.5,
+                  color: "text.secondary",
+                  lineHeight: 1.8,
+                }}
+              >
+                We've sent a password reset link to your registered email
+                address.
+              </Typography>
+
+              <Typography
+                sx={{
+                  mt: 2,
+                  fontWeight: 700,
+                  color: "secondary.main",
+                  wordBreak: "break-word",
+                }}
+              >
+                {user}
+              </Typography>
+
+              <Box
+                sx={{
+                  mt: 4,
+                  p: 2.5,
+                  borderRadius: 3,
+                  bgcolor: "#f8fafc",
+                  border: "1px solid #e5e7eb",
+                  textAlign: "left",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    mb: 2,
+                  }}
+                >
+                  Next Steps
+                </Typography>
+
+                {[
+                  "Check your Inbox.",
+                  "If you don't see it, check your Spam or Junk folder.",
+                  "Open the email and click the reset link.",
+                  "Create your new password and sign in.",
+                ].map((item) => (
+                  <Box
+                    key={item}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1.5,
+                      mb: 1.5,
+
+                      "&:last-child": {
+                        mb: 0,
+                      },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        bgcolor: "secondary.main",
+                        flexShrink: 0,
+                      }}
+                    />
+
+                    <Typography
+                      sx={{
+                        fontSize: 14,
+                        color: "text.secondary",
+                      }}
+                    >
+                      {item}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+
+              <Typography
+                sx={{
+                  mt: 3,
+                  fontSize: 13,
+                  color: "text.secondary",
+                }}
+              >
+                Didn't receive the email?
+              </Typography>
+
+              <Page.MuiButton
+                variant="text"
+                color="secondary"
+                disabled={timeout > 0}
+                onClick={async () => {
+                  await sendOTP();
+                  updateTimeout(30);
+                }}
+                sx={{
+                  mt: 0.5,
+                  fontWeight: 700,
+                  textTransform: "none",
+                }}
+              >
+                {timeout > 0 ? `Resend in ${timeout}s` : "Resend Reset Link"}
+              </Page.MuiButton>
+            </Box>
           )}
         </Grid>
         <Grid>
-          <Page.Text sx={{ textAlign: "center", color: "grey.700" }}>
-            Try to remember your password?&nbsp;
-            <Typography
-              component={"span"}
-              color="secondary"
+          <Box
+            sx={{
+              pt: 3,
+              borderTop: "1px solid",
+              borderColor: "divider",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            <ArrowBackIcon
               sx={{
-                fontWeight: 500,
+                fontSize: 18,
+                color: "secondary.main",
+              }}
+            />
+
+            <Typography
+              onClick={() => setCardType("login")}
+              sx={{
+                color: "secondary.main",
+                fontWeight: 700,
+                cursor: "pointer",
+
                 "&:hover": {
-                  cursor: "pointer",
                   textDecoration: "underline",
                 },
               }}
-              onClick={() => {
-                setCardType("login");
+            >
+              Back to Sign In
+            </Typography>
+          </Box>
+          {stage !== "otp" && (
+            <Box
+              sx={{
+                mt: 2,
+                textAlign: "center",
               }}
             >
-              Login
-            </Typography>
-          </Page.Text>
-          {stage !== "otp" && (
-            <Page.Text sx={{ mt: 1, textAlign: "center", color: "grey.700" }}>
-              Not a Member?&nbsp;
               <Typography
-                component={"span"}
-                color="secondary"
                 sx={{
-                  fontWeight: 500,
-                  "&:hover": {
-                    cursor: "pointer",
-                    textDecoration: "underline",
-                  },
+                  color: "text.secondary",
+                  fontSize: 14,
                 }}
+              >
+                Don't have an account?
+              </Typography>
+
+              <Typography
                 onClick={() => {
                   onClose();
                   setCardType("login");
                   setOpenSignUp(true);
                 }}
+                sx={{
+                  mt: 0.5,
+                  color: "secondary.main",
+                  fontWeight: 700,
+                  cursor: "pointer",
+
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
               >
-                Sign up
+                Create Account
               </Typography>
-            </Page.Text>
+            </Box>
           )}
         </Grid>
       </Page.Box>

@@ -1,14 +1,77 @@
-import { Grid, Typography } from "@mui/material";
+"use client";
+
 import React from "react";
+import { Grid, Typography, Box } from "@mui/material";
+import { motion } from "framer-motion";
+
+const MotionBox = motion.create(Box);
+const MotionGrid = motion.create(Grid);
+
+const container = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const heading = {
+  hidden: {
+    opacity: 0,
+    y: 40,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const card = {
+  hidden: {
+    opacity: 0,
+    y: 50,
+    scale: 0.92,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const logo = {
+  hover: {
+    scale: 1.08,
+    rotate: [-2, 2, -2, 0],
+    transition: {
+      duration: 0.45,
+    },
+  },
+};
 
 const modes = [
   {
-    label: "Paypal",
+    label: "PayPal",
     img: (
       <img
         src="/images/rewards/paypal.png"
-        alt="paypal"
-        style={{ aspectRatio: "500 / 132", width: "185px", height: "auto" }}
+        alt="PayPal"
+        style={{
+          width: "170px",
+          height: "auto",
+          objectFit: "contain",
+        }}
       />
     ),
   },
@@ -17,8 +80,12 @@ const modes = [
     img: (
       <img
         src="/images/rewards/upi.png"
-        alt="upi"
-        style={{ aspectRatio: "500 / 138", width: "185px", height: "auto" }}
+        alt="UPI"
+        style={{
+          width: "170px",
+          height: "auto",
+          objectFit: "contain",
+        }}
       />
     ),
   },
@@ -27,8 +94,12 @@ const modes = [
     img: (
       <img
         src="/images/rewards/wire-transfer.png"
-        alt="wire transfer"
-        style={{ aspectRatio: "512 / 319", width: "120px", height: "auto" }}
+        alt="Wire Transfer"
+        style={{
+          width: "120px",
+          height: "auto",
+          objectFit: "contain",
+        }}
       />
     ),
   },
@@ -37,8 +108,12 @@ const modes = [
     img: (
       <img
         src="/images/rewards/health-report.png"
-        alt="medical report"
-        style={{ height: "80px", width: "80px" }}
+        alt="Medical Report"
+        style={{
+          width: "80px",
+          height: "80px",
+          objectFit: "contain",
+        }}
       />
     ),
   },
@@ -46,69 +121,182 @@ const modes = [
 
 function RewardModes() {
   return (
-    <Grid
-      size={12}
+    <MotionGrid
+      variants={container}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{
+        once: true,
+        amount: 0.2,
+      }}
       container
       justifyContent="center"
-      alignItems="center"
-      px={2}
       sx={{
-        bgcolor: "#d5eeea",
-        // background: "linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%)",
-        minheight: "300px",
+        py: { xs: 8, md: 12 },
+        background: "linear-gradient(180deg,#FFF3E9 0%,#FFF9F4 100%)",
       }}
     >
-      <Grid size={10} alignSelf="flex-start" py={3}>
-        <Typography
+      <Grid container size={10} direction="column">
+        {/* Heading */}
+        <MotionBox
+          variants={heading}
           sx={{
-            fontSize: { xs: "16px", md: "20px" },
-            display: "inline-block",
-            fontWeight: "bold",
-            borderBottom: "3px solid #06923E",
-            pb: 0.5,
-            mt: 2,
+            textAlign: "center",
+            mb: 7,
+            maxWidth: 720,
+            mx: "auto",
           }}
         >
-          Reward Mode
-        </Typography>
-        <Grid
-          size={12}
-          container
-          spacing={3}
-          my={4}
-          justifyContent="center"
-          alignItems="center"
-        >
-          {modes.map((mode, index) => {
-            return (
-              <Grid
-                container
-                size={{ xs: 12, md: 6, lg: 3 }}
-                key={index}
-                direction="column"
-                alignItems="center"
-                spacing={3}
-                justifyContent="flex-end"
+          <Typography
+            sx={{
+              color: "secondary.main",
+              textTransform: "uppercase",
+              letterSpacing: 2,
+              fontWeight: 700,
+              fontSize: 14,
+              mb: 1,
+            }}
+          >
+            Rewards
+          </Typography>
+
+          <Typography
+            sx={{
+              fontWeight: 800,
+              fontSize: {
+                xs: "2rem",
+                md: "2.75rem",
+              },
+              color: "primary.dark",
+              mb: 2,
+            }}
+          >
+            Get Rewarded Your Way
+          </Typography>
+
+          <Typography
+            sx={{
+              color: "text.secondary",
+              fontSize: {
+                xs: 16,
+                md: 18,
+              },
+              lineHeight: 1.8,
+              maxWidth: 650,
+              mx: "auto",
+            }}
+          >
+            Receive your survey incentives through secure and convenient payment
+            methods that suit your preferences.
+          </Typography>
+        </MotionBox>
+
+        {/* Reward Cards */}
+        <Grid container spacing={4} justifyContent="center">
+          {modes.map((mode, index) => (
+            <Grid
+              key={index}
+              size={{
+                xs: 12,
+                sm: 6,
+                lg: 3,
+              }}
+            >
+              <MotionBox
+                variants={card}
+                whileHover={{
+                  y: -10,
+                  scale: 1.03,
+                }}
                 sx={{
-                  bgcolor: "#f1f4f9",
-                  border: `2px solid white`,
-                  borderRadius: 4,
-                  p: 2,
-                  minHeight: "190px",
-                  textAlign: "center",
+                  height: 220,
+
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+
+                  p: 4,
+
+                  borderRadius: 5,
+
+                  bgcolor: "white",
+
+                  border: (theme) => `1px solid ${theme.palette.primary.light}`,
+
+                  boxShadow: "0 12px 35px rgba(0,0,0,.06)",
+
+                  transition: (theme) =>
+                    theme.transitions.create(
+                      ["transform", "box-shadow", "border-color"],
+                      {
+                        duration: theme.transitions.duration.standard,
+                      },
+                    ),
+
+                  "&:hover": {
+                    borderColor: "secondary.main",
+
+                    boxShadow: (theme) => `
+                      0 20px 45px ${theme.palette.secondary.main}20,
+                      0 0 25px ${theme.palette.secondary.main}15
+                    `,
+                  },
                 }}
               >
-                {mode?.img}
+                <MotionBox
+                  variants={logo}
+                  whileHover="hover"
+                  sx={{
+                    height: 90,
 
-                <Typography sx={{ fontSize: "18px", height: "50px" }}>
-                  {mode?.label}
-                </Typography>
-              </Grid>
-            );
-          })}
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+
+                    mb: 4,
+                  }}
+                >
+                  {mode.img}
+                </MotionBox>
+
+                <MotionBox variants={heading}>
+                  <Typography
+                    sx={{
+                      fontWeight: 700,
+                      fontSize: 18,
+                      color: "primary.dark",
+                    }}
+                  >
+                    {mode.label}
+                  </Typography>
+                </MotionBox>
+              </MotionBox>
+            </Grid>
+          ))}
         </Grid>
+
+        {/* Bottom Message */}
+        <MotionBox
+          variants={heading}
+          sx={{
+            mt: 7,
+            textAlign: "center",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "text.secondary",
+              fontSize: 17,
+              lineHeight: 1.8,
+            }}
+          >
+            Every completed survey brings you closer to exciting rewards,
+            securely delivered through your preferred payment method.
+          </Typography>
+        </MotionBox>
       </Grid>
-    </Grid>
+    </MotionGrid>
   );
 }
 

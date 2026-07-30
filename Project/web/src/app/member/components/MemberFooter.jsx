@@ -1,39 +1,66 @@
-import { Grid, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 
 function MemberFooter() {
   return (
-    <Grid
-      size={12}
+    <Box
+      component="footer"
       sx={{
+        py: "3.5px",
+        px: 2,
         textAlign: "center",
-        // borderTop: "1px solid #222222",
-        py: 0.5,
-        color: "#bdbdbd",
-        bgcolor: "#24292e",
+
+        bgcolor: "#f8fafc",
+        borderTop: "1px solid #e5e7eb",
+
+        color: "text.secondary",
         fontSize: 12,
-        zIndex: 999,
+
+        boxShadow: "0 -2px 12px rgba(0,0,0,.04)",
       }}
     >
-      Copyright 2026 ©{" "}
+      <Typography
+        component="span"
+        sx={{
+          fontSize: 12,
+          color: "text.secondary",
+        }}
+      >
+        Copyright © 2026{" "}
+      </Typography>
+
       <Typography
         component="a"
         href="https://frequentresearch.com/"
         target="_blank"
         rel="noopener noreferrer"
-        color="primary.main"
-        fontWeight={500}
-        fontSize={12}
         sx={{
+          fontSize: 12,
+          fontWeight: 700,
+          color: "secondary.main",
+          textDecoration: "none",
+          transition: ".25s",
+
           "&:hover": {
+            color: "secondary.dark",
             textDecoration: "underline",
           },
         }}
       >
         Frequent Research Fieldwork Solutions Pvt. Ltd.
-      </Typography>{" "}
-      (d/b/a MyHealthOpinions). All Rights Reserved.
-    </Grid>
+      </Typography>
+
+      <Typography
+        component="span"
+        sx={{
+          fontSize: 12,
+          color: "text.secondary",
+        }}
+      >
+        {" "}
+        (d/b/a MyHealthOpinions). All Rights Reserved.
+      </Typography>
+    </Box>
   );
 }
 

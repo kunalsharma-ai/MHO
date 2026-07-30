@@ -34,7 +34,7 @@ export default function PositionedSnackbar() {
         anchorOrigin={{ ...state }}
         open={state.open}
         sx={{ zIndex: 99999 }}
-        autoHideDuration={2000}
+        autoHideDuration={status === "error" ? null : 3000}
         onClose={(e, reason) => {
           if (reason === "clickaway") return;
           setState({ ...state, open: false });

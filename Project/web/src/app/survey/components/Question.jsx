@@ -34,9 +34,7 @@ export default function Question({ que, user, form, disabled }) {
   ) : question.isError ? (
     <></>
   ) : Boolean(question.data) ? (
-    <>
-      <Que question={question.data} form={form} disabled={disabled} />
-    </>
+    <Que question={question.data} form={form} disabled={disabled} />
   ) : (
     <></>
   );
@@ -146,7 +144,7 @@ function DateElement({ question, form, disabled }) {
       }}
     >
       <FormControl fullWidth required={question.required}>
-        <Page.Text sx={{ fontWeight: 600, mb: 0.5, color: "secondary.main" }}>
+        <Page.Text sx={{ fontWeight: 600, mb: 0.5, color: "primary.main" }}>
           {question.label}{" "}
           {question.required && (
             <span style={{ color: "red", fontWeight: 600 }}>*</span>

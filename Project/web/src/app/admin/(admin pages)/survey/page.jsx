@@ -93,7 +93,7 @@ export default function () {
                   setOpen({ open: true, id: info._id });
                 }}
               >
-                <EditIcon fontSize="small" color="secondary"/>
+                <EditIcon fontSize="small" color="secondary" />
               </IconButton>
             ),
           },
@@ -114,7 +114,9 @@ export default function () {
               fontSize: "18px",
               display: "inline-block",
               fontWeight: "600",
-              borderBottom: "2px solid #59AC77",
+              color: "primary.main",
+              borderBottom: (theme) =>
+                `2px solid ${theme.palette.secondary.dark}`,
               pb: 0.5,
               my: 1,
             }}
@@ -528,7 +530,7 @@ function QuestionsEditor({ pageIndex, control, register, watch }) {
                   control={control}
                   {...register(`pages.${pageIndex}.${index}`)}
                   label={`Question ${index + 1} [${watch(
-                    `pages.${pageIndex}.${index}`
+                    `pages.${pageIndex}.${index}`,
                   )}]`}
                   // label={`Question ${index + 1}`}
                   api="question"

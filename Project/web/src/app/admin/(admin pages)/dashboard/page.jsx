@@ -63,22 +63,23 @@ function Panelists() {
 
   return (
     <Grid
-      size={12}
       container
-      spacing={2}
-      mt={1}
-      p={{ xs: 2, md: 3 }}
-      sx={{ border: `1px solid #e0e0e0` }}
+      size={12}
+      spacing={2.5}
+      sx={{
+        p: { xs: 2, md: 3 },
+        bgcolor: "#fafafa",
+        borderRadius: 3,
+        border: "1px solid #ececec",
+      }}
     >
-      <Page.Box width="100%">
+      <Page.Box sx={{ width: "100%" }}>
         <Typography
           sx={{
-            fontSize: "16px",
-            display: "inline-block",
-            fontWeight: "600",
-            borderBottom: "2px solid #59AC77",
-            pb: 0.5,
-            my: 2,
+            fontSize: 22,
+            fontWeight: 700,
+            color: "primary.main",
+            mb: 1,
           }}
         >
           Panelists
@@ -86,43 +87,84 @@ function Panelists() {
       </Page.Box>
       {Object.values(statistics)?.map((stat, index) => {
         return (
-          <Grid
-            container
-            size={{ xs: 12, md: 6, lg: 3 }}
-            key={index}
-            alignItems="center"
-            justifyContent="space-between"
-            spacing={1}
-            sx={{
-              border: "1px solid rgba(89, 172, 119, 0.6)",
-              bgcolor: "#ecfcf5",
-              borderRadius: 4,
-              px: { xs: 3, xl: 5 },
-              py: 2,
-              minHeight: "120px",
-            }}
-          >
-            <Grid
-              // size={6}
-              direction="column"
-              alignItems="flex-start"
-              justifyContent="center"
+          <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={index}>
+            <Page.Box
+              sx={{
+                position: "relative",
+                overflow: "hidden",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                p: 2.5,
+                borderRadius: 3,
+                bgcolor: "#fff",
+                minHeight: 115,
+                boxShadow: "0 6px 20px rgba(0,0,0,.08)",
+                border: "1px solid rgba(0,0,0,.06)",
+                transition: "all .25s ease",
+
+                "&:hover": {
+                  transform: "translateY(-4px)",
+                  boxShadow: "0 12px 30px rgba(0,0,0,.12)",
+                },
+
+                "&::before": {
+                  content: '""',
+                  position: "absolute",
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: 6,
+                  background: (theme) =>
+                    `linear-gradient(180deg,
+            ${theme.palette.primary.main},
+            ${theme.palette.secondary.main})`,
+                },
+              }}
             >
-              <Typography fontSize={16} sx={{ textTransform: "capitalize" }}>
-                {stat?.label}
-              </Typography>
-              <Typography
+              <Page.Box>
+                <Typography
+                  sx={{
+                    color: "text.secondary",
+                    fontSize: 13,
+                    fontWeight: 500,
+                    mb: 0.5,
+                    textTransform: "uppercase",
+                    letterSpacing: ".5px",
+                  }}
+                >
+                  {stat.label}
+                </Typography>
+
+                <Typography
+                  sx={{
+                    fontSize: { xs: 30, lg: 36 },
+                    fontWeight: 700,
+                    color: "primary.main",
+                    lineHeight: 1,
+                  }}
+                >
+                  {Number(stat.value).toLocaleString("en-US")}
+                </Typography>
+              </Page.Box>
+
+              <Page.Box
                 sx={{
-                  fontWeight: "500",
-                  fontSize: { xs: "24px", xl: "36px" },
-                  wordBreak: "break-word",
-                  overflowWrap: "anywhere",
-                  whiteSpace: "normal",
+                  width: 60,
+                  height: 60,
+                  borderRadius: "50%",
+                  bgcolor: (theme) => `${theme.palette.primary.main}15`,
+                  color: "primary.main",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 30,
+                  flexShrink: 0,
                 }}
               >
-                {stat.value.toLocaleString("en-US")}
-              </Typography>
-            </Grid>
+                <i className="fa-solid fa-users" />
+              </Page.Box>
+            </Page.Box>
           </Grid>
         );
       })}

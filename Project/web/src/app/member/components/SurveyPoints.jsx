@@ -5,9 +5,8 @@ import { Avatar, Box, Button, Grid, Typography } from "@mui/material";
 import { api } from "@/util";
 import { useToast } from "@/hooks";
 
-
 export default function SurveyPoints() {
-  const router=useRouter();
+  const router = useRouter();
   const [points, setPoints] = React.useState(0); //todo: set from api call
   const [conversionRate, setConversionRate] = React.useState(1); //todo: set conversion rate from api call
   const [threshold, setThreshold] = React.useState(1500); //todo: set from server config
@@ -15,8 +14,7 @@ export default function SurveyPoints() {
     api
       .get(`/api/v1/me/points`)
       .then((resp) => {
-        if(resp.status==="error")
-          router.replace("/survey?name=welcome");
+        if (resp.status === "error") router.replace("/survey?name=welcome");
         // if (!resp.data) return useToast(resp);
         let data = resp.data;
         setPoints(data.totalPoints);
@@ -35,11 +33,11 @@ export default function SurveyPoints() {
       textAlign={{ xs: "center", md: "right" }}
     >
       <Typography
-        fontSize={{ xs: "16px", md: "20px" }}
+        fontSize={{ xs: "16px", md: "25px" }}
         color="secondary.main"
         fontWeight={"500"}
       >
-        Earned Points : {points} (~{" "}
+        Earned Points : {points} ( ≈{" "}
         {(Number(points) * Number(conversionRate)).toMoney("USD")})
       </Typography>
       {threshold > points ? (

@@ -18,40 +18,40 @@ import ParentDetailsForm from "../password/ParentDetailsForm";
 export default function page() {
   return (
     <Grid
-      size={ 12 }
+      size={12}
       container
-      sx={ {
-        bgcolor: "rgba(89, 172, 119, 0.4)",
+      sx={{
+        bgcolor: "primary.light",
         minHeight: "100vh",
         minWidth: "100vw",
-      } }
+      }}
       justifyContent="center"
       alignItems="center"
-      py={ 2 }
+      py={2}
     >
       <Grid
         container
         direction="column"
         alignItems="center"
-        spacing={ 0 }
-        sx={ {
+        spacing={0}
+        sx={{
           bgcolor: "white",
           borderRadius: 4,
           boxShadow: 24,
           py: 3,
           px: { xs: 1, md: 4 },
           textAlign: "justify",
-        } }
+        }}
       >
-        { " " }
+        {" "}
         <Page.Box
-          sx={ {
-            height: "80px",
+          sx={{
+            height: "67.44px",
             width: "240px",
-          } }
+          }}
         >
           <img
-            src="/images/logo/My-Health-Opinions1500-500.png"
+            src="/images/logo/My-Health-Opinions.png"
             alt="logo"
             height="100%"
             width="100%"
@@ -62,13 +62,6 @@ export default function page() {
     </Grid>
   );
 }
-
-
-
-
-
-
-
 
 export function Terms({
   width = { xs: "90vw", lg: "80vw", xl: "70vw" },
@@ -91,7 +84,7 @@ export function Terms({
       termOptions[0],
       ...category.terms.map((term) => {
         return {
-          label: <div dangerouslySetInnerHTML={ { __html: term.body } } />,
+          label: <div dangerouslySetInnerHTML={{ __html: term.body }} />,
           value: term.name,
           required: term.isRequired ?? false,
         };
@@ -165,23 +158,22 @@ export function Terms({
     }
     if (pathName === "/auth/terms") router.push("/survey?name=welcome");
     if ("Reload" in user) user.Reload();
-    else
-      useToast(resp);
+    else useToast(resp);
   };
   if (isLoading && !hideLoading) {
     return <LoadingOverlay />;
   }
   if (user?.isMinor && [null, undefined, ""].includes(user?.parent?.email)) {
-    return <form
-      onSubmit={
-        form.handleSubmit(async data => {
-          let resp = await api.patch(`/api/v1/me/parent-details`, data)
-          user.update(resp.data)
-        })
-      }
-    >
-      <ParentDetailsForm form={ form } submitLabel={ "Submit" } />
-    </form>
+    return (
+      <form
+        onSubmit={form.handleSubmit(async (data) => {
+          let resp = await api.patch(`/api/v1/me/parent-details`, data);
+          user.update(resp.data);
+        })}
+      >
+        <ParentDetailsForm form={form} submitLabel={"Submit"} />
+      </form>
+    );
   }
   return (
     <>
@@ -194,20 +186,20 @@ export function Terms({
         }}
       ></Page.Text> */}
       <Grid
-        sx={ {
+        sx={{
           borderRadius: 2,
-          bgcolor: "rgba(163, 243, 206, 0.21)",
-          border: "1px solid #f4f4f4",
+          bgcolor: "primary.light",
+          border: (theme) => `1px solid ${theme.palette.secondary.light}`,
           py: 2,
           px: 2,
           width: width,
-        } }
+        }}
       >
-        <Page.Box fontSize={ 15 } py={ 2 }>
+        <Page.Box fontSize={15} py={2}>
           <div
-            dangerouslySetInnerHTML={ {
+            dangerouslySetInnerHTML={{
               __html: category?.termsMessage ?? "",
-            } }
+            }}
           />
           {/* todo: deleted once flow is finalized
           
@@ -234,25 +226,25 @@ export function Terms({
           </Page.Text> */}
 
         <Grid
-          size={ 12 }
+          size={12}
           container
-          direction={ "column" }
-          mt={ 2 }
-          gap={ 0 }
-          sx={ {
+          direction={"column"}
+          mt={2}
+          gap={0}
+          sx={{
             "& ul": {
               pl: 3,
               my: 1,
             },
-          } }
+          }}
         >
-          { termOptions.map((option, index) => (
+          {termOptions.map((option, index) => (
             <Page.Box
-              key={ index }
-              className={ option.required ? "required" : "not-required" }
-              sx={ {
+              key={index}
+              className={option.required ? "required" : "not-required"}
+              sx={{
                 borderBottom: "4px solid #fcfcfc",
-              } }
+              }}
             >
               <FormControlLabel
                 control={
@@ -264,25 +256,25 @@ export function Terms({
                         ? isAllChecked
                         : acceptedTerms?.includes(option.value)
                     }
-                    onChange={ () =>
+                    onChange={() =>
                       option.value === "accept_all"
                         ? handleAcceptAll()
                         : handleCheckboxChange(option.value)
                     }
                   />
                 }
-                label={ option.label }
-                sx={ {
+                label={option.label}
+                sx={{
                   alignItems: "flex-start",
                   "& .MuiFormControlLabel-label": {
                     my: "6px",
                   },
-                } }
+                }}
               />
             </Page.Box>
-          )) }
+          ))}
 
-          <Page.Text pt={ 3 }>
+          <Page.Text pt={3}>
             <em>
               Your data will be stored securely and used solely for market
               research and opinion analysis purposes in compliance with
@@ -290,15 +282,15 @@ export function Terms({
               regulations)
             </em>
           </Page.Text>
-          <Page.Text mt={ 1 }>
+          <Page.Text mt={1}>
             <em>
-              { " " }
+              {" "}
               You may withdraw your consent or deactivate your account at any
-              time by contacting{ " " }
+              time by contacting{" "}
               <Page.Text
                 component="a"
                 href="mailto:support@myhealthopinions.com"
-                sx={ { color: "secondary.main", fontWeight: 600 } }
+                sx={{ color: "secondary.main", fontWeight: 600 }}
               >
                 support@myhealthopinions.com
               </Page.Text>
@@ -307,18 +299,18 @@ export function Terms({
             </em>
           </Page.Text>
 
-          <Grid size={ 12 } container justifyContent={ "flex-end" } my={ 2 }>
+          <Grid size={12} container justifyContent={"flex-end"} my={2}>
             <Page.MuiButton
-              onClick={ handleSubmit }
-              disabled={ !allRequiredSelected || !isTermsChanged }
+              onClick={handleSubmit}
+              disabled={!allRequiredSelected || !isTermsChanged}
               variant="contained"
               color="secondary"
-              sx={ {
+              sx={{
                 ml: 1,
                 fontWeight: 600,
                 color: "white",
                 px: 2,
-              } }
+              }}
             >
               Accept
             </Page.MuiButton>

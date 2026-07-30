@@ -69,7 +69,7 @@ function InputField(attr) {
               name={attr.name}
               value={attr.value}
               color="primary"
-              size="small"
+              size={attr.size ?? "small"}
             />
           }
           label={attr.label}
@@ -83,6 +83,7 @@ function InputField(attr) {
           {/* <Label htmlFor={attr.id??attr.name}>{attr.label}</Label> */}
           <Password
             id={attr.id ?? attr.name}
+            size={attr.size ?? "small"}
             name={attr.name}
             required={attr.required}
             autoFocus={attr.autoFocus}
@@ -113,6 +114,7 @@ function InputField(attr) {
           <InputTextField
             fullWidth={attr.fullWidth}
             id={attr.id ?? attr.name}
+            size={attr.size ?? "small"}
             type={attr.type ?? "text"}
             name={attr.name}
             placeholder={attr.placeholder}

@@ -27,7 +27,6 @@ export default function page() {
     setReload((reload + 1) % 10);
   }
 
-
   const columns = [
     {
       id: "createdAt",
@@ -54,15 +53,15 @@ export default function page() {
       label: "Status",
       render: (info) => (
         <Chip
-          label={ info.status }
+          label={info.status}
           size="small"
-          color={ info.status === "closed" ? "error" : "info" }
-          sx={ {
+          color={info.status === "closed" ? "error" : "info"}
+          sx={{
             fontSize: "12px",
             textTransform: "capitalize",
             height: 22,
             px: 1,
-          } }
+          }}
         />
       ),
       feature: ["filterable", "sortable"],
@@ -73,69 +72,69 @@ export default function page() {
       width: "200px",
       render: (info) => (
         <div
-          style={ {
+          style={{
             display: "flex",
             gap: "4px",
-          } }
-        >
-        </div>
+          }}
+        ></div>
       ),
     },
   ];
   return (
     <Grid
-      size={ 12 }
-      p={ { xs: 2, md: 3 } }
+      size={12}
+      p={{ xs: 2, md: 3 }}
       justifyContent="center"
-      sx={ {
+      sx={{
         border: `1px solid #e0e0e0`,
         bgcolor: (theme) => theme.palette.page.main,
-      } }
+      }}
     >
       <Datatable
-        isLoading={ isLoading }
-        pagination={ [10, 20, 50, 100] }
-        pageSize={ 20 }
+        isLoading={isLoading}
+        pagination={[10, 20, 50, 100]}
+        pageSize={20}
         noDataMsg="No Record Found."
-        data={ data }
+        data={data}
         hideColumnSelector
         extra={
           <Box
-            px={ { xs: 0, md: 2 } }
-            my={ { xs: 1, md: 0 } }
+            px={{ xs: 0, md: 2 }}
+            my={{ xs: 1, md: 0 }}
             display="flex"
             alignItems="center"
-            gap={ 1 }
-          >
-          </Box>
+            gap={1}
+          ></Box>
         }
         title={
           <Typography
-            sx={ {
+            sx={{
               fontSize: "16px",
               display: "inline-block",
               fontWeight: "600",
-              borderBottom: (theme) => `2px solid ${theme.palette.primary.main}`,
+              color: "primary.main",
+              borderBottom: (theme) =>
+                `2px solid ${theme.palette.secondary.dark}`,
               pb: 0.5,
               my: 1,
-            } }
+            }}
           >
             Redemption Requests
           </Typography>
         }
-        columns={ columns }
+        columns={columns}
       />
 
       <SideDrawer
-        open={ open }
-        hideTitleBar={ true }
-        onClose={ () => setOpen(false) }
+        open={open}
+        hideTitleBar={true}
+        onClose={() => setOpen(false)}
       >
         <CreateTicket
-          reloadData={ reloadData }
-          close={ () => {
+          reloadData={reloadData}
+          close={() => {
             setOpen(false);
-          } }
+          }}
         />
       </SideDrawer>
     </Grid>
@@ -152,7 +151,7 @@ function CreateTicket({ reloadData, close }) {
           resp.data.map((u) => ({
             label: `${u.fullName} (${u.mail}) [${u.category}]`,
             value: u.mail,
-          }))
+          })),
         );
     });
   }, []);
@@ -170,60 +169,60 @@ function CreateTicket({ reloadData, close }) {
   return (
     <Grid
       component="form"
-      onSubmit={ handleSubmit(async (data) => {
+      onSubmit={handleSubmit(async (data) => {
         let resp = await api.put(`/api/v1/support`, data);
         useToast(resp);
         if (resp.status === "success") {
           reloadData();
           close();
         }
-      }) }
+      })}
       container
-      spacing={ 2 }
-      size={ 12 }
-      sx={ {
+      spacing={2}
+      size={12}
+      sx={{
         bgcolor: "white",
         overflow: "hidden",
         borderRadius: "10px",
         boxShadow: 1,
         pb: 2,
         alignSelf: "flex-start",
-      } }
+      }}
     >
       <SectionTitle
         title="Create Ticket"
-        sx={ { justifyContent: "space-between" } }
+        sx={{ justifyContent: "space-between" }}
       >
-        <IconButton onClick={ close } color="secondary">
+        <IconButton onClick={close} color="secondary">
           <CloseIcon />
         </IconButton>
       </SectionTitle>
-      <Grid container size={ 12 } spacing={ 1.4 } sx={ { px: 2 } }>
-        <Grid size={ 12 }>
+      <Grid container size={12} spacing={1.4} sx={{ px: 2 }}>
+        <Grid size={12}>
           <Form.Select
-            control={ control }
-            { ...form.register("user") }
+            control={control}
+            {...form.register("user")}
             label="User"
-            options={ users }
+            options={users}
           />
         </Grid>
         <Form.Input
-          control={ control }
-          { ...form.register("subject") }
+          control={control}
+          {...form.register("subject")}
           label="Subject"
         />
         <Form.TextEditor
-          control={ control }
+          control={control}
           name="description"
           label="Description"
-          editorId={ id }
+          editorId={id}
           dialogScoped
         />
         <Form.Upload
           endpoint="/api/v1/upload/image"
           name="attachments"
-          control={ control }
-          form={ form }
+          control={control}
+          form={form}
           multiple
           accept="image/jpeg,image/png,image/webp"
           hideCaption
@@ -231,19 +230,19 @@ function CreateTicket({ reloadData, close }) {
       </Grid>
       <Grid
         container
-        size={ 12 }
-        sx={ {
+        size={12}
+        sx={{
           justifyContent: "flex-end",
           mr: 2,
-        } }
+        }}
       >
         <Page.MuiButton
           type="submit"
           variant="contained"
           color="secondary"
-          sx={ {
+          sx={{
             fontWeight: "bold",
-          } }
+          }}
         >
           Create
         </Page.MuiButton>

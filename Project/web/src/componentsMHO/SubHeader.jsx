@@ -7,55 +7,130 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 function SubHeader({ title = "Title", pageName = "name" }) {
   const router = useRouter();
-  return (
-    <Grid
-      container
-      size={12}
-      direction={"column"}
-      justifyContent="center"
-      alignItems={"center"}
-      sx={{
-        color: "white",
+ return (
+  <Grid
+    container
+    size={12}
+    justifyContent="center"
+    alignItems="center"
+    direction="column"
+    sx={{
+      position: "relative",
+      overflow: "hidden",
+      height: { xs: 360, md: 420 },
+
+      // backgroundImage: "url(/images/home/banner/bg5.jpg)",
+      backgroundImage: "url(/images/home/banner/subheader.jpg)",
+      backgroundSize: "cover",
+      backgroundPosition: "0% 85%",
+      backgroundRepeat: "no-repeat",
+
+      "&::before": {
+        content: '""',
+        position: "absolute",
+        inset: 0,
+        background: (theme) => `
+          linear-gradient(
+            135deg,
+            ${theme.palette.primary.main}E6 0%,
+            rgba(0,0,0,.55) 45%,
+            ${theme.palette.secondary.main}AA 100%
+          )
+        `,
+      },
+
+      "&::after": {
+        content: '""',
+        position: "absolute",
+        inset: 0,
         background:
-          "linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(./images/home/banner/bg5.jpg)",
-        height: "260px",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
+          "radial-gradient(circle at top right, rgba(255,255,255,.12), transparent 45%)",
+      },
+    }}
+  >
+    <Box
+      sx={{
+        position: "relative",
+        zIndex: 2,
+        textAlign: "center",
+        px: 2,
       }}
     >
       <Typography
-        fontSize={{ xs: "26px", md: "40px" }}
-        fontWeight={"bold"}
-        textAlign={"center"}
+        sx={{
+          fontSize: { xs: 34, md: 54 },
+          fontWeight: 800,
+          color: "#fff",
+          letterSpacing: 1,
+          textShadow: "0 8px 25px rgba(0,0,0,.35)",
+        }}
       >
         {title}
       </Typography>
+
       <Box
-        display={"flex"}
-        sx={{ gap: 1, mt: 2 }}
-        alignItems={"center"}
-        justifyContent={"center"}
+        sx={{
+          mt: 3,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 1.25,
+          px: 3,
+          py: 1,
+          borderRadius: 100,
+          bgcolor: "rgba(255,255,255,.12)",
+          backdropFilter: "blur(14px)",
+          border: "1px solid rgba(255,255,255,.2)",
+        }}
       >
         <Typography
-          onClick={() => {
-            router.push("/");
-          }}
+          onClick={() => router.push("/")}
           sx={{
-            fontSize: "16px",
+            color: "rgba(255,255,255,.9)",
+            fontWeight: 600,
+            cursor: "pointer",
+            transition: ".25s",
+
             "&:hover": {
-              textDecoration: "underline",
-              cursor: "pointer",
+              color: "secondary.main",
             },
           }}
         >
           Home
         </Typography>
-        <ArrowForwardIosIcon fontSize="small" />{" "}
-        <Typography fontSize="16px">{pageName}</Typography>
+
+        <ArrowForwardIosIcon
+          sx={{
+            fontSize: 14,
+            color: "rgba(255,255,255,.6)",
+          }}
+        />
+
+        <Typography
+          sx={{
+            fontWeight: 700,
+            color: "#fff",
+          }}
+        >
+          {pageName}
+        </Typography>
       </Box>
-    </Grid>
-  );
+    </Box>
+
+    <Box
+      sx={{
+        position: "absolute",
+        bottom: -70,
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: 220,
+        height: 220,
+        borderRadius: "50%",
+        bgcolor: "rgba(255,255,255,.06)",
+        filter: "blur(10px)",
+      }}
+    />
+  </Grid>
+);
 }
 
 export default SubHeader;

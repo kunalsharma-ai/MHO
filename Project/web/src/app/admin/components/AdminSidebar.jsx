@@ -106,12 +106,12 @@ export default function AdminSidebar({ children }) {
                 justifyContent: "center",
                 border: "1px solid #e0e0e0",
                 color: isActive ? "secondary.main" : "inherit",
-                bgcolor: isActive ? "#d9eee3a2" : "transparent",
+                bgcolor: isActive ? "primary.light" : "transparent",
                 gap: 0.5,
                 "&:hover": {
                   cursor: "pointer",
-                  color: "secondary.main",
-                  bgcolor: "#ecfcf5",
+                  color: "secondary.dark",
+                  bgcolor: "secondary.light",
                 },
               }}
             >

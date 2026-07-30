@@ -2,16 +2,23 @@ import { Grid } from "@mui/material";
 
 function SectionTitle(attr) {
   const sectionHeaderStyle = {
-    // fontFamily: "Times New Roman",
-    // fontFamily: "Roboto, Arial, sans-serif",
-    fontWeight: 600,
-    fontSize: "18px",
-    height: "45px",
-    p: 2,
+    height: 52,
+    px: 3,
+    fontSize: 20,
+    fontWeight: 700,
     color: attr.isDisabled && "grey",
     background: attr.isDisabled
       ? "#e4e5e6"
-      : "linear-gradient(-45deg, rgb(191, 226, 247), #e4e5e6, rgb(191, 226, 247))",
+      : (theme) => `
+      linear-gradient(
+        135deg,
+        ${theme.palette.secondary.light || "#EAF2FF"} 0%,
+        #FFFFFF 45%,
+        #F6F9FF 65%,
+        ${theme.palette.secondary.light || "#EAF2FF"} 100%
+      )
+    `,
+    borderBottom: (theme) => `1px solid ${theme.palette.secondary.light}`,
     backgroundSize: "150% 150%",
     animation: "gradientShift 12s ease infinite",
     borderTopLeftRadius: "8px",

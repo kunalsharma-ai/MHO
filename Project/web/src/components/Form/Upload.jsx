@@ -25,13 +25,13 @@ function getCroppedImg(imageSrc, croppedAreaPixels, outputType = "image/jpeg") {
         0,
         0,
         croppedAreaPixels.width,
-        croppedAreaPixels.height
+        croppedAreaPixels.height,
       );
 
       canvas.toBlob(
         (blob) => resolve(blob),
         outputType,
-        outputType === "image/jpeg" ? 0.92 : undefined
+        outputType === "image/jpeg" ? 0.92 : undefined,
       );
     };
   });
@@ -48,7 +48,7 @@ export default function Upload({
   hideCaption = false,
   form,
   tooltipTitle = "Logo",
-  multiple = false, 
+  multiple = false,
   ...attr
 }) {
   const inputRef = React.useRef(null);
@@ -102,7 +102,7 @@ export default function Upload({
     const croppedBlob = await getCroppedImg(
       imgURL,
       croppedAreaPixels,
-      outputType
+      outputType,
     );
 
     const ext = outputType.split("/")[1];
@@ -270,8 +270,9 @@ export default function Upload({
                       py: 0.2,
                       fontSize: 13,
                       textAlign: "center",
-                      bgcolor: "hsla(144, 93%, 21%, 0.7)",
-                      color: "white",
+                      bgcolor: "secondary.light",
+                      color: "primary.main",
+                      fontWeight: 600,
                       position: "absolute",
                       bottom: 0,
                       width: "100%",

@@ -64,13 +64,13 @@ export default function page() {
     retry: false,
   });
   const isLoading = surveyLoading || (!survey && !surveyError);
-  console.log({ survey, surveyError })
+  console.log({ survey, surveyError });
   return (
-    <LocalizationProvider dateAdapter={ AdapterDateFns } adapterLocale={ enGB }>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
       <Grid
-        size={ 12 }
+        size={12}
         container
-        sx={ {
+        sx={{
           bgcolor: "primary.main",
           backgroundImage: "url(/images/logo/facts-bg-last.png)",
           backgroundSize: "cover",
@@ -78,17 +78,17 @@ export default function page() {
           backgroundPosition: "center",
           minHeight: "100vh",
           minWidth: "100vw",
-        } }
+        }}
         justifyContent="center"
         alignItems="center"
-        py={ 2 }
+        py={2}
       >
         <Grid
           container
           direction="column"
           alignItems="center"
-          spacing={ 0 }
-          sx={ {
+          spacing={0}
+          sx={{
             width: { xs: "90vw", lg: "80vw", xl: "70vw" },
             minHeight: "90vh",
             overflow: "hidden",
@@ -100,20 +100,20 @@ export default function page() {
             py: 3,
             px: { xs: 1, md: 4 },
             textAlign: "justify",
-          } }
+          }}
         >
-          { isLoading ? (
+          {isLoading ? (
             <LoadingOverlay />
           ) : surveyCompleted ? (
             <Grid
-              size={ 12 }
+              size={12}
               container
               alignItems="space-between"
-              sx={ { minHeight: "calc(90vh - 125px)" } }
+              sx={{ minHeight: "calc(90vh - 125px)" }}
             >
               <Page.Box
                 component="div"
-                sx={ {
+                sx={{
                   textAlign: "justify",
                   p: 3,
                   width: "100%",
@@ -121,20 +121,20 @@ export default function page() {
                   bgcolor: (theme) => theme.palette.cardbg.main,
                   border: "1px solid #f4f4f4",
                   textShadow: "1px 1px 1px rgba(0, 0, 0, 0.1)",
-                } }
-                dangerouslySetInnerHTML={ { __html: survey.thankyou } }
+                }}
+                dangerouslySetInnerHTML={{ __html: survey.thankyou }}
               />
-              <Grid size={ 12 } container justifyContent="center" mt={ 2 }>
+              <Grid size={12} container justifyContent="center" mt={2}>
                 <Page.MuiButton
                   variant="contained"
                   color="secondary"
-                  sx={ {
+                  sx={{
                     height: "36px",
                     fontWeight: 600,
-                  } }
-                  onClick={ () => {
+                  }}
+                  onClick={() => {
                     router.push("/member/dashboard");
-                  } }
+                  }}
                 >
                   Go to Dashboard
                 </Page.MuiButton>
@@ -144,22 +144,23 @@ export default function page() {
             <>
               <Grid
                 container
-                size={ 12 }
+                size={12}
                 alignItems="center"
-                justifyContent={ { xs: "center", md: "space-between" } }
-                mb={ 2 }
-                spacing={ { xs: 1, md: 2 } }
-                direction={ { xs: "column", md: "row" } }
-                sx={ { borderBottom: "1px solid #f4f4f4" } }
+                justifyContent={{ xs: "center", md: "space-between" }}
+                mb={2}
+                spacing={{ xs: 1, md: 2 }}
+                direction={{ xs: "column", md: "row" }}
+                sx={{ borderBottom: "1px solid #f4f4f4" }}
               >
                 <Page.Box
-                  sx={ {
-                    height: "80px",
-                    width: "240px",
-                  } }
+                  sx={{
+                    height: "72px",
+                    width: "227.69px",
+                    pb: 1,
+                  }}
                 >
                   <img
-                    src="/images/logo/My-Health-Opinions1500-500.png"
+                    src="/images/logo/My-Health-Opinions.png"
                     alt="logo"
                     height="100%"
                     width="100%"
@@ -167,49 +168,49 @@ export default function page() {
                 </Page.Box>
 
                 <Page.Text
-                  sx={ {
+                  sx={{
                     flex: 1,
                     textAlign: "center",
                     ml: { xs: 0, md: "-240px" },
                     fontSize: { xs: "18px", lg: "24px" },
                     fontWeight: 600,
                     color: "secondary.main",
-                  } }
+                  }}
                 >
-                  { survey?.name }
+                  {survey?.name}
                 </Page.Text>
               </Grid>
-              { Boolean(surveyError) ? (
+              {Boolean(surveyError) ? (
                 <SurveyAlreadyTaken
-                  onExit={ (e) => {
+                  onExit={(e) => {
                     router.push("/member/dashboard");
-                  } }
-                  timeout={ 10 }
+                  }}
+                  timeout={10}
                 />
               ) : (
                 <Survey
-                  survey={ survey }
-                  user={ user }
-                  onError={ (err) => {
+                  survey={survey}
+                  user={user}
+                  onError={(err) => {
                     setErrorPopup({ ...err });
-                  } }
-                  onComplete={ (status) => {
+                  }}
+                  onComplete={(status) => {
                     setSurveyCompleted(status);
                     setTimeout(() => {
                       router.replace("/member/dashboard");
                     }, 30000);
-                  } }
+                  }}
                 />
-              ) }
+              )}
             </>
-          ) }
+          )}
         </Grid>
         <SecurityCheck
-          title={ errorPopup.title }
-          errorMessage={ errorPopup.message }
-          onOk={ errorPopup.onOk }
-          onCancel={ errorPopup.onCancel }
-          btns={ errorPopup.btns }
+          title={errorPopup.title}
+          errorMessage={errorPopup.message}
+          onOk={errorPopup.onOk}
+          onCancel={errorPopup.onCancel}
+          btns={errorPopup.btns}
         />
       </Grid>
     </LocalizationProvider>

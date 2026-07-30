@@ -13,12 +13,12 @@ function StatsCard({ label, value, onClick }) {
         width: "100%",
         height: "74px",
         borderRadius: "10px",
-        background: "#06923E",
+        background: "primary.dark",
         color: "white",
         transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.4)",
         "&:disabled": {
-          background: "#06923E",
+          background: "primary.dark",
           color: "white",
         },
         "&:hover": {

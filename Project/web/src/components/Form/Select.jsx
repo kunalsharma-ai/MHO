@@ -284,7 +284,7 @@ export default function Select({
                             },
                             "& .MuiAutocomplete-option": {
                               '&[aria-selected="true"]': {
-                                backgroundColor: "#c9f2d8 !important",
+                                backgroundColor: "#FFD199 !important",
                               },
                             },
                           },

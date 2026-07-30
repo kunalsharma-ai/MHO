@@ -1,6 +1,55 @@
-import { Avatar, Grid, Typography, Box } from "@mui/material";
+"use client";
+
 import React from "react";
+import { Grid, Typography, Box } from "@mui/material";
 import Carousel from "./Carousel";
+import { motion } from "framer-motion";
+
+const MotionBox = motion.create(Box);
+const MotionGrid = motion.create(Grid);
+
+const container = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.18,
+    },
+  },
+};
+
+const item = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const badge = {
+  hidden: {
+    opacity: 0,
+    scale: 0.9,
+    y: 25,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
 
 const specialists = [
   {
@@ -20,7 +69,7 @@ const specialists = [
   },
   {
     id: "4",
-    label: "Skin Nails Hair Disorders",
+    label: "Skin, Nails & Hair Disorders",
     img: "/images/Specialist/skin-nails-hair-disorders.jpg",
   },
   {
@@ -30,7 +79,7 @@ const specialists = [
   },
   {
     id: "6",
-    label: "Eye Ear Nose Throat",
+    label: "Eye, Ear, Nose & Throat",
     img: "/images/Specialist/eye-ear-nose-throat.jpg",
   },
   {
@@ -40,7 +89,7 @@ const specialists = [
   },
   {
     id: "8",
-    label: "Allergy Imunnology",
+    label: "Allergy & Immunology",
     img: "/images/Specialist/allergy-immunology.jpg",
   },
   {
@@ -50,71 +99,126 @@ const specialists = [
   },
   {
     id: "10",
-    label: "Others",
+    label: "Other Specialties",
     img: "/images/Specialist/others.jpg",
   },
 ];
+
 function HealthcareSpecialities() {
   return (
-    <Grid
-      size={12}
+    <MotionGrid
+      variants={container}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{
+        once: true,
+        amount: 0.2,
+      }}
       container
       justifyContent="center"
-      alignItems="center"
       sx={{
-        // border: `1px solid #e0e0e0`,
-        bgcolor: "#d5eeea",
-        minheight: "400px",
-        pb: 4,
+        py: { xs: 8, md: 12 },
+        background: "linear-gradient(180deg,#FFFFFF 0%,#FFF8F2 100%)",
       }}
     >
-      <Grid size={10} alignSelf="flex-start" py={3}>
-        <Typography
-          sx={{
-            fontSize: { xs: "16px", md: "20px" },
-            display: "inline-block",
-            fontWeight: "bold",
-            borderBottom: "3px solid #06923E",
-            pb: 0.5,
-            mt: 3,
-          }}
-        >
-          Healthcare Specialities Categories
-        </Typography>
-        <Typography sx={{ fontSize: "16px", my: 2 }}>
-          Reach with our highly qualified healthcare speciality profiles.
-        </Typography>
+      <Grid container size={10} direction="column">
+        {/* Heading */}
 
-        <Carousel cardsData={specialists} />
-        {/* <Grid size={12} container spacing={2} my={5}>
-          {specialists.map((spec) => (
-            <Grid
-              size={4}
-              container
-              alignItems="center"
+        <MotionBox variants={item}>
+          <Box
+            sx={{
+              textAlign: "center",
+              mb: 7,
+              maxWidth: 760,
+              mx: "auto",
+            }}
+          >
+            <Typography
               sx={{
-                borderRadius: 3,
-                p: 2,
-                border: 1,
-                borderColor: "transparent",
-                borderColor: "#e0e0e0",
-                "&:hover": {
-                  bgcolor: "#f9f9f9",
-                },
+                color: "secondary.main",
+                textTransform: "uppercase",
+                letterSpacing: 2,
+                fontWeight: 700,
+                fontSize: 14,
+                mb: 1,
               }}
             >
-              <Avatar
-                src={spec?.img}
-                alt={spec?.label}
-                sx={{ height: "60px", width: "60px" }}
-              />
+              Areas of Expertise
+            </Typography>
 
-              <Typography fontWeight="bold">{spec?.label}</Typography>
-            </Grid>
-          ))}
-        </Grid> */}
+            <Typography
+              sx={{
+                fontWeight: 800,
+                fontSize: {
+                  xs: "2rem",
+                  md: "2.8rem",
+                },
+                color: "primary.dark",
+                mb: 2,
+              }}
+            >
+              Healthcare Specialties We Cover
+            </Typography>
+
+            <Typography
+              sx={{
+                color: "text.secondary",
+                fontSize: {
+                  xs: 16,
+                  md: 18,
+                },
+                lineHeight: 1.8,
+              }}
+            >
+              Access insights across a broad spectrum of medical specialties,
+              helping healthcare organizations conduct targeted research with
+              the right professionals and patient communities.
+            </Typography>
+          </Box>
+        </MotionBox>
+
+        <Carousel cardsData={specialists} />
+
+        <MotionBox variants={badge}>
+          <Box
+            sx={{
+              mt: 7,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              sx={{
+                px: 5,
+                py: 2,
+                borderRadius: 100,
+                background: (theme) =>
+                  `linear-gradient(90deg,
+                  ${theme.palette.primary.light},
+                  #ffffff)`,
+
+                border: (theme) => `1px solid ${theme.palette.primary.main}22`,
+
+                boxShadow: "0 8px 25px rgba(0,0,0,.06)",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 700,
+                  color: "primary.dark",
+                  fontSize: {
+                    xs: 16,
+                    md: 18,
+                  },
+                }}
+              >
+                10+ Medical Specialty Categories
+              </Typography>
+            </Box>
+          </Box>
+        </MotionBox>
       </Grid>
-    </Grid>
+    </MotionGrid>
   );
 }
 

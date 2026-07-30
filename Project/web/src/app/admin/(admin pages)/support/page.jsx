@@ -219,7 +219,9 @@ export default function page() {
               fontSize: "16px",
               display: "inline-block",
               fontWeight: "600",
-              borderBottom: "2px solid #59AC77",
+              color: "primary.main",
+              borderBottom: (theme) =>
+                `2px solid ${theme.palette.secondary.dark}`,
               pb: 0.5,
               my: 1,
             }}

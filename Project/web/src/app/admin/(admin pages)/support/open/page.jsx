@@ -30,41 +30,41 @@ export default function page() {
     if (!query || !("ticket" in query)) return;
     api.get(`/api/v1/support/${query.ticket}`).then((resp) => {
       if ("data" in resp) setTicket(resp.data);
-      console.log(resp)
+      console.log(resp);
     });
   }, [query, reload]);
 
   if (!ticket) return <LoadingOverlay />;
   return (
     <Grid
-      size={ 12 }
-      px={ { xs: 1, md: 2 } }
-      py={ 2 }
+      size={12}
+      px={{ xs: 1, md: 2 }}
+      py={2}
       justifyContent="center"
-      sx={ {
+      sx={{
         border: `1px solid #e0e0e0`,
         bgcolor: (theme) => theme.palette.page.main,
-      } }
+      }}
     >
       <Grid
-        size={ 12 }
+        size={12}
         container
-        spacing={ 1 }
+        spacing={1}
         justifyContent="space-between"
-        mb={ 2 }
-        mt={ 1 }
+        mb={2}
+        mt={1}
         alignItems="center"
       >
         <Page.MuiButton
           aria-label="Back Button"
           startIcon={
             <ArrowBackIcon
-              sx={ {
+              sx={{
                 fontSize: "18px !important",
-              } }
+              }}
             />
           }
-          sx={ {
+          sx={{
             bgcolor: "white",
             color: "black",
             borderRadius: 2,
@@ -74,92 +74,93 @@ export default function page() {
             "&:hover": {
               boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
             },
-          } }
-          onClick={ () => {
-            if (path?.startsWith("/admin"))
-              router.push("/admin/support");
-            else
-              router.push("/member/support");
-          } }
+          }}
+          onClick={() => {
+            if (path?.startsWith("/admin")) router.push("/admin/support");
+            else router.push("/member/support");
+          }}
         >
           Back
         </Page.MuiButton>
-        <Page.Text sx={ { fontWeight: 600, fontSize: "20px" } }>
-          Ticket Number :{ " " }
+        <Page.Text sx={{ fontWeight: 600, fontSize: "20px" }}>
+          Ticket Number :{" "}
           <Page.Text
             component="span"
-            sx={ { fontWeight: 600, fontSize: "20px", color: "secondary.main" } }
+            sx={{ fontWeight: 600, fontSize: "20px", color: "secondary.main" }}
           >
-            { ticket?.ticketNo }
+            {ticket?.ticketNo}
           </Page.Text>
         </Page.Text>
-        <Page.Text sx={ { fontWeight: "bold", fontSize: "16px", mr: 2 } }>
-          Ticket Status :{ " " }
+        <Page.Text sx={{ fontWeight: "bold", fontSize: "16px", mr: 2 }}>
+          Ticket Status :{" "}
           <Page.Text
             component="span"
-            sx={ {
+            sx={{
               fontWeight: 600,
               fontSize: "16px",
               color: "secondary.main",
               textTransform: "capitalize",
-            } }
+            }}
           >
-            { ticket?.status }
+            {ticket?.status}
           </Page.Text>
         </Page.Text>
       </Grid>
-      <TicketBody ticket={ ticket } />
-      <TicketReply ticket={ ticket } reloadData={ reloadData } />
-      <TicketHistory ticket={ ticket } />
+      <TicketBody ticket={ticket} />
+      <TicketReply ticket={ticket} reloadData={reloadData} />
+      <TicketHistory ticket={ticket} />
     </Grid>
   );
 }
 function TicketBody({ ticket }) {
   return (
     <Grid
-      size={ 12 }
-      sx={ {
-        border: "1px solid rgba(89, 172, 119, 0.6)",
+      size={12}
+      sx={{
+        bgcolor: "primary.light",
+        border: (theme) => `1px solid ${theme.palette.secondary.light}`,
         borderRadius: 2,
         mb: 2,
         p: 2,
         bgcolor: "white",
-      } }
+      }}
     >
-      <Grid size={ 12 } container alignItems="center" mb={ 2 }>
+      <Grid size={12} container alignItems="center" mb={2}>
         <Page.Text
-          sx={ {
+          sx={{
             display: "inline-block",
             fontWeight: "600",
-            borderBottom: "2px solid #59AC77",
+            color: "primary.main",
+            borderBottom: (theme) =>
+              `2px solid ${theme.palette.secondary.dark}`,
             pb: 0.5,
-          } }
+          }}
         >
           Subject:
         </Page.Text>
         <Page.Text
-          sx={ {
+          sx={{
             fontWeight: "600",
             pb: "6px",
             pl: 1,
-          } }
+          }}
         >
-          { ticket?.subject }
+          {ticket?.subject}
         </Page.Text>
       </Grid>
       <div className="body">
-        <div dangerouslySetInnerHTML={ { __html: ticket?.description } } />
-        { ticket?.attachments.length !== 0 && (
+        <div dangerouslySetInnerHTML={{ __html: ticket?.description }} />
+        {ticket?.attachments.length !== 0 && (
           <>
-            <Page.Divider sx={ { my: 1, mx: -1 } } />
-            <Page.Text sx={ { fontWeight: "bold" } }>Attachments</Page.Text>
-            <Grid container size={ 12 } spacing={ 1 } mt={ 1 }>
-              { ticket.attachments?.map((file, i) => (
+            <Page.Divider sx={{ my: 1, mx: -1 }} />
+            <Page.Text sx={{ fontWeight: "bold" }}>Attachments</Page.Text>
+            <Grid container size={12} spacing={1} mt={1}>
+              {ticket.attachments?.map((file, i) => (
                 <Grid
                   container
-                  key={ i }
-                  size={ { xs: 12, sm: 6, md: 4 } }
-                  sx={ {
+                  key={i}
+                  size={{ xs: 12, sm: 6, md: 4 }}
+                  sx={{
                     p: 1,
                     border: "1px solid #e0e0e0",
                     borderRadius: 2,
@@ -168,22 +169,22 @@ function TicketBody({ ticket }) {
                     justifyContent: "space-between",
                     gap: 1,
                     bgcolor: "#fafafa",
-                  } }
+                  }}
                 >
                   <Page.Text
-                    sx={ {
+                    sx={{
                       fontSize: "14px",
                       wordBreak: "break-all",
                       fontWeight: 500,
-                    } }
+                    }}
                   >
-                    { file.split("/").pop() }
+                    {file.split("/").pop()}
                   </Page.Text>
-                  <Grid container spacing={ 1 } alignItems="flex-end">
+                  <Grid container spacing={1} alignItems="flex-end">
                     <Page.MuiButton
                       size="small"
                       variant="outlined"
-                      onClick={ () => window.open(file, "_blank") }
+                      onClick={() => window.open(file, "_blank")}
                     >
                       View
                     </Page.MuiButton>
@@ -193,20 +194,20 @@ function TicketBody({ ticket }) {
                       variant="contained"
                       color="secondary"
                       component="a"
-                      href={ file }
+                      href={file}
                       download
                     >
                       Download
                     </Page.MuiButton>
                   </Grid>
                 </Grid>
-              )) }
+              ))}
             </Grid>
           </>
-        ) }
-        {/* {ticket?.attachments.map(attachment=><img key={attachment} src={attachment} alt="attachment" />)} */ }
-        {/* {ticket.issueRaisedBy.name} */ }
-        {/* {ticket.issueRaisedBy.email} */ }
+        )}
+        {/* {ticket?.attachments.map(attachment=><img key={attachment} src={attachment} alt="attachment" />)} */}
+        {/* {ticket.issueRaisedBy.name} */}
+        {/* {ticket.issueRaisedBy.email} */}
       </div>
     </Grid>
   );
@@ -223,33 +224,35 @@ function TicketHistory({ ticket }) {
   }, [ticket]);
   return (
     <Grid
-      size={ 12 }
+      size={12}
       container
-      p={ 2 }
-      mt={ 2 }
-      sx={ {
-        border: "1px solid rgba(89, 172, 119, 0.6)",
+      p={2}
+      mt={2}
+      sx={{
+        bgcolor: "primary.light",
+        border: (theme) => `1px solid ${theme.palette.secondary.light}`,
         borderRadius: 2,
         bgcolor: "white",
-      } }
+      }}
     >
       <Page.Text
-        sx={ {
+        sx={{
           fontWeight: "600",
-          borderBottom: "2px solid #59AC77",
+          color: "primary.main",
+          borderBottom: (theme) => `2px solid ${theme.palette.secondary.dark}`,
           pb: 0.5,
           mb: 1,
-        } }
+        }}
       >
         Ticket History
       </Page.Text>
-      { ticketData.map((data, index) => (
+      {ticketData.map((data, index) => (
         <Accordion
-          key={ index }
-          expanded={ expanded === index }
-          onChange={ () => setExpanded(expanded === index ? false : index) }
+          key={index}
+          expanded={expanded === index}
+          onChange={() => setExpanded(expanded === index ? false : index)}
           disableGutters
-          sx={ {
+          sx={{
             my: 0.4,
             width: "100%",
             "&:first-of-type": {
@@ -260,63 +263,63 @@ function TicketHistory({ ticket }) {
               borderBottomLeftRadius: 8,
               borderBottomRightRadius: 8,
             },
-            bgcolor: "#ecfcf5",
-            border: "1px solid rgba(89, 172, 119, 0.6)",
+            bgcolor: "primary.light",
+            border: (theme) => `1px solid ${theme.palette.secondary.light}`,
             minHeight: "50px",
-          } }
+          }}
         >
-          <AccordionSummary expandIcon={ <ExpandMoreIcon /> }>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Grid
               container
-              size={ 12 }
-              sx={ {
+              size={12}
+              sx={{
                 justifyContent: "space-between",
                 alignItems: "center",
                 px: 1,
-              } }
+              }}
             >
               <Page.Text fontWeight="bold" fontSize="13px">
-                { data.subject }
+                {data.subject}
               </Page.Text>
               <Grid
                 container
-                sx={ {
+                sx={{
                   justifyContent: "flex-end",
                   alignItems: "center",
-                } }
+                }}
               >
-                <Page.Text sx={ { fontSize: "13px", fontWeight: 600 } }>
-                  { data?.created?.By?.fullName }
+                <Page.Text sx={{ fontSize: "13px", fontWeight: 600 }}>
+                  {data?.created?.By?.fullName}
                 </Page.Text>
-                <Page.Text sx={ { fontSize: "13px", pl: 2 } }>
-                  { new Date(data?.createdAt).relativeTime() }
+                <Page.Text sx={{ fontSize: "13px", pl: 2 }}>
+                  {new Date(data?.createdAt).relativeTime()}
                 </Page.Text>
               </Grid>
             </Grid>
           </AccordionSummary>
-          <AccordionDetails sx={ { borderRadius: 2, p: 1 } }>
+          <AccordionDetails sx={{ borderRadius: 2, p: 1 }}>
             <Page.Box
-              sx={ {
+              sx={{
                 p: 2,
                 bgcolor: "white",
                 border: "1px solid #e0e0e0",
                 borderRadius: 1,
-              } }
+              }}
             >
-              <div dangerouslySetInnerHTML={ { __html: data?.message } } />
+              <div dangerouslySetInnerHTML={{ __html: data?.message }} />
             </Page.Box>
 
-            { data?.attachments.length !== 0 && (
+            {data?.attachments.length !== 0 && (
               <>
-                <Page.Divider sx={ { my: 1, mx: -1 } } />
-                <Page.Text sx={ { fontWeight: "bold" } }>Attachments</Page.Text>
-                <Grid container size={ 12 } spacing={ 1 } mt={ 1 }>
-                  { data.attachments?.map((file, i) => (
+                <Page.Divider sx={{ my: 1, mx: -1 }} />
+                <Page.Text sx={{ fontWeight: "bold" }}>Attachments</Page.Text>
+                <Grid container size={12} spacing={1} mt={1}>
+                  {data.attachments?.map((file, i) => (
                     <Grid
                       container
-                      key={ i }
-                      size={ { xs: 12, sm: 6, md: 4 } }
-                      sx={ {
+                      key={i}
+                      size={{ xs: 12, sm: 6, md: 4 }}
+                      sx={{
                         p: 1,
                         border: "1px solid #e0e0e0",
                         borderRadius: 2,
@@ -325,22 +328,22 @@ function TicketHistory({ ticket }) {
                         justifyContent: "space-between",
                         gap: 1,
                         bgcolor: "#fafafa",
-                      } }
+                      }}
                     >
                       <Page.Text
-                        sx={ {
+                        sx={{
                           fontSize: "14px",
                           wordBreak: "break-all",
                           fontWeight: 500,
-                        } }
+                        }}
                       >
-                        { file.split("/").pop() }
+                        {file.split("/").pop()}
                       </Page.Text>
-                      <Grid container spacing={ 1 } alignItems="flex-end">
+                      <Grid container spacing={1} alignItems="flex-end">
                         <Page.MuiButton
                           size="small"
                           variant="outlined"
-                          onClick={ () => window.open(file, "_blank") }
+                          onClick={() => window.open(file, "_blank")}
                         >
                           View
                         </Page.MuiButton>
@@ -350,39 +353,40 @@ function TicketHistory({ ticket }) {
                           variant="contained"
                           color="secondary"
                           component="a"
-                          href={ file }
+                          href={file}
                           download
                         >
                           Download
                         </Page.MuiButton>
                       </Grid>
                     </Grid>
-                  )) }
+                  ))}
                 </Grid>
               </>
-            ) }
+            )}
           </AccordionDetails>
         </Accordion>
-      )) }
+      ))}
     </Grid>
   );
 }
 
 function TicketReply({ ticket, reloadData }) {
   const [reload, setReload] = React.useState(1);
-  let ticketStatusOptions = ticket.status === "Closed" ? [
-    "Re Open"
-  ] : [
-    "In Progress",
-    "Close",
-    // "New",
-    // "Open",
-    // "Resolved",
-    // "Re Opened",
-    // "Pending",
-    // "Awaited",
-    // "Cancelled",
-  ]
+  let ticketStatusOptions =
+    ticket.status === "Closed"
+      ? ["Re Open"]
+      : [
+          "In Progress",
+          "Close",
+          // "New",
+          // "Open",
+          // "Resolved",
+          // "Re Opened",
+          // "Pending",
+          // "Awaited",
+          // "Cancelled",
+        ];
   const form = useForm({
     defaultValues: {},
   });
@@ -397,71 +401,73 @@ function TicketReply({ ticket, reloadData }) {
   return (
     <Grid
       component="form"
-      onSubmit={ handleSubmit(async (data) => {
+      onSubmit={handleSubmit(async (data) => {
         let resp = await api.put(`/api/v1/support/${ticket._id}/reply`, data);
         useToast(resp);
         reloadData();
-      }) }
-      size={ 12 }
-      spacing={ 1 }
+      })}
+      size={12}
+      spacing={1}
       container
-      mt={ 2 }
-      px={ 2 }
-      py={ 2 }
-      sx={ {
-        bgcolor: "white",
-        border: "1px solid rgba(89, 172, 119, 0.6)",
+      mt={2}
+      px={2}
+      py={2}
+      sx={{
+        bgcolor: "primary.light",
+        border: (theme) => `1px solid ${theme.palette.secondary.light}`,
         borderRadius: 2,
-      } }
+      }}
     >
       <Page.Text
-        sx={ {
+        sx={{
           fontWeight: "600",
-          borderBottom: "2px solid #59AC77",
+          color: "primary.main",
+          borderBottom: (theme) => `2px solid ${theme.palette.secondary.dark}`,
           pb: 0.5,
           mb: 1,
-        } }
+        }}
       >
         Reply
       </Page.Text>
-      <Form.TextEditor control={ control } name="message" label="Message" />
+      <Form.TextEditor control={control} name="message" label="Message" />
 
-      <Grid size={ 12 } mb={ 1 }>
+      <Grid size={12} mb={1}>
         <Form.Select
-          control={ control }
-          { ...form.register("status") }
+          control={control}
+          {...form.register("status")}
           label="Ticket Status"
-          options={ ticketStatusOptions.map((option) => ({
+          options={ticketStatusOptions.map((option) => ({
             label: option,
             value: option.sluggify(),
-          })) }
-          errors={ form?.formState?.errors?.status }
-          validations={
-            {
-              validate: async val => {
-                if (ticketStatusOptions.map(v=>v.sluggify()).indexOf(val) > -1) return;
-                return "Please select ticket status"
-              }
-            }
-          }
+          }))}
+          errors={form?.formState?.errors?.status}
+          validations={{
+            validate: async (val) => {
+              if (
+                ticketStatusOptions.map((v) => v.sluggify()).indexOf(val) > -1
+              )
+                return;
+              return "Please select ticket status";
+            },
+          }}
         />
       </Grid>
       <Form.Upload
         endpoint="/api/v1/upload/image"
         name="attachments"
-        control={ control }
-        form={ form }
+        control={control}
+        form={form}
         accept="image/jpeg,image/png,image/webp"
         multiple
         hideCaption
       />
-       <Grid size={ 12 } container justifyContent="flex-end" my={ 2 }>
+      <Grid size={12} container justifyContent="flex-end" my={2}>
         <Page.MuiButton
           type="submit"
-          disabled={form.watch("message")===""}
+          disabled={form.watch("message") === ""}
           variant="contained"
           color="secondary"
-          sx={ { fontWeight: 600 } }
+          sx={{ fontWeight: 600 }}
         >
           Reply
         </Page.MuiButton>

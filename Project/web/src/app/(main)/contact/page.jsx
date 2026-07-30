@@ -11,6 +11,9 @@ import {
   IconButton,
   useTheme,
 } from "@mui/material";
+import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
+import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
+import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 
 const Contact = () => {
   const theme = useTheme();
@@ -37,123 +40,205 @@ const Contact = () => {
   };
 
   return (
-    <Grid size={12} container justifyContent="center">
-      {/* Contact Info Section */}
-
+    <Grid size={12} container justifyContent="center" mt={"80px"}>
       <Grid container size={{ xs: 11, md: 10 }} spacing={2} p={4} mt={2}>
-        <Grid
-          container
-          size={{ xs: 12, lg: 4 }}
-          direction="column"
-          alignItems="flex-start"
-          gap={0.5}
-          sx={{
-            bgcolor: "whitesmoke",
-            border: `1px solid #e0e0e0`,
-
-            p: 2,
-            minHeight: "90px",
-          }}
-        >
-          <Typography
-            variant="h6"
-            gutterBottom
-            sx={{ fontWeight: 600, color: "text.primary" }}
-          >
-            Email
-          </Typography>
-          <Typography
-            component="a"
-            href="mailto:support@frequentresearch.com"
+        <Grid size={{ xs: 12, lg: 4 }}>
+          <Box
             sx={{
-              display: "block",
-              color: "secondary.main",
-              fontSize: "16px",
-              fontWeight: 600,
-              textDecoration: "none",
+              height: "100%",
+              p: 3,
+              borderRadius: 4,
+              bgcolor: "#fff",
+              border: "1px solid",
+              borderColor: "grey.200",
+              boxShadow: "0 15px 35px rgba(0,0,0,.06)",
+              transition: ".3s",
+
               "&:hover": {
-                textDecoration: "underline",
+                transform: "translateY(-6px)",
+                boxShadow: "0 25px 50px rgba(0,0,0,.12)",
               },
             }}
           >
-            support@frequentresearch.com
-          </Typography>
+            <Box
+              sx={{
+                width: 58,
+                height: 58,
+                borderRadius: "50%",
+                bgcolor: "secondary.main",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                mb: 2,
+              }}
+            >
+              <MailOutlineRoundedIcon
+                sx={{
+                  color: "#fff",
+                  fontSize: 30,
+                }}
+              />
+            </Box>
+
+            <Typography
+              sx={{
+                fontSize: 22,
+                fontWeight: 700,
+                mb: 1,
+              }}
+            >
+              Email
+            </Typography>
+
+            <Typography
+              component="a"
+              href="mailto:support@myhealthopinions.com"
+              sx={{
+                color: "text.secondary",
+                textDecoration: "none",
+                transition: ".25s",
+
+                "&:hover": {
+                  color: "secondary.main",
+                },
+              }}
+            >
+              support@myhealthopinions.com
+            </Typography>
+          </Box>
         </Grid>
-        <Grid
-          size={{ xs: 12, lg: 4 }}
-          direction="column"
-          alignItems="flex-start"
-          gap={0.5}
-          sx={{
-            bgcolor: "whitesmoke",
-            border: `1px solid #e0e0e0`,
-
-            p: 2,
-            minHeight: "90px",
-          }}
-        >
-          <Typography
-            variant="h6"
-            gutterBottom
-            sx={{ fontWeight: 600, color: "text.primary" }}
-          >
-            Phone
-          </Typography>
-          <Typography
-            component="a"
-            href="tel:+918130015743"
+        <Grid size={{ xs: 12, lg: 4 }}>
+          <Box
             sx={{
-              display: "block",
-              color: "secondary.main",
-              fontSize: "16px",
-              fontWeight: 600,
-              textDecoration: "none",
+              height: "100%",
+              p: 3,
+              borderRadius: 4,
+              bgcolor: "#fff",
+              border: "1px solid",
+              borderColor: "grey.200",
+              boxShadow: "0 15px 35px rgba(0,0,0,.06)",
+              transition: ".3s",
+
               "&:hover": {
-                textDecoration: "underline",
+                transform: "translateY(-6px)",
+                boxShadow: "0 25px 50px rgba(0,0,0,.12)",
               },
             }}
           >
-            +91 8130015743
-          </Typography>
+            <Box
+              sx={{
+                width: 58,
+                height: 58,
+                borderRadius: "50%",
+                bgcolor: "secondary.main",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                mb: 2,
+              }}
+            >
+              <PhoneRoundedIcon
+                sx={{
+                  color: "#fff",
+                  fontSize: 30,
+                }}
+              />
+            </Box>
+
+            <Typography
+              sx={{
+                fontSize: 22,
+                fontWeight: 700,
+                mb: 1,
+              }}
+            >
+              Phone
+            </Typography>
+
+            <Typography
+              component="a"
+              href="tel:+918130015743"
+              sx={{
+                color: "text.secondary",
+                textDecoration: "none",
+                transition: ".25s",
+
+                "&:hover": {
+                  color: "secondary.main",
+                },
+              }}
+            >
+              +91 8130015743
+            </Typography>
+          </Box>
         </Grid>
-        <Grid
-          size={{ xs: 12, lg: 4 }}
-          direction="column"
-          alignItems="flex-start"
-          gap={0.5}
-          sx={{
-            bgcolor: "whitesmoke",
-            border: `1px solid #e0e0e0`,
 
-            p: 2,
-            minHeight: "90px",
-          }}
-        >
-          <Typography
-            variant="h6"
-            gutterBottom
-            sx={{ fontWeight: 600, color: "text.primary" }}
-          >
-            Address
-          </Typography>
-          <Typography
-            component="a"
-            href="//goo.gl/maps/omWW4BDscx5fZpFdA"
-            target="_blank"
-            rel="noreferrer"
+        <Grid size={{ xs: 12, lg: 4 }}>
+          <Box
             sx={{
-              display: "block",
-              color: "secondary.main",
-              fontSize: "16px",
-              fontWeight: 600,
-              textDecoration: "none",
+              height: "100%",
+              p: 3,
+              borderRadius: 4,
+              bgcolor: "#fff",
+              border: "1px solid",
+              borderColor: "grey.200",
+              boxShadow: "0 15px 35px rgba(0,0,0,.06)",
+              transition: ".3s",
+
               "&:hover": {
-                textDecoration: "underline",
+                transform: "translateY(-6px)",
+                boxShadow: "0 25px 50px rgba(0,0,0,.12)",
               },
             }}
           >
-          Mangolpur Kalan, New Delhi - 110085
-          </Typography>
+            <Box
+              sx={{
+                width: 58,
+                height: 58,
+                borderRadius: "50%",
+                bgcolor: "secondary.main",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                mb: 2,
+              }}
+            >
+              <LocationOnRoundedIcon
+                sx={{
+                  color: "#fff",
+                  fontSize: 30,
+                }}
+              />
+            </Box>
+
+            <Typography
+              sx={{
+                fontSize: 22,
+                fontWeight: 700,
+                mb: 1,
+              }}
+            >
+              Address
+            </Typography>
+
+            <Typography
+              component="a"
+              href="//goo.gl/maps/omWW4BDscx5fZpFdA"
+              target="_blank"
+              rel="noreferrer"
+              sx={{
+                color: "text.secondary",
+                textDecoration: "none",
+                transition: ".25s",
+
+                "&:hover": {
+                  color: "secondary.main",
+                },
+              }}
+            >
+              Mangolpur Kalan, New Delhi - 110085
+            </Typography>
+          </Box>
         </Grid>
       </Grid>
 
@@ -161,30 +246,58 @@ const Contact = () => {
         container
         size={{ xs: 11, md: 10 }}
         spacing={2}
-        p={{ xs: 1, md: 4 }}
+        px={{ xs: 1, md: 4 }}
+        py ={2}
         mb={3}
       >
         <Grid size={{ xs: 12, lg: 6 }}>
           <Box
             sx={{
-              px: { xs: 0, lg: 4 },
               borderRadius: 2,
               mb: { xs: 3, lg: 0 },
-              bgcolor: "background.default",
+              p: { xs: 3, md: 5 },
+              bgcolor: "#fff",
+              borderRadius: 5,
+              border: "1px solid",
+              borderColor: "grey.200",
+              boxShadow: "0 20px 50px rgba(0,0,0,.08)",
             }}
           >
-            <Typography
-              variant="h4"
-              component="h2"
-              gutterBottom
-              sx={{
-                fontWeight: 700,
-                my: 3,
-                color: "text.primary",
-              }}
-            >
-              Get In Touch
-            </Typography>
+            <Box mb={4}>
+              <Typography
+                sx={{
+                  color: "secondary.main",
+                  fontWeight: 700,
+                  letterSpacing: 2,
+                  textTransform: "uppercase",
+                  mb: 1,
+                }}
+              >
+                Contact Us
+              </Typography>
+
+              <Typography
+                sx={{
+                  fontSize: { xs: 34, md: 42 },
+                  fontWeight: 800,
+                  lineHeight: 1.2,
+                  mb: 2,
+                }}
+              >
+                We'd Love To Hear From You
+              </Typography>
+
+              <Typography
+                sx={{
+                  color: "text.secondary",
+                  maxWidth: 500,
+                  lineHeight: 1.8,
+                }}
+              >
+                Whether you have a question about surveys, rewards, membership,
+                or partnership opportunities, our team is ready to help.
+              </Typography>
+            </Box>
 
             <Box component="form" onSubmit={handleSubmit}>
               <Grid container spacing={1.5}>
@@ -203,7 +316,20 @@ const Contact = () => {
                     }}
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        borderRadius: 2,
+                        borderRadius: 3,
+                        bgcolor: "#fafafa",
+
+                        transition: ".3s",
+
+                        "&:hover": {
+                          bgcolor: "#fff",
+                        },
+
+                        "&.Mui-focused": {
+                          bgcolor: "#fff",
+                          boxShadow: (theme) =>
+                            `0 0 0 4px ${theme.palette.primary.main}15`,
+                        },
                       },
                     }}
                   />
@@ -224,7 +350,20 @@ const Contact = () => {
                     }}
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        borderRadius: 2,
+                        borderRadius: 3,
+                        bgcolor: "#fafafa",
+
+                        transition: ".3s",
+
+                        "&:hover": {
+                          bgcolor: "#fff",
+                        },
+
+                        "&.Mui-focused": {
+                          bgcolor: "#fff",
+                          boxShadow: (theme) =>
+                            `0 0 0 4px ${theme.palette.primary.main}15`,
+                        },
                       },
                     }}
                   />
@@ -243,7 +382,20 @@ const Contact = () => {
                     onChange={handleInputChange}
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        borderRadius: 2,
+                        borderRadius: 3,
+                        bgcolor: "#fafafa",
+
+                        transition: ".3s",
+
+                        "&:hover": {
+                          bgcolor: "#fff",
+                        },
+
+                        "&.Mui-focused": {
+                          bgcolor: "#fff",
+                          boxShadow: (theme) =>
+                            `0 0 0 4px ${theme.palette.primary.main}15`,
+                        },
                       },
                     }}
                   />
@@ -262,7 +414,20 @@ const Contact = () => {
                     onChange={handleInputChange}
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        borderRadius: 2,
+                        borderRadius: 3,
+                        bgcolor: "#fafafa",
+
+                        transition: ".3s",
+
+                        "&:hover": {
+                          bgcolor: "#fff",
+                        },
+
+                        "&.Mui-focused": {
+                          bgcolor: "#fff",
+                          boxShadow: (theme) =>
+                            `0 0 0 4px ${theme.palette.primary.main}15`,
+                        },
                       },
                     }}
                   />
@@ -282,7 +447,20 @@ const Contact = () => {
                     onChange={handleInputChange}
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        borderRadius: 2,
+                        borderRadius: 3,
+                        bgcolor: "#fafafa",
+
+                        transition: ".3s",
+
+                        "&:hover": {
+                          bgcolor: "#fff",
+                        },
+
+                        "&.Mui-focused": {
+                          bgcolor: "#fff",
+                          boxShadow: (theme) =>
+                            `0 0 0 4px ${theme.palette.primary.main}15`,
+                        },
                       },
                     }}
                   />
@@ -294,19 +472,23 @@ const Contact = () => {
                     variant="contained"
                     fullWidth
                     sx={{
-                      py: 1.5,
-                      borderRadius: 2,
-                      fontSize: "16px",
-                      fontWeight: 600,
-                      color: "white",
-                      border: 1,
-                      borderColor: "secondary.main",
+                      py: 1.8,
+                      borderRadius: 100,
+                      fontWeight: 700,
+                      fontSize: 16,
                       textTransform: "none",
-                      bgcolor: "primary.main",
-                      // background:
-                      //   "linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%)",
+
+                      background: (theme) =>
+                        `linear-gradient(135deg,
+                      ${theme.palette.primary.main},
+                      ${theme.palette.secondary.main})`,
+
+                      boxShadow: "0 15px 35px rgba(0,0,0,.18)",
+                      transition: "transform 0.3s ease, box-shadow 0.3s ease",
+
                       "&:hover": {
-                        bgcolor: "secondary.main",
+                        transform: "translateY(-3px)",
+                        boxShadow: "0 25px 45px rgba(0,0,0,.22)",
                       },
                     }}
                   >
@@ -321,9 +503,20 @@ const Contact = () => {
         <Grid size={{ xs: 12, lg: 6 }}>
           <Box
             sx={{
-              borderRadius: 2,
-              overflow: "hidden",
               height: "100%",
+              borderRadius: 5,
+              overflow: "hidden",
+              boxShadow: "0 20px 50px rgba(0,0,0,.08)",
+              border: "1px solid",
+              borderColor: "grey.200",
+
+              "& iframe": {
+                width: "100%",
+                height: "100%",
+                minHeight: 520,
+                border: 0,
+                display: "block",
+              },
             }}
           >
             <iframe

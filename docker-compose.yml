@@ -39,11 +39,10 @@ services:
     image: mongo
     container_name: ${PROJECT}-mongodb
     restart: always
-    ports:
-      - '27016:27017'
     volumes:
       - ./db/storage:/data/db
       - ./db/dump:/backup
+      - ./db/config:/data/configdb
     networks:
       - db
   email:

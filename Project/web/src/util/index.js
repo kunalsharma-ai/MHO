@@ -2,6 +2,7 @@ export * as Page from "./page";
 
 export { default as api } from "./api.js";
 export { default as loadPDF } from "./loadPDF";
+export { loadData } from "./loadData";
 export { default as submitWithAjax } from "./submitWithAjax";
 export { default as checkPasswordStrength } from "./checkPasswordStrength";
 export { default as inputKeyboardShortcut } from "./inputKeyboardShortcut";

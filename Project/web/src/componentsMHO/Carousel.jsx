@@ -173,7 +173,7 @@ export default function Carousel({ cardsData }) {
                   transition: "transform 0.3s ease-in-out",
                   "&:hover": {
                     transform: `scale(${hoverScale})`,
-                    cursor: "pointer",
+                    // cursor: "pointer",
                   },
                 }}
               />

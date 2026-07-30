@@ -17,16 +17,17 @@ export default function Phone({
   onlyCountries,
   disableDropdown,
   disabled = false,
-  selectedCountry
+  selectedCountry,
+  sx = {},
 }) {
   const [defaultCountry, setDefaultCountry] = React.useState();
   React.useEffect(() => {
     if (onlyCountries && onlyCountries.length > 0)
       setDefaultCountry(onlyCountries[0]);
   }, [onlyCountries]);
-  React.useEffect(()=>{
-    if(selectedCountry)setDefaultCountry(selectedCountry)
-  },[selectedCountry])
+  React.useEffect(() => {
+    if (selectedCountry) setDefaultCountry(selectedCountry);
+  }, [selectedCountry]);
   return (
     <>
       {labelText && (
@@ -74,6 +75,10 @@ export default function Phone({
               color: "grey",
               fontSize: "14px",
               borderColor: errors?.message ? "red" : " #0000003b",
+              ...sx.inputStyle,
+            }}
+            buttonStyle={{
+              ...sx.buttonStyle,
             }}
             inputClass="custom-phone-font"
             specialLabel={""}

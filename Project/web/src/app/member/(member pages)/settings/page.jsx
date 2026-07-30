@@ -16,6 +16,40 @@ import {
 import { Terms } from "@/app/auth/terms/page";
 import { useMember } from "@/Context";
 import { useDebounce, useToast } from "@/hooks";
+import { motion } from "framer-motion";
+
+const MotionGrid = motion.create(Grid);
+
+const fadeUp = {
+  hidden: {
+    opacity: 0,
+    y: 24,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.45,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const sectionVariant = {
+  hidden: {
+    opacity: 0,
+    y: 30,
+  },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.12,
+      duration: 0.5,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  }),
+};
 
 export default function page() {
   return (
@@ -26,11 +60,37 @@ export default function page() {
       py={2}
       px={{ xs: 2, md: 3 }}
       justifyContent="center"
-      alignItems={"flex-start"}
+      alignItems="flex-start"
     >
-      <ChangePassword />
-      <SurveyNotification />
-      <TermsAndConditions />
+      <MotionGrid
+        custom={0}
+        variants={sectionVariant}
+        initial="hidden"
+        animate="visible"
+        size={{ xs: 12, md: 6 }}
+      >
+        <ChangePassword />
+      </MotionGrid>
+
+      <MotionGrid
+        custom={1}
+        variants={sectionVariant}
+        initial="hidden"
+        animate="visible"
+        size={{ xs: 12, md: 6 }}
+      >
+        <SurveyNotification />
+      </MotionGrid>
+
+      <MotionGrid
+        custom={3}
+        variants={sectionVariant}
+        initial="hidden"
+        animate="visible"
+        size={12}
+      >
+        <TermsAndConditions />
+      </MotionGrid>
     </Grid>
   );
 }
@@ -43,7 +103,7 @@ function ChangePassword() {
   });
   return (
     <Grid
-      size={{ xs: 12, md: 6 }}
+      size={12}
       container
       spacing={2}
       component="form"
@@ -72,7 +132,9 @@ function ChangePassword() {
             fontSize: "16px",
             display: "inline-block",
             fontWeight: 600,
-            borderBottom: "2px solid #59AC77",
+            color: "primary.main",
+            borderBottom: (theme) =>
+              `2px solid ${theme.palette.secondary.dark}`,
             pb: 0.5,
           }}
         >
@@ -88,8 +150,8 @@ function ChangePassword() {
         px={2}
         py={2}
         sx={{
-          bgcolor: "#ecfcf5",
-          border: `1px solid rgba(51, 169, 202, 0.4)`,
+          bgcolor: "primary.light",
+          border: (theme) => `1px solid ${theme.palette.secondary.light}`,
           borderRadius: 2,
         }}
       >
@@ -176,7 +238,7 @@ function SurveyNotification() {
   }, [selected, initialSelected]);
 
   return (
-    <Grid size={{ xs: 12, md: 6 }} container spacing={2}>
+    <Grid size={12} container spacing={2}>
       <Box
         width="100%"
         display={"flex"}
@@ -190,7 +252,9 @@ function SurveyNotification() {
             fontSize: "16px",
             display: "inline-block",
             fontWeight: "600",
-            borderBottom: "2px solid #59AC77",
+            color: "primary.main",
+            borderBottom: (theme) =>
+              `2px solid ${theme.palette.secondary.dark}`,
             pb: 0.5,
           }}
         >
@@ -206,8 +270,8 @@ function SurveyNotification() {
         px={2}
         py={2}
         sx={{
-          bgcolor: "#ecfcf5",
-          border: `1px solid rgba(51, 169, 202, 0.4)`,
+          bgcolor: "primary.light",
+          border: (theme) => `1px solid ${theme.palette.secondary.light}`,
           borderRadius: 2,
         }}
       >
@@ -338,7 +402,9 @@ function ChangeEmail() {
             fontSize: "16px",
             display: "inline-block",
             fontWeight: 600,
-            borderBottom: "2px solid #59AC77",
+            color: "primary.main",
+            borderBottom: (theme) =>
+              `2px solid ${theme.palette.secondary.dark}`,
             pb: 0.5,
           }}
         >
@@ -354,8 +420,8 @@ function ChangeEmail() {
         px={2}
         py={2}
         sx={{
-          bgcolor: "#ecfcf5",
-          border: `1px solid rgba(51, 169, 202, 0.4)`,
+          bgcolor: "primary.light",
+          border: (theme) => `1px solid ${theme.palette.secondary.light}`,
           borderRadius: 2,
         }}
       >
@@ -406,7 +472,9 @@ function TermsAndConditions() {
             fontSize: "16px",
             display: "inline-block",
             fontWeight: "600",
-            borderBottom: "2px solid #59AC77",
+            color: "primary.main",
+            borderBottom: (theme) =>
+              `2px solid ${theme.palette.secondary.dark}`,
             pb: 0.5,
           }}
         >
@@ -416,7 +484,8 @@ function TermsAndConditions() {
       <Grid
         size={12}
         sx={{
-          border: `1px solid rgba(51, 169, 202, 0.4)`,
+          bgcolor: "primary.light",
+          border: (theme) => `1px solid ${theme.palette.secondary.light}`,
           borderRadius: 2,
         }}
       >

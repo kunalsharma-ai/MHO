@@ -94,7 +94,7 @@ function page() {
             sx={{
               textAlign: "center",
               borderRadius: 5,
-              bgcolor: "rgba(163, 243, 206, 0.21)",
+              bgcolor: "primary.light",
               border: "1px solid #f4f4f4",
               p: 4,
             }}
@@ -175,7 +175,7 @@ function page() {
             sx={{
               textAlign: "center",
               borderRadius: 5,
-              bgcolor: "rgba(163, 243, 206, 0.21)",
+              bgcolor: "primary.light",
               border: "1px solid #f4f4f4",
               p: 4,
             }}
@@ -218,7 +218,7 @@ function page() {
       size={12}
       container
       sx={{
-        bgcolor: "rgba(89, 172, 119, 0.4)",
+        bgcolor: "primary.light",
         minHeight: "100vh",
         width: "100vw",
       }}
@@ -270,12 +270,12 @@ function SetPasswordForm({ form }) {
     <>
       <Page.Box
         sx={{
-          height: "60px",
-          width: "180px",
+          height: "72px",
+          width: "227.69px",
         }}
       >
         <img
-          src="/images/logo/My-Health-Opinions1500-500.png"
+          src="/images/logo/My-Health-Opinions.png"
           alt="logo"
           height="100%"
           width="100%"
@@ -341,7 +341,7 @@ function SetPasswordForm({ form }) {
       <Grid
         sx={{
           borderRadius: 2,
-          bgcolor: "rgba(163, 243, 206, 0.21)",
+          bgcolor: "primary.light",
           border: "1px solid #f4f4f4",
           py: 2,
           pl: 2,

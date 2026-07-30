@@ -54,7 +54,7 @@ export default function page() {
       size={12}
       container
       sx={{
-        bgcolor: "rgba(89, 172, 119, 0.4)",
+        bgcolor: "primary.light",
         minHeight: "100vh",
         width: "100vw",
       }}
@@ -124,7 +124,7 @@ function LinkExpiredMessage() {
           sx={{
             textAlign: "center",
             borderRadius: 5,
-            bgcolor: "rgba(163, 243, 206, 0.21)",
+            bgcolor: "primary.light",
             border: "1px solid #f4f4f4",
             p: 4,
           }}
@@ -182,7 +182,7 @@ function EmailChangedSuccess({ message }) {
           sx={{
             textAlign: "center",
             borderRadius: 5,
-            bgcolor: "rgba(163, 243, 206, 0.21)",
+            bgcolor: "primary.light",
             border: "1px solid #f4f4f4",
             p: 4,
           }}

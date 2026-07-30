@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 import SubHeader from "@/componentsMHO/SubHeader";
@@ -7,8 +8,36 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Box,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { motion } from "framer-motion";
+const MotionBox = motion.create(Box);
+const MotionGrid = motion.create(Grid);
+
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
+    },
+  },
+};
+
+const fadeUp = {
+  hidden: {
+    opacity: 0,
+    y: 30,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
 
 const faqs = [
   {
@@ -27,7 +56,7 @@ To register on My Health Opinions, You need to choose the respective category be
   },
   {
     title: "How do I change my email address and password?",
-    content: `Due to security, My Health Opinions don’t allow updating the primary email ID for the profile. You may contact support team at support@frequentresearch.com for any type of email update request.
+    content: `Due to security, My Health Opinions don’t allow updating the primary email ID for the profile. You may contact support team at support@myhealthopinions.com for any type of email update request.
 
 You can change your password after login to the My Health Opinions Dashboard,  Go to “Change Password” section after selecting Settings option in Sidebar.`,
   },
@@ -66,7 +95,7 @@ The number of surveys you receive will vary depending on what personal settings 
     title: "Technical difficulties with a survey, and why does this happen?",
     content: `One of the major reasons behind technical issues is that survey respondents are using a variety of operating systems, browsers, Internet connection types, and hardware, and not all are necessarily compatible with the technology of all surveys that may be available.
 
-If you encounter a technical difficulty during any survey. Usually, if you wait for a while, and try again later, the problem will be resolved and the survey resumed where the user left. Otherwise, if you are still seeing an error after waiting a while, please report it to support team at support@frequentresearch.com along with error information screenshot, if possible. We apologize for any inconvenience caused by technical errors. We will do our best to get them resolved.`,
+If you encounter a technical difficulty during any survey. Usually, if you wait for a while, and try again later, the problem will be resolved and the survey resumed where the user left. Otherwise, if you are still seeing an error after waiting a while, please report it to support team at support@myhealthopinions.com along with error information screenshot, if possible. We apologize for any inconvenience caused by technical errors. We will do our best to get them resolved.`,
   },
   {
     title:
@@ -121,58 +150,191 @@ function page() {
       className="scroll-target"
     >
       <SubHeader title="FAQ" pageName="faq" />
-      <Grid size={{ xs: 11, md: 8 }} container justifyContent={"center"} py={5}>
-        <Typography fontWeight={"bold"} fontSize={"24px"}>
-          Do You Have{" "}
-          <Typography
-            fontSize={"24px"}
-            component="span"
-            color="secondary.main"
-            fontWeight={"bold"}
+      <MotionGrid
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{
+          once: true,
+          amount: 0.1,
+        }}
+        size={{ xs: 11, lg: 9, xl: 8 }}
+        container
+        justifyContent="center"
+        py={{ xs: 6, md: 10 }}
+        px={2}
+        sx={{
+          background: "linear-gradient(180deg,#ffffff 0%,#f8fafc 100%)",
+        }}
+      >
+        <MotionBox variants={fadeUp}>
+          <Box
+            sx={{
+              width: "100%",
+              bgcolor: "background.paper",
+              borderRadius: 4,
+              p: { xs: 3, md: 5 },
+              textAlign: "center",
+              border: "1px solid",
+              borderColor: "grey.200",
+              boxShadow: "0 15px 35px rgba(0,0,0,.08)",
+            }}
           >
-            Any Question?
-          </Typography>
-        </Typography>
-
-        <Grid size={12} container direction="column" spacing={2} mt={4}>
-          {faqs.map((faq, index) => (
-            <Accordion
-              key={index}
-              disableGutters
+            <Typography
               sx={{
-                boxShadow: 0,
-                bgcolor: "#d5eeea",
-                border: `1px solid #e0e0e0`,
-                p: 1.5,
-                borderRadius: 3,
-                minHeight: "50px",
-                "&:first-of-type": {
-                  borderTopLeftRadius: 12,
-                  borderTopRightRadius: 12,
-                },
-                "&:last-of-type": {
-                  borderBottomLeftRadius: 12,
-                  borderBottomRightRadius: 12,
-                },
+                color: "secondary.main",
+                fontWeight: 700,
+                letterSpacing: 2,
+                textTransform: "uppercase",
+                mb: 1,
+                fontSize: 14,
               }}
             >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                sx={{ borderRadius: 3 }}
+              Frequently Asked Questions
+            </Typography>
+
+            <Typography
+              sx={{
+                fontSize: { xs: "2rem", md: "2.8rem" },
+                fontWeight: 800,
+                color: "text.primary",
+                mb: 2,
+              }}
+            >
+              Have{" "}
+              <Typography
+                component="span"
+                sx={{
+                  color: "primary.main",
+                  fontSize: "inherit",
+                  fontWeight: "inherit",
+                }}
               >
-                <Typography fontSize={"18px"} fontWeight="500">
-                  {faq.title}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails sx={{ bgcolor: "white", borderRadius: 2 }}>
-                <Typography fontSize={"15px"} textAlign={"justify"} p={1}>
-                  {faq.content}
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
+                Questions?
+              </Typography>
+            </Typography>
+
+            <Typography
+              sx={{
+                color: "text.secondary",
+                fontSize: 17,
+                lineHeight: 1.8,
+                maxWidth: 720,
+                mx: "auto",
+              }}
+            >
+              Find answers to the most commonly asked questions about joining
+              our healthcare research community, participating in surveys,
+              rewards, profile management, and account security.
+            </Typography>
+          </Box>
+        </MotionBox>
+        <MotionGrid size={12} container direction="column" spacing={2} mt={4}>
+          {faqs.map((faq, index) => (
+            <MotionBox
+              key={index}
+              initial={{
+                opacity: 0,
+                y: 50,
+                scale: 0.98,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+                scale: 1,
+              }}
+              viewport={{
+                once: true,
+                amount: 0.3,
+              }}
+              transition={{
+                duration: 0.55,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <Accordion
+                key={index}
+                disableGutters
+                sx={{
+                  overflow: "hidden",
+                  borderRadius: 3,
+                  border: "1px solid",
+                  borderColor: "grey.200",
+                  boxShadow: "0 10px 25px rgba(0,0,0,.06)",
+                  transition: ".25s",
+
+                  "&:before": {
+                    display: "none",
+                  },
+
+                  "&:hover": {
+                    transform: "translateY(-4px)",
+                    boxShadow: "0 22px 45px rgba(0,0,0,.12)",
+                  },
+
+                  "&.Mui-expanded": {
+                    borderColor: "secondary.main",
+                    boxShadow: "0 18px 35px rgba(0,0,0,.08)",
+                  },
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={
+                    <ExpandMoreIcon
+                      sx={{
+                        color: "secondary.main",
+                        fontSize: 30,
+                      }}
+                    />
+                  }
+                  sx={{
+                    bgcolor: "grey.50",
+                    px: 3,
+                    minHeight: 72,
+
+                    "&.Mui-expanded": {
+                      bgcolor: "secondary.light",
+                    },
+
+                    "& .MuiAccordionSummary-content": {
+                      my: 1.5,
+                    },
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: 19,
+                      fontWeight: 700,
+                      color: "primary.main",
+                      pr: 2,
+                    }}
+                  >
+                    {faq.title}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails
+                  sx={{
+                    bgcolor: "background.paper",
+                    px: { xs: 3, md: 4 },
+                    py: 3,
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: 16,
+                      lineHeight: 1.9,
+                      color: "text.secondary",
+                      whiteSpace: "pre-line",
+                    }}
+                  >
+                    {faq.content}
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+            </MotionBox>
           ))}
-        </Grid>
-      </Grid>
+        </MotionGrid>
+      </MotionGrid>
     </Grid>
   );
 }

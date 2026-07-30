@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { keyframes } from "@mui/system";
+import CircularProgress from "@mui/material/CircularProgress";
 import { Page } from "@/util";
 
 // Define rotation animation
@@ -54,7 +55,7 @@ function LoadingOverlay({ zIndex = 9998 }) {
             flexDirection: "column",
           }}
         >
-          <Page.Box
+          {/* <Page.Box
             component="img"
             alt="Rotating Logo"
             src="/images/logo/logo.png"
@@ -64,6 +65,13 @@ function LoadingOverlay({ zIndex = 9998 }) {
               animation: `${spin} 2s linear infinite`,
               transformOrigin: "center center",
             }}
+          /> */}
+          <CircularProgress
+            enableTrackSlot
+            color="secondary"
+            size={100}
+            thickness={2}
+            aria-label="Loading…"
           />
         </Page.Box>
       </Page.Box>

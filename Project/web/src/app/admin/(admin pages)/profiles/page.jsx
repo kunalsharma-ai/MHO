@@ -33,7 +33,7 @@ export default function () {
       try {
         setIsLoading(true);
         const resp = await api.post(endpoint, {
-          isActive: { $in: [true, false] }
+          isActive: { $in: [true, false] },
         });
         setProfiles(resp.data);
       } catch (err) {
@@ -105,25 +105,25 @@ export default function () {
             label: "Action",
             render: (info) => (
               <>
-              <IconButton
-                sx={{ p: 0 }}
-                onClick={() => {
-                  setOpen({ open: true, id: info._id });
-                }}
-              >
-                <EditIcon fontSize="small" color="secondary" />
-              </IconButton>
-<IconButton
+                <IconButton
+                  sx={{ p: 0 }}
+                  onClick={() => {
+                    setOpen({ open: true, id: info._id });
+                  }}
+                >
+                  <EditIcon fontSize="small" color="secondary" />
+                </IconButton>
+                <IconButton
                   sx={{ p: 0 }}
                   title="Move Up in Sort Order"
                   onClick={async () => {
-                    let temp = await api.put(
-                      `/api/v1/profile/${info._id}`,
-                      { ...info, sortOrder: Number(info.sortOrder) + 1 },
-                    );
+                    let temp = await api.put(`/api/v1/profile/${info._id}`, {
+                      ...info,
+                      sortOrder: Number(info.sortOrder) + 1,
+                    });
                     // useToast(temp);
-                    let resp = await api.get(`/api/v1/profile`)
-                    setProfiles(resp.data)
+                    let resp = await api.get(`/api/v1/profile`);
+                    setProfiles(resp.data);
                   }}
                 >
                   <KeyboardArrowUpIcon fontSize="small" color="primary" />
@@ -133,18 +133,17 @@ export default function () {
                   sx={{ p: 0 }}
                   title="Move Down in Sort Order"
                   onClick={async () => {
-                    let temp = await api.put(
-                      `/api/v1/profile/${info._id}`,
-                      { ...info, sortOrder: Number(info.sortOrder) - 1 },
-                    );
+                    let temp = await api.put(`/api/v1/profile/${info._id}`, {
+                      ...info,
+                      sortOrder: Number(info.sortOrder) - 1,
+                    });
                     // useToast(temp);
-                    let resp = await api.get(`/api/v1/profile`)
-                    setProfiles(resp.data)
+                    let resp = await api.get(`/api/v1/profile`);
+                    setProfiles(resp.data);
                   }}
                 >
                   <KeyboardArrowDownIcon fontSize="small" color="primary" />
                 </IconButton>
-
               </>
             ),
           },
@@ -181,7 +180,9 @@ export default function () {
               fontSize: "18px",
               display: "inline-block",
               fontWeight: "600",
-              borderBottom: "2px solid #59AC77",
+              color: "primary.main",
+              borderBottom: (theme) =>
+                `2px solid ${theme.palette.secondary.dark}`,
               pb: 0.5,
               my: 1,
             }}

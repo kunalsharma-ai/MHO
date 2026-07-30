@@ -132,7 +132,7 @@ function ColHeader(attr) {
           top: 0,
           bgcolor: attr.headerColor
             ? `${attr.headerColor} !important`
-            : "#04662b",
+            : "#0A4DA5",
           color: "white",
           zIndex: attr.locked ? 4 : 2,
           fontWeight: "600",
@@ -865,7 +865,7 @@ export default function Datatable({
                         top: 0,
                         bgcolor: attr.headerColor
                           ? `${attr.headerColor} !important`
-                          : "#04662b",
+                          : "#0A4DA5",
                         width: "35.5px !important",
                         maxWidth: "35.5px !important",
                         p: "0 !important",
@@ -914,7 +914,7 @@ export default function Datatable({
                       locked={lockedColumns[col.id]}
                       sorted={orderBy === col.id ? order : false}
                       onSort={onSort}
-                      headerColor={attr.headerColor ?? "#04662b"}
+                      headerColor={attr.headerColor ?? "#0A4DA5"}
                       onLock={onLockColumn}
                       lockOffset={getLockedColumnOffset(col.id)}
                     />

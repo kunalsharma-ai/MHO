@@ -155,7 +155,7 @@ export default function ({
       variant={attr.variant}
       color={attr.color}
       sx={attr.sx}
-      size="small"
+      size={attr.size ?? "small"}
       value={password}
       onChange={(e) => {
         if (attr.onChange) attr.onChange(e);

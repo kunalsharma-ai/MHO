@@ -530,7 +530,7 @@ function page() {
               sx={{
                 borderRadius: 2,
                 p: 2,
-                bgcolor: "#d5eeea",
+                bgcolor: "secondary.light",
                 border: `1px solid #cac9c9ff`,
               }}
             >
@@ -549,7 +549,7 @@ function page() {
                 />
                 <Typography
                   textAlign={"center"}
-                  color="secondary.main"
+                  color="primary.main"
                   fontWeight={"bold"}
                   fontSize={"13px"}
                 >
@@ -578,7 +578,7 @@ function page() {
               sx={{
                 p: 2,
                 borderRadius: 2,
-                bgcolor: "#d5eeea",
+                bgcolor: "secondary.light",
                 border: `1px solid #cac9c9ff`,
                 width: "100%",
               }}
@@ -592,7 +592,7 @@ function page() {
                 mb={1}
               >
                 <img src={item?.imageSrc} alt="quality standard" width="60px" />
-                <Typography fontWeight="bold">{item.title}</Typography>
+                <Typography fontWeight="bold" color={"primary"}>{item.title}</Typography>
               </Grid>
               <Typography>{item.description}</Typography>
             </Grid>

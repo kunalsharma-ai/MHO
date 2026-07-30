@@ -1,6 +1,56 @@
-import { Avatar, Grid, Typography, Box } from "@mui/material";
+"use client";
+
 import React from "react";
+import { Grid, Typography, Box } from "@mui/material";
 import Carousel from "./Carousel";
+
+import { motion } from "framer-motion";
+
+const MotionBox = motion.create(Box);
+const MotionGrid = motion.create(Grid);
+
+const container = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.18,
+    },
+  },
+};
+
+const item = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const badge = {
+  hidden: {
+    opacity: 0,
+    scale: 0.9,
+    y: 25,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
 
 const professionals = [
   {
@@ -45,7 +95,7 @@ const professionals = [
   },
   {
     id: 8,
-    label: "Security Department Sepecialist",
+    label: "Security Department Specialist",
     img: "/images/Professional/security-department-specialist.jpg",
   },
   {
@@ -75,7 +125,7 @@ const professionals = [
   },
   {
     id: 14,
-    label: "Dietry Specialist",
+    label: "Dietary Specialist",
     img: "/images/Professional/dietary-specialist.jpg",
   },
   {
@@ -90,7 +140,7 @@ const professionals = [
   },
   {
     id: 17,
-    label: "Physical Medicine and Rehabilitation Specialist",
+    label: "Physical Medicine & Rehabilitation",
     img: "/images/Professional/physical-medicine-and-rehabilitation-specialist.jpg",
   },
   {
@@ -132,64 +182,113 @@ const professionals = [
 
 function HealthcareProfessionals() {
   return (
-    <Grid
-      size={12}
+    <MotionGrid
+      variants={container}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{
+        once: true,
+        amount: 0.2,
+      }}
       container
       justifyContent="center"
-      alignItems="center"
       sx={{
-        bgcolor: "#d5eeea",
-        minheight: "400px",
-        pb: 4,
+        py: { xs: 8, md: 12 },
+        background: "linear-gradient(180deg,#FFFFFF 0%,#FFF7EF 100%)",
       }}
     >
-      <Grid size={10} alignSelf="flex-start" py={3}>
-        <Typography
-          sx={{
-            fontSize: { xs: "16px", md: "20px" },
-            display: "inline-block",
-            fontWeight: "bold",
-            borderBottom: "3px solid #06923E",
-            pb: 0.5,
-            mt: 3,
-          }}
-        >
-          Healthcare Professionals Categories
-        </Typography>
-        <Typography sx={{ fontSize: "16px", my: 2 }}>
-          Reach with our highly qualified healthcare professional profiles.
-        </Typography>
-        {/* <Grid size={12} container spacing={2} my={5}>
-          {professionals.map((prof) => (
-            <Grid
-              size={4}
-              container
-              alignItems="center"
+      <Grid container size={10} direction="column">
+        <MotionBox variants={item}>
+          <Box
+            sx={{
+              textAlign: "center",
+              maxWidth: 760,
+              mx: "auto",
+              mb: 7,
+            }}
+          >
+            <Typography
               sx={{
-                borderRadius: 3,
-                p: 2,
-                border: 1,
-                borderColor: "transparent",
-                borderColor: "#e0e0e0",
-                "&:hover": {
-                  bgcolor: "#f9f9f9",
-                },
+                color: "secondary.main",
+                textTransform: "uppercase",
+                letterSpacing: 2,
+                fontWeight: 700,
+                fontSize: 14,
+                mb: 1,
               }}
             >
-              <Avatar
-                src={prof?.img}
-                alt={prof?.label}
-                sx={{ height: "60px", width: "60px" }}
-              />
+              Healthcare Community
+            </Typography>
 
-              <Typography fontWeight="bold">{prof?.label}</Typography>
-            </Grid>
-          ))}
-        </Grid> */}
+            <Typography
+              sx={{
+                fontWeight: 800,
+                fontSize: {
+                  xs: "2rem",
+                  md: "2.8rem",
+                },
+                color: "primary.dark",
+                mb: 2,
+              }}
+            >
+              Professionals We Work With
+            </Typography>
+
+            <Typography
+              sx={{
+                color: "text.secondary",
+                fontSize: {
+                  xs: 16,
+                  md: 18,
+                },
+                lineHeight: 1.8,
+              }}
+            >
+              Our healthcare panel includes physicians, nurses, therapists,
+              pharmacists, clinical specialists, administrators and many other
+              professionals whose expertise contributes to meaningful healthcare
+              research around the world.
+            </Typography>
+          </Box>
+        </MotionBox>
 
         <Carousel cardsData={professionals} />
+
+        <MotionBox variants={badge}>
+          <Box
+            sx={{
+              mt: 7,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              sx={{
+                px: 5,
+                py: 2,
+                borderRadius: 100,
+                bgcolor: "primary.light",
+                border: (theme) => `1px solid ${theme.palette.primary.main}22`,
+                boxShadow: "0 8px 24px rgba(0,0,0,.05)",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 700,
+                  color: "primary.dark",
+                  fontSize: {
+                    xs: 16,
+                    md: 18,
+                  },
+                }}
+              >
+                25+ Healthcare Professional Categories
+              </Typography>
+            </Box>
+          </Box>
+        </MotionBox>
       </Grid>
-    </Grid>
+    </MotionGrid>
   );
 }
 

@@ -17,7 +17,9 @@ import {
   Fade,
   Collapse,
   Rating,
-  Chip,
+  Stack,
+  Card,
+  CardContent,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import MaleIcon from "@mui/icons-material/Male";
@@ -31,15 +33,29 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import StarIcon from "@mui/icons-material/Star";
+import CakeIcon from "@mui/icons-material/Cake";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import PhoneIcon from "@mui/icons-material/Phone";
+import EmailIcon from "@mui/icons-material/Email";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useForm } from "react-hook-form";
 
 import { Form } from "@/components";
 import PopUp from "@/componentsMHO/PopUp";
-import { api, Page } from "@/util";
+import { api, loadData, Page } from "@/util";
 import DataList from "@/componentsMHO/DataList";
 import { useMember } from "@/Context";
 import LoadingOverlay from "@/componentsMHO/LoadingOverlay";
 import { useToast } from "@/hooks";
+import MyAccountPoints from "../../components/MyAccountPoints";
+
+const paymentMethods = {
+  paypal: "/images/payment/paypal.png",
+  "wire-transfer": "/images/payment/wire-transfer.png",
+  "amazon-gift-card": "/images/payment/amazone.png",
+  upi: "/images/payment/upi.png",
+};
 
 const iconStyle = {
   color: "secondary.main",
@@ -77,89 +93,275 @@ const getGenderIcon = (gender) => {
 export default function page() {
   const user = useMember();
 
-  if (!user) return <LoadingOverlay />;
-
   return (
-    <Grid container size={12}>
-      <Stats user={user} />
-      <Grid
-        size={12}
-        container
-        spacing={2}
-        py={2}
-        px={{ xs: 2, md: 3 }}
-        justifyContent="center"
-        alignItems={"flex-start"}
-      >
-        <Payment />
-        <SocialAccounts user={user} />
+    <Grid
+      container
+      size={12}
+      py={2}
+      px={{ xs: 2, md: 3 }}
+      sx={{ border: `1px solid #e0e0e0` }}
+      spacing={2}
+    >
+      <Grid container size={{ xs: 12, md: 6, xl: 3 }} alignSelf={"flex-start"}>
+        <UserInfo user={user} />
       </Grid>
-      <Summary />
+
+      <Grid container size={{ xs: 12, md: 6, xl: 9 }} alignContent="flex-start">
+        <MyAccountPoints />
+
+        <Stats user={user} />
+
+        <Summary />
+      </Grid>
     </Grid>
   );
 }
 
-function Stats({ user }) {
+function Stats() {
   const [statistics, setStatistics] = React.useState({});
+
   React.useEffect(() => {
     api
       .get(`/api/v1/me/statistics`)
       .then((resp) => {
         if (!resp.data) return useToast(resp);
-        let data = resp.data;
-        setStatistics(data);
+
+        setStatistics(resp.data);
       })
       .catch((err) => {
         console.log(err);
-      })
-      .finally(() => {});
+      });
   }, []);
 
   const stats = [
+    // {
+    //   title: "Current Rewards",
+    //   value: `${statistics?.totalRewards ?? 0} pts`,
+    //   subtitle: "Available reward balance",
+    //   icon: "/images/myaccount/currentreward.png",
+    //   bg: "rgba(255, 152, 0, 0.12)",
+    // },
     {
-      label: "Current Rewards",
-      value: statistics?.totalRewards ?? 0,
-      icon: "/images/myaccount/currentreward.png",
-    },
-    {
-      label: "Claimed Rewards",
-      value: 0,
+      title: "Claimed Rewards",
+      value: `0 pts`,
+      subtitle: "Rewards already redeemed",
       icon: "/images/myaccount/claimedreward.png",
+      bg: "rgba(76, 175, 80, 0.12)",
     },
     {
-      label: "Total Rewards Earned",
-      value: statistics?.totalRewards ?? 0,
+      title: "Total Rewards Earned",
+      value: `${statistics?.totalRewards ?? 0} pts`,
+      subtitle: "Lifetime reward earnings",
       icon: "/images/myaccount/totalreward.png",
+      bg: "rgba(255, 193, 7, 0.12)",
     },
     {
-      label: "Profile Status",
-      value: "42%",
-      icon: "/images/myaccount/profilestatus.png",
-    },
-    {
-      label: "Profile Completion",
-      value: "8/19",
-      icon: "/images/myaccount/totalprofilecompletion.png",
-    },
-    {
-      label: "Total Surveys Taken",
+      title: "Total Surveys Taken",
       value: (statistics?.total ?? 0).toLocaleString("en-US"),
+      subtitle: "All survey attempts",
       icon: "/images/myaccount/totalsurveytaken.png",
+      bg: "rgba(33, 150, 243, 0.12)",
     },
     {
-      label: "Completed Suveys",
+      title: "Completed Surveys",
       value: (statistics?.complete ?? 0).toLocaleString("en-US"),
+      subtitle: "Successfully completed",
       icon: "/images/myaccount/completedsurvey.png",
+      bg: "rgba(76, 175, 80, 0.12)",
     },
     {
-      label: "Disqualified Surveys",
+      title: "Disqualified Surveys",
       value: (statistics?.disqualified ?? 0).toLocaleString("en-US"),
+      subtitle: "Screened out surveys",
       icon: "/images/myaccount/disqualifiedsurvey.png",
+      bg: "rgba(244, 67, 54, 0.12)",
     },
     {
-      label: "Abandoned Surveys",
+      title: "Abandoned Surveys",
       value: (statistics?.abdoned ?? 0).toLocaleString("en-US"),
+      subtitle: "Surveys not completed",
       icon: "/images/myaccount/abandonedsurvey.png",
+      bg: "rgba(158, 158, 158, 0.12)",
+    },
+    {
+      title: "Approved Surveys",
+      value: (statistics?.approved ?? 0).toLocaleString("en-US"),
+      subtitle: "Approved responses",
+      icon: "/images/myaccount/disqualifiedsurvey.png",
+      bg: "rgba(0, 150, 136, 0.12)",
+    },
+    {
+      title: "Rejected Surveys",
+      value: (statistics?.rejected ?? 0).toLocaleString("en-US"),
+      subtitle: "Rejected responses",
+      icon: "/images/myaccount/abandonedsurvey.png",
+      bg: "rgba(233, 30, 99, 0.12)",
+    },
+  ];
+
+  return (
+    <Grid container spacing={2} my={2}>
+      {stats.map((item, index) => (
+        <Grid
+          key={index}
+          size={{
+            xs: 12,
+            sm: 6,
+            xl: 3,
+          }}
+        >
+          <Card
+            sx={{
+              height: "100%",
+              display: "flex",
+              borderRadius: 4,
+              border: "1px solid",
+              borderColor: "divider",
+              transition: "0.2s",
+              "&:hover": {
+                transform: "translateY(-4px)",
+                boxShadow: "0 10px 24px rgba(0,0,0,.08)",
+              },
+            }}
+          >
+            <CardContent
+              sx={{
+                flex: 1,
+                display: "flex",
+                p: 2.5,
+              }}
+            >
+              <Stack
+                direction="row"
+                spacing={2}
+                alignItems="flex-start"
+                sx={{ height: "100%" }}
+              >
+                {" "}
+                <Avatar
+                  variant="rounded"
+                  sx={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: "50%",
+                    bgcolor: item.bg,
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={item.icon}
+                    alt={item.title}
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      objectFit: "contain",
+                    }}
+                  />
+                </Avatar>
+                <Box
+                  flex={1}
+                  minWidth={0}
+                  display="flex"
+                  flexDirection="column"
+                  height={110}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: 15,
+                      fontWeight: 600,
+                      color: "primary.main",
+                      lineHeight: 1.3,
+                      minHeight: 40,
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {item.title}
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      fontSize: 32,
+                      fontWeight: 700,
+                      lineHeight: 1.1,
+                      mt: "auto",
+                      mb: 0.5,
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {item.value}
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      fontSize: 13,
+                      color: "text.secondary",
+                      lineHeight: 1.35,
+                      minHeight: 36,
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {item.subtitle}
+                  </Typography>
+                </Box>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
+  );
+}
+
+function UserInfo({ user }) {
+  const form = useForm();
+
+  const [visibleFields, setVisibleFields] = React.useState({});
+
+  const toggleField = (index) => {
+    setVisibleFields((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  const maskValue = (value) => {
+    return value ? "xxxxxx" : "";
+  };
+
+  React.useEffect(() => {
+    if (!user) return;
+
+    form.reset({
+      profilePicture: user.profilePicture ?? "/images/logo/user.png",
+    });
+  }, [user]);
+
+  const userData = [
+    {
+      icon: <CakeIcon sx={{ fontSize: 18 }} />,
+      label: "Birth Date",
+      value: new Date(user?.dob).showDate(),
+    },
+    {
+      icon: <EventNoteIcon sx={{ fontSize: 18 }} />,
+      label: "Joined on",
+      value: new Date(user?.createdAt).showDate(),
+    },
+    {
+      icon: <EmailIcon sx={{ fontSize: 18 }} />,
+      label: "Email",
+      value: user?.mail,
+    },
+    {
+      icon: <PhoneIcon sx={{ fontSize: 18 }} />,
+      label: "Mobile",
+      value: `+${user?.phone}`,
     },
   ];
 
@@ -167,108 +369,72 @@ function Stats({ user }) {
     <Grid
       size={12}
       container
-      spacing={3}
-      py={3}
-      px={{ xs: 2, md: 3 }}
-      sx={{ border: `1px solid #e0e0e0` }}
-    >
-      <UserInfo user={user} />
-      <Grid size={{ xs: 12, lg: 8 }} container spacing={2}>
-        {stats.map((stat, index) => {
-          return (
-            <Grid
-              container
-              size={{ xs: 12, md: 6, lg: 4 }}
-              key={index}
-              // direction={{ xs: "row", md: "column", lg: "row" }}
-              alignItems="center"
-              justifyContent="space-between"
-              spacing={1}
-              sx={{
-                border: "1px solid rgba(89, 172, 119, 0.6)",
-                bgcolor: "#ecfcf5",
-                borderRadius: 4,
-                px: { xs: 3, md: 1, xl: 3 },
-                py: 3,
-                minHeight: "120px",
-              }}
-            >
-              <Grid
-                // size={6}
-                direction="column"
-                alignItems="flex-start"
-                justifyContent="center"
-              >
-                <Typography fontSize={{ xs: 14, md: 13, xl: 14 }}>
-                  {stat?.label}
-                </Typography>
-                <Typography
-                  sx={{
-                    fontWeight: "600",
-                    fontSize: { xs: "22px", xl: "26px" },
-                    wordBreak: "break-word",
-                    overflowWrap: "anywhere",
-                    whiteSpace: "normal",
-                  }}
-                >
-                  {stat.value.toLocaleString("en-US")}
-                </Typography>
-              </Grid>
-
-              <Page.Box
-                component="img"
-                src={stat.icon}
-                height={60}
-                alt="stats logo"
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
-    </Grid>
-  );
-}
-
-function UserInfo({ user }) {
-  const [openVerificationDialog, setOpenVerificationDialog] =
-    React.useState(false);
-  const form = useForm();
-  React.useEffect(() => {
-    if (!user) return;
-    form.reset({
-      profilePicture: user.profilePicture ?? "/images/logo/user.png",
-    });
-  }, [user]);
-  const userData = [
-    {
-      label: "Birth Date",
-      value: new Date(user?.dob).showDate(),
-    },
-    {
-      label: "Joined on",
-      value: new Date(user?.createdAt).showDate(),
-    },
-    {
-      label: "Mobile",
-      value: `+${user?.phone}`,
-    },
-  ];
-  return (
-    <Grid
-      size={{ xs: 12, lg: 4 }}
-      container
-      px={{ xs: 2, xl: 4 }}
-      py={2}
-      spacing={0}
+      p={2.5}
+      spacing={1}
       alignItems={"center"}
+      alignContent={"flex-start"}
       alignSelf={{ md: "flex-start", xl: "stretch" }}
       justifyContent={"space-between"}
       sx={{
-        border: "1px solid rgba(89, 172, 119, 0.6)",
-        bgcolor: "#ecfcf5",
-        borderRadius: 4,
+        position: "relative",
+        overflow: "hidden",
+        borderRadius: 5,
+        background: `
+linear-gradient(
+180deg,
+#ffffff 0%,
+#fafcff 60%,
+#f4f8ff 100%
+)
+`,
+        border: "1px solid rgba(0,27,102,.12)",
+        boxShadow: "0 12px 40px rgba(0,27,102,.08)",
+        color: "#24324B",
       }}
     >
+      {/* Decorative Pattern */}
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          opacity: 0.06,
+          backgroundImage: `
+      linear-gradient(120deg, transparent 0%, transparent 48%, #0A47C9 49%, transparent 50%),
+      linear-gradient(60deg, transparent 0%, transparent 48%, #001B66 49%, transparent 50%)
+    `,
+          backgroundSize: "220px 220px",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Top Glow */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: -120,
+          right: -90,
+          width: 260,
+          height: 260,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(0,27,102,.45) 0%, rgba(10,71,201,.18) 55%, transparent 100%)",
+          filter: "blur(70px)",
+        }}
+      />
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: -120,
+          left: -80,
+          width: 220,
+          height: 220,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(0,55,166,.28) 0%, transparent 75%)",
+          filter: "blur(80px)",
+        }}
+      />
+
       <Grid
         size={12}
         container
@@ -279,220 +445,366 @@ function UserInfo({ user }) {
         })}
         justifyContent={{ xs: "center", md: "space-between" }}
         alignItems={"center"}
-        pb={2}
-        mb={2}
-        borderBottom={{ md: `1px solid #e0e0e0`, xs: "none" }}
-        spacing={2}
+        pb={1.5}
+        spacing={0}
+        sx={{
+          position: "relative",
+          zIndex: 2,
+        }}
       >
+        {/* Profile Image */}
         <Grid
-          size={{ xs: 12, md: 6 }}
+          size={12}
           position={"relative"}
           container
           justifyContent="center"
           alignItems="center"
           p={1}
         >
-          <Form.Upload
-            form={form}
-            name="profilePicture"
-            tooltipTitle={"Profile Picture"}
-            endpoint="/api/v1/upload/image"
-            accept={"image/*"}
+          <Box
             sx={{
-              height: "140px",
-              width: "140px",
+              position: "relative",
+              borderRadius: "50%",
             }}
-            onUpload={async (e) => {
-              const updatedValue = form.watch();
-              let temp = await api.put(`/api/v1/me`, updatedValue);
-              useToast(temp);
-              user.Reload();
+          >
+            <Form.Upload
+              form={form}
+              name="profilePicture"
+              tooltipTitle={"Profile Picture"}
+              endpoint="/api/v1/upload/image"
+              accept={"image/*"}
+              hideCaption={true}
+              sx={{
+                height: "130px",
+                width: "130px",
+                borderRadius: "50%",
+                border: `3px solid rgba(255,255,255,0.9)`,
+                background: "#fff",
+              }}
+              containerSx={{
+                alignItems: "center",
+              }}
+              onUpload={async () => {
+                const updatedValue = form.watch();
+
+                let temp = await api.put("/api/v1/me", updatedValue);
+
+                useToast(temp);
+
+                user.Reload();
+              }}
+            />
+          </Box>
+        </Grid>
+
+        {/* User Info */}
+        <Grid
+          size={12}
+          container
+          direction="column"
+          alignItems={"center"}
+          spacing={0}
+        >
+          <Box display={"flex"} alignItems="center" gap={0.5}>
+            <Typography
+              fontSize={26}
+              fontWeight={700}
+              sx={{
+                color: "#001B66",
+                textShadow: "0 1px 2px rgba(255,255,255,.35)",
+                textAlign: "center",
+              }}
+            >
+              {user?.fullName}
+            </Typography>
+
+            {getGenderIcon(user?.gender)}
+          </Box>
+
+          {user?.isMinor && (
+            <>
+              <Box display={"flex"} alignItems="center" mt={1}>
+                <Typography
+                  sx={{
+                    color: "secondary.main",
+                    fontWeight: 700,
+                  }}
+                >
+                  {user?.parent?.name?.first}
+
+                  {user?.parent?.relation && (
+                    <span
+                      style={{
+                        paddingLeft: "0.5rem",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      [{user?.parent?.relation}]
+                    </span>
+                  )}
+                </Typography>
+              </Box>
+
+              <Typography
+                fontWeight={600}
+                fontSize={12}
+                sx={{
+                  color: "primary.main",
+                }}
+              >
+                {user?.parent?.email}
+              </Typography>
+            </>
+          )}
+
+          <Rating
+            name="account-rating"
+            value={4}
+            readOnly
+            size="large"
+            emptyIcon={
+              <StarIcon
+                style={{ opacity: 0.28, color: "primary.main" }}
+                fontSize="inherit"
+              />
+            }
+            sx={{
+              pb: 2,
+              "& .MuiRating-iconFilled": {
+                color: "#FFD54F",
+              },
             }}
           />
         </Grid>
+
+        {/* User Data */}
         <Grid
-          size={{ xs: 12, md: 6 }}
+          size={12}
           container
-          spacing={2}
+          spacing={1.6}
           justifyContent="flex-start"
           direction={"column"}
-          alignItems={{ xs: "center", md: "flex-end" }}
-          borderTop={{ xs: `1px solid #e0e0e0`, md: "none" }}
-          borderBottom={{ xs: `1px solid #e0e0e0`, md: "none" }}
-          py={{ xs: 1, md: 0 }}
+          alignItems="center"
+          // py={{ xs: 1, md: 0 }}
         >
-          {userData.map((user, index) => {
+          {userData.map((item, index) => {
             return (
               <Grid
                 key={index}
                 size={12}
                 container
-                textAlign={{ xs: "center", md: "right" }}
+                alignItems="center"
                 spacing={0}
-                direction="column"
+                sx={{
+                  background: "linear-gradient(180deg,#FFFFFF 0%,#F7FAFF 100%)",
+                  border: "1px solid #E5EDF8",
+                  backdropFilter: "blur(10px)",
+                  borderRadius: "14px",
+                  px: 1.5,
+                  py: 1.2,
+                }}
               >
-                <Typography>{user.label}</Typography>
-                <Typography
-                  component="span"
-                  fontSize={{ xs: "16px", md: "18px" }}
-                  color="secondary"
-                  fontWeight={"500"}
-                  pb={1}
+                <Box
+                  sx={{
+                    mr: 1.2,
+                    display: "flex",
+                    alignItems: "center",
+                    color: "secondary.main",
+                  }}
                 >
-                  {user.value}
+                  {item.icon}
+                </Box>
+
+                <Typography
+                  sx={{
+                    color: "#24324B",
+                    pr: 0.5,
+                    fontWeight: 500,
+                  }}
+                >
+                  {item.label}:
                 </Typography>
 
-                {/* {user.label === "Mobile" && !!user.value && (
-                  <Grid
-                    size={12}
-                    container
-                    justifyContent={{ xs: "center", md: "flex-end" }}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flex: 1,
+                  }}
+                >
+                  <Typography
+                    component="span"
+                    sx={{
+                      color: "#24324B",
+                      fontWeight: 600,
+                      wordBreak: "break-word",
+                      flex: 1,
+                    }}
                   >
-                    <Chip
-                      onClick={
-                        user?.isVerified?.phone === "unverified"
-                          ? () => setOpenVerificationDialog(true)
-                          : undefined
-                      }
-                      icon={<WhatsAppIcon />}
-                      label={user?.isVerified?.phone}
-                      color={
-                        user?.isVerified?.phone === "unverified"
-                          ? "error"
-                          : "success"
-                      }
-                      size="small"
-                      sx={{
-                        width: 100,
-                        textTransform: "capitalize",
-                        cursor:
-                          user?.isVerified?.phone === "unverified"
-                            ? "pointer"
-                            : "default",
-                      }}
-                    />
-                  </Grid>
-                )} */}
+                    {visibleFields[index] ? item.value : maskValue(item.value)}
+                  </Typography>
+
+                  <IconButton
+                    size="small"
+                    onClick={() => toggleField(index)}
+                    sx={{ color: "primary.main", ml: 1 }}
+                  >
+                    {visibleFields[index] ? (
+                      <VisibilityOffIcon fontSize="small" />
+                    ) : (
+                      <VisibilityIcon fontSize="small" />
+                    )}
+                  </IconButton>
+                </Box>
               </Grid>
             );
           })}
         </Grid>
       </Grid>
 
-      <Grid size={12} container direction="column">
-        <Box display={"flex"} alignItems="center">
-          <Typography fontSize={"16px"} color="secondary" fontWeight={"600"}>
-            {user?.fullName}
-          </Typography>
-          {getGenderIcon(user?.gender)}
-        </Box>
+      {/* Payment Section */}
+      <Box
+        sx={{
+          width: "100%",
 
-        <Typography fontWeight={600} fontSize={{ xs: 12, md: 14 }}>
-          {user?.mail}
-        </Typography>
-        {user?.isMinor && (
-          <>
-            <Box display={"flex"} alignItems="center" mt={1}>
-              <Typography color="secondary" fontWeight={"600"}>
-                {user?.parent?.name?.first}
-                <span
-                  style={{
-                    paddingLeft: "0.5rem",
-                    textTransform: "capitalize",
-                  }}
-                >
-                  [{user?.parent?.relation}]
-                </span>
-              </Typography>
-            </Box>
-
-            <Typography fontWeight={600} fontSize={12}>
-              {user?.parent?.email}
-            </Typography>
-          </>
-        )}
-
-        <Rating
-          name="account-rating"
-          value={4}
-          // precision={0.5}
-          readOnly
-          size="large"
-          emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-          sx={{ py: 1, mt: 1 }}
-        />
-      </Grid>
-      <PopUp
-        open={openVerificationDialog}
-        onClose={() => {
-          setOpenVerificationDialog(false);
+          px: 2,
+          borderRadius: "18px",
+          background: "#fff",
+          border: "1px solid #E5EDF8",
+          backdropFilter: "blur(10px)",
+          position: "relative",
+          zIndex: 2,
         }}
-        hideTitle={true}
-        maxWidth={"xs"}
       >
-        <Grid size={12} container direction="column" alignItems="center" py={1}>
-          <Typography color="secondary" variant="h6" p={2}>
-            Verify WhatsApp Number
-          </Typography>
-          <Typography textAlign="center">
-            To verify your phone number, <br />
-            Please Message <b>CODE</b> on WhatsApp to <b>987654321</b>
-          </Typography>
+        <Payment />
+      </Box>
 
-          <Button
-            variant="outlined"
-            onClick={() => {
-              setOpenVerificationDialog(false);
-            }}
-            size="medium"
-            sx={{ my: 3, borderWidth: 2, fontWeight: 600 }}
-          >
-            OK
-          </Button>
-        </Grid>
-      </PopUp>
+      {/* Social Section */}
+      <Box
+        sx={{
+          width: "100%",
+
+          px: 2,
+          pb: 1,
+          borderRadius: "18px",
+          background: "#fff",
+          border: "1px solid #E5EDF8",
+          backdropFilter: "blur(10px)",
+          position: "relative",
+          zIndex: 2,
+        }}
+      >
+        <SocialAccounts user={user} />
+      </Box>
     </Grid>
   );
 }
 
 function Payment() {
+  const [paymentOptions, setPaymentOptions] = React.useState([]);
   const [openPayment, setOpenPayment] = React.useState(false);
   const [selectedMethod, setSelectedMethod] = React.useState("Wire Transfer");
   const [payment, setPayment] = React.useState({});
-  const member = useMember();
-  const paymentMethods = [
-    { name: "PayPal", icon: "/images/payment/paypal.png" },
-    { name: "Wire Transfer", icon: "/images/payment/wire-transfer.png" },
-    { name: "Amazon", icon: "/images/payment/amazone.png" },
-    { name: "UPI", icon: "/images/payment/upi.png" },
-  ];
 
-  const handleSave = async (method, value) => {
-    let resp = await api.patch("/api/v1/me/payment-method", {
-      method,
-      details: {
-        ...value,
-      },
-    });
-    // console.log({value})
-    setPayment({ method, value });
-    setOpenPayment(false);
-    // console.log({ method, value });
+  const [visibleFields, setVisibleFields] = React.useState({});
+
+  const toggleField = (index) => {
+    setVisibleFields((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
   };
+
+  const maskValue = (value) => {
+    return value ? "xxxxxx" : "";
+  };
+
+  const member = useMember();
+  React.useState(() => {
+    loadData(
+      api.get(`/api/v1/option/payment-method`),
+      (resp) => {
+        setPaymentOptions(resp.data);
+      },
+      () => {},
+    );
+  }, []);
   React.useEffect(() => {
-    console.log(member);
+    if (!member) return;
+
     setPayment({
-      ...member.paymentMethod,
-      value: member?.paymentMethod?.details,
+      method: member["payment-method"],
+      ifsc: member["payment-method-bank-ifsc"],
+      bankAccount: member["payment-method-bank-account"],
+      bankName: member["payment-method-bank-name"],
+      amazonAccount: member["payment-method-amazon"],
+      paypalAccount: member["payment-method-paypal"],
+      upiAccount: member["payment-method-upi"],
     });
   }, [member]);
+
+  const handleSave = async (method, value) => {
+    const resp = await api.patch(`/api/v1/me/answer`, {
+      "payment-method": payment.method,
+      "payment-method-bank-ifsc": payment.ifsc,
+      "payment-method-bank-account": payment.bankAccount,
+      "payment-method-bank-name": payment.bankName,
+      "payment-method-amazon": payment.amazonAccount,
+      "payment-method-paypal": payment.paypalAccount,
+      "payment-method-upi": payment.upiAccount,
+    });
+    await member.Reload();
+    useToast(resp);
+    setOpenPayment(false);
+  };
+  const accountDetails = React.useMemo(() => {
+    switch (payment.method) {
+      case "wire-transfer":
+        return [
+          {
+            name: "Bank",
+            value: payment.bankName,
+          },
+          {
+            name: "IFSC / Swift / IBAN Code",
+            value: payment.ifsc,
+          },
+          {
+            name: "Account Number",
+            value: payment.bankAccount,
+          },
+        ];
+        break;
+      case "upi":
+        return [
+          {
+            name: "Virtual Payment Address (VPA)",
+            value: payment.upiAccount,
+          },
+        ];
+        break;
+      case "paypal":
+        return [
+          {
+            name: "Paypal Account",
+            value: payment.paypalAccount,
+          },
+        ];
+        break;
+      case "amazon-gift-card":
+        return [
+          {
+            name: "Amazon ID",
+            value: payment.amazonAccount,
+          },
+        ];
+        break;
+      default:
+        break;
+    }
+  }, [payment]);
   return (
-    <Grid
-      size={{ xs: 12, lg: 6 }}
-      container
-      spacing={2}
-      justifyContent="center"
-    >
+    <Grid size={12} container spacing={1} justifyContent="center">
       {/* Header */}
       <Box
         width="100%"
@@ -501,13 +813,15 @@ function Payment() {
         justifyContent="space-between"
         px={1}
         pt={1}
-        minHeight={"46px"}
+        minHeight={46}
       >
         <Typography
           sx={{
-            fontSize: "16px",
+            fontSize: "15px",
             fontWeight: 600,
-            borderBottom: "2px solid #59AC77",
+            color: "primary.main",
+            borderBottom: (theme) =>
+              `2px solid ${theme.palette.secondary.dark}`,
             pb: 0.5,
           }}
         >
@@ -516,7 +830,7 @@ function Payment() {
         {payment?.method && (
           <IconButton
             onClick={() => setOpenPayment(true)}
-            sx={{ color: "secondary.main" }}
+            sx={{ color: "#fff" }}
           >
             <EditIcon sx={{ fontSize: 22 }} />
           </IconButton>
@@ -529,11 +843,10 @@ function Payment() {
         size={12}
         direction="column"
         spacing={0}
-        px={2}
-        py={2}
+        px={1.5}
+        py={1}
         sx={{
-          bgcolor: "#ecfcf5",
-          border: "1px solid rgba(89, 172, 119, 0.6)",
+          background: "rgba(255, 255, 255, 0.1)",
           borderRadius: 2,
         }}
       >
@@ -545,85 +858,87 @@ function Payment() {
             >
               {payment.method}:
             </Typography>
-            {["PayPal", "UPI", "Amazon"].includes(payment?.method) ? (
-              <Typography color="secondary" fontWeight={500}>
-                {payment?.value?.account}
-              </Typography>
-            ) : (
-              <Grid size={12} mt={1.5}>
+
+            <Grid size={12} mt={1.5}>
+              {accountDetails.map((detail, index) => (
                 <Grid
                   size={12}
                   container
                   alignItems="center"
-                  borderBottom={"2px solid #fff"}
+                  spacing={1}
+                  borderBottom={"1px solid rgba(255, 255, 255, 0.3)"}
                   py={1}
                 >
                   <Typography
-                    width={{ xs: "100%", lg: "40%" }}
+                    width={{ xs: "100%", xl: "40%" }}
                     fontWeight={500}
                   >
-                    Bank:
+                    {detail.name}
                   </Typography>
-                  <Typography
-                    component="span"
-                    color="secondary"
-                    fontWeight={500}
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      flex: 1,
+                    }}
                   >
-                    {payment?.value?.bank}
-                  </Typography>{" "}
+                    <Typography
+                      component="span"
+                      sx={{
+                        color: "#fff",
+                        fontWeight: 600,
+                        wordBreak: "break-word",
+                        flex: 1,
+                      }}
+                    >
+                      {visibleFields[index]
+                        ? detail.value
+                        : maskValue(detail.value)}
+                    </Typography>
+
+                    <IconButton
+                      size="small"
+                      onClick={() => toggleField(index)}
+                      sx={{ color: "#fff", ml: 1 }}
+                    >
+                      {visibleFields[index] ? (
+                        <VisibilityOffIcon fontSize="small" />
+                      ) : (
+                        <VisibilityIcon fontSize="small" />
+                      )}
+                    </IconButton>
+                  </Box>
                 </Grid>
-                <Grid
-                  size={12}
-                  container
-                  alignItems="center"
-                  borderBottom={"2px solid #fff"}
-                  py={1}
-                >
-                  <Typography
-                    width={{ xs: "100%", lg: "40%" }}
-                    fontWeight={500}
-                  >
-                    IFSC/IBAN/SWIFT Code:
-                  </Typography>
-                  <Typography
-                    component="span"
-                    color="secondary"
-                    fontWeight={500}
-                  >
-                    {payment?.value?.ifsc}
-                  </Typography>{" "}
-                </Grid>
-                <Grid size={12} container alignItems="center" py={1}>
-                  <Typography
-                    width={{ xs: "100%", lg: "40%" }}
-                    fontWeight={500}
-                  >
-                    Account Number:
-                  </Typography>
-                  <Typography
-                    component="span"
-                    color="secondary"
-                    fontWeight={500}
-                  >
-                    {payment?.value?.account}
-                  </Typography>
-                </Grid>
-              </Grid>
-            )}
+              ))}
+            </Grid>
           </Grid>
         ) : (
-          <Typography py={1}>
-            No Payment method selected yet.{" "}
-            <Typography
+          <Box
+            sx={{
+              width: "100%",
+              py: 4,
+              textAlign: "center",
+              borderRadius: 3,
+              border: "1px dashed",
+              borderColor: "divider",
+              bgcolor: "grey.50",
+            }}
+          >
+            <Typography color="text.secondary">
+              No payment method linked yet.
+            </Typography>
+
+            <Button
+              sx={{ mt: 2 }}
+              variant="contained"
               color="secondary"
-              component={"span"}
-              fontWeight={600}
-              sx={{ cursor: "pointer" }}
+              startIcon={<EditIcon />}
               onClick={() => setOpenPayment(true)}
             >
-              Click to add
-            </Typography>
-          </Typography>
+              Add Payment Method
+            </Button>
+          </Box>
         )}
       </Grid>
 
@@ -632,15 +947,17 @@ function Payment() {
         title="Select Payment Method"
         maxWidth="md"
         open={openPayment}
-        onClose={() => setOpenPayment(false)}
+        onClose={async () => {
+          await member.Reload();
+          setOpenPayment(false);
+        }}
       >
         <Grid
           size={12}
           container
           alignItems="center"
-          sx={{ bgcolor: "#ecfcf5" }}
+          sx={{ bgcolor: (theme) => theme.palette.cardbg.main }}
         >
-          {/* Payment options */}
           <Grid
             container
             size={12}
@@ -652,20 +969,22 @@ function Payment() {
           >
             <RadioGroup
               row
-              value={selectedMethod}
-              onChange={(event) => setSelectedMethod(event.target.value)}
+              value={payment.method}
+              onChange={(event) => {
+                setPayment({ ...payment, method: event.target.value });
+              }}
               style={{ justifyContent: "space-evenly", width: "100%" }}
             >
-              {paymentMethods.map((method, index) => (
+              {paymentOptions.map((method, index) => (
                 <FormControlLabel
                   key={index}
-                  value={method.name}
+                  value={method.value}
                   control={<Radio />}
                   label={
                     <Box
                       component="img"
-                      src={method.icon}
-                      alt={method.name}
+                      src={paymentMethods[method.value]}
+                      alt={method.label}
                       sx={{
                         height: 63,
                         width: 100,
@@ -673,13 +992,13 @@ function Payment() {
                         p: 1,
                         borderRadius: 2,
                         cursor: "pointer",
-                        border:
-                          selectedMethod === method.name
-                            ? "2px solid #59AC77"
+                        border: (theme) =>
+                          payment.method === method.name
+                            ? `2px solid ${theme.palette.primary.main}`
                             : "2px solid transparent",
-                        boxShadow:
-                          selectedMethod === method.name
-                            ? "0 0 8px #06923e5a"
+                        boxShadow: (theme) =>
+                          payment.method === method.name
+                            ? `0 0 8px ${theme.palette.secondary.main}`
                             : "none",
                         transition: "0.2s",
                       }}
@@ -694,7 +1013,7 @@ function Payment() {
           <Grid size={12} container py={2}>
             {/* PayPal */}
             <Collapse
-              in={selectedMethod === "PayPal"}
+              in={payment.method === "paypal"}
               unmountOnExit
               sx={{ width: "100%" }}
             >
@@ -714,13 +1033,11 @@ function Payment() {
                   Enter your PayPal Email
                 </Typography>
                 <Page.Input
-                  value={
-                    payment.method === "PayPal" ? payment?.value?.account : ""
-                  }
+                  value={payment.paypalAccount}
                   onChange={(e) =>
                     setPayment({
-                      method: "PayPal",
-                      value: { account: e.target.value },
+                      ...payment,
+                      paypalAccount: e.target.value,
                     })
                   }
                 />
@@ -737,7 +1054,7 @@ function Payment() {
 
             {/* Wire Transfer */}
             <Collapse
-              in={selectedMethod === "Wire Transfer"}
+              in={payment.method === "wire-transfer"}
               unmountOnExit
               sx={{ width: "100%" }}
             >
@@ -754,51 +1071,50 @@ function Payment() {
                   </Typography>
                   <Page.Input
                     value={
-                      payment.method === "Wire Transfer"
-                        ? payment.value.bank || ""
-                        : ""
+                      payment.method === "wire-transfer" ? payment.bankName : ""
                     }
-                    onChange={(e) =>
-                      setPayment((prev) => ({
-                        method: "Wire Transfer",
-                        value: { ...prev.value, bank: e.target.value },
-                      }))
-                    }
+                    onChange={(e) => {
+                      let temp = {
+                        ...payment,
+                        bankName: e.target.value,
+                      };
+                      setPayment(temp);
+                    }}
                   />
                 </Grid>
                 <Grid size={6} container spacing={0}>
                   <Typography fontSize={16} fontWeight={600} color="secondary">
-                    Enter your IFSC/IBAN/SWIFT Code
+                    IFSC/IBAN/SWIFT Code
                   </Typography>
                   <Page.Input
                     value={
-                      payment.method === "Wire Transfer"
-                        ? payment.value.ifsc || ""
+                      payment.method === "wire-transfer"
+                        ? payment.ifsc || ""
                         : ""
                     }
                     onChange={(e) =>
-                      setPayment((prev) => ({
-                        method: "Wire Transfer",
-                        value: { ...prev.value, ifsc: e.target.value },
-                      }))
+                      setPayment({
+                        ...payment,
+                        ifsc: e.target.value,
+                      })
                     }
                   />
                 </Grid>
                 <Grid size={12} container spacing={0}>
                   <Typography fontSize={16} fontWeight={600} color="secondary">
-                    Account Number
+                    Enter your Account Number
                   </Typography>
                   <Page.Input
                     value={
-                      payment.method === "Wire Transfer"
-                        ? (payment?.value?.account ?? "")
+                      payment.method === "wire-transfer"
+                        ? payment.bankAccount || ""
                         : ""
                     }
                     onChange={(e) =>
-                      setPayment((prev) => ({
-                        method: "Wire Transfer",
-                        value: { ...prev.value, account: e.target.value },
-                      }))
+                      setPayment({
+                        ...payment,
+                        bankAccount: e.target.value,
+                      })
                     }
                   />
                 </Grid>
@@ -815,7 +1131,7 @@ function Payment() {
 
             {/* Amazon */}
             <Collapse
-              in={selectedMethod === "Amazon"}
+              in={payment.method === "amazon-gift-card"}
               unmountOnExit
               sx={{ width: "100%" }}
             >
@@ -832,16 +1148,14 @@ function Payment() {
                   fontWeight={600}
                   color="secondary"
                 >
-                  Enter your Amazon Email
+                  Enter your Amazon Giftcard ID
                 </Typography>
                 <Page.Input
-                  value={
-                    payment.method === "Amazon" ? payment?.value?.account : ""
-                  }
+                  value={payment.amazonAccount}
                   onChange={(e) =>
                     setPayment({
-                      method: "Amazon",
-                      value: { account: e.target.value },
+                      ...payment,
+                      amazonAccount: e.target.value,
                     })
                   }
                 />
@@ -858,7 +1172,7 @@ function Payment() {
 
             {/* UPI */}
             <Collapse
-              in={selectedMethod === "UPI"}
+              in={payment.method === "upi"}
               unmountOnExit
               sx={{ width: "100%" }}
             >
@@ -878,18 +1192,16 @@ function Payment() {
                   Enter your UPI ID
                 </Typography>
                 <Page.Input
-                  value={
-                    payment.method === "UPI" ? payment?.value?.account : ""
-                  }
+                  value={payment.upiAccount}
                   onChange={(e) =>
                     setPayment({
-                      method: "UPI",
-                      value: { account: e.target.value },
+                      ...payment,
+                      upiAccount: e.target.value,
                     })
                   }
                 />
                 <Button
-                  onClick={() => handleSave("UPI", payment.value)}
+                  onClick={() => handleSave()}
                   variant="contained"
                   color="secondary"
                   sx={{ my: 2, fontWeight: 600, color: "white", px: 2 }}
@@ -914,18 +1226,19 @@ function SocialAccounts({ user }) {
     facebook: "",
     linkedin: "",
     youtube: "",
-    twitter: "",
+    x: "",
   });
   React.useEffect(() => {
-    if (!user) return;
-    // console.log(user.socials);
+    if (!user) return () => {};
     setContact(
-      user.socials.reduce((a, c) => {
-        a[c.channel] = c.account;
-        return a;
-      }, {}),
+      Object.fromEntries(
+        Object.entries(user)
+          .filter((e) => e[0].startsWith("social-media"))
+          .map((d) => [d[0].replace("social-media-", ""), d[1]]),
+      ),
     );
   }, [user]);
+  console.table(contact);
   const handleChange = (key) => (e) => {
     setContact((prev) => ({
       ...prev,
@@ -934,62 +1247,49 @@ function SocialAccounts({ user }) {
   };
 
   const contactIcons = {
-    WhatsApp: <WhatsAppIcon sx={{ color: "#25D366" }} />,
-    Instagram: <InstagramIcon sx={{ color: "#C13584" }} />,
-    Facebook: <FacebookIcon sx={{ color: "#3b5998" }} />,
-    Linkedin: <LinkedInIcon sx={{ color: "#0e76a8" }} />,
-    YouTube: <YouTubeIcon sx={{ color: "#FF0000" }} />,
-    Twitter: <XIcon sx={{ color: "black" }} />,
+    whatsapp: <WhatsAppIcon sx={{ color: "primary.main" }} />,
+    instagram: <InstagramIcon sx={{ color: "primary.main" }} />,
+    facebook: <FacebookIcon sx={{ color: "primary.main" }} />,
+    linkedin: <LinkedInIcon sx={{ color: "primary.main" }} />,
+    youtube: <YouTubeIcon sx={{ color: "primary.main" }} />,
+    x: <XIcon sx={{ color: "primary.main" }} />,
   };
 
   const socialChannels = [
     {
       name: "WhatsApp",
       key: "whatsapp",
-      icon: <WhatsAppIcon sx={{ color: "#25D366" }} />,
-      url: "https://wa.me/",
+      icon: <WhatsAppIcon sx={{ fontSize: 26, color: "#25D366" }} />,
     },
     {
       name: "Instagram",
       key: "instagram",
-      icon: <InstagramIcon sx={{ color: "#C13584" }} />,
-      url: "https://instagram.com/",
+      icon: <InstagramIcon sx={{ fontSize: 26, color: "#C13584" }} />,
     },
     {
       name: "Facebook",
       key: "facebook",
-      icon: <FacebookIcon sx={{ color: "#3b5998" }} />,
-      url: "https://facebook.com/",
+      icon: <FacebookIcon sx={{ fontSize: 26, color: "#3b5998" }} />,
     },
     {
       name: "LinkedIn",
       key: "linkedin",
-      icon: <LinkedInIcon sx={{ color: "#0e76a8" }} />,
-      url: "https://linkedin.com/in/",
+      icon: <LinkedInIcon sx={{ fontSize: 26, color: "#0e76a8" }} />,
     },
     {
       name: "YouTube",
       key: "youtube",
-      icon: <YouTubeIcon sx={{ color: "#FF0000" }} />,
-      url: "https://youtube.com/",
+      icon: <YouTubeIcon sx={{ fontSize: 26, color: "#FF0000" }} />,
     },
     {
       name: "X (formerly Twitter)",
-      key: "twitter",
-      icon: <XIcon sx={{ color: "black" }} />,
-      url: "https://x.com/",
+      key: "x",
+      icon: <XIcon sx={{ fontSize: 26, color: "black" }} />,
     },
   ];
 
-  const hasContacts = Object.values(contact).some((v) => v?.trim());
-
   return (
-    <Grid
-      size={{ xs: 12, lg: 6 }}
-      container
-      spacing={2}
-      justifyContent="center"
-    >
+    <Grid size={12} container spacing={1} justifyContent="center">
       <Box
         width="100%"
         display="flex"
@@ -997,85 +1297,80 @@ function SocialAccounts({ user }) {
         justifyContent="space-between"
         px={1}
         pt={1}
-        minHeight={"46px"}
+        minHeight={46}
       >
         <Typography
           sx={{
-            fontSize: "16px",
+            fontSize: "15px",
             fontWeight: 600,
-            borderBottom: "2px solid #59AC77",
+
+            color: "primary.main",
+            borderBottom: (theme) =>
+              `2px solid ${theme.palette.secondary.dark}`,
             pb: 0.5,
           }}
         >
           Social Contacts
         </Typography>
-        {hasContacts && (
+        {Object.values(contact).some((value) => value?.trim()) && (
           <IconButton
             onClick={() => setOpenContact(true)}
-            sx={{ color: "secondary.main" }}
+            sx={{
+              bgcolor: "secondary.light",
+              color: "secondary.dark",
+              border: "1px solid",
+              borderColor: "secondary.light",
+              "&:hover": {
+                bgcolor: "secondary.main",
+                color: "#fff",
+              },
+            }}
           >
-            <EditIcon sx={{ fontSize: 22 }} />
+            <EditIcon fontSize="small" />
           </IconButton>
         )}
       </Box>
 
-      <Grid
-        container
-        size={12}
-        direction="column"
-        spacing={0}
-        px={2}
-        py={2}
-        sx={{
-          bgcolor: "#ecfcf5",
-          border: "1px solid rgba(89, 172, 119, 0.6)",
-          borderRadius: 2,
-        }}
-      >
+      <Grid container size={12} spacing={1.5}>
         {Object.entries(contact).filter(([_, value]) => value?.trim())
           .length ? (
           Object.entries(contact)
             .filter(([_, value]) => value?.trim())
             .map(([key, value], index, arr) => (
-              <Grid
+              <Tooltip
+                title={`${key?.Capitalize()} :  ${value}`}
                 key={index}
-                container
-                size={12}
-                alignItems="center"
-                borderBottom={
-                  index !== arr.length - 1 ? "2px solid #fff" : "none"
-                }
-                py={1}
-                px={2}
+                placement="top"
               >
-                <Grid
-                  size={{ xs: 12, lg: 4 }}
-                  alignItems="center"
-                  container
-                  gap={1}
-                >
-                  {contactIcons[key]}
-                  <Typography fontWeight={500}>{key}</Typography>
-                </Grid>
-
-                <Typography color="secondary" fontWeight={600}>
-                  {value}
-                </Typography>
-              </Grid>
+                <Page.Box px={1.5}>{contactIcons[key]}</Page.Box>
+              </Tooltip>
             ))
         ) : (
-          <Typography py={1}>
-            No social contact method added.{" "}
-            <Typography
+          <Box
+            sx={{
+              width: "100%",
+              py: 4,
+              textAlign: "center",
+              borderRadius: 3,
+              border: "1px dashed",
+              borderColor: "divider",
+              bgcolor: "grey.50",
+            }}
+          >
+            <Typography color="text.secondary">
+              No social accounts linked yet.
+            </Typography>
+
+            <Button
+              sx={{ mt: 2 }}
+              variant="contained"
               color="secondary"
-              component={"span"}
-              fontWeight={600}
-              sx={{ cursor: "pointer" }}
+              startIcon={<EditIcon />}
               onClick={() => setOpenContact(true)}
             >
-              Click to add
-            </Typography>
-          </Typography>
+              Add Social Accounts
+            </Button>
+          </Box>
         )}
       </Grid>
 
@@ -1089,27 +1384,36 @@ function SocialAccounts({ user }) {
           size={12}
           container
           alignItems="center"
-          justifyContent="center"
+          // justifyContent="center"
           px={2}
           pt={2}
-          sx={{ bgcolor: "#ecfcf5" }}
+          sx={{ bgcolor: "#fff" }}
         >
-          <Grid size={12} container spacing={2} justifyContent="center" p={2}>
-            {socialChannels.map(({ name, key, icon, url }, index) => (
+          <Box px={3} pt={2} justifySelf="flex-start">
+            <Typography color="text.secondary" fontSize={13}>
+              Link your preferred social media accounts
+            </Typography>
+          </Box>
+          <Grid size={12} container spacing={3} p={3} justifyContent="center">
+            {socialChannels.map(({ name, key, icon }, index) => (
               <Grid key={index} container size={6} spacing={0}>
-                <Typography fontSize={16} fontWeight={600} color="secondary">
-                  {name}
-                </Typography>
                 <Page.Input
+                  label={name}
+                  size="normal"
                   value={contact[key]}
                   onChange={handleChange(key)}
-                  prefix="it works"
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton edge="end" disabled>
+                        <Avatar
+                          sx={{
+                            width: 34,
+                            height: 34,
+                            bgcolor: "grey.100",
+                          }}
+                        >
                           {icon}
-                        </IconButton>
+                        </Avatar>
                       </InputAdornment>
                     ),
                   }}
@@ -1117,30 +1421,43 @@ function SocialAccounts({ user }) {
               </Grid>
             ))}
           </Grid>
-
-          <Button
-            onClick={async () => {
-              const socials = Object.entries(contact).map((c) => ({
-                channel: c[0],
-                account: c[1],
-              }));
-              const resp = await api.put(`/api/v1/me`, { socials });
-              useToast(resp);
-              setOpenContact(false);
-              user.Reload();
-            }}
-            variant="contained"
-            color="secondary"
+          <Box
             sx={{
-              my: 3,
-              fontWeight: 600,
-              color: "white",
-              px: 2,
-              py: 0.5,
+              width: "100%",
+              mt: 1,
+              p: 3,
+              borderTop: "1px solid",
+              borderColor: "divider",
+              display: "flex",
+              justifyContent: "center",
             }}
           >
-            Save
-          </Button>
+            <Button
+              onClick={async () => {
+                const socials = Object.fromEntries(
+                  Object.entries(contact).map((c) => [
+                    `social-media-${c[0]}`,
+                    c[1],
+                  ]),
+                );
+                const resp = await api.patch(`/api/v1/me/answer`, socials);
+                useToast(resp);
+                setOpenContact(false);
+                user.Reload();
+              }}
+              size="large"
+              variant="contained"
+              color="secondary"
+              sx={{
+                minWidth: 240,
+                borderRadius: 10,
+                fontWeight: 700,
+                px: 5,
+              }}
+            >
+              Save Chanegs
+            </Button>
+          </Box>
         </Grid>
       </PopUp>
     </Grid>
@@ -1191,17 +1508,16 @@ function Summary() {
       value: `${threshold - points}pts`,
     },
   ];
-
   const [activeTab, setActiveTab] = React.useState(0);
   const tabs = [
-    {
-      label: "Rewards Summary",
-      render: (
-        <Grid size={12}>
-          <DataList dataList={rewardSummary} />
-        </Grid>
-      ),
-    },
+    // {
+    //   label: "Rewards Summary",
+    //   render: (
+    //     <Grid size={12}>
+    //       <DataList dataList={rewardSummary} />
+    //     </Grid>
+    //   ),
+    // },
     {
       label: "Rewards Processed Summary",
       render: (
@@ -1221,13 +1537,7 @@ function Summary() {
   ];
 
   return (
-    <Grid
-      size={12}
-      container
-      px={{ xs: 2, md: 3 }}
-      mt={2}
-      justifyContent="center"
-    >
+    <Grid size={12} container px={1} mt={2} justifyContent="center">
       <Tabs
         value={activeTab}
         onChange={(e, v) => {
@@ -1240,7 +1550,7 @@ function Summary() {
           width: "100%",
           borderBottom: "3px solid whitesmoke",
           "& .MuiTabs-indicator": {
-            backgroundColor: "secondary.main",
+            backgroundColor: "primary.main",
             height: "3px",
           },
           "& .MuiTab-root": {
@@ -1249,7 +1559,7 @@ function Summary() {
             fontWeight: 500,
           },
           "& .Mui-selected": {
-            color: "secondary.main !important",
+            color: "primary.main !important",
 
             fontWeight: 600,
           },

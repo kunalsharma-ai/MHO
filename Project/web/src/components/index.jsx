@@ -1,4 +1,5 @@
 export { default as Datatable } from "./Datatable";
+export { default as DataCards } from "./Datatable";
 export { Icon } from "./Datatable";
 export { default as PaginationButtons } from "./PaginationButtons";
 export { default as SectionTitle } from "./SectionTitle";
