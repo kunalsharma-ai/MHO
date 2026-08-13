@@ -66,7 +66,13 @@ export default function () {
               return (
                 <Chip
                   size="small"
-                  label={info?.category}
+                  label={
+                    info?.category === "care giver"
+                      ? "CG"
+                      : info?.category === "healthcare professional"
+                        ? "HP"
+                        : info?.category
+                  }
                   variant="contained"
                   color={
                     info?.category == "care giver"
@@ -100,7 +106,12 @@ export default function () {
           {
             id: "name",
             label: "Survey",
-            data: "name",
+            // data: "name",
+            render: (info) => (
+              <Tooltip title={info.name} placement="top">
+                {info.name}
+              </Tooltip>
+            ),
             feature: ["sortable", "searchable"],
           },
           { id: "loi", label: "LOI (in min)", data: "loi", width: 120 },

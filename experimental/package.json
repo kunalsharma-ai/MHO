@@ -1,0 +1,32 @@
+{
+  "name": "samp-api-auth",
+  "version": "1.0.0",
+  "description": "Authentication microservice for the Sampledge API",
+  "main": "app/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "npm install ; nodemon app/server.js",
+    "start": "npm install && node app/server.js"
+  },
+  "keywords": [
+    "express",
+    "express-module",
+    "expressjs-server",
+    "express-server-module"
+  ],
+  "author": "Om Prakash Tiwari <optiwari.india@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "express-fileupload": "^1.5.1",
+    "express-pureip": "^1.0.0",
+    "express-rate-limit": "^7.4.0",
+    "express-web-tools": "^1.0.17",
+    "jsonwebtoken": "^9.0.2",
+    "libphonenumber-js": "^1.12.25",
+    "mongoose": "^8.5.4",
+    "twig": "^1.17.1"
+  }
+}

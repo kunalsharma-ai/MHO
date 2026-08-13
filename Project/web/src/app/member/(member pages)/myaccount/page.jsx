@@ -830,9 +830,18 @@ function Payment() {
         {payment?.method && (
           <IconButton
             onClick={() => setOpenPayment(true)}
-            sx={{ color: "#fff" }}
+            sx={{
+              // bgcolor: "secondary.light",
+              color: "secondary.dark",
+              border: "1px solid",
+              borderColor: "secondary.light",
+              "&:hover": {
+                bgcolor: "secondary.main",
+                color: "#fff",
+              },
+            }}
           >
-            <EditIcon sx={{ fontSize: 22 }} />
+            <EditIcon fontSize="small" />
           </IconButton>
         )}
       </Box>
@@ -1247,12 +1256,12 @@ function SocialAccounts({ user }) {
   };
 
   const contactIcons = {
-    whatsapp: <WhatsAppIcon sx={{ color: "primary.main" }} />,
-    instagram: <InstagramIcon sx={{ color: "primary.main" }} />,
-    facebook: <FacebookIcon sx={{ color: "primary.main" }} />,
-    linkedin: <LinkedInIcon sx={{ color: "primary.main" }} />,
-    youtube: <YouTubeIcon sx={{ color: "primary.main" }} />,
-    x: <XIcon sx={{ color: "primary.main" }} />,
+    whatsapp: <WhatsAppIcon sx={{ fontSize: 24, color: "#25D366" }} />,
+    instagram: <InstagramIcon sx={{ fontSize: 24, color: "#C13584" }} />,
+    facebook: <FacebookIcon sx={{ fontSize: 24, color: "#3b5998" }} />,
+    linkedin: <LinkedInIcon sx={{ fontSize: 24, color: "#0e76a8" }} />,
+    youtube: <YouTubeIcon sx={{ fontSize: 24, color: "#FF0000" }} />,
+    x: <XIcon sx={{ fontSize: 24, color: "#000" }} />,
   };
 
   const socialChannels = [
@@ -1316,7 +1325,7 @@ function SocialAccounts({ user }) {
           <IconButton
             onClick={() => setOpenContact(true)}
             sx={{
-              bgcolor: "secondary.light",
+              // bgcolor: "secondary.light",
               color: "secondary.dark",
               border: "1px solid",
               borderColor: "secondary.light",

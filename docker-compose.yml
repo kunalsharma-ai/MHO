@@ -134,3 +134,11 @@ services:
       - environment/${PROJECT}.env
     networks:
       - mho
+  llama-agent:
+    image: optiwariindia/express:api-module-1.0.1
+    restart: unless-stopped
+    networks:
+      - mho
+    volumes:
+      - ./experimental/app:/src/app
+      - ./experimental/package.json:/src/package.json

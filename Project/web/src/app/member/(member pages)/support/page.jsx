@@ -670,7 +670,11 @@ function FAQ() {
           px={0.5}
           variants={staggerContainer}
           initial="hidden"
-          animate="visible"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.1,
+          }}
         >
           <MotionBox variants={fadeUp}>
             <Typography
@@ -722,10 +726,22 @@ function FAQ() {
             {faqs.map((faq, index) => (
               <MotionBox
                 key={index}
-                variants={fadeUp}
-                whileHover={{
-                  y: -2,
-                  transition: { duration: 0.2 },
+                initial={{
+                  opacity: 0,
+                  y: 40,
+                }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                viewport={{
+                  once: true,
+                  amount: 0.4,
+                }}
+                transition={{
+                  duration: 0.6,
+                  delay: index * 0.05,
+                  ease: [0.22, 1, 0.36, 1],
                 }}
               >
                 <Accordion

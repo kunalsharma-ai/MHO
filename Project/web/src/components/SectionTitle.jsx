@@ -6,7 +6,7 @@ function SectionTitle(attr) {
     px: 3,
     fontSize: 20,
     fontWeight: 700,
-    color: attr.isDisabled && "grey",
+    color: attr.isDisabled ? "grey" : "primary.main",
     background: attr.isDisabled
       ? "#e4e5e6"
       : (theme) => `

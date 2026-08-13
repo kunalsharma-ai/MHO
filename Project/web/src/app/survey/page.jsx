@@ -171,15 +171,32 @@ export default function page() {
                   sx={{
                     flex: 1,
                     textAlign: "center",
-                    ml: { xs: 0, md: "-240px" },
+                    ml: {
+                      xs: 0,
+                      md: survey?.slug === "welcome" ? 0 : "-240px",
+                    },
                     fontSize: { xs: "18px", lg: "24px" },
                     fontWeight: 600,
-                    color: "secondary.main",
+                    color: "primary.main",
                   }}
                 >
-                  {survey?.slug === "welcome"
-                    ? `Welcome ${user?.name.first.Capitalize()}`
-                    : survey?.name}
+                  {survey?.slug === "welcome" ? (
+                    <>
+                      Welcome{" "}
+                      <Page.Text
+                        component="span"
+                        sx={{
+                          fontSize: { xs: "18px", lg: "24px" },
+                          fontWeight: 600,
+                          color: "secondary.main",
+                        }}
+                      >
+                        {user?.name.first.Capitalize()}
+                      </Page.Text>
+                    </>
+                  ) : (
+                    survey?.name
+                  )}
                 </Page.Text>
               </Grid>
               {Boolean(surveyError) ? (

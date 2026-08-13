@@ -27,7 +27,7 @@ export default function Confetti({ trigger, count = 120, duration = 2.8 }) {
       id: `${Date.now()}-${i}`,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
       size: random(6, 12),
-      left: random(35, 65), // explosion origin
+      left: random(35, 65),
       x: random(-350, 350),
       y: random(-450, -150),
       rotate: random(-720, 720),

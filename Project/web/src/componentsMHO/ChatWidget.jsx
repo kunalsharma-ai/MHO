@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import {
   Box,
@@ -67,7 +66,6 @@ const chatVariants = {
       duration: 0.35,
       ease: "easeOut",
       when: "beforeChildren",
-      staggerChildren: 0.08,
     },
   },
   exit: {
@@ -91,17 +89,6 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.25,
-      when: "beforeChildren",
-    },
-  },
-};
-
-const listVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.1,
     },
   },
 };
@@ -109,9 +96,9 @@ const listVariants = {
 const messageVariants = {
   hidden: (isMe) => ({
     opacity: 0,
-    x: isMe ? 30 : -30,
-    y: 12,
-    scale: 0.92,
+    x: isMe ? 20 : -20,
+    y: 8,
+    scale: 0.96,
   }),
   visible: {
     opacity: 1,
@@ -119,11 +106,13 @@ const messageVariants = {
     y: 0,
     scale: 1,
     transition: {
-      duration: 0.3,
+      duration: 0.22,
       ease: "easeOut",
     },
   },
 };
+
+const MAX_ANIMATED_MESSAGES = 10;
 
 export default function ChatWidget() {
   const [open, setOpen] = React.useState(false);
@@ -135,19 +124,15 @@ export default function ChatWidget() {
 
   React.useEffect(() => {
     if (!open) return;
-
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
         if (document.activeElement instanceof HTMLElement) {
           document.activeElement.blur();
         }
-
         setOpen(false);
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
-
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -164,7 +149,6 @@ export default function ChatWidget() {
 
   const handleSend = () => {
     if (!input.trim()) return;
-
     setMessages((prev) => [
       ...prev,
       {
@@ -175,9 +159,7 @@ export default function ChatWidget() {
         timestamp: Date.now(),
       },
     ]);
-
     setInput("");
-
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
@@ -193,24 +175,15 @@ export default function ChatWidget() {
   };
 
   if (isSurveyPage) return null;
+
   return (
     <>
       <MotionFab
         color="primary"
-        initial={{
-          scale: 0,
-          opacity: 0,
-        }}
-        animate={{
-          scale: 1,
-          opacity: 1,
-        }}
-        whileHover={{
-          scale: 1.08,
-        }}
-        whileTap={{
-          scale: 0.9,
-        }}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.9 }}
         transition={{
           duration: 0.45,
           ease: [0.34, 1.56, 0.64, 1],
@@ -313,28 +286,24 @@ export default function ChatWidget() {
                 bgcolor: "#f5f5f5",
               }}
             >
-              <MotionBox
-                key={open ? "open" : "closed"}
-                variants={listVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                {messages.map((msg) => {
+              <Box>
+                {messages.map((msg, index) => {
                   const isMe = msg.sender === "me";
+                  const isRecent =
+                    index >= messages.length - MAX_ANIMATED_MESSAGES;
 
                   return (
                     <MotionBox
                       key={msg.id}
                       custom={isMe}
-                      variants={messageVariants}
+                      variants={isRecent ? messageVariants : undefined}
+                      initial={isRecent ? "hidden" : false}
+                      animate={isRecent ? "visible" : false}
                       exit={{
                         opacity: 0,
                         scale: 0.8,
-                        transition: {
-                          duration: 0.15,
-                        },
+                        transition: { duration: 0.15 },
                       }}
-                      layout
                       sx={{
                         display: "flex",
                         flexDirection: "column",
@@ -343,12 +312,8 @@ export default function ChatWidget() {
                       }}
                     >
                       <MotionBox
-                        whileHover={{
-                          scale: 1.02,
-                        }}
-                        transition={{
-                          duration: 0.15,
-                        }}
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.15 }}
                         sx={{
                           px: 2,
                           py: 1.2,
@@ -371,9 +336,7 @@ export default function ChatWidget() {
                             {msg.name}
                           </Typography>
                         )}
-
                         <Typography variant="body2">{msg.text}</Typography>
-
                         <Box
                           sx={{
                             display: "flex",
@@ -393,14 +356,8 @@ export default function ChatWidget() {
                           >
                             {formatTime(msg.timestamp)}
                           </Typography>
-
                           {isMe && (
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
                               <CheckIcon sx={{ fontSize: 14 }} />
                               <DoneAllIcon sx={{ fontSize: 14 }} />
                               <DoneAllIcon
@@ -418,8 +375,7 @@ export default function ChatWidget() {
                     </MotionBox>
                   );
                 })}
-              </MotionBox>
-
+              </Box>
               <div ref={messagesEndRef} />
             </MotionBox>
 
@@ -445,15 +401,12 @@ export default function ChatWidget() {
                   "& .MuiOutlinedInput-root": {
                     borderRadius: 4,
                     bgcolor: "background.paper",
-
                     "& fieldset": {
                       borderColor: "divider",
                     },
-
                     "&:hover fieldset": {
                       borderColor: "divider",
                     },
-
                     "&.Mui-focused fieldset": {
                       borderColor: "secondary.main",
                       borderWidth: 2,
@@ -461,7 +414,6 @@ export default function ChatWidget() {
                   },
                 }}
               />
-
               <IconButton color="primary" onClick={handleSend}>
                 <SendIcon />
               </IconButton>

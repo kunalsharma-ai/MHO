@@ -148,11 +148,11 @@ export default function CurrentUser() {
             sx={{
               fontSize: 10,
               fontWeight: 700,
-              color: {xs:"secondary.dark",md:"#FFD79C"},
+              color: { xs: "secondary.dark", md: "#FFD79C" },
               textTransform: "capitalize",
             }}
           >
-            {user?.role}
+            {user?.category === "care giver" ? "Caregiver" : user?.category}
           </Typography>
         </Box>
       </Box>

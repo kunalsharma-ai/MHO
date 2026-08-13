@@ -148,17 +148,24 @@ export default function Survey({
           // steps[currentGroupIndex] !== "Welcome"
           //   ? "calc(90vh - 230px)"
           background: `
-  radial-gradient(circle at top right,
-    rgba(255,255,255,.45) 0%,
-    transparent 40%
-  ),
-  linear-gradient(
-    180deg,
-    #edf5ff 0%,
-    #dcecff 45%,
-    #cfe5ff 100%
-  )
-`,
+          radial-gradient(
+            circle at 85% 5%,
+            rgba(255, 255, 255, 0.8) 0%,
+            transparent 38%
+          ),
+          radial-gradient(
+            circle at 10% 95%,
+            rgba(1, 35, 98, 0.06) 0%,
+            transparent 40%
+          ),
+          linear-gradient(
+            135deg,
+            #f6faff 0%,
+            #edf5ff 35%,
+            #e2efff 70%,
+            #d7e9fc 100%
+          )
+        `,
 
           borderBottomLeftRadius: "16px",
           borderBottomRightRadius: "16px",
