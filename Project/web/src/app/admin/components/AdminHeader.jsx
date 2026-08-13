@@ -21,6 +21,18 @@ export default function AdminHeader() {
   const me = useMember();
   const router = useRouter();
 
+
+    const handleLogout = async () => {
+    try {
+      setProfileAnchorEl(null);
+      
+      await me.Logout();
+     
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
+
   // if (!me) return <LoadingOverlay />;
   return (
     <div>
@@ -247,12 +259,7 @@ export default function AdminHeader() {
           </MenuItem>
         ))}
         <MenuItem
-          onClick={async () => {
-            setProfileAnchorEl(null);
-            localStorage.removeItem("token");
-
-            me.Reload();
-          }}
+           onClick={handleLogout}
           sx={{
             mt: 1,
 

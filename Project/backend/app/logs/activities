@@ -8571,3 +8571,1183 @@
     },
     "message": "Fallback route called"
 }
+
+[30 Jul 2026, 11:09:27 IST]: OTP Sent to user
+{
+    "qualityScore": 100,
+    "category": "care giver",
+    "name": {
+        "salutation": "Mr.",
+        "first": "siddhant",
+        "last": "Tripathi",
+        "middle": ""
+    },
+    "gender": "Male",
+    "dob": "1992-07-29T18:30:00.000Z",
+    "mail": "siddhtripathi.dev@gmail.com",
+    "phone": "19838394044",
+    "timezone": "Asia/Calcutta",
+    "address": [
+        {
+            "tag": "home",
+            "country": "us",
+            "gps": {
+                "type": "Point",
+                "coordinates": [
+                    0,
+                    0
+                ]
+            },
+            "_id": "6a6ae38fc87f890a63c6cde5",
+            "id": "6a6ae38fc87f890a63c6cde5"
+        }
+    ],
+    "isVerified": {
+        "email": "unverified",
+        "phone": "unverified",
+        "video": "unverified",
+        "inPersonVisit": "unverified"
+    },
+    "profilePicture": null,
+    "referredBy": null,
+    "consent": {
+        "canShareVideo": false,
+        "canShareGPS": false,
+        "canAcceptPushNotification": false
+    },
+    "origin": "mho.sampledge.duckdns.org",
+    "terms": [],
+    "role": "respondent",
+    "paymentMethod": {
+        "method": ""
+    },
+    "parent": {
+        "consent": null
+    },
+    "sortOrder": 0,
+    "isActive": true,
+    "isDeleted": false,
+    "created": {
+        "By": null,
+        "From": "192.168.0.130, 10.10.0.2"
+    },
+    "_id": "6a6ae38fc87f890a63c6cde4",
+    "notification": [],
+    "socials": [],
+    "createdAt": "2026-07-30T05:39:27.223Z",
+    "updatedAt": "2026-07-30T05:39:27.223Z",
+    "fullName": "Mr. siddhant Tripathi",
+    "age": {
+        "years": 34,
+        "month": 0,
+        "day": 0
+    },
+    "id": "6a6ae38fc87f890a63c6cde4"
+}
+
+[30 Jul 2026, 11:15:28 IST]: OTP Sent to user
+{
+    "name": {
+        "salutation": "Mr.",
+        "first": "siddhant",
+        "last": "Tripathi",
+        "middle": ""
+    },
+    "isVerified": {
+        "email": "unverified",
+        "phone": "unverified",
+        "video": "unverified",
+        "inPersonVisit": "unverified"
+    },
+    "consent": {
+        "canShareVideo": false,
+        "canShareGPS": false,
+        "canAcceptPushNotification": false
+    },
+    "paymentMethod": {
+        "method": ""
+    },
+    "parent": {
+        "consent": null
+    },
+    "_id": "6a6ae38fc87f890a63c6cde4",
+    "qualityScore": 100,
+    "category": "care giver",
+    "gender": "Male",
+    "dob": "1992-07-29T18:30:00.000Z",
+    "mail": "siddhtripathi.dev@gmail.com",
+    "phone": "19838394044",
+    "timezone": "Asia/Calcutta",
+    "address": [
+        {
+            "gps": {
+                "type": "Point",
+                "coordinates": [
+                    0,
+                    0
+                ]
+            },
+            "tag": "home",
+            "country": "us",
+            "_id": "6a6ae38fc87f890a63c6cde5",
+            "id": "6a6ae38fc87f890a63c6cde5"
+        }
+    ],
+    "profilePicture": null,
+    "origin": "mho.sampledge.duckdns.org",
+    "terms": [],
+    "notification": [],
+    "socials": [],
+    "createdAt": "2026-07-30T05:39:27.223Z",
+    "updatedAt": "2026-07-30T05:39:27.223Z",
+    "fullName": "Mr. siddhant Tripathi",
+    "age": {
+        "years": 34,
+        "month": 0,
+        "day": 0
+    },
+    "id": "6a6ae38fc87f890a63c6cde4"
+}
+
+[30 Jul 2026, 11:19:59 IST]: Password Changed
+{
+    "name": {
+        "salutation": "Mr.",
+        "first": "siddhant",
+        "last": "Tripathi",
+        "middle": ""
+    },
+    "isVerified": {
+        "email": "verified",
+        "phone": "unverified",
+        "video": "unverified",
+        "inPersonVisit": "unverified"
+    },
+    "consent": {
+        "canShareVideo": false,
+        "canShareGPS": false,
+        "canAcceptPushNotification": false
+    },
+    "paymentMethod": {
+        "method": ""
+    },
+    "parent": {
+        "consent": null
+    },
+    "_id": "6a6ae38fc87f890a63c6cde4",
+    "qualityScore": 100,
+    "category": "care giver",
+    "gender": "Male",
+    "dob": "1992-07-29T18:30:00.000Z",
+    "mail": "siddhtripathi.dev@gmail.com",
+    "phone": "19838394044",
+    "timezone": "Asia/Calcutta",
+    "address": [
+        {
+            "gps": {
+                "type": "Point",
+                "coordinates": [
+                    0,
+                    0
+                ]
+            },
+            "tag": "home",
+            "country": "us",
+            "_id": "6a6ae38fc87f890a63c6cde5",
+            "id": "6a6ae38fc87f890a63c6cde5"
+        }
+    ],
+    "profilePicture": null,
+    "origin": "mho.sampledge.duckdns.org",
+    "terms": [],
+    "sortOrder": 0,
+    "notification": [],
+    "socials": [],
+    "createdAt": "2026-07-30T05:39:27.223Z",
+    "updatedAt": "2026-07-30T05:49:59.320Z",
+    "password": "$2a$10$NlZfB3JWvjSXSEXstyzwo..AiadKonnQZTRCUP2pRLQmereMfHnt.",
+    "fullName": "Mr. siddhant Tripathi",
+    "age": {
+        "years": 34,
+        "month": 0,
+        "day": 0
+    },
+    "id": "6a6ae38fc87f890a63c6cde4"
+}
+
+[30 Jul 2026, 11:20:38 IST]: User Logged In
+{
+    "name": {
+        "salutation": "Mr.",
+        "first": "siddhant",
+        "last": "Tripathi",
+        "middle": ""
+    },
+    "isVerified": {
+        "email": "verified",
+        "phone": "unverified",
+        "video": "unverified",
+        "inPersonVisit": "unverified"
+    },
+    "consent": {
+        "canShareVideo": false,
+        "canShareGPS": false,
+        "canAcceptPushNotification": false
+    },
+    "paymentMethod": {
+        "method": ""
+    },
+    "parent": {
+        "consent": null
+    },
+    "_id": "6a6ae38fc87f890a63c6cde4",
+    "qualityScore": 100,
+    "category": "care giver",
+    "gender": "Male",
+    "dob": "1992-07-29T18:30:00.000Z",
+    "mail": "siddhtripathi.dev@gmail.com",
+    "phone": "19838394044",
+    "timezone": "Asia/Calcutta",
+    "address": [
+        {
+            "gps": {
+                "type": "Point",
+                "coordinates": [
+                    0,
+                    0
+                ]
+            },
+            "tag": "home",
+            "country": "us",
+            "_id": "6a6ae38fc87f890a63c6cde5",
+            "id": "6a6ae38fc87f890a63c6cde5"
+        }
+    ],
+    "profilePicture": null,
+    "origin": "mho.sampledge.duckdns.org",
+    "terms": [],
+    "role": "respondent",
+    "notification": [],
+    "socials": [],
+    "createdAt": "2026-07-30T05:39:27.223Z",
+    "updatedAt": "2026-07-30T05:49:59.320Z",
+    "fullName": "Mr. siddhant Tripathi",
+    "age": {
+        "years": 34,
+        "month": 0,
+        "day": 0
+    },
+    "id": "6a6ae38fc87f890a63c6cde4"
+}
+
+[30 Jul 2026, 11:20:42 IST]: Internal Survey Started by User
+{
+    "user": {
+        "name": {
+            "salutation": "Mr.",
+            "first": "siddhant",
+            "last": "Tripathi",
+            "middle": ""
+        },
+        "isVerified": {
+            "email": "verified",
+            "phone": "unverified",
+            "video": "unverified",
+            "inPersonVisit": "unverified"
+        },
+        "consent": {
+            "canShareVideo": false,
+            "canShareGPS": false,
+            "canAcceptPushNotification": false
+        },
+        "paymentMethod": {
+            "method": ""
+        },
+        "parent": {
+            "consent": null
+        },
+        "_id": "6a6ae38fc87f890a63c6cde4",
+        "qualityScore": 100,
+        "category": "care giver",
+        "gender": "Male",
+        "dob": "1992-07-29T18:30:00.000Z",
+        "mail": "siddhtripathi.dev@gmail.com",
+        "phone": "19838394044",
+        "timezone": "Asia/Calcutta",
+        "address": [
+            {
+                "gps": {
+                    "type": "Point",
+                    "coordinates": [
+                        0,
+                        0
+                    ]
+                },
+                "tag": "home",
+                "country": "us",
+                "_id": "6a6ae38fc87f890a63c6cde5",
+                "id": "6a6ae38fc87f890a63c6cde5"
+            }
+        ],
+        "profilePicture": null,
+        "origin": "mho.sampledge.duckdns.org",
+        "terms": [],
+        "role": "respondent",
+        "notification": [],
+        "socials": [],
+        "createdAt": "2026-07-30T05:39:27.223Z",
+        "updatedAt": "2026-07-30T05:49:59.320Z",
+        "fullName": "Mr. siddhant Tripathi",
+        "age": {
+            "years": 34,
+            "month": 0,
+            "day": 0
+        },
+        "id": "6a6ae38fc87f890a63c6cde4"
+    },
+    "response": {
+        "survey": {
+            "name": "Welcome to My Health Opinions",
+            "slug": "welcome"
+        },
+        "timeline": {
+            "end": null,
+            "start": "2026-07-30T05:50:42.618Z"
+        },
+        "_id": "6a6ae6324935cef981e7dc0d",
+        "origin": "mho.sampledge.duckdns.org",
+        "user": "6a6ae38fc87f890a63c6cde4",
+        "createdAt": "2026-07-30T05:50:42.622Z",
+        "loi": 0,
+        "points": 100,
+        "source": "internal",
+        "status": "dropout",
+        "telemetry": [
+            {
+                "key": "UserAgent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+                "_id": "6a6ae632c87f890a63c6e44c",
+                "id": "6a6ae632c87f890a63c6e44c"
+            },
+            {
+                "key": "Languages",
+                "value": "en-US,en;q=0.9",
+                "_id": "6a6ae632c87f890a63c6e44d",
+                "id": "6a6ae632c87f890a63c6e44d"
+            },
+            {
+                "key": "IP Address",
+                "value": "192.168.0.130, 10.10.0.2",
+                "_id": "6a6ae632c87f890a63c6e44e",
+                "id": "6a6ae632c87f890a63c6e44e"
+            }
+        ],
+        "updatedAt": "2026-07-30T05:50:42.622Z",
+        "id": "6a6ae6324935cef981e7dc0d"
+    }
+}
+
+[30 Jul 2026, 11:20:57 IST]: Terms Accepted: 
+{
+    "$__": {
+        "activePaths": {
+            "paths": {
+                "origin": "init",
+                "timezone": "init",
+                "mail": "init",
+                "dob": "init",
+                "gender": "init",
+                "name.last": "init",
+                "name.first": "init",
+                "category": "init",
+                "qualityScore": "init",
+                "name.middle": "init",
+                "isVerified.email": "init",
+                "isVerified.phone": "init",
+                "isVerified.video": "init",
+                "isVerified.inPersonVisit": "init",
+                "profilePicture": "init",
+                "consent.canShareVideo": "init",
+                "consent.canShareGPS": "init",
+                "consent.canAcceptPushNotification": "init",
+                "terms": "init",
+                "role": "init",
+                "paymentMethod.method": "init",
+                "parent.consent": "init",
+                "_id": "init",
+                "name.salutation": "init",
+                "phone": "init",
+                "address": "init",
+                "notification": "init",
+                "socials": "init",
+                "createdAt": "init",
+                "updatedAt": "init"
+            },
+            "states": {
+                "require": {},
+                "default": {},
+                "init": {
+                    "_id": true,
+                    "qualityScore": true,
+                    "category": true,
+                    "name.salutation": true,
+                    "name.first": true,
+                    "name.last": true,
+                    "name.middle": true,
+                    "gender": true,
+                    "dob": true,
+                    "mail": true,
+                    "phone": true,
+                    "timezone": true,
+                    "address": true,
+                    "isVerified.email": true,
+                    "isVerified.phone": true,
+                    "isVerified.video": true,
+                    "isVerified.inPersonVisit": true,
+                    "profilePicture": true,
+                    "consent.canShareVideo": true,
+                    "consent.canShareGPS": true,
+                    "consent.canAcceptPushNotification": true,
+                    "origin": true,
+                    "terms": true,
+                    "role": true,
+                    "paymentMethod.method": true,
+                    "parent.consent": true,
+                    "notification": true,
+                    "socials": true,
+                    "createdAt": true,
+                    "updatedAt": true
+                }
+            }
+        },
+        "skipId": true,
+        "selected": {
+            "referredBy": 0,
+            "password": 0,
+            "sortOrder": 0,
+            "isActive": 0,
+            "isDeleted": 0,
+            "deleted.At": 0,
+            "deleted.By": 0,
+            "created.By": 0,
+            "created.From": 0,
+            "updated.By": 0,
+            "updated.From": 0
+        },
+        "exclude": true
+    },
+    "$isNew": false,
+    "_doc": {
+        "name": {
+            "salutation": "Mr.",
+            "first": "siddhant",
+            "last": "Tripathi",
+            "middle": ""
+        },
+        "isVerified": {
+            "email": "verified",
+            "phone": "unverified",
+            "video": "unverified",
+            "inPersonVisit": "unverified"
+        },
+        "consent": {
+            "canShareVideo": false,
+            "canShareGPS": false,
+            "canAcceptPushNotification": false
+        },
+        "paymentMethod": {
+            "method": ""
+        },
+        "parent": {
+            "name": {},
+            "consent": null
+        },
+        "deleted": {},
+        "created": {},
+        "updated": {},
+        "_id": "6a6ae38fc87f890a63c6cde4",
+        "qualityScore": 100,
+        "category": "care giver",
+        "gender": "Male",
+        "dob": "1992-07-29T18:30:00.000Z",
+        "mail": "siddhtripathi.dev@gmail.com",
+        "phone": "19838394044",
+        "timezone": "Asia/Calcutta",
+        "address": [
+            {
+                "gps": {
+                    "type": "Point",
+                    "coordinates": [
+                        0,
+                        0
+                    ]
+                },
+                "tag": "home",
+                "country": "us",
+                "_id": "6a6ae38fc87f890a63c6cde5",
+                "id": "6a6ae38fc87f890a63c6cde5"
+            }
+        ],
+        "profilePicture": null,
+        "origin": "mho.sampledge.duckdns.org",
+        "terms": [],
+        "role": "respondent",
+        "notification": [],
+        "socials": [],
+        "createdAt": "2026-07-30T05:39:27.223Z",
+        "updatedAt": "2026-07-30T05:49:59.320Z"
+    },
+    "terms": [
+        "accuracy-clause",
+        "privacy-notice",
+        "participation",
+        "cookies",
+        "sensitive-data",
+        "profile-information",
+        "data-collection-identifiers",
+        "device-id",
+        "video-confirmation",
+        "location-sharing"
+    ]
+}
+
+[30 Jul 2026, 11:20:57 IST]: Internal Survey Started by User
+{
+    "user": {
+        "name": {
+            "salutation": "Mr.",
+            "first": "siddhant",
+            "last": "Tripathi",
+            "middle": ""
+        },
+        "isVerified": {
+            "email": "verified",
+            "phone": "unverified",
+            "video": "unverified",
+            "inPersonVisit": "unverified"
+        },
+        "consent": {
+            "canShareVideo": false,
+            "canShareGPS": false,
+            "canAcceptPushNotification": false
+        },
+        "paymentMethod": {
+            "method": ""
+        },
+        "parent": {
+            "consent": null
+        },
+        "_id": "6a6ae38fc87f890a63c6cde4",
+        "qualityScore": 100,
+        "category": "care giver",
+        "gender": "Male",
+        "dob": "1992-07-29T18:30:00.000Z",
+        "mail": "siddhtripathi.dev@gmail.com",
+        "phone": "19838394044",
+        "timezone": "Asia/Calcutta",
+        "address": [
+            {
+                "gps": {
+                    "type": "Point",
+                    "coordinates": [
+                        0,
+                        0
+                    ]
+                },
+                "tag": "home",
+                "country": "us",
+                "_id": "6a6ae38fc87f890a63c6cde5",
+                "id": "6a6ae38fc87f890a63c6cde5"
+            }
+        ],
+        "profilePicture": null,
+        "origin": "mho.sampledge.duckdns.org",
+        "terms": [
+            "accuracy-clause",
+            "privacy-notice",
+            "participation",
+            "cookies",
+            "sensitive-data",
+            "profile-information",
+            "data-collection-identifiers",
+            "device-id",
+            "video-confirmation",
+            "location-sharing"
+        ],
+        "role": "respondent",
+        "notification": [],
+        "socials": [],
+        "createdAt": "2026-07-30T05:39:27.223Z",
+        "updatedAt": "2026-07-30T05:50:57.439Z",
+        "fullName": "Mr. siddhant Tripathi",
+        "age": {
+            "years": 34,
+            "month": 0,
+            "day": 0
+        },
+        "id": "6a6ae38fc87f890a63c6cde4"
+    },
+    "response": {
+        "survey": {
+            "name": "Welcome to My Health Opinions",
+            "slug": "welcome"
+        },
+        "timeline": {
+            "end": null,
+            "start": "2026-07-30T05:50:57.586Z"
+        },
+        "_id": "6a6ae6324935cef981e7dc0d",
+        "origin": "mho.sampledge.duckdns.org",
+        "user": "6a6ae38fc87f890a63c6cde4",
+        "createdAt": "2026-07-30T05:50:42.622Z",
+        "loi": 0,
+        "points": 100,
+        "source": "internal",
+        "status": "dropout",
+        "telemetry": [
+            {
+                "key": "UserAgent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+                "_id": "6a6ae641c87f890a63c6e6a7",
+                "id": "6a6ae641c87f890a63c6e6a7"
+            },
+            {
+                "key": "Languages",
+                "value": "en-US,en;q=0.9",
+                "_id": "6a6ae641c87f890a63c6e6a8",
+                "id": "6a6ae641c87f890a63c6e6a8"
+            },
+            {
+                "key": "IP Address",
+                "value": "192.168.0.130, 10.10.0.2",
+                "_id": "6a6ae641c87f890a63c6e6a9",
+                "id": "6a6ae641c87f890a63c6e6a9"
+            }
+        ],
+        "updatedAt": "2026-07-30T05:50:57.589Z",
+        "id": "6a6ae6324935cef981e7dc0d"
+    }
+}
+
+[30 Jul 2026, 11:21:41 IST]: Internal Survey Started by User
+{
+    "user": {
+        "name": {
+            "salutation": "Mr.",
+            "first": "siddhant",
+            "last": "Tripathi",
+            "middle": ""
+        },
+        "isVerified": {
+            "email": "verified",
+            "phone": "unverified",
+            "video": "unverified",
+            "inPersonVisit": "unverified"
+        },
+        "consent": {
+            "canShareVideo": false,
+            "canShareGPS": false,
+            "canAcceptPushNotification": false
+        },
+        "paymentMethod": {
+            "method": ""
+        },
+        "parent": {
+            "consent": null
+        },
+        "_id": "6a6ae38fc87f890a63c6cde4",
+        "qualityScore": 100,
+        "category": "care giver",
+        "gender": "Male",
+        "dob": "1992-07-29T18:30:00.000Z",
+        "mail": "siddhtripathi.dev@gmail.com",
+        "phone": "19838394044",
+        "timezone": "Asia/Calcutta",
+        "address": [
+            {
+                "gps": {
+                    "type": "Point",
+                    "coordinates": [
+                        0,
+                        0
+                    ]
+                },
+                "tag": "home",
+                "country": "us",
+                "_id": "6a6ae38fc87f890a63c6cde5",
+                "id": "6a6ae38fc87f890a63c6cde5"
+            }
+        ],
+        "profilePicture": null,
+        "origin": "mho.sampledge.duckdns.org",
+        "terms": [
+            "accuracy-clause",
+            "privacy-notice",
+            "participation",
+            "cookies",
+            "sensitive-data",
+            "profile-information",
+            "data-collection-identifiers",
+            "device-id",
+            "video-confirmation",
+            "location-sharing"
+        ],
+        "role": "respondent",
+        "notification": [],
+        "socials": [],
+        "createdAt": "2026-07-30T05:39:27.223Z",
+        "updatedAt": "2026-07-30T05:50:57.439Z",
+        "fullName": "Mr. siddhant Tripathi",
+        "age": {
+            "years": 34,
+            "month": 0,
+            "day": 0
+        },
+        "id": "6a6ae38fc87f890a63c6cde4"
+    },
+    "response": {
+        "survey": {
+            "name": "Welcome to My Health Opinions",
+            "slug": "welcome"
+        },
+        "timeline": {
+            "end": null,
+            "start": "2026-07-30T05:51:41.785Z"
+        },
+        "_id": "6a6ae6324935cef981e7dc0d",
+        "origin": "mho.sampledge.duckdns.org",
+        "user": "6a6ae38fc87f890a63c6cde4",
+        "createdAt": "2026-07-30T05:50:42.622Z",
+        "loi": 0,
+        "points": 100,
+        "source": "internal",
+        "status": "dropout",
+        "telemetry": [
+            {
+                "key": "UserAgent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+                "_id": "6a6ae66dc87f890a63c6e948",
+                "id": "6a6ae66dc87f890a63c6e948"
+            },
+            {
+                "key": "Languages",
+                "value": "en-US,en;q=0.9",
+                "_id": "6a6ae66dc87f890a63c6e949",
+                "id": "6a6ae66dc87f890a63c6e949"
+            },
+            {
+                "key": "IP Address",
+                "value": "192.168.0.130, 10.10.0.2",
+                "_id": "6a6ae66dc87f890a63c6e94a",
+                "id": "6a6ae66dc87f890a63c6e94a"
+            }
+        ],
+        "updatedAt": "2026-07-30T05:51:41.787Z",
+        "id": "6a6ae6324935cef981e7dc0d"
+    }
+}
+
+[30 Jul 2026, 11:25:14 IST]: Internal Survey Completed by User
+{
+    "user": {
+        "name": {
+            "salutation": "Mr.",
+            "first": "siddhant",
+            "last": "Tripathi",
+            "middle": ""
+        },
+        "isVerified": {
+            "email": "verified",
+            "phone": "unverified",
+            "video": "unverified",
+            "inPersonVisit": "unverified"
+        },
+        "consent": {
+            "canShareVideo": false,
+            "canShareGPS": false,
+            "canAcceptPushNotification": false
+        },
+        "paymentMethod": {
+            "method": ""
+        },
+        "parent": {
+            "consent": null
+        },
+        "_id": "6a6ae38fc87f890a63c6cde4",
+        "qualityScore": 100,
+        "category": "care giver",
+        "gender": "Male",
+        "dob": "1992-07-29T18:30:00.000Z",
+        "mail": "siddhtripathi.dev@gmail.com",
+        "phone": "19838394044",
+        "timezone": "Asia/Calcutta",
+        "address": [
+            {
+                "gps": {
+                    "type": "Point",
+                    "coordinates": [
+                        0,
+                        0
+                    ]
+                },
+                "tag": "home",
+                "country": "us",
+                "_id": "6a6ae38fc87f890a63c6cde5",
+                "id": "6a6ae38fc87f890a63c6cde5"
+            }
+        ],
+        "profilePicture": null,
+        "origin": "mho.sampledge.duckdns.org",
+        "terms": [
+            "accuracy-clause",
+            "privacy-notice",
+            "participation",
+            "cookies",
+            "sensitive-data",
+            "profile-information",
+            "data-collection-identifiers",
+            "device-id",
+            "video-confirmation",
+            "location-sharing"
+        ],
+        "role": "respondent",
+        "notification": [],
+        "socials": [],
+        "createdAt": "2026-07-30T05:39:27.223Z",
+        "updatedAt": "2026-07-30T05:50:57.439Z",
+        "fullName": "Mr. siddhant Tripathi",
+        "age": {
+            "years": 34,
+            "month": 0,
+            "day": 0
+        },
+        "id": "6a6ae38fc87f890a63c6cde4"
+    },
+    "response": {
+        "survey": {
+            "name": "Welcome to My Health Opinions",
+            "slug": "welcome"
+        },
+        "timeline": {
+            "end": null,
+            "start": "2026-07-30T05:51:41.785Z"
+        },
+        "_id": "6a6ae6324935cef981e7dc0d",
+        "origin": "mho.sampledge.duckdns.org",
+        "user": "6a6ae38fc87f890a63c6cde4",
+        "createdAt": "2026-07-30T05:50:42.622Z",
+        "loi": 0,
+        "points": 100,
+        "sortOrder": 0,
+        "source": "internal",
+        "status": "dropout",
+        "telemetry": [
+            {
+                "key": "UserAgent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+                "_id": "6a6ae66dc87f890a63c6e948",
+                "id": "6a6ae66dc87f890a63c6e948"
+            },
+            {
+                "key": "Languages",
+                "value": "en-US,en;q=0.9",
+                "_id": "6a6ae66dc87f890a63c6e949",
+                "id": "6a6ae66dc87f890a63c6e949"
+            },
+            {
+                "key": "IP Address",
+                "value": "192.168.0.130, 10.10.0.2",
+                "_id": "6a6ae66dc87f890a63c6e94a",
+                "id": "6a6ae66dc87f890a63c6e94a"
+            }
+        ],
+        "updatedAt": "2026-07-30T05:51:41.787Z",
+        "id": "6a6ae6324935cef981e7dc0d"
+    }
+}
+
+[30 Jul 2026, 11:30:42 IST]: Fallback route
+{
+    "headers": {
+        "connection": "close",
+        "host": "mho.sampledge.duckdns.org",
+        "x-real-ip": "10.10.0.2",
+        "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+        "x-forwarded-proto": "http",
+        "x-forwarded-host": "mho.sampledge.duckdns.org",
+        "x-forwarded-port": "80",
+        "x-forwarded-scheme": "https",
+        "content-type": "application/json",
+        "accept": "application/json, text/html, text/plain",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OWJhOGZkZDY1NGM1MmE4MDlhMmVkNWIiLCJjYXRlZ29yeSI6ImhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIiwiZW1haWwiOiJ0ZXN0aW5nLmVpZ2h0ZWVubWFyY2hAZnJlcXVlbnRyZXNlYXJjaC5jb20iLCJwaG9uZSI6IjkxOTM1NDc3OTU0OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoidGVzdGluZyIsImxhc3QiOiJlaWdodGVlbm1hcmNoIiwibWlkZGxlIjoiIn0sIm9yaWdpbiI6Im1oby5zYW1wbGVkZ2UuZHVja2Rucy5vcmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzYwNTY2MDMsImV4cCI6MTgwNzU5MjYwM30.xKKwiOjUlEQYj2jvHWKcm0MFdYdW2xnO-6CkFwGT-Sc"
+    },
+    "message": "Fallback route called"
+}
+
+[30 Jul 2026, 11:30:42 IST]: Fallback route
+{
+    "headers": {
+        "connection": "close",
+        "host": "mho.sampledge.duckdns.org",
+        "x-real-ip": "10.10.0.2",
+        "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+        "x-forwarded-proto": "http",
+        "x-forwarded-host": "mho.sampledge.duckdns.org",
+        "x-forwarded-port": "80",
+        "x-forwarded-scheme": "https",
+        "content-type": "application/json",
+        "accept": "application/json, text/html, text/plain",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OWJhOGZkZDY1NGM1MmE4MDlhMmVkNWIiLCJjYXRlZ29yeSI6ImhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIiwiZW1haWwiOiJ0ZXN0aW5nLmVpZ2h0ZWVubWFyY2hAZnJlcXVlbnRyZXNlYXJjaC5jb20iLCJwaG9uZSI6IjkxOTM1NDc3OTU0OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoidGVzdGluZyIsImxhc3QiOiJlaWdodGVlbm1hcmNoIiwibWlkZGxlIjoiIn0sIm9yaWdpbiI6Im1oby5zYW1wbGVkZ2UuZHVja2Rucy5vcmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzYwNTY2MDMsImV4cCI6MTgwNzU5MjYwM30.xKKwiOjUlEQYj2jvHWKcm0MFdYdW2xnO-6CkFwGT-Sc"
+    },
+    "message": "Fallback route called"
+}
+
+[30 Jul 2026, 11:36:21 IST]: User Logged In
+{
+    "name": {
+        "salutation": "Mr.",
+        "first": "John",
+        "middle": "",
+        "last": "Doe"
+    },
+    "isVerified": {
+        "email": "verified",
+        "phone": "unverified",
+        "video": "unverified",
+        "inPersonVisit": "unverified"
+    },
+    "consent": {
+        "canShareVideo": true,
+        "canShareGPS": false,
+        "canAcceptPushNotification": true
+    },
+    "paymentMethod": {
+        "method": ""
+    },
+    "parent": {
+        "consent": null
+    },
+    "_id": "69020ed3fd135eac3245c0ea",
+    "respondentID": "USR001",
+    "category": "care giver",
+    "gender": "Male",
+    "dob": "1990-05-05T00:00:00.000Z",
+    "mail": "optiwari.india+mho@gmail.com",
+    "phone": "918130202879",
+    "timezone": "Asia/Kolkata",
+    "address": [
+        {
+            "gps": {
+                "type": "Point",
+                "coordinates": [
+                    0,
+                    0
+                ]
+            },
+            "tag": "home",
+            "house": "101",
+            "street": "sample street",
+            "city": "udaipur",
+            "state": "rajasthan",
+            "country": "india",
+            "zipcode": "313001",
+            "_id": "69020ed3fd135eac3245c0eb",
+            "id": "69020ed3fd135eac3245c0eb"
+        }
+    ],
+    "profilePicture": "/storage/1/images/508e5f6a-b463-4b16-9012-b4967777674b.webp",
+    "origin": "mho.sampledge.duckdns.org",
+    "notification": [],
+    "createdAt": "2025-10-29T12:55:47.101Z",
+    "updatedAt": "2026-07-24T10:23:59.642Z",
+    "terms": [
+        "accuracy-clause",
+        "privacy-notice",
+        "participation",
+        "cookies",
+        "sensitive-data",
+        "profile-information",
+        "data-collection-identifiers",
+        "device-id",
+        "video-confirmation",
+        "location-sharing"
+    ],
+    "qualityScore": 100,
+    "socials": [],
+    "role": "admin",
+    "fullName": "Mr. John Doe",
+    "age": {
+        "years": 36,
+        "month": 2,
+        "day": 2
+    },
+    "id": "69020ed3fd135eac3245c0ea"
+}
+
+[30 Jul 2026, 13:48:13 IST]: Fallback route
+{
+    "headers": {
+        "connection": "close",
+        "host": "mho.sampledge.duckdns.org",
+        "x-real-ip": "10.10.0.2",
+        "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+        "x-forwarded-proto": "http",
+        "x-forwarded-host": "mho.sampledge.duckdns.org",
+        "x-forwarded-port": "80",
+        "x-forwarded-scheme": "https",
+        "content-type": "application/json",
+        "accept": "application/json, text/html, text/plain",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OWJhOGZkZDY1NGM1MmE4MDlhMmVkNWIiLCJjYXRlZ29yeSI6ImhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIiwiZW1haWwiOiJ0ZXN0aW5nLmVpZ2h0ZWVubWFyY2hAZnJlcXVlbnRyZXNlYXJjaC5jb20iLCJwaG9uZSI6IjkxOTM1NDc3OTU0OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoidGVzdGluZyIsImxhc3QiOiJlaWdodGVlbm1hcmNoIiwibWlkZGxlIjoiIn0sIm9yaWdpbiI6Im1oby5zYW1wbGVkZ2UuZHVja2Rucy5vcmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzYwNTY2MDMsImV4cCI6MTgwNzU5MjYwM30.xKKwiOjUlEQYj2jvHWKcm0MFdYdW2xnO-6CkFwGT-Sc"
+    },
+    "message": "Fallback route called"
+}
+
+[30 Jul 2026, 13:48:13 IST]: Fallback route
+{
+    "headers": {
+        "connection": "close",
+        "host": "mho.sampledge.duckdns.org",
+        "x-real-ip": "10.10.0.2",
+        "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+        "x-forwarded-proto": "http",
+        "x-forwarded-host": "mho.sampledge.duckdns.org",
+        "x-forwarded-port": "80",
+        "x-forwarded-scheme": "https",
+        "content-type": "application/json",
+        "accept": "application/json, text/html, text/plain",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OWJhOGZkZDY1NGM1MmE4MDlhMmVkNWIiLCJjYXRlZ29yeSI6ImhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIiwiZW1haWwiOiJ0ZXN0aW5nLmVpZ2h0ZWVubWFyY2hAZnJlcXVlbnRyZXNlYXJjaC5jb20iLCJwaG9uZSI6IjkxOTM1NDc3OTU0OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoidGVzdGluZyIsImxhc3QiOiJlaWdodGVlbm1hcmNoIiwibWlkZGxlIjoiIn0sIm9yaWdpbiI6Im1oby5zYW1wbGVkZ2UuZHVja2Rucy5vcmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzYwNTY2MDMsImV4cCI6MTgwNzU5MjYwM30.xKKwiOjUlEQYj2jvHWKcm0MFdYdW2xnO-6CkFwGT-Sc"
+    },
+    "message": "Fallback route called"
+}
+
+[30 Jul 2026, 13:48:52 IST]: Fallback route
+{
+    "headers": {
+        "connection": "close",
+        "host": "mho.sampledge.duckdns.org",
+        "x-real-ip": "10.10.0.2",
+        "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+        "x-forwarded-proto": "http",
+        "x-forwarded-host": "mho.sampledge.duckdns.org",
+        "x-forwarded-port": "80",
+        "x-forwarded-scheme": "https",
+        "content-type": "application/json",
+        "accept": "application/json, text/html, text/plain",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OWJhOGZkZDY1NGM1MmE4MDlhMmVkNWIiLCJjYXRlZ29yeSI6ImhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIiwiZW1haWwiOiJ0ZXN0aW5nLmVpZ2h0ZWVubWFyY2hAZnJlcXVlbnRyZXNlYXJjaC5jb20iLCJwaG9uZSI6IjkxOTM1NDc3OTU0OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoidGVzdGluZyIsImxhc3QiOiJlaWdodGVlbm1hcmNoIiwibWlkZGxlIjoiIn0sIm9yaWdpbiI6Im1oby5zYW1wbGVkZ2UuZHVja2Rucy5vcmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzYwNTY2MDMsImV4cCI6MTgwNzU5MjYwM30.xKKwiOjUlEQYj2jvHWKcm0MFdYdW2xnO-6CkFwGT-Sc"
+    },
+    "message": "Fallback route called"
+}
+
+[30 Jul 2026, 13:48:52 IST]: Fallback route
+{
+    "headers": {
+        "connection": "close",
+        "host": "mho.sampledge.duckdns.org",
+        "x-real-ip": "10.10.0.2",
+        "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+        "x-forwarded-proto": "http",
+        "x-forwarded-host": "mho.sampledge.duckdns.org",
+        "x-forwarded-port": "80",
+        "x-forwarded-scheme": "https",
+        "content-type": "application/json",
+        "accept": "application/json, text/html, text/plain",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OWJhOGZkZDY1NGM1MmE4MDlhMmVkNWIiLCJjYXRlZ29yeSI6ImhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIiwiZW1haWwiOiJ0ZXN0aW5nLmVpZ2h0ZWVubWFyY2hAZnJlcXVlbnRyZXNlYXJjaC5jb20iLCJwaG9uZSI6IjkxOTM1NDc3OTU0OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoidGVzdGluZyIsImxhc3QiOiJlaWdodGVlbm1hcmNoIiwibWlkZGxlIjoiIn0sIm9yaWdpbiI6Im1oby5zYW1wbGVkZ2UuZHVja2Rucy5vcmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzYwNTY2MDMsImV4cCI6MTgwNzU5MjYwM30.xKKwiOjUlEQYj2jvHWKcm0MFdYdW2xnO-6CkFwGT-Sc"
+    },
+    "message": "Fallback route called"
+}
+
+[30 Jul 2026, 13:49:49 IST]: Fallback route
+{
+    "headers": {
+        "connection": "close",
+        "host": "mho.sampledge.duckdns.org",
+        "x-real-ip": "10.10.0.2",
+        "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+        "x-forwarded-proto": "http",
+        "x-forwarded-host": "mho.sampledge.duckdns.org",
+        "x-forwarded-port": "80",
+        "x-forwarded-scheme": "https",
+        "content-type": "application/json",
+        "accept": "application/json, text/html, text/plain",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OWJhOGZkZDY1NGM1MmE4MDlhMmVkNWIiLCJjYXRlZ29yeSI6ImhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIiwiZW1haWwiOiJ0ZXN0aW5nLmVpZ2h0ZWVubWFyY2hAZnJlcXVlbnRyZXNlYXJjaC5jb20iLCJwaG9uZSI6IjkxOTM1NDc3OTU0OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoidGVzdGluZyIsImxhc3QiOiJlaWdodGVlbm1hcmNoIiwibWlkZGxlIjoiIn0sIm9yaWdpbiI6Im1oby5zYW1wbGVkZ2UuZHVja2Rucy5vcmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzYwNTY2MDMsImV4cCI6MTgwNzU5MjYwM30.xKKwiOjUlEQYj2jvHWKcm0MFdYdW2xnO-6CkFwGT-Sc"
+    },
+    "message": "Fallback route called"
+}
+
+[30 Jul 2026, 13:49:49 IST]: Fallback route
+{
+    "headers": {
+        "connection": "close",
+        "host": "mho.sampledge.duckdns.org",
+        "x-real-ip": "10.10.0.2",
+        "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+        "x-forwarded-proto": "http",
+        "x-forwarded-host": "mho.sampledge.duckdns.org",
+        "x-forwarded-port": "80",
+        "x-forwarded-scheme": "https",
+        "content-type": "application/json",
+        "accept": "application/json, text/html, text/plain",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OWJhOGZkZDY1NGM1MmE4MDlhMmVkNWIiLCJjYXRlZ29yeSI6ImhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIiwiZW1haWwiOiJ0ZXN0aW5nLmVpZ2h0ZWVubWFyY2hAZnJlcXVlbnRyZXNlYXJjaC5jb20iLCJwaG9uZSI6IjkxOTM1NDc3OTU0OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoidGVzdGluZyIsImxhc3QiOiJlaWdodGVlbm1hcmNoIiwibWlkZGxlIjoiIn0sIm9yaWdpbiI6Im1oby5zYW1wbGVkZ2UuZHVja2Rucy5vcmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzYwNTY2MDMsImV4cCI6MTgwNzU5MjYwM30.xKKwiOjUlEQYj2jvHWKcm0MFdYdW2xnO-6CkFwGT-Sc"
+    },
+    "message": "Fallback route called"
+}
+
+[30 Jul 2026, 17:14:18 IST]: Server started at port 3000
+
+[30 Jul 2026, 18:52:44 IST]: Fallback route
+{
+    "headers": {
+        "connection": "close",
+        "host": "mho.sampledge.duckdns.org",
+        "x-real-ip": "10.10.0.2",
+        "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+        "x-forwarded-proto": "http",
+        "x-forwarded-host": "mho.sampledge.duckdns.org",
+        "x-forwarded-port": "80",
+        "x-forwarded-scheme": "https",
+        "content-type": "application/json",
+        "accept": "application/json, text/html, text/plain",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OWJhOGZkZDY1NGM1MmE4MDlhMmVkNWIiLCJjYXRlZ29yeSI6ImhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIiwiZW1haWwiOiJ0ZXN0aW5nLmVpZ2h0ZWVubWFyY2hAZnJlcXVlbnRyZXNlYXJjaC5jb20iLCJwaG9uZSI6IjkxOTM1NDc3OTU0OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoidGVzdGluZyIsImxhc3QiOiJlaWdodGVlbm1hcmNoIiwibWlkZGxlIjoiIn0sIm9yaWdpbiI6Im1oby5zYW1wbGVkZ2UuZHVja2Rucy5vcmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzYwNTY2MDMsImV4cCI6MTgwNzU5MjYwM30.xKKwiOjUlEQYj2jvHWKcm0MFdYdW2xnO-6CkFwGT-Sc"
+    },
+    "message": "Fallback route called"
+}
+
+[30 Jul 2026, 18:52:44 IST]: Fallback route
+{
+    "headers": {
+        "connection": "close",
+        "host": "mho.sampledge.duckdns.org",
+        "x-real-ip": "10.10.0.2",
+        "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+        "x-forwarded-proto": "http",
+        "x-forwarded-host": "mho.sampledge.duckdns.org",
+        "x-forwarded-port": "80",
+        "x-forwarded-scheme": "https",
+        "content-type": "application/json",
+        "accept": "application/json, text/html, text/plain",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OWJhOGZkZDY1NGM1MmE4MDlhMmVkNWIiLCJjYXRlZ29yeSI6ImhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIiwiZW1haWwiOiJ0ZXN0aW5nLmVpZ2h0ZWVubWFyY2hAZnJlcXVlbnRyZXNlYXJjaC5jb20iLCJwaG9uZSI6IjkxOTM1NDc3OTU0OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoidGVzdGluZyIsImxhc3QiOiJlaWdodGVlbm1hcmNoIiwibWlkZGxlIjoiIn0sIm9yaWdpbiI6Im1oby5zYW1wbGVkZ2UuZHVja2Rucy5vcmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzYwNTY2MDMsImV4cCI6MTgwNzU5MjYwM30.xKKwiOjUlEQYj2jvHWKcm0MFdYdW2xnO-6CkFwGT-Sc"
+    },
+    "message": "Fallback route called"
+}
+
+[30 Jul 2026, 18:52:44 IST]: Fallback route
+{
+    "headers": {
+        "connection": "close",
+        "host": "mho.sampledge.duckdns.org",
+        "x-real-ip": "10.10.0.2",
+        "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+        "x-forwarded-proto": "http",
+        "x-forwarded-host": "mho.sampledge.duckdns.org",
+        "x-forwarded-port": "80",
+        "x-forwarded-scheme": "https",
+        "content-type": "application/json",
+        "accept": "application/json, text/html, text/plain",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OWJhOGZkZDY1NGM1MmE4MDlhMmVkNWIiLCJjYXRlZ29yeSI6ImhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIiwiZW1haWwiOiJ0ZXN0aW5nLmVpZ2h0ZWVubWFyY2hAZnJlcXVlbnRyZXNlYXJjaC5jb20iLCJwaG9uZSI6IjkxOTM1NDc3OTU0OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoidGVzdGluZyIsImxhc3QiOiJlaWdodGVlbm1hcmNoIiwibWlkZGxlIjoiIn0sIm9yaWdpbiI6Im1oby5zYW1wbGVkZ2UuZHVja2Rucy5vcmciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzYwNTY2MDMsImV4cCI6MTgwNzU5MjYwM30.xKKwiOjUlEQYj2jvHWKcm0MFdYdW2xnO-6CkFwGT-Sc"
+    },
+    "message": "Fallback route called"
+}
+
+[31 Jul 2026, 05:46:44 IST]: Server started at port 3000
+
+[31 Jul 2026, 10:03:40 IST]: Server started at port 3000

@@ -8,13 +8,19 @@ import {
   Typography,
   TextField,
   IconButton,
+  Badge,
 } from "@mui/material";
-import ChatIcon from "@mui/icons-material/Chat";
+import { usePathname } from "next/navigation";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import CheckIcon from "@mui/icons-material/Check";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
-import RemoveIcon from "@mui/icons-material/Remove";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import { motion, AnimatePresence } from "framer-motion";
+
+const MotionPaper = motion.create(Paper);
+const MotionBox = motion.create(Box);
+const MotionFab = motion.create(Fab);
 
 const formatTime = (date) =>
   new Date(date).toLocaleTimeString([], {
@@ -46,10 +52,115 @@ const dummyMessages = [
   },
 ];
 
+const chatVariants = {
+  hidden: {
+    opacity: 0,
+    y: 30,
+    scale: 0.9,
+    transformOrigin: "bottom right",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.35,
+      ease: "easeOut",
+      when: "beforeChildren",
+      staggerChildren: 0.08,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: 20,
+    scale: 0.92,
+    transition: {
+      duration: 0.25,
+      ease: "easeIn",
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 15,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.25,
+      when: "beforeChildren",
+    },
+  },
+};
+
+const listVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const messageVariants = {
+  hidden: (isMe) => ({
+    opacity: 0,
+    x: isMe ? 30 : -30,
+    y: 12,
+    scale: 0.92,
+  }),
+  visible: {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.3,
+      ease: "easeOut",
+    },
+  },
+};
+
 export default function ChatWidget() {
   const [open, setOpen] = React.useState(false);
   const [messages, setMessages] = React.useState(dummyMessages);
   const [input, setInput] = React.useState("");
+  const messagesEndRef = React.useRef(null);
+  const pathname = usePathname();
+  const isSurveyPage = pathname.startsWith("/survey");
+
+  React.useEffect(() => {
+    if (!open) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+
+        setOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  React.useEffect(() => {
+    if (open) {
+      messagesEndRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  }, [messages, open]);
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -81,172 +192,283 @@ export default function ChatWidget() {
     }, 800);
   };
 
+  if (isSurveyPage) return null;
   return (
     <>
-      <Fab
+      <MotionFab
         color="primary"
+        initial={{
+          scale: 0,
+          opacity: 0,
+        }}
+        animate={{
+          scale: 1,
+          opacity: 1,
+        }}
+        whileHover={{
+          scale: 1.08,
+        }}
+        whileTap={{
+          scale: 0.9,
+        }}
+        transition={{
+          duration: 0.45,
+          ease: [0.34, 1.56, 0.64, 1],
+        }}
         onClick={() => setOpen((prev) => !prev)}
         sx={{
+          height: 48,
+          width: 48,
           position: "fixed",
-          bottom: 24,
-          right: 24,
+          bottom: 15,
+          right: 15,
           zIndex: 1300,
           color: "white",
+          fontSize: 30,
         }}
       >
-        {open ? <CloseIcon /> : <ChatIcon />}
-      </Fab>
-
-      {open && (
-        <Paper
-          elevation={6}
-          sx={{
-            position: "fixed",
-            bottom: 90,
-            right: 24,
-            width: 320,
-            height: "calc(100vh - 200px)",
-            display: "flex",
-            flexDirection: "column",
-            borderRadius: 3,
-            overflow: "hidden",
-            zIndex: 1300,
-          }}
-        >
-          <Box
-            sx={{
-              px: 2,
-              py: 1,
-              bgcolor: "#04662b",
-              color: "white",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="subtitle1" fontWeight={600}>
-              Support Chat
-            </Typography>
-            <IconButton
-              onClick={() => {
-                setOpen(false);
+        <AnimatePresence mode="wait">
+          {open ? (
+            <motion.div
+              key="close"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <RemoveIcon sx={{ color: "white" }} />
-            </IconButton>
-          </Box>
+              <CloseIcon />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="support"
+              initial={{ rotate: 90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: -90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Badge badgeContent={1} color="error">
+                <SupportAgentIcon sx={{ fontSize: 30 }} />
+              </Badge>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </MotionFab>
 
-          <Box
+      <AnimatePresence>
+        {open && (
+          <MotionPaper
+            variants={chatVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            elevation={10}
             sx={{
-              flex: 1,
-              p: 2,
-              overflowY: "auto",
-              bgcolor: "#f5f5f5",
+              position: "fixed",
+              bottom: 90,
+              right: 20,
+              width: { xs: "95vw", sm: 380, md: 420 },
+              height: "calc(100vh - 200px)",
+              display: "flex",
+              flexDirection: "column",
+              borderRadius: 4,
+              overflow: "hidden",
+              zIndex: 1300,
             }}
           >
-            {messages.map((msg) => {
-              const isMe = msg.sender === "me";
+            <Box
+              sx={{
+                px: 2,
+                py: 1,
+                bgcolor: "secondary.dark",
+                color: "white",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography fontWeight={700}>Support Chat</Typography>
+              <IconButton onClick={() => setOpen(false)}>
+                <CloseIcon sx={{ color: "white" }} />
+              </IconButton>
+            </Box>
 
-              return (
-                <Box
-                  key={msg.id}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: isMe ? "flex-end" : "flex-start",
-                    mb: 2,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      px: 2,
-                      py: 1,
-                      maxWidth: "75%",
-                      borderRadius: 2,
-                      bgcolor: isMe ? "secondary.main" : "grey.300",
-                      color: isMe ? "white" : "black",
-                    }}
-                  >
-                    {!isMe && (
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          display: "block",
-                          fontWeight: 600,
-                          mb: 0.3,
-                        }}
-                      >
-                        {msg.name}
-                      </Typography>
-                    )}
+            <MotionBox
+              variants={itemVariants}
+              initial="hidden"
+              animate="visible"
+              sx={{
+                flex: 1,
+                p: 2,
+                overflowY: "auto",
+                bgcolor: "#f5f5f5",
+              }}
+            >
+              <MotionBox
+                key={open ? "open" : "closed"}
+                variants={listVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                {messages.map((msg) => {
+                  const isMe = msg.sender === "me";
 
-                    <Typography variant="body2">{msg.text}</Typography>
-
-                    <Box
+                  return (
+                    <MotionBox
+                      key={msg.id}
+                      custom={isMe}
+                      variants={messageVariants}
+                      exit={{
+                        opacity: 0,
+                        scale: 0.8,
+                        transition: {
+                          duration: 0.15,
+                        },
+                      }}
+                      layout
                       sx={{
                         display: "flex",
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                        mt: 0.5,
-                        gap: 0.5,
+                        flexDirection: "column",
+                        alignItems: isMe ? "flex-end" : "flex-start",
+                        mb: 2,
                       }}
                     >
-                      <Typography
-                        variant="caption"
+                      <MotionBox
+                        whileHover={{
+                          scale: 1.02,
+                        }}
+                        transition={{
+                          duration: 0.15,
+                        }}
                         sx={{
-                          lineHeight: 1,
-                          display: "flex",
-                          alignItems: "center",
-                          fontWeight: 600,
-                          fontSize: "8px !Important",
+                          px: 2,
+                          py: 1.2,
+                          maxWidth: "75%",
+                          borderRadius: 3,
+                          bgcolor: isMe ? "primary.main" : "grey.300",
+                          color: isMe ? "white" : "black",
+                          boxShadow: 2,
                         }}
                       >
-                        {formatTime(msg.timestamp)}{" "}
-                      </Typography>
-                      {isMe && (
+                        {!isMe && (
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              display: "block",
+                              fontWeight: 700,
+                              mb: 0.5,
+                            }}
+                          >
+                            {msg.name}
+                          </Typography>
+                        )}
+
+                        <Typography variant="body2">{msg.text}</Typography>
+
                         <Box
                           sx={{
                             display: "flex",
+                            justifyContent: "flex-end",
                             alignItems: "center",
+                            gap: 0.5,
+                            mt: 0.8,
                           }}
                         >
-                          <CheckIcon sx={{ fontSize: 14 }} />
-                          <DoneAllIcon
+                          <Typography
+                            variant="caption"
                             sx={{
-                              fontSize: 14,
+                              fontSize: 10,
+                              fontWeight: 600,
+                              lineHeight: 1,
                             }}
-                          />
-                        </Box>
-                      )}
-                    </Box>
-                  </Box>
-                </Box>
-              );
-            })}
-          </Box>
+                          >
+                            {formatTime(msg.timestamp)}
+                          </Typography>
 
-          <Box
-            sx={{
-              p: 1,
-              display: "flex",
-              gap: 1,
-              borderTop: "1px solid #ddd",
-            }}
-          >
-            <TextField
-              fullWidth
-              size="small"
-              placeholder="Type a message..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            />
-            <IconButton color="primary" onClick={handleSend}>
-              <SendIcon />
-            </IconButton>
-          </Box>
-        </Paper>
-      )}
+                          {isMe && (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                              }}
+                            >
+                              <CheckIcon sx={{ fontSize: 14 }} />
+                              <DoneAllIcon sx={{ fontSize: 14 }} />
+                              <DoneAllIcon
+                                sx={{
+                                  fontSize: 15,
+                                  color: "#4FC3F7",
+                                  filter:
+                                    "drop-shadow(0 0 1px rgba(0,0,0,.35))",
+                                }}
+                              />
+                            </Box>
+                          )}
+                        </Box>
+                      </MotionBox>
+                    </MotionBox>
+                  );
+                })}
+              </MotionBox>
+
+              <div ref={messagesEndRef} />
+            </MotionBox>
+
+            <MotionBox
+              variants={itemVariants}
+              sx={{
+                p: 1,
+                display: "flex",
+                gap: 1,
+                borderTop: "1px solid",
+                borderColor: "divider",
+                bgcolor: "background.paper",
+              }}
+            >
+              <TextField
+                fullWidth
+                size="small"
+                placeholder="Type a message..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 4,
+                    bgcolor: "background.paper",
+
+                    "& fieldset": {
+                      borderColor: "divider",
+                    },
+
+                    "&:hover fieldset": {
+                      borderColor: "divider",
+                    },
+
+                    "&.Mui-focused fieldset": {
+                      borderColor: "secondary.main",
+                      borderWidth: 2,
+                    },
+                  },
+                }}
+              />
+
+              <IconButton color="primary" onClick={handleSend}>
+                <SendIcon />
+              </IconButton>
+            </MotionBox>
+          </MotionPaper>
+        )}
+      </AnimatePresence>
     </>
   );
 }

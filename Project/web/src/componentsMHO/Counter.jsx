@@ -15,7 +15,7 @@ function Counter({ value, prefix }) {
 
       // Animate count → value
       const controls = animate(count, value, {
-        duration: 4, // make a bit longer
+        duration: 5, // make a bit longer
         ease: [0.16, 1, 0.3, 1], // expo-like slow down
       });
 

@@ -1,6 +1,13 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import {
+  motion,
+  useMotionValue,
+  useAnimationFrame,
+  wrap,
+  AnimatePresence,
+  useTransform,
+} from "framer-motion";
 import {
   Box,
   Typography,
@@ -16,6 +23,64 @@ import Image from "next/image";
 const MotionBox = motion.create(Box);
 const MotionGrid = motion.create(Grid);
 const MotionButton = motion.create(Button);
+
+const surveys = [
+  {
+    title: "Diabetes Treatment",
+    description:
+      "Share your experience with diabetes treatments to help improve future care and patient outcomes.",
+    reward: "$4",
+    duration: "12 min",
+    category: "Patients",
+    color: "#43A047",
+  },
+  {
+    title: "Cardiology Research",
+    description:
+      "Provide insights on heart health, medications, and treatment approaches in this cardiology study.",
+    reward: "$6",
+    duration: "18 min",
+    category: "Doctors",
+    color: "#1976D2",
+  },
+  {
+    title: "Oncology Study",
+    description:
+      "Contribute your expertise on cancer diagnosis, therapies, and patient management practices.",
+    reward: "$7",
+    duration: "20 min",
+    category: "Specialists",
+    color: "#8E24AA",
+  },
+  {
+    title: "Caregiver Experience",
+    description:
+      "Tell us about your caregiving journey to support the development of better healthcare services.",
+    reward: "$3",
+    duration: "10 min",
+    category: "Caregivers",
+    color: "#FB8C00",
+  },
+  {
+    title: "Nutrition Survey",
+    description:
+      "Share your opinions on nutrition, healthy eating habits, and dietary recommendations for better wellness.",
+    reward: "$6",
+    duration: "14 min",
+    category: "General",
+    color: "#26A69A",
+  },
+  {
+    title: "Mental Wellness",
+    description:
+      "Help researchers understand mental well-being, stress management, and access to support resources.",
+    reward: "$5",
+    duration: "15 min",
+    category: "Patients",
+    color: "#00ACC1",
+  },
+];
+
 const BannerData = [
   {
     backgroundImg: "/images/home/banner/bg7.jpg",
@@ -121,6 +186,24 @@ const arrow = {
   },
 };
 
+const surveyCarousel = {
+  hidden: {
+    opacity: 0,
+    x: -70,
+    scale: 0.96,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: {
+      duration: 0.9,
+      delay: 0.45,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
 const HeroSection = ({ open, setOpen, setUserType }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const theme = useTheme();
@@ -158,6 +241,28 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
     }
   };
 
+  const cards = [...surveys, ...surveys];
+
+  const x = useMotionValue(0);
+  const [paused, setPaused] = useState(false);
+
+  const SPEED = 45;
+
+  const trackRef = useRef(null);
+  const [trackWidth, setTrackWidth] = useState(0);
+
+  useLayoutEffect(() => {
+    if (trackRef.current) {
+      setTrackWidth(trackRef.current.scrollWidth / 2);
+    }
+  }, []);
+
+  useAnimationFrame((_, delta) => {
+    if (paused || !trackWidth) return;
+    x.set(x.get() - (SPEED * delta) / 1000);
+  });
+
+  const translateX = useTransform(x, (v) => `${wrap(-trackWidth, 0, v)}px`);
   return (
     <Box
       sx={{
@@ -247,13 +352,198 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
           display: "flex",
           flexDirection: "column",
           alignItems: isMobile ? "center" : "flex-start",
-          justifyContent: "center",
+          justifyContent: {
+            xs: "center",
+            lg: "flex-start",
+          },
           height: "100%",
           width: "100%",
           px: { xs: 2, sm: 4 },
+          pt: {
+            lg: 12,
+            xl: 16,
+          },
           textAlign: isMobile ? "center" : "left",
         }}
       >
+        <MotionBox
+          variants={surveyCarousel}
+          initial="hidden"
+          animate="visible"
+          sx={{
+            // position: "absolute",
+            // left: { lg: 50, xl: 70 },
+            // bottom: 20,
+            // zIndex: 15,
+            mb: 4,
+            alignSelf: "flex-start",
+            width: "60%",
+            overflow: "hidden",
+            display: { xs: "none", lg: "block" },
+          }}
+        >
+          <Typography
+            sx={{
+              color: "rgba(255,255,255,.72)",
+              fontSize: { lg: 11, xl: 12 },
+              my: { xl: 1 },
+            }}
+          >
+            Browse a few of our paid surveys
+          </Typography>
+          <Box
+            sx={{
+              py: 1,
+              my: -1,
+              overflow: "hidden",
+              maskImage:
+                "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+              WebkitMaskImage:
+                "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+            }}
+          >
+            <motion.div
+              ref={trackRef}
+              style={{
+                display: "flex",
+                gap: 20,
+                width: "max-content",
+                x: translateX,
+              }}
+            >
+              {cards.map((survey, index) => (
+                <MotionBox
+                  key={index}
+                  whileHover={{
+                    y: -5,
+                    scale: 1.03,
+                  }}
+                  transition={{
+                    duration: 0.2,
+                  }}
+                  onMouseEnter={() => setPaused(true)}
+                  onMouseLeave={() => setPaused(false)}
+                  onClick={() => setOpen(true)}
+                  sx={{
+                    width: 250,
+                    minHeight: { lg: 200, xl: 240 },
+                    flexShrink: 0,
+                    my: 2,
+                    p: 1.5,
+                    cursor: "pointer",
+                    borderRadius: 3,
+                    background: "rgba(255,255,255,.12)",
+                    backdropFilter: "blur(18px)",
+                    border: "1px solid rgba(255,255,255,.18)",
+                    boxShadow: "0 10px 30px rgba(0,0,0,.18)",
+                    transition: ".25s",
+                    "&:hover": {
+                      borderColor: "secondary.main",
+                      boxShadow: (theme) =>
+                        `0 15px 35px ${theme.palette.secondary.main}30`,
+                    },
+                  }}
+                >
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={1}
+                  >
+                    <Box
+                      sx={{
+                        px: 1.25,
+                        py: 0.5,
+                        borderRadius: 5,
+                        bgcolor: survey.color,
+                        color: "#fff",
+                        fontWeight: 700,
+                        fontSize: { lg: 11, xl: 12 },
+                      }}
+                    >
+                      {survey.category}
+                    </Box>
+
+                    <Typography
+                      sx={{
+                        color: "#fff",
+                        fontWeight: 700,
+                        fontSize: { lg: 18, xl: 20 },
+                      }}
+                    >
+                      {survey.reward}
+                    </Typography>
+                  </Box>
+                  <Typography
+                    sx={{
+                      color: "#fff",
+                      fontWeight: 700,
+                      fontSize: { lg: 18, xl: 20 },
+                      lineHeight: 1.35,
+                      minHeight: 52,
+                      mt: 1,
+                    }}
+                  >
+                    {survey.title}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: "rgba(255,255,255,.72)",
+                      fontSize: { lg: 13, xl: 14 },
+                      lineHeight: 1.5,
+
+                      minHeight: 42,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                    }}
+                  >
+                    {survey.description}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: "rgba(255,255,255,.72)",
+                      fontSize: { lg: 13, xl: 14 },
+                      mt: 1.8,
+                    }}
+                  >
+                    {survey.duration}
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      mt: 1,
+                      pt: 1.5,
+
+                      borderTop: "1px solid rgba(255,255,255,.08)",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        color: "secondary.main",
+                        fontWeight: 700,
+                        fontSize: { lg: 14, xl: 15 },
+                      }}
+                    >
+                      Take Survey
+                    </Typography>
+
+                    <ArrowForwardIcon
+                      sx={{
+                        color: "secondary.main",
+                        fontSize: 20,
+                      }}
+                    />
+                  </Box>
+                </MotionBox>
+              ))}
+            </motion.div>
+          </Box>
+        </MotionBox>
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlide}
@@ -277,11 +567,12 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                     xs: "1.75rem",
                     sm: "2rem",
                     md: "2.5rem",
-                    lg: "3rem",
+                    lg: "1.75rem",
+                    xl: "2.5rem",
                   },
                   fontWeight: 700,
                   lineHeight: 1.2,
-                  mb: 2,
+                  mb: 1.5,
                   pr: { md: 4 },
                   color: "white",
                   textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
@@ -299,7 +590,7 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                   fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" },
                   fontWeight: 400,
                   lineHeight: 1.5,
-                  mb: { xs: 3, md: 4 },
+                  mb: { xs: 3, md: 2.5 },
                   color: "rgba(255,255,255,0.9)",
                   textShadow: "1px 1px 2px rgba(0,0,0,0.5)",
                   maxWidth: { xs: "100%", md: "600px" },
@@ -308,6 +599,7 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                 {currentBanner.caption}
               </Typography>
             </motion.div>
+
             <motion.div variants={item}>
               <Box
                 display="flex"
@@ -332,6 +624,7 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                     fontWeight: 600,
                     px: { xs: 3, md: 4 },
                     py: { xs: 1, md: 1.5 },
+
                     borderRadius: 2,
                     textTransform: "none",
                     boxShadow: 4,
@@ -436,7 +729,7 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
             <Typography
               sx={{
                 color: "#fff",
-                fontSize: { lg: 25, xl: 30 },
+                fontSize: { lg: 22, xl: 30 },
                 fontWeight: 800,
                 textAlign: "center",
                 letterSpacing: 0.3,
@@ -455,8 +748,8 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                 textAlign: "center",
                 fontSize: { lg: 13, xl: 15 },
                 lineHeight: 1.8,
-                mt: 1.5,
-                mb: 4,
+                mt: { lg: 1, xl: 1.5 },
+                mb: { lg: 2, xl: 4 },
                 px: 1,
               }}
             >
@@ -502,9 +795,9 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                 display: "flex",
                 alignItems: "center",
 
-                p: 2,
+                p: { lg: 1.5, xl: 2 },
 
-                mb: { lg: 1.5, xl: 2 },
+                mb: { lg: 1, xl: 2 },
 
                 borderRadius: 3,
 

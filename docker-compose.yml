@@ -14,7 +14,8 @@ networks:
 
 services:
   backend:
-    image: optiwariindia/express:api-module-1.0.1
+    # image: optiwariindia/express:api-module-1.0.1
+    image: registry.sampledge.com/turn2opinion/backend:1.0.1
     restart: unless-stopped
     networks:
       - db
@@ -23,13 +24,13 @@ services:
       - ./environment/${PROJECT}.env
     container_name: ${PROJECT}-api-auth
     volumes:
-      - ./Project/backend/app:/src/app
-      - ./Project/backend/package.json:/src/package.json
-      - ./Project/utils:/src/utils
-      - ./defaultData:/data
-  api-email-template:
+      # - ./Project/backend/app:/src/app
+      # - ./Project/backend/package.json:/src/package.json
+      # - ./Project/utils:/src/utils
+      # - ./defaultData:/data
+      - ./logs:/app/app/logs
+  email-template:
     image: registry.sampledge.com/microservice/email-template
-    container_name: ${PROJECT}-api-email-template
     restart: unless-stopped
     volumes:
       - ./Project/mailer:/app/mailer

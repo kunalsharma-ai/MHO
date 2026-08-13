@@ -20,6 +20,15 @@ export default function MemberHeader() {
   const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
   const [router, user] = [useRouter(), useMember()];
 
+  const handleLogout = async () => {
+    try {
+      setProfileAnchorEl(null);
+      await user.Logout();
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
+
   return (
     <div>
       <AppBar
@@ -233,12 +242,7 @@ export default function MemberHeader() {
           </MenuItem>
         ))}
         <MenuItem
-          onClick={async () => {
-            setProfileAnchorEl(null);
-            localStorage.removeItem("token");
-
-            user.Reload();
-          }}
+          onClick={handleLogout}
           sx={{
             mt: 1,
 

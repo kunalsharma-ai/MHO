@@ -108,7 +108,6 @@ function Stats() {
       }}
     >
       <Grid container size={10} direction="column" alignItems="center">
-        {/* Section Heading */}
         <MotionBox
           variants={heading}
           sx={{

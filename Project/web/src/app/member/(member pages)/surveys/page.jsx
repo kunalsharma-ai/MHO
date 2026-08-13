@@ -93,87 +93,87 @@ export default function SurveyDashboard() {
     );
   }, [query]);
 
-  const dummySurveys = [
-    {
-      id: 1,
-      name: "Healthcare Habits Survey",
-      slug: "healthcare-habits-survey",
-      points: 350,
-      loi: 8,
-      surveyCategory: "health",
-      participationStatus: "invited",
-    },
-    {
-      id: 2,
-      name: "Daily Shopping Preferences",
-      slug: "daily-shopping-preferences",
-      points: 500,
-      loi: 12,
-      surveyCategory: "shopping",
-      participationStatus: "invited",
-    },
-    {
-      id: 3,
-      name: "Travel & Vacation Planning",
-      slug: "travel-vacation-planning",
-      points: 700,
-      loi: 18,
-      surveyCategory: "travel",
-      participationStatus: "dropout",
-    },
-    {
-      id: 4,
-      name: "Fitness & Sports Lifestyle",
-      slug: "fitness-sports-lifestyle",
-      points: 450,
-      loi: 10,
-      surveyCategory: "sports",
-      participationStatus: "invited",
-    },
-    {
-      id: 5,
-      name: "Mobile Technology Usage",
-      slug: "mobile-technology-usage",
-      points: 800,
-      loi: 20,
-      surveyCategory: "media, electronics, mobile & technology",
-      participationStatus: "invited",
-    },
-    {
-      id: 6,
-      name: "Financial Planning Study",
-      slug: "financial-planning-study",
-      points: 900,
-      loi: 25,
-      surveyCategory: "financial",
-      participationStatus: "invited",
-    },
-    {
-      id: 7,
-      name: "Beauty & Fashion Trends",
-      slug: "beauty-fashion-trends",
-      points: 400,
-      loi: 7,
-      surveyCategory: "beauty & fashion",
-      participationStatus: "dropout",
-    },
-    {
-      id: 8,
-      name: "Food & Lifestyle Choices",
-      slug: "food-lifestyle-choices",
-      points: 550,
-      loi: 15,
-      surveyCategory: "Lifestyle and food",
-      participationStatus: "invited",
-    },
-  ];
+  // const dummySurveys = [
+  //   {
+  //     id: 1,
+  //     name: "Healthcare Habits Survey",
+  //     slug: "healthcare-habits-survey",
+  //     points: 350,
+  //     loi: 8,
+  //     surveyCategory: "health",
+  //     participationStatus: "invited",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Daily Shopping Preferences",
+  //     slug: "daily-shopping-preferences",
+  //     points: 500,
+  //     loi: 12,
+  //     surveyCategory: "shopping",
+  //     participationStatus: "invited",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Travel & Vacation Planning",
+  //     slug: "travel-vacation-planning",
+  //     points: 700,
+  //     loi: 18,
+  //     surveyCategory: "travel",
+  //     participationStatus: "dropout",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Fitness & Sports Lifestyle",
+  //     slug: "fitness-sports-lifestyle",
+  //     points: 450,
+  //     loi: 10,
+  //     surveyCategory: "sports",
+  //     participationStatus: "invited",
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Mobile Technology Usage",
+  //     slug: "mobile-technology-usage",
+  //     points: 800,
+  //     loi: 20,
+  //     surveyCategory: "media, electronics, mobile & technology",
+  //     participationStatus: "invited",
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Financial Planning Study",
+  //     slug: "financial-planning-study",
+  //     points: 900,
+  //     loi: 25,
+  //     surveyCategory: "financial",
+  //     participationStatus: "invited",
+  //   },
+  //   {
+  //     id: 7,
+  //     name: "Beauty & Fashion Trends",
+  //     slug: "beauty-fashion-trends",
+  //     points: 400,
+  //     loi: 7,
+  //     surveyCategory: "beauty & fashion",
+  //     participationStatus: "dropout",
+  //   },
+  //   {
+  //     id: 8,
+  //     name: "Food & Lifestyle Choices",
+  //     slug: "food-lifestyle-choices",
+  //     points: 550,
+  //     loi: 15,
+  //     surveyCategory: "Lifestyle and food",
+  //     participationStatus: "invited",
+  //   },
+  // ];
 
-  // const availableSurveys = surveys?.filter((s) =>
-  //   permittedStatus.includes(s.participationStatus),
-  // );
-  const availableSurveys = dummySurveys?.filter((s) =>
+  const availableSurveys = surveys?.filter((s) =>
     permittedStatus.includes(s.participationStatus),
   );
+  // const availableSurveys = dummySurveys?.filter((s) =>
+  //   permittedStatus.includes(s.participationStatus),
+  // );
 
   const stats = [
     {
@@ -259,8 +259,8 @@ export default function SurveyDashboard() {
       <MotionBox variants={fadeUp}>
         <Divider sx={{ my: 2, bgcolor: "#ffe" }} />
       </MotionBox>
-      {/* <SurveyList surveys={surveys} query={query} isLoading={isLoading} /> */}
-      <SurveyList surveys={dummySurveys} query={query} isLoading={isLoading} />
+      <SurveyList surveys={surveys} query={query} isLoading={isLoading} />
+      {/* <SurveyList surveys={dummySurveys} query={query} isLoading={isLoading} /> */}
       <Divider sx={{ my: 2, bgcolor: "#ffe" }} />
       <MotionBox variants={fadeUp}>
         <SurveyHistory />

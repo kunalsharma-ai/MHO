@@ -1,33 +1,68 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { api } from "@/util";
 const MemberContext = createContext();
 function notLoggedIn(pathname, router) {
   if (typeof pathname !== "string") return;
+  return;
   if (pathname.startsWith("/member")) router.replace("/");
   if (pathname.startsWith("/admin")) router.replace("/");
-
-}
-function createEvent(name, detail) {
-  if (typeof document === "undefined") return console.log("No Document");
-  if (!name) return console.log("Event ka naam required hai")
-  document.dispatchEvent(new CustomEvent(name, { detail }));
 }
 
 async function loadUserInfo() {
-  let temp = await api.get(`/api/v1/me`);
-  if (
-    temp.status === "error" &&
-    temp.message.toLowerCase() === "token expired"
-  ) {
-    window.localStorage.removeItem("token");
-    setMe(null);
-    throw new Error("token expired");
+  try {
+    let temp = await api.get(`/api/v1/me`);
+    if (temp.status === "error") throw new Error(temp.message);
+    if ("data" in temp)
+      return { ...temp.data, fullname: temp.data.fullName, firstname: temp?.data?.name?.first, lastname: temp?.data?.name?.last }
+
+  } catch (error) {
+    throw new Error(error.message);
   }
-  return temp.data
+}
+class ValidUser {
+  constructor(userinfo, router) {
+    this.userinfo = userinfo
+    this.router = router
+  }
+  termsAccepted() {
+    return ("terms" in this.userinfo && this.userinfo.terms instanceof Array && this.userinfo.terms.length !== 0)
+  }
+  emailVerified() {
+    return ("isVerified" in this.userinfo && "email" in this.userinfo.isVerified && this.userinfo.isVerified.email === "verified")
+  }
+  async hasCompletedWelcomeSurvey() {
+    try {
+      let temp = await api.post(`/api/v1/response`, {
+        ["survey.slug"]: "welcome",
+        "status": "complete"
+      });
+      if (temp.status === "error") {
+        return false;
+      }
+      return ("data" in temp && Array.isArray(temp.data) && temp.data.length === 1)
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+  isAdmin() {
+    return ("role" in this.userinfo && ["root", "admin","administrator"].includes(this.userinfo.role))
+  }
+  async allowAccess(pathname) {
+    if (pathname.startsWith("/admin")) {
+      if (!this.isAdmin()) return this.router.replace("/")
+    }
+    if (pathname.startsWith("/member")) {
+      if (!this.emailVerified()) return this.router.replace(`/?verifyemail=${this.userinfo.mail}`)
+      if (!this.termsAccepted()) return this.router.replace("/auth/terms")
+      if (!(await this.hasCompletedWelcomeSurvey())) return this.router.replace("/survey?name=welcome")
+    }
+  }
 }
 export function MemberProvider({ children }) {
+  const [isLoading, setIsLoading] = React.useState(true)
   const [reload, setReload] = useState(1);
   const [me, setMe] = useState(null);
   const [router, pathname] = [useRouter(), usePathname()];
@@ -35,34 +70,52 @@ export function MemberProvider({ children }) {
     setReload(reload + 1)
   }
   function update(data) {
-    updateMe(data)
+    if (!Boolean(data))
+      updateMe(null)
+    else
+      updateMe(data)
   }
+  async function Logout() {
+   let resp= await api.delete("/api/v1/me")
+   
+    if (typeof window === "undefined") return;
+    localStorage.clear();
+    Reload();
+    router.replace("/")
+  }
+
   function updateMe(data) {
     setMe({
       ...data,
       Reload,
-      update
+      Logout,
+      update,
     })
   }
+
   useEffect(() => {
-    if (typeof window === "undefined")
-      return console.error("Window not loaded yet");
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setMe(null)
-      return notLoggedIn(pathname, router);
-    }
+    setIsLoading(true);
     loadUserInfo()
-      .then((resp) => {
-        if(pathname.startsWith("/admin") && !["root","admin"].includes(resp.role)){
-            router.replace("/")
-        }
+      .then((resp) => {       
+        let user = new ValidUser(resp, router)
+        user.allowAccess(pathname)
         updateMe(resp)
       })
-      .catch((err) => {
-        notLoggedIn(pathname, router);
-      });
+      .catch((err) => {  
+        setMe(null);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      })
   }, [reload, pathname]);
+  useEffect(() => {
+    if (isLoading || !Boolean(me)) return () => { };
+    api
+      .get(`/api/v1/me/profile`)
+      .then(resp => {
+        update({...me, ...resp.data})
+      })
+  }, [isLoading])
   return <MemberContext.Provider value={ me }>{ children }</MemberContext.Provider>;
 }
 

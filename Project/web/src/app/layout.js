@@ -6,6 +6,7 @@ import { Toast } from "@/components";
 import "@/lib/enhancements.js";
 import { ContextProviders } from "@/Context";
 import { GoogleTagManager } from "@next/third-parties/google";
+import ChatWidget from "@/componentsMHO/ChatWidget";
 
 export default function RootLayout({ children }) {
   return (
@@ -50,20 +51,21 @@ export default function RootLayout({ children }) {
           <ContextProviders>
             <CssBaseline />
             <main role="main">{children}</main>
+            <ChatWidget />
             <Toast />
           </ContextProviders>
         </Providers>
         {/* <scrip src="/wasm_exec.js" /> */}
         {/* <call-us-selector
-          phonesystem-url="https://1697.3cx.cloud"
-          party="frequentresearch"
+          phonesystem-url="https://1706.3cx.cloud"
+          party="frequent"
         ></call-us-selector>
         <script
           defer
           src="https://downloads-global.3cx.com/downloads/livechatandtalk/v1/callus.js"
           id="tcx-callus-js"
         ></script> */}
-         <GoogleTagManager gtmId="GTM-549KJ2GG" />
+        <GoogleTagManager gtmId="GTM-549KJ2GG" />
       </body>
     </html>
   );

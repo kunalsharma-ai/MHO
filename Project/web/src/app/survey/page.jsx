@@ -177,7 +177,9 @@ export default function page() {
                     color: "secondary.main",
                   }}
                 >
-                  {survey?.name}
+                  {survey?.slug === "welcome"
+                    ? `Welcome ${user?.name.first.Capitalize()}`
+                    : survey?.name}
                 </Page.Text>
               </Grid>
               {Boolean(surveyError) ? (

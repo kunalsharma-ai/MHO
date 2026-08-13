@@ -14,7 +14,7 @@ export default function CustomStepIcon(props) {
         width: 18,
         height: 18,
         borderRadius: "50%",
-        backgroundColor: active ? "#06923E" : completed ? "#59AC77" : "#e0e0e0",
+        backgroundColor: active ? "#0A4DA5" : completed ? "#0D5CC7" : "#e0e0e0",
         color: "white",
         fontWeight: active ? "bold" : "normal",
         fontSize: "12px",

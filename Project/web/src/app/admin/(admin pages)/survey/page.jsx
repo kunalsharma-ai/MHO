@@ -8,10 +8,11 @@ import React from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Datatable, Form, Icon, SectionTitle } from "@/components";
 import { Page, api } from "@/util";
-import { Grid, IconButton } from "@mui/material";
+import { Grid, IconButton, Chip, Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
+import PeopleIcon from "@mui/icons-material/People";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useToast } from "@/hooks";
@@ -21,10 +22,23 @@ export default function () {
   const [isLoading, setIsLoading] = React.useState(true);
   const [surveys, setSurveys] = React.useState([]);
   const [open, setOpen] = React.useState({ open: false, id: null });
+  const [openInvite, setOpenInvite] = React.useState({ open: false, id: null });
   const [openQuestons, setOpenQuestions] = React.useState({
     open: false,
     id: null,
   });
+  function badgeColor(status) {
+    switch (status) {
+      case "active":
+        return "success";
+      case "closed":
+        return "error";
+      case "draft":
+        return "warning";
+      default:
+        return "secondary";
+    }
+  }
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -43,8 +57,52 @@ export default function () {
     >
       <Datatable
         columns={[
-          { id: "category", label: "Category", data: "category" },
-          { id: "name", label: "Survey", data: "name" },
+          {
+            id: "category",
+            label: "Category",
+            width: 160,
+            feature: ["filterable", "sortable"],
+            render: (info, i) => {
+              return (
+                <Chip
+                  size="small"
+                  label={info?.category}
+                  variant="contained"
+                  color={
+                    info?.category == "care giver"
+                      ? "secondary"
+                      : info?.category == "patient"
+                        ? "success"
+                        : "primary"
+                  }
+                  sx={{ mr: 0.5, color: "white", textTransform: "uppercase" }}
+                />
+              );
+            },
+          },
+          {
+            id: "status",
+            label: "Status",
+            width: 160,
+            feature: ["filterable", "sortable"],
+            render: (info, i) => {
+              return (
+                <Chip
+                  size="small"
+                  label={info?.status}
+                  variant="contained"
+                  color={badgeColor(info?.status)}
+                  sx={{ mr: 0.5, color: "white", textTransform: "uppercase" }}
+                />
+              );
+            },
+          },
+          {
+            id: "name",
+            label: "Survey",
+            data: "name",
+            feature: ["sortable", "searchable"],
+          },
           { id: "loi", label: "LOI (in min)", data: "loi", width: 120 },
           { id: "source", label: "Source", data: "source", width: 120 },
           { id: "points", label: "Survey Points", data: "points", width: 120 },
@@ -81,6 +139,24 @@ export default function () {
                 View Questions
               </Page.MuiButton>
             ),
+          },
+          {
+            id: "invite",
+            label: "Invite",
+            width: 80,
+            render: (info) =>
+              info.status !== "active" ? null : (
+                <Tooltip title="Invite Panelists">
+                  <IconButton
+                    sx={{ p: 0 }}
+                    onClick={() => {
+                      setOpenInvite({ open: true, id: info._id });
+                    }}
+                  >
+                    <PeopleIcon fontSize="small" color="secondary" />
+                  </IconButton>
+                </Tooltip>
+              ),
           },
           {
             id: "action",
@@ -150,7 +226,157 @@ export default function () {
           }}
         />
       </SideDrawer>
+      <SideDrawer
+        open={openInvite.open}
+        hideTitleBar={true}
+        onClose={() => setOpenInvite({ open: false, id: null })}
+      >
+        <SurveyInvite
+          surveyID={openInvite.id}
+          close={() => {
+            setOpenInvite({ open: false, id: null });
+          }}
+        />
+      </SideDrawer>
     </Page.Box>
+  );
+}
+function SurveyInvite({ surveyID = null, close }) {
+  const [summary, setSummary] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [surveyData, setSurveyData] = React.useState(null);
+
+  const form = useForm({
+    defaultValues: {
+      inviteType: "category",
+      autoInvite: false,
+    },
+  });
+
+  const { control, handleSubmit, watch, setValue } = form;
+  const inviteType = watch("inviteType");
+
+  React.useEffect(() => {
+    api.get("/api/v1/user/summarize").then((resp) => {
+      setSummary(resp.data || []);
+      setIsLoading(false);
+    });
+    if (surveyID) {
+      api.get(`${endpoint}/${surveyID}`).then((resp) => {
+        setSurveyData(resp.data);
+        setValue("autoInvite", !!resp.data?.autoInvite);
+      });
+    }
+  }, [surveyID]);
+
+  const onSubmit = async (data) => {
+    const payload = {
+      all: data.inviteType === "all",
+      autoInvite: data.autoInvite,
+    };
+
+    let resp = await api.post(`${endpoint}/${surveyID}/invite`, payload);
+    useToast(resp);
+    close();
+  };
+
+  const totalRespondents = Array.isArray(summary)
+    ? summary.find((s) => s.label === "Total Panelists")?.value || 0
+    : 0;
+  const categoryCount =
+    surveyData && Array.isArray(summary)
+      ? summary.find((s) => s.label === surveyData.category)?.value || 0
+      : 0;
+
+  return (
+    <Grid
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      container
+      spacing={2}
+      size={12}
+      sx={{
+        bgcolor: "white",
+        overflow: "hidden",
+        borderRadius: "10px",
+        boxShadow: 1,
+        pb: 2,
+        alignSelf: "flex-start",
+      }}
+    >
+      <SectionTitle
+        title={"Invite Panelists"}
+        sx={{ justifyContent: "space-between" }}
+      >
+        <IconButton onClick={close} color="secondary">
+          <CloseIcon />
+        </IconButton>
+      </SectionTitle>
+      <Grid container size={12} spacing={2} sx={{ px: 2 }}>
+        {isLoading ? (
+          <Grid size={12} sx={{ py: 4, textAlign: "center" }}>
+            <Page.Text>Loading user statistics...</Page.Text>
+          </Grid>
+        ) : (
+          <>
+            <Grid size={12}>
+              <Form.Radio
+                control={control}
+                name="inviteType"
+                label="Invitation Scope"
+                options={[
+                  {
+                    label: `Match Category Only (${surveyData?.category?.toUpperCase()}: ${categoryCount} users)`,
+                    value: "category",
+                  },
+                  {
+                    label: `All Respondents (${totalRespondents} users)`,
+                    value: "all",
+                  },
+                ]}
+              />
+            </Grid>
+            <Grid size={12}>
+              <Form.Switch
+                control={control}
+                name="autoInvite"
+                label="Auto-invite new registrations matching category"
+              />
+            </Grid>
+            <Grid size={12} sx={{ mt: 1 }}>
+              <Page.Text
+                fontSize={13}
+                sx={{ color: "text.secondary", fontStyle: "italic" }}
+              >
+                Note: Clicking "Send Invitations" will immediately create
+                invitations for existing users based on the selected scope.
+              </Page.Text>
+            </Grid>
+          </>
+        )}
+      </Grid>
+      <Grid
+        container
+        size={12}
+        sx={{
+          justifyContent: "flex-end",
+          mr: 2,
+          mt: 2,
+        }}
+      >
+        <Page.MuiButton
+          type="submit"
+          variant="contained"
+          color="secondary"
+          disabled={isLoading}
+          sx={{
+            fontWeight: "bold",
+          }}
+        >
+          Send Invitations
+        </Page.MuiButton>
+      </Grid>
+    </Grid>
   );
 }
 
@@ -227,11 +453,44 @@ function CreateOrEditSurvey({ surveyID = null, close }) {
         </IconButton>
       </SectionTitle>
       <Grid container size={12} spacing={1.4} sx={{ px: 2 }}>
-        <Form.Input
-          control={control}
-          {...form.register("slug")}
-          label="Survey URL"
-        />
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Form.Input
+            control={control}
+            {...form.register("slug")}
+            label="Survey URL"
+          />
+        </Grid>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Form.Select
+            control={control}
+            {...form.register("surveyCategory")}
+            label="Survey Category"
+            options={[
+              { label: "Basic", value: "basic" },
+              { label: "Professional", value: "professional" },
+              { label: "Educational", value: "educational" },
+              { label: "Survey and Rewards", value: "Survey and Rewards" },
+              { label: "Financial", value: "financial" },
+              { label: "Parenting", value: "parenting" },
+              {
+                label: "Home and Pet Ownership",
+                value: "Home and Pet Ownership",
+              },
+              { label: "Shopping", value: "shopping" },
+              { label: "Lifestyle and food", value: "Lifestyle and food" },
+              { label: "Travel", value: "travel" },
+              { label: "Automobile", value: "automobile" },
+              { label: "Health", value: "health" },
+              { label: "Beauty & Fashion", value: "beauty & fashion" },
+              {
+                label: "Media, Electronics, Mobile & Technology",
+                value: "media, electronics, mobile & technology",
+              },
+              { label: "Sports", value: "sports" },
+              { label: "Gaming", value: "gaming" },
+            ]}
+          />
+        </Grid>
         <Form.Input
           control={control}
           {...form.register("name")}

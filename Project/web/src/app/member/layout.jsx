@@ -7,7 +7,7 @@ function layout({ children }) {
     <div>
       <MemberHeader />
       <MemberSidebar>
-        <main>{ children }</main>
+        <main>{children}</main>
       </MemberSidebar>
       <MemberFooter />
     </div>

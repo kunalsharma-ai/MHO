@@ -1,10 +1,3 @@
-function wait(time = 1000) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve()
-    }, time)
-  })
-}
 class API {
   constructor(baseUrl = "") {
     this.baseUrl = baseUrl;
@@ -42,41 +35,41 @@ class API {
     }
 
     const response = await fetch(url, config);
-    
+
     if (!response.ok) {
       let errorData;
       try {
-        errorData = {
-          ...await response.json(),
-          respStatus: {
-            code: response.status,
-            text: response.statusText
-          }
-        }
+        errorData = await response.json();
       } catch {
+        console.log(response)
         errorData = { message: response.statusText };
+      }
+
+      const errorMessage = (errorData?.message || '').toLowerCase();
+      if (
+        token &&
+        typeof window !== 'undefined' &&
+        (response.status === 401 ||
+          errorMessage.includes('invalid token') ||
+          errorMessage.includes('token invalid') ||
+          errorMessage.includes('jwt malformed') ||
+          errorMessage.includes('jwt expired')   ||
+          errorMessage.includes("token expired"))
+      ) {
+        localStorage.removeItem('token');
       }
 
       document.dispatchEvent(
         new CustomEvent('error-received', {
           detail: {
-            status: errorData.status ?? response.statusText,
+            status: response.status,
             message: errorData.message
           },
         })
       )
-      return errorData;
+      return errorData;//throw new Error(errorData.message || 'Request failed');
     }
-    try {
-      let output = await response.json();
-      if ("token" in output) {
-        localStorage.setItem("token", output.token);
-      }
-      return output;
-    } catch (error) {
-      console.log("Invalid JSON Received");
-      return await response.text();
-    }
+    return response.json();
 
   }
   async getHtml(url, config = { mode: "no-cors" }) {
@@ -105,6 +98,7 @@ class API {
     }
     return response
   }
+  
   get(endpoint, options = {}) {
     return this.request('GET', endpoint, options);
   }

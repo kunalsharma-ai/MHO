@@ -537,12 +537,9 @@ export default function Header({ sections = [], open, setOpen }) {
         ))}
 
         <MenuItem
-          onClick={() => {
+          onClick={async () => {
             setProfileAnchorEl(null);
-
-            localStorage.removeItem("token");
-
-            user.Reload();
+            await user.Logout();
           }}
           sx={{
             mt: 1,
@@ -741,9 +738,11 @@ export default function Header({ sections = [], open, setOpen }) {
                 <Button
                   fullWidth
                   startIcon={<PowerSettingsNewIcon />}
-                  onClick={() => {
-                    localStorage.removeItem("token");
-                    user.Reload();
+                  onClick={async(e) => {
+                    e.preventDefault();
+                    console.log("Logout in progress....")
+                    await user.Logout();
+                    console.log("Logout ho gaya bye bye")
                     handleDrawerClose();
                   }}
                   sx={{
@@ -751,6 +750,7 @@ export default function Header({ sections = [], open, setOpen }) {
                     color: "#fff",
                   }}
                 >
+                  
                   Sign out
                 </Button>
               </>

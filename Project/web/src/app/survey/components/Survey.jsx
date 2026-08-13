@@ -97,7 +97,7 @@ export default function Survey({
       let dob = new Date(user.dob);
       if (new Date().getFullYear() !== dob.getFullYear() + Number(age)) {
         onError({
-          title: "Security Check",
+          title: "Invalid Age",
           btns: {
             ok: "Try Again",
             cancel: "Go Back",
@@ -111,18 +111,16 @@ export default function Survey({
           message: (
             <>
               <p>
-                For security reasons, the age entered must match your registered
-                information.
+                The age you entered doesn't match the information on your
+                profile. Please check and correct your age and try again.
               </p>
-              <p>&nbsp;</p>
-              <p>Please check and re-enter the correct age.</p>
             </>
           ),
         });
         return;
       }
     }
-    console.log("sab theek hai, Next page load kar lete hain");
+
     setCurrentPage(currentPage + 1);
   }
 
@@ -217,7 +215,8 @@ export default function Survey({
             sx={{
               justifyContent: "flex-end",
               py: 2,
-              px: isProfile ? 2 : 0,
+              px: 2,
+              // px: isProfile ? 2 : 0,
             }}
           >
             {isProfile && (
@@ -252,7 +251,7 @@ export default function Survey({
                 }}
                 onClick={onNext}
               >
-                Next
+                {[null, undefined].includes(currentPage) ? "Start" : "Next "}
               </Page.MuiButton>
             )}
           </Grid>

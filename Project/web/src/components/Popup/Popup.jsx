@@ -56,66 +56,68 @@ export default function Popup(attr) {
         },
       }}
     >
-      <DialogTitle
-        sx={{
-          m: 0,
-          p: 0,
-        }}
-      >
-        <SectionTitle
-          title={title}
+      {!attr?.hideTitle && (
+        <DialogTitle
           sx={{
-            px: 2,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            fontSize: "18px",
-            fontWeight: "bold",
+            m: 0,
+            p: 0,
           }}
         >
-          <Page.Box>
-            {attr.onEdit && (
+          <SectionTitle
+            title={title}
+            sx={{
+              px: 2,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              fontSize: "18px",
+              fontWeight: "bold",
+            }}
+          >
+            <Page.Box>
+              {attr.onEdit && (
+                <IconButton
+                  aria-label="Edit"
+                  onClick={attr.onEdit}
+                  sx={{
+                    color: "grey",
+                    mr: 2,
+                    "&:hover": { color: "info.light" },
+                  }}
+                  size="small"
+                >
+                  <EditIcon />
+                </IconButton>
+              )}
+              {attr.onDownload && (
+                <IconButton
+                  aria-label="Download"
+                  onClick={attr.onDownload}
+                  sx={{
+                    color: "grey",
+                    mr: 2,
+                    "&:hover": { color: "success.light" },
+                  }}
+                  size="small"
+                >
+                  <DownloadIcon />
+                </IconButton>
+              )}
               <IconButton
-                aria-label="Edit"
-                onClick={attr.onEdit}
-                sx={{
-                  color: "grey",
-                  mr: 2,
-                  "&:hover": { color: "info.light" },
+                aria-label="close"
+                onClick={() => {
+                  if (attr.onClose) attr.onClose();
+                  else setOpen(false);
                 }}
+                sx={{ color: "grey", "&:hover": { color: "error.light" } }}
                 size="small"
               >
-                <EditIcon />
+                <CloseIcon />
               </IconButton>
-            )}
-            {attr.onDownload && (
-              <IconButton
-                aria-label="Download"
-                onClick={attr.onDownload}
-                sx={{
-                  color: "grey",
-                  mr: 2,
-                  "&:hover": { color: "success.light" },
-                }}
-                size="small"
-              >
-                <DownloadIcon />
-              </IconButton>
-            )}
-            <IconButton
-              aria-label="close"
-              onClick={() => {
-                if (attr.onClose) attr.onClose();
-                else setOpen(false);
-              }}
-              sx={{ color: "grey", "&:hover": { color: "error.light" } }}
-              size="small"
-            >
-              <CloseIcon />
-            </IconButton>
-          </Page.Box>
-        </SectionTitle>
-      </DialogTitle>
+            </Page.Box>
+          </SectionTitle>
+        </DialogTitle>
+      )}
       <DialogContent
         sx={{
           maxHeight: "80vh",

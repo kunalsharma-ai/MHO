@@ -39,6 +39,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTelemetry } from "@/Context";
 import { useToast } from "@/hooks";
 import Captcha from "./Captcha";
+// import { Captcha } from 'react-gocaptcha'
 import { motion, AnimatePresence } from "framer-motion";
 
 const MotionBox = motion.create(Box);
@@ -529,12 +530,15 @@ function LoginCard({ onClose, setCardType, setOpenSignUp }) {
             setLoading(true);
             try {
               const resp = await submitWithAjax(e);
-              if ("token" in resp) {
-                localStorage.setItem("token", resp.token);
-                router.replace("/member/dashboard");
-              } else {
-                setErrorMessage("Invalid credentials");
-                setLoading(false);
+              switch (resp.status) {
+                case "success":
+                  router.replace("/member/dashboard");
+                  break;
+
+                default:
+                  setErrorMessage(resp.message);
+                  setLoading(false);
+                  break;
               }
             } catch (error) {
               console.log({ error });
@@ -788,6 +792,7 @@ function LoginCard({ onClose, setCardType, setOpenSignUp }) {
                     setBtnDisabled(false);
                   }}
                 />
+                {/* <Captcha endpoint="/captcha/slider" /> */}
               </Box>
             </Collapse>
             {errorMessage && <Page.Error message={errorMessage} />}
@@ -797,7 +802,7 @@ function LoginCard({ onClose, setCardType, setOpenSignUp }) {
               type="submit"
               fullWidth
               variant="contained"
-              // disabled={btnDisabled}
+              disabled={btnDisabled}
               loading={loading}
               loadingIndicator="Signing in..."
               sx={{
@@ -839,7 +844,9 @@ function LoginCard({ onClose, setCardType, setOpenSignUp }) {
                 <Box
                   sx={{
                     flex: 1,
-                    height: 1,
+                    height: "1px",
+                    minHeight: "1px",
+                    alignSelf: "center",
                     bgcolor: "divider",
                   }}
                 />
@@ -859,7 +866,9 @@ function LoginCard({ onClose, setCardType, setOpenSignUp }) {
                 <Box
                   sx={{
                     flex: 1,
-                    height: 1,
+                    height: "1px",
+                    minHeight: "1px",
+                    alignSelf: "center",
                     bgcolor: "divider",
                   }}
                 />
@@ -873,7 +882,11 @@ function LoginCard({ onClose, setCardType, setOpenSignUp }) {
                     transition={{ delay: i * 0.08 }}
                     key={i}
                     size={
-                      authProviders.length <= 3 ? { xs: 12 } : { xs: 6, sm: 4 }
+                      authProviders.length <= 2
+                        ? { xs: 12 }
+                        : authProviders.length === 3
+                          ? { xs: 12, sm: 4 }
+                          : { xs: 6, sm: 3 }
                     }
                   >
                     <Page.MuiButton
@@ -984,14 +997,47 @@ function LoginCard({ onClose, setCardType, setOpenSignUp }) {
               }}
             >
               {socials.map((social) => (
-                <Page.Link
+                <motion.div
                   key={social.name}
-                  href={social.link}
-                  underline="none"
-                  target="_blank"
+                  whileHover={{
+                    y: -5,
+                    scale: 1.15,
+                    rotate: social.name === "twitter" ? 8 : 0,
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 350,
+                    damping: 15,
+                  }}
                 >
-                  {social.icon}
-                </Page.Link>
+                  <Page.Link
+                    href={social.link}
+                    underline="none"
+                    target="_blank"
+                    sx={{
+                      width: 46,
+                      height: 46,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "50%",
+                      transition: "all .25s ease",
+                      color: "inherit",
+
+                      "&:hover": {
+                        background: "rgba(1,35,98,.08)",
+                        boxShadow: "0 8px 20px rgba(1,35,98,.15)",
+                      },
+
+                      "& svg": {
+                        transition: "transform .25s ease",
+                      },
+                    }}
+                  >
+                    {social.icon}
+                  </Page.Link>
+                </motion.div>
               ))}
             </Page.Box>
           </Grid>
@@ -1028,7 +1074,7 @@ function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
         position: "relative",
         width: { xs: "95vw", md: "auto" },
         borderRadius: 4,
-        overflow: "hidden",
+        overflow: "auto",
         boxShadow: "0 30px 70px rgba(0,0,0,.18)",
         bgcolor: "#fff",
       }}
@@ -1111,7 +1157,8 @@ function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
           //   submitWithAjax(e);
         }}
         sx={{
-          p: 4,
+          px: 4,
+          py: 3,
           display: "flex",
           flexDirection: "column",
           gap: 4,

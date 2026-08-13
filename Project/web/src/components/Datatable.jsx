@@ -273,8 +273,8 @@ export default function Datatable({
         ...acc,
         [cell.id]: !cell.hidden && !defaultHiddenColumns.includes(cell.id),
       }),
-      {}
-    )
+      {},
+    ),
   );
 
   React.useEffect(() => {
@@ -291,8 +291,8 @@ export default function Datatable({
           ...acc,
           [cell.id]: !cell.hidden && !defaultHiddenColumns.includes(cell.id),
         }),
-        {}
-      )
+        {},
+      ),
     );
   }, [columns]);
 
@@ -330,7 +330,7 @@ export default function Datatable({
       ...new Set(data.map((row) => String(row[columnId]))),
     ].sort();
     return uniqueValues.filter(
-      (value) => value !== undefined && value !== null && value !== ""
+      (value) => value !== undefined && value !== null && value !== "",
     );
   };
 
@@ -343,7 +343,7 @@ export default function Datatable({
     setStatusFilter((prev) =>
       prev.includes(value)
         ? prev.filter((item) => item !== value)
-        : [...prev, value]
+        : [...prev, value],
     );
     setPage(0);
   };
@@ -415,7 +415,7 @@ export default function Datatable({
     setCategoryFilter((prev) =>
       prev.includes(value)
         ? prev.filter((item) => item !== value)
-        : [...prev, value]
+        : [...prev, value],
     );
     setPage(0);
   };
@@ -443,7 +443,7 @@ export default function Datatable({
       }
       return row[columnId] ?? "";
     },
-    [columns, parentData]
+    [columns, parentData],
   );
 
   const filteredRows = React.useMemo(() => {
@@ -456,11 +456,11 @@ export default function Datatable({
           String(row[column]).toLowerCase().includes(term.toLowerCase()) ||
           String(getRowValue(row, column))
             .toLowerCase()
-            .includes(term.toLowerCase())
+            .includes(term.toLowerCase()),
       );
 
       const matchesFilters = Object.entries(filterValues).every(
-        ([column, value]) => !value || String(row[column]) === value
+        ([column, value]) => !value || String(row[column]) === value,
       );
 
       const matchesCategory =
@@ -493,7 +493,7 @@ export default function Datatable({
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  const headerRowHeight = 0;
+  const headerRowHeight = 36;
   let stickyOffset = headerRowHeight + 40;
 
   const getLockedColumnOffset = (columnId) => {
@@ -510,7 +510,7 @@ export default function Datatable({
     rows,
     columns,
     columnVisibility,
-    parentData
+    parentData,
   ) => {
     const totals = {};
     columns.forEach((col) => {
@@ -522,7 +522,7 @@ export default function Datatable({
           } else if (col.render) {
             let temp = jsxToText(col.render(row, parentData)).replace(
               /[^\d.-]+/g,
-              ""
+              "",
             );
             value = parseFloat(temp);
           }
@@ -538,7 +538,7 @@ export default function Datatable({
   const columnTotals = React.useMemo(
     () =>
       calculateColumnTotals(visibleRows, columns, columnVisibility, parentData),
-    [visibleRows, columns, columnVisibility, parentData]
+    [visibleRows, columns, columnVisibility, parentData],
   );
 
   const columnTotalsOverall = React.useMemo(
@@ -547,9 +547,9 @@ export default function Datatable({
         filteredRows,
         columns,
         columnVisibility,
-        parentData
+        parentData,
       ),
-    [filteredRows, columns, columnVisibility, parentData]
+    [filteredRows, columns, columnVisibility, parentData],
   );
 
   React.useEffect(() => {
@@ -557,7 +557,7 @@ export default function Datatable({
   }, [data]);
 
   const firstVisibleColumn = columns.find(
-    (col) => columnVisibility[col.id]
+    (col) => columnVisibility[col.id],
   )?.id;
   return (
     <Box sx={{ minWidth: "100%" }}>
@@ -624,7 +624,7 @@ export default function Datatable({
                   label="Download Table Data"
                   onClick={(e) => {
                     const visibleColumns = columns.filter(
-                      (col) => columnVisibility[col.id]
+                      (col) => columnVisibility[col.id],
                     );
 
                     const headers = visibleColumns.map((col) => col.label);
@@ -1038,8 +1038,8 @@ export default function Datatable({
                                   {opt === "true"
                                     ? "Active"
                                     : opt === "false"
-                                    ? "Inactive"
-                                    : opt}
+                                      ? "Inactive"
+                                      : opt}
                                 </MenuItem>
                               ))}
                             </Select>
@@ -1128,8 +1128,8 @@ export default function Datatable({
                             backgroundColor: isLocked
                               ? "#e4f5f7"
                               : index & 1
-                              ? "#f0f0f0"
-                              : "background.default",
+                                ? "#f0f0f0"
+                                : "background.default",
                           }}
                         >
                           {attr.rowLockable && (
@@ -1218,7 +1218,7 @@ export default function Datatable({
                                     ...(lockedColumns[cell.id] && {
                                       position: "sticky",
                                       left: `${getLockedColumnOffset(
-                                        cell.id
+                                        cell.id,
                                       )}px`,
                                       backgroundColor: "inherit",
                                       boxShadow:
@@ -1228,10 +1228,10 @@ export default function Datatable({
                                   }}
                                 >
                                   {cell.data
-                                    ? row?.[cell.data] ?? ""
-                                    : cell.render?.(row, parentData) ?? ""}
+                                    ? (row?.[cell.data] ?? "")
+                                    : (cell.render?.(row, parentData) ?? "")}
                                 </TableCell>
-                              )
+                              ),
                           )}
                         </TableRow>
                       );
@@ -1329,10 +1329,10 @@ export default function Datatable({
                                 ? cell.total(columnTotals[cell.id] || "0.00")
                                 : columnTotals[cell.id] || "0.00"
                               : cell.id === columns[0].id
-                              ? "Total"
-                              : ""}
+                                ? "Total"
+                                : ""}
                           </TableCell>
-                        )
+                        ),
                     )}
                   </TableRow>
                 </TableFooter>
@@ -1447,7 +1447,7 @@ export default function Datatable({
               <ShowProgress
                 shape="circle"
                 status={Math.round(
-                  (attr.progress.current / selected.length) * 100
+                  (attr.progress.current / selected.length) * 100,
                 )}
               />
             </>

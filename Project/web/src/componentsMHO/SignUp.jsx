@@ -192,6 +192,32 @@ export default function SignUp({
     microsoft: <Microsoft />,
   };
 
+  React.useEffect(() => {
+    let userInfo = form.getValues();
+    if ("name" in query) {
+      let name = query?.name.split(" ");
+      switch (name.length) {
+        case 1:
+          userInfo.name.first = name[0];
+          break;
+        case 2:
+          userInfo.name.first = name[0];
+          userInfo.name.last = name[1];
+          break;
+        case 3:
+          userInfo.name.first = name[0];
+          userInfo.name.middle = name[1];
+          userInfo.name.last = name[2];
+          break;
+        default:
+          userInfo.name.first = name[0] ?? "";
+          userInfo.name.last = name.at(-1) ?? "";
+      }
+    }
+    if ("email" in query) userInfo.mail = query?.email;
+    form.reset(userInfo);
+  }, [query]);
+
   const authProviders = providers.map((provider) => ({
     label: `Continue with ${
       provider.name.charAt(0).toUpperCase() + provider.name.slice(1)
@@ -996,6 +1022,7 @@ export default function SignUp({
                           {authProviders.length > 0 && (
                             <Box
                               sx={{
+                                width: "100%",
                                 mt: 1,
                                 p: 2.5,
                                 border: "1px solid",
@@ -1022,7 +1049,13 @@ export default function SignUp({
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: i * 0.08 }}
                                     key={i}
-                                    size={{ xs: 6, sm: 4 }}
+                                    size={
+                                      authProviders.length <= 2
+                                        ? { xs: 12 }
+                                        : authProviders.length === 3
+                                          ? { xs: 12, sm: 4 }
+                                          : { xs: 6, sm: 3 }
+                                    }
                                   >
                                     <motion.div
                                       whileHover={{ y: -2 }}
@@ -1145,14 +1178,47 @@ export default function SignUp({
                         }}
                       >
                         {socials.map((social) => (
-                          <Page.Link
+                          <motion.div
                             key={social.name}
-                            href={social.link}
-                            underline="none"
-                            target="_blank"
+                            whileHover={{
+                              y: -5,
+                              scale: 1.15,
+                              rotate: social.name === "twitter" ? 8 : 0,
+                            }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 350,
+                              damping: 15,
+                            }}
                           >
-                            {social.icon}
-                          </Page.Link>
+                            <Page.Link
+                              href={social.link}
+                              underline="none"
+                              target="_blank"
+                              sx={{
+                                width: 46,
+                                height: 46,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                borderRadius: "50%",
+                                transition: "all .25s ease",
+                                color: "inherit",
+
+                                "&:hover": {
+                                  background: "rgba(1,35,98,.08)",
+                                  boxShadow: "0 8px 20px rgba(1,35,98,.15)",
+                                },
+
+                                "& svg": {
+                                  transition: "transform .25s ease",
+                                },
+                              }}
+                            >
+                              {social.icon}
+                            </Page.Link>
+                          </motion.div>
                         ))}
                       </Page.Box>
                     </Grid>

@@ -20,6 +20,8 @@ import SignUp from "@/componentsMHO/SignUp";
 import Login from "@/componentsMHO/Login";
 import LoadingOverlay from "@/componentsMHO/LoadingOverlay";
 import { useMember, useQuery } from "@/Context";
+import FeedbackForm from "@/componentsMHO/FeedbackForm";
+import { Popup } from "@/components/Popup";
 
 export default function Home() {
   const query = useQuery();
@@ -139,8 +141,8 @@ export default function Home() {
             aria-label="Scroll to top"
             sx={{
               position: "fixed",
-              bottom: 35,
-              right: 35,
+              bottom: 15,
+              left: 15,
               boxShadow: 4,
               zIndex: 999,
               color: "white",
@@ -165,6 +167,10 @@ export default function Home() {
             setOpenLogin(false);
           }}
         />
+
+        {/* <Popup open={true} onClose={() => {}} hideTitle maxWidth="sm">
+          <FeedbackForm />
+        </Popup> */}
       </div>
     </>
   );

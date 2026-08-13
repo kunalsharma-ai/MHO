@@ -104,14 +104,29 @@ const modes = [
     ),
   },
   {
+    label: "Amazon Gift Card",
+    img: (
+      <img
+        src="/images/rewards/amazon.png"
+        alt="Amazon Gift Card"
+        style={{
+          width: "120px",
+          height: "auto",
+          objectFit: "contain",
+        }}
+      />
+    ),
+  },
+  {
     label: "Medical Report",
     img: (
       <img
-        src="/images/rewards/health-report.png"
+        src="/images/rewards/medicalreport.png"
+        // src="/images/rewards/health-report.png"
         alt="Medical Report"
         style={{
-          width: "80px",
-          height: "80px",
+          width: "85px",
+          height: "auto",
           objectFit: "contain",
         }}
       />
@@ -137,7 +152,6 @@ function RewardModes() {
       }}
     >
       <Grid container size={10} direction="column">
-        {/* Heading */}
         <MotionBox
           variants={heading}
           sx={{
@@ -191,7 +205,6 @@ function RewardModes() {
           </Typography>
         </MotionBox>
 
-        {/* Reward Cards */}
         <Grid container spacing={4} justifyContent="center">
           {modes.map((mode, index) => (
             <Grid
@@ -199,7 +212,8 @@ function RewardModes() {
               size={{
                 xs: 12,
                 sm: 6,
-                lg: 3,
+                md: 4,
+                lg: 2.4,
               }}
             >
               <MotionBox
@@ -265,6 +279,7 @@ function RewardModes() {
                     sx={{
                       fontWeight: 700,
                       fontSize: 18,
+                      textAlign: "center",
                       color: "primary.dark",
                     }}
                   >
@@ -276,7 +291,6 @@ function RewardModes() {
           ))}
         </Grid>
 
-        {/* Bottom Message */}
         <MotionBox
           variants={heading}
           sx={{
