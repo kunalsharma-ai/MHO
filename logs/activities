@@ -3867,3 +3867,148 @@
     "endpoint": "/api/v1/rewards",
     "method": "POST"
 }
+
+[14 Aug 2026, 10:15:18 IST]: Server started at port 3000
+
+[17 Aug 2026, 07:47:38 IST]: Server started at port 3000
+
+[17 Aug 2026, 10:19:49 IST]: Server started at port 3000
+
+[18 Aug 2026, 10:23:18 IST]: Server started at port 3000
+
+[19 Aug 2026, 10:06:00 IST]: Server started at port 3000
+
+[19 Aug 2026, 15:13:32 IST]: Server started at port 3000
+
+[20 Aug 2026, 10:22:47 IST]: Server started at port 3000
+
+[20 Aug 2026, 18:13:07 IST]: Server started at port 3000
+
+[21 Aug 2026, 10:23:42 IST]: Server started at port 3000
+
+[21 Aug 2026, 12:28:44 IST]: Server started at port 3000
+
+[21 Aug 2026, 14:32:36 IST]: Server started at port 3000
+
+[21 Aug 2026, 14:51:55 IST]: Server started at port 3000
+
+[21 Aug 2026, 16:23:18 IST]: Server started at port 3000
+
+[21 Aug 2026, 16:40:59 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "192.168.0.108, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "x-forwarded-scheme": "https",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "sec-ch-ua": "\"Not=A?Brand\";v=\"99\", \"Google Chrome\";v=\"151\", \"Chromium\";v=\"151\"",
+    "content-type": "application/json",
+    "sec-ch-ua-mobile": "?0",
+    "accept": "*/*",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-dest": "empty",
+    "referer": "https://mho.sampledge.duckdns.org/admin/panelists",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "en-US,en;q=0.9,hi;q=0.8,ja;q=0.7",
+    "priority": "u=1, i",
+    "cookie": "_ga=GA1.1.68102614.1784794879; __next_hmr_refresh_hash__=36; authorization=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTAyMGVkM2ZkMTM1ZWFjMzI0NWMwZWEiLCJjYXRlZ29yeSI6ImNhcmUgZ2l2ZXIiLCJlbWFpbCI6Im9wdGl3YXJpLmluZGlhK21ob0BnbWFpbC5jb20iLCJwaG9uZSI6IjkxODEzMDIwMjg3OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoiSm9obiIsIm1pZGRsZSI6IiIsImxhc3QiOiJEb2UifSwib3JpZ2luIjoibWhvLnNhbXBsZWRnZS5kdWNrZG5zLm9yZyIsInJvbGUiOiJhZG1pbmlzdHJhdG9yIiwiaWF0IjoxNzg3MzEwNjE0LCJleHAiOjE3ODc5MTU0MTR9.42cx8r8gyqxR9kfHQHon3VrWwXpxUufqQqcA4qdpFYk; _ga_CJZZ33W5MP=GS2.1.s1787310058$o69$g1$t1787310657$j7$l0$h0",
+    "endpoint": "/api/v1/options/country",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "GET"
+}
+
+[21 Aug 2026, 16:40:59 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "192.168.0.108, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "x-forwarded-scheme": "https",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "sec-ch-ua": "\"Not=A?Brand\";v=\"99\", \"Google Chrome\";v=\"151\", \"Chromium\";v=\"151\"",
+    "content-type": "application/json",
+    "sec-ch-ua-mobile": "?0",
+    "accept": "*/*",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-dest": "empty",
+    "referer": "https://mho.sampledge.duckdns.org/admin/panelists",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "en-US,en;q=0.9,hi;q=0.8,ja;q=0.7",
+    "if-none-match": "W/\"63-pwryt1xt8/+5m6R6qWA/8DYKqHI\"",
+    "priority": "u=1, i",
+    "cookie": "_ga=GA1.1.68102614.1784794879; __next_hmr_refresh_hash__=36; authorization=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTAyMGVkM2ZkMTM1ZWFjMzI0NWMwZWEiLCJjYXRlZ29yeSI6ImNhcmUgZ2l2ZXIiLCJlbWFpbCI6Im9wdGl3YXJpLmluZGlhK21ob0BnbWFpbC5jb20iLCJwaG9uZSI6IjkxODEzMDIwMjg3OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoiSm9obiIsIm1pZGRsZSI6IiIsImxhc3QiOiJEb2UifSwib3JpZ2luIjoibWhvLnNhbXBsZWRnZS5kdWNrZG5zLm9yZyIsInJvbGUiOiJhZG1pbmlzdHJhdG9yIiwiaWF0IjoxNzg3MzEwNjE0LCJleHAiOjE3ODc5MTU0MTR9.42cx8r8gyqxR9kfHQHon3VrWwXpxUufqQqcA4qdpFYk; _ga_CJZZ33W5MP=GS2.1.s1787310058$o69$g1$t1787310657$j7$l0$h0",
+    "endpoint": "/api/v1/options/country",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "GET"
+}
+
+[21 Aug 2026, 16:52:33 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "192.168.0.108, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "x-forwarded-scheme": "https",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "sec-ch-ua": "\"Not=A?Brand\";v=\"99\", \"Google Chrome\";v=\"151\", \"Chromium\";v=\"151\"",
+    "content-type": "application/json",
+    "sec-ch-ua-mobile": "?0",
+    "accept": "*/*",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-dest": "empty",
+    "referer": "https://mho.sampledge.duckdns.org/admin/panelists",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "en-US,en;q=0.9,hi;q=0.8,ja;q=0.7",
+    "if-none-match": "W/\"63-pwryt1xt8/+5m6R6qWA/8DYKqHI\"",
+    "priority": "u=1, i",
+    "cookie": "_ga=GA1.1.68102614.1784794879; __next_hmr_refresh_hash__=36; authorization=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTAyMGVkM2ZkMTM1ZWFjMzI0NWMwZWEiLCJjYXRlZ29yeSI6ImNhcmUgZ2l2ZXIiLCJlbWFpbCI6Im9wdGl3YXJpLmluZGlhK21ob0BnbWFpbC5jb20iLCJwaG9uZSI6IjkxODEzMDIwMjg3OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoiSm9obiIsIm1pZGRsZSI6IiIsImxhc3QiOiJEb2UifSwib3JpZ2luIjoibWhvLnNhbXBsZWRnZS5kdWNrZG5zLm9yZyIsInJvbGUiOiJhZG1pbmlzdHJhdG9yIiwiaWF0IjoxNzg3MzEwNjE0LCJleHAiOjE3ODc5MTU0MTR9.42cx8r8gyqxR9kfHQHon3VrWwXpxUufqQqcA4qdpFYk; _ga_CJZZ33W5MP=GS2.1.s1787310058$o69$g1$t1787311352$j29$l0$h0",
+    "endpoint": "/api/v1/options/country",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "GET"
+}
+
+[21 Aug 2026, 16:52:33 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "192.168.0.108, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "x-forwarded-scheme": "https",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "sec-ch-ua": "\"Not=A?Brand\";v=\"99\", \"Google Chrome\";v=\"151\", \"Chromium\";v=\"151\"",
+    "content-type": "application/json",
+    "sec-ch-ua-mobile": "?0",
+    "accept": "*/*",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-dest": "empty",
+    "referer": "https://mho.sampledge.duckdns.org/admin/panelists",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "en-US,en;q=0.9,hi;q=0.8,ja;q=0.7",
+    "if-none-match": "W/\"63-pwryt1xt8/+5m6R6qWA/8DYKqHI\"",
+    "priority": "u=1, i",
+    "cookie": "_ga=GA1.1.68102614.1784794879; __next_hmr_refresh_hash__=36; authorization=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTAyMGVkM2ZkMTM1ZWFjMzI0NWMwZWEiLCJjYXRlZ29yeSI6ImNhcmUgZ2l2ZXIiLCJlbWFpbCI6Im9wdGl3YXJpLmluZGlhK21ob0BnbWFpbC5jb20iLCJwaG9uZSI6IjkxODEzMDIwMjg3OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoiSm9obiIsIm1pZGRsZSI6IiIsImxhc3QiOiJEb2UifSwib3JpZ2luIjoibWhvLnNhbXBsZWRnZS5kdWNrZG5zLm9yZyIsInJvbGUiOiJhZG1pbmlzdHJhdG9yIiwiaWF0IjoxNzg3MzEwNjE0LCJleHAiOjE3ODc5MTU0MTR9.42cx8r8gyqxR9kfHQHon3VrWwXpxUufqQqcA4qdpFYk; _ga_CJZZ33W5MP=GS2.1.s1787310058$o69$g1$t1787311352$j29$l0$h0",
+    "endpoint": "/api/v1/options/country",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "GET"
+}
