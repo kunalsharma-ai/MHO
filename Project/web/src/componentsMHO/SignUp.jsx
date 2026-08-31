@@ -85,6 +85,7 @@ export default function SignUp({
   const [query, member] = [useQuery(), useMember()];
   const [isInvalidUser, setIsInvalidUser] = React.useState(false);
   const [btnDisabled, setBtnDisabled] = React.useState(true);
+  const [salutationChange, setSalutationchange] = React.useState(false);
 
   const RESEND_SECONDS = 60;
 
@@ -122,6 +123,7 @@ export default function SignUp({
   }, []);
 
   const form = useForm({
+    mode:"onBlur",
     defaultValues: {
       category: "",
       name: {
@@ -261,9 +263,18 @@ export default function SignUp({
       }
     });
   }, [telemetry]);
-  React.useEffect(() => {
+ React.useEffect(() => {
     form.setValue("category", userType);
   }, [userType]);
+
+  const genderValue = form.watch("gender");     
+  React.useEffect(() => {                          
+    if (salutationChange) return;                  
+    const map = { Male: "Mr.", Female: "Ms.", Other: "Mx." };   
+    if (genderValue && map[genderValue]) {         
+      form.setValue("name.salutation", map[genderValue]);   
+    }                                               
+  }, [genderValue, salutationChange]); 
   let minDOB = new Date();
   minDOB.setFullYear(minDOB.getFullYear() - 120);
   let maxDOB = new Date();
@@ -684,19 +695,20 @@ export default function SignUp({
                         </Grid>
                       )}
 
-                      <Grid size={{ xs: 12, md: 6 }}>
+                      <Grid size={{ xs: 12, md: 3 }}>
                         <Form.Select
-                          {...register("name.salutation")}
-                          control={control}
-                          options={[
-                            { value: "Mr.", label: "Mr." },
-                            { value: "Ms.", label: "Ms." },
-                            { value: "Mrs.", label: "Mrs." },
-                            { value: "Dr.", label: "Dr." },
-                            { value: "Prof.", label: "Prof." },
-                            { value: "Mx. ", label: "Mx." },
-                          ]}
-                          labelText="Salutation"
+  {...register("name.salutation")}
+  control={control}
+  onChange={() => setSalutationchange(true)}   
+  options={[
+    { value: "Mr.", label: "Mr." },
+    { value: "Ms.", label: "Ms." },
+    { value: "Mrs.", label: "Mrs." },
+    { value: "Dr.", label: "Dr." },
+    { value: "Prof.", label: "Prof." },
+    { value: "Mx.", label: "Mx." },   
+  ]}
+  labelText="Sal."
                           sx={{
                             "& .MuiOutlinedInput-root": {
                               height: 54,
@@ -718,16 +730,7 @@ export default function SignUp({
                           }}
                         />
                       </Grid>
-                      <Grid size={{ xs: 12, md: 6 }}>
-                        <GenderRadioGroup
-                          name={"gender"}
-                          control={control}
-                          label="Gender"
-                          errors={errors?.gender}
-                          validations={user.gender}
-                        />
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 6 }}>
+                    <Grid size={{ xs: 12, md: 4.5 }}>
                         <Form.Input
                           {...register("name.first")}
                           control={control}
@@ -756,7 +759,7 @@ export default function SignUp({
                           }}
                         />
                       </Grid>
-                      <Grid size={{ xs: 12, md: 6 }}>
+                      <Grid size={{ xs: 12, md: 4.5 }}>
                         <Form.Input
                           {...register("name.last")}
                           control={control}
@@ -781,6 +784,62 @@ export default function SignUp({
                               "&.Mui-focused": {
                                 boxShadow: "0 8px 24px rgba(1,35,98,.08)",
                               },
+                            },
+                          }}
+                        />
+                      </Grid>
+                       <Grid size={{xs:12,md:6}}>
+                        <Form.Input
+                          {...register("mail")}
+                          control={control}
+                          labelText="Email"
+                          required={true}
+                          errors={errors?.mail}
+                          validations={user.email}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              height: 54,
+
+                              borderRadius: 3,
+
+                              background: "#fff",
+
+                              transition: ".25s",
+
+                              "&:hover": {
+                                boxShadow: "0 3px 12px rgba(0,0,0,.04)",
+                              },
+
+                              "&.Mui-focused": {
+                                boxShadow: "0 8px 24px rgba(1,35,98,.08)",
+                              },
+                            },
+                          }}
+                        />
+                      </Grid><Grid size={ {xs:12,md:6} }>
+                        <Form.Phone
+                          {...register("phone")}
+                          control={control}
+                          labelText="Phone"
+                          // onlyCountries={ [country] }
+                          selectedCountry={country}
+                          disableDropdown={Boolean(country)}
+                          validations={user.phone}
+                          errors={errors?.phone}
+                          onBlur={(e) => {
+                            console.log(form.getValues());
+                          }}
+                          sx={{
+                            inputStyle: {
+                              height: "54px",
+                              borderRadius: "12px",
+                              background: "#fff",
+                              transition: ".25s",
+                              boxShadow: "none",
+                            },
+                            buttonStyle: {
+                              borderTopLeftRadius: "12px",
+                              borderBottomLeftRadius: "12px",
                             },
                           }}
                         />
@@ -814,63 +873,18 @@ export default function SignUp({
                         />
                       </Grid>
 
-                      <Grid size={{ xs: 12, md: 6 }}>
-                        <Form.Phone
-                          {...register("phone")}
+                        <Grid size={{ xs: 12, md: 6 }}>
+                        <GenderRadioGroup
+                          name={"gender"}
                           control={control}
-                          labelText="Phone"
-                          // onlyCountries={ [country] }
-                          selectedCountry={country}
-                          disableDropdown={Boolean(country)}
-                          validations={user.phone}
-                          errors={errors?.phone}
-                          onBlur={(e) => {
-                            console.log(form.getValues());
-                          }}
-                          sx={{
-                            inputStyle: {
-                              height: "54px",
-                              borderRadius: "12px",
-                              background: "#fff",
-                              transition: ".25s",
-                              boxShadow: "none",
-                            },
-                            buttonStyle: {
-                              borderTopLeftRadius: "12px",
-                              borderBottomLeftRadius: "12px",
-                            },
-                          }}
+                          label="Gender"
+                          errors={errors?.gender}
+                          validations={user.gender}
                         />
                       </Grid>
-                      <Grid size={12}>
-                        <Form.Input
-                          {...register("mail")}
-                          control={control}
-                          labelText="Email"
-                          required={true}
-                          errors={errors?.mail}
-                          validations={user.email}
-                          sx={{
-                            "& .MuiOutlinedInput-root": {
-                              height: 54,
 
-                              borderRadius: 3,
-
-                              background: "#fff",
-
-                              transition: ".25s",
-
-                              "&:hover": {
-                                boxShadow: "0 3px 12px rgba(0,0,0,.04)",
-                              },
-
-                              "&.Mui-focused": {
-                                boxShadow: "0 8px 24px rgba(1,35,98,.08)",
-                              },
-                            },
-                          }}
-                        />
-                      </Grid>
+                      
+                     
 
                       <Collapse in={!!btnDisabled} sx={{ width: "100%" }}>
                         <Grid
