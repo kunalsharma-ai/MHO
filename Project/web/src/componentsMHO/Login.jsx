@@ -1047,10 +1047,48 @@ function LoginCard({ onClose, setCardType, setOpenSignUp }) {
   );
 }
 
+const RESET_LIMIT_COOKIE = "forgotPasswordRequests";
+const MAX_REQUESTS_PER_DAY = 5;
+
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+function setCookie(name, value, hours) {
+  const expires = new Date(Date.now() + hours * 60 * 60 * 1000).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+}
+
+function canSendResetRequest() {
+  const stored = getCookie(RESET_LIMIT_COOKIE);
+  if (!stored) return true;
+  try {
+    const data = JSON.parse(stored);
+    return data.count < MAX_REQUESTS_PER_DAY;
+  } catch (e) {
+    return true;
+  }
+}
+
+function recordResetRequest() {
+  const stored = getCookie(RESET_LIMIT_COOKIE);
+  let count = 1;
+  if (stored) {
+    try {
+      const data = JSON.parse(stored);
+      count = data.count + 1;
+    } catch (e) {}
+  }
+  setCookie(RESET_LIMIT_COOKIE, JSON.stringify({ count }), 24);
+}
+
 function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
   const [stage, setStage] = React.useState("user"); //user,otp,password
   const [user, setUser] = React.useState("");
   const [timeout, updateTimeout] = React.useState(30);
+  const [limitError,setLimitError]=React.useState(null);
+
   // const router = useRouter();
   React.useEffect(() => {
     setTimeout(() => {
@@ -1062,9 +1100,15 @@ function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
   const form = useForm({});
 
   async function sendOTP(e) {
+    if(!canSendResetRequest()){
+      setLimitError("Maximum request reached for today. Please try again after 24 hours.");
+      return ;
+    }
+    setLimitError(null);
     const resp = await api.post(`/api/v1/forgot-password`, { user });
     useToast(resp);
     if (resp.status === "error") return;
+    recordResetRequest();
     setStage("otp");
   }
 
@@ -1261,6 +1305,11 @@ function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
                   ))}
                 </Box>
               </Box>
+               {limitError && (
+                <Typography sx={{ color: "error.main", fontSize: 13, fontWeight: 600 }}>
+                  {limitError}
+                </Typography>
+              )}
 
               <Page.MuiButton
                 variant="contained"
