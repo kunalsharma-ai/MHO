@@ -137,7 +137,7 @@ export default function page() {
         gap: 2.5,
       }}
     >
-      <OnboardingTour /> 
+      <OnboardingTour greeting={greeting} userName={member?.name.first}/> 
 
       <MotionBox variants={fadeUp} initial="hidden" animate="visible" data-tour="greeting">
         <Box

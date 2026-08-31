@@ -392,6 +392,8 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
             Browse a few of our paid surveys
           </Typography>
           <Box
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
             sx={{
               py: 1,
               my: -1,
@@ -413,7 +415,7 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
             >
               {cards.map((survey, index) => (
                 <MotionBox
-                  key={index}
+                  key={`${survey.title}-${index}`}
                   whileHover={{
                     y: -5,
                     scale: 1.03,
@@ -421,19 +423,16 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                   transition={{
                     duration: 0.2,
                   }}
-                  onMouseEnter={() => setPaused(true)}
-                  onMouseLeave={() => setPaused(false)}
-                  onClick={() => setOpen(true)}
                   sx={{
                     width: 250,
                     minHeight: { lg: 200, xl: 240 },
                     flexShrink: 0,
                     my: 2,
                     p: 1.5,
-                    cursor: "pointer",
                     borderRadius: 3,
                     background: "rgba(255,255,255,.12)",
                     backdropFilter: "blur(18px)",
+                    WebkitBackdropFilter: "blur(18px)",
                     border: "1px solid rgba(255,255,255,.18)",
                     boxShadow: "0 10px 30px rgba(0,0,0,.18)",
                     transition: ".25s",
@@ -458,7 +457,10 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                         bgcolor: survey.color,
                         color: "#fff",
                         fontWeight: 700,
-                        fontSize: { lg: 11, xl: 12 },
+                        fontSize: {
+                          lg: 11,
+                          xl: 12,
+                        },
                       }}
                     >
                       {survey.category}
@@ -468,17 +470,24 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                       sx={{
                         color: "#fff",
                         fontWeight: 700,
-                        fontSize: { lg: 18, xl: 20 },
+                        fontSize: {
+                          lg: 18,
+                          xl: 20,
+                        },
                       }}
                     >
                       {survey.reward}
                     </Typography>
                   </Box>
+
                   <Typography
                     sx={{
                       color: "#fff",
                       fontWeight: 700,
-                      fontSize: { lg: 18, xl: 20 },
+                      fontSize: {
+                        lg: 18,
+                        xl: 20,
+                      },
                       lineHeight: 1.35,
                       minHeight: 52,
                       mt: 1,
@@ -486,10 +495,14 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                   >
                     {survey.title}
                   </Typography>
+
                   <Typography
                     sx={{
                       color: "rgba(255,255,255,.72)",
-                      fontSize: { lg: 13, xl: 14 },
+                      fontSize: {
+                        lg: 13,
+                        xl: 14,
+                      },
                       lineHeight: 1.5,
 
                       minHeight: 42,
@@ -505,7 +518,10 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                   <Typography
                     sx={{
                       color: "rgba(255,255,255,.72)",
-                      fontSize: { lg: 13, xl: 14 },
+                      fontSize: {
+                        lg: 12,
+                        xl: 13,
+                      },
                       mt: 1.8,
                     }}
                   >
@@ -513,31 +529,60 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                   </Typography>
                   <Box
                     sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
                       mt: 1,
                       pt: 1.5,
-
                       borderTop: "1px solid rgba(255,255,255,.08)",
                     }}
                   >
-                    <Typography
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      color="secondary"
+                      size="small"
+                      disableElevation
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        setOpen(true);
+                      }}
+                      endIcon={
+                        <ArrowForwardIcon
+                          sx={{
+                            fontSize: 17,
+                          }}
+                        />
+                      }
                       sx={{
-                        color: "secondary.main",
-                        fontWeight: 700,
-                        fontSize: { lg: 14, xl: 15 },
+                        minWidth: 0,
+                        height: 32,
+                        px: 1.5,
+
+                        borderRadius: 2,
+
+                        color: "#fff",
+
+                        fontSize: {
+                          lg: 11,
+                          xl: 12,
+                        },
+
+                        fontWeight: 600,
+                        textTransform: "none",
+
+                        backgroundColor: "secondary.main",
+
+                        "&:hover": {
+                          backgroundColor: "secondary.dark",
+                        },
+
+                        "& .MuiButton-endIcon": {
+                          ml: 0.4,
+                          mr: 0,
+                        },
                       }}
                     >
                       Take Survey
-                    </Typography>
-
-                    <ArrowForwardIcon
-                      sx={{
-                        color: "secondary.main",
-                        fontSize: 20,
-                      }}
-                    />
+                    </Button>
                   </Box>
                 </MotionBox>
               ))}

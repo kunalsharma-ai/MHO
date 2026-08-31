@@ -6,7 +6,6 @@ import {
   Paper,
   Typography,
   TextField,
-  MenuItem,
   Rating,
   RadioGroup,
   FormControlLabel,
@@ -20,11 +19,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 export default function FeedbackForm({ onClose }) {
   const [form, setForm] = useState({
-    name: "",
-    email: "",
-    type: "General Feedback",
     rating: 5,
-    subject: "",
     feedback: "",
     recommend: "Yes",
   });
@@ -68,56 +63,17 @@ export default function FeedbackForm({ onClose }) {
         or reporting any issues you've encountered.
       </Typography>
 
-      <Stack spacing={2}>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "1fr",
-              md: "1fr 1fr",
-            },
-            gap: 2,
-          }}
-        >
-          <TextField
-            label="Full Name (Optional)"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            fullWidth
-          />
-
-          <TextField
-            label="Email Address (Optional)"
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-            fullWidth
-          />
-        </Box>
-
+      <Stack spacing={2} mb={2}>
         <TextField
-          select
-          label="Feedback Type"
-          name="type"
-          value={form.type}
+          label="Feedback"
+          name="feedback"
+          value={form.feedback}
           onChange={handleChange}
+          multiline
+          rows={5}
           fullWidth
-        >
-          {[
-            "General Feedback",
-            "Suggestion",
-            "Bug Report",
-            "Website Experience",
-            "Survey Experience",
-            "Other",
-          ].map((item) => (
-            <MenuItem key={item} value={item}>
-              {item}
-            </MenuItem>
-          ))}
-        </TextField>
+          placeholder="Tell us what you liked, what could be improved, or describe any issues you experienced..."
+        />
 
         <Box>
           <Typography fontWeight={600} sx={{ mb: 1 }}>
@@ -136,25 +92,6 @@ export default function FeedbackForm({ onClose }) {
           />
         </Box>
 
-        <TextField
-          label="Subject"
-          name="subject"
-          value={form.subject}
-          onChange={handleChange}
-          fullWidth
-        />
-
-        <TextField
-          label="Feedback"
-          name="feedback"
-          value={form.feedback}
-          onChange={handleChange}
-          multiline
-          rows={5}
-          fullWidth
-          placeholder="Tell us what you liked, what could be improved, or describe any issues you experienced..."
-        />
-
         <Box>
           <Typography fontWeight={600} sx={{ mb: 1 }}>
             Would you recommend us?
@@ -167,14 +104,16 @@ export default function FeedbackForm({ onClose }) {
             onChange={handleChange}
           >
             <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-
             <FormControlLabel value="Maybe" control={<Radio />} label="Maybe" />
-
             <FormControlLabel value="No" control={<Radio />} label="No" />
           </RadioGroup>
         </Box>
 
         <Button
+          onClick={() => {
+            alert(JSON.stringify(form, null, 2));
+          }}
+          fullWidth
           variant="contained"
           color="primary"
           size="large"
