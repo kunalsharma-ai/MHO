@@ -11,3 +11,5 @@ services/storage/uploads/*
 services/gateway/logs/*
 Project/api/auth/app/logs
 tasks
+logs
+logs/activities
