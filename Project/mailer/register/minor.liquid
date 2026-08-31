@@ -1,152 +1,622 @@
-<table width="100%" cellpadding="0" cellspacing="0">
-  <tr>
-    <td align="center">
-       <img
-        src="https://myhealthopinions.com/images/logo/My-Health-Opinions.png"
-        alt="My Health Opinions"
-        style="width: 320px; height: auto; margin: 0; padding: 20px"
-      />
-    </td>
-  </tr>
-</table>
-<div
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parental Consent - My Health Opinions</title>
+</head>
+
+<body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
+
+<table
+  width="100%"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  bgcolor="#f4f7fb"
+  style="margin:0;padding:0;background:#f4f7fb;"
+>
+<tr>
+<td align="center" style="padding:35px 15px;">
+
+<table
+  width="680"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  bgcolor="#ffffff"
   style="
-    max-width: 600px;
-    margin: auto;
-  background: #EAF3FF;
-    border: 1px solid #FFD199;
-    border-radius: 6px;
+    width:680px;
+    max-width:680px;
+    background:#ffffff;
+    border-radius:14px;
+    overflow:hidden;
   "
 >
-  <div style="padding: 30px 20px; font-family: Roboto, sans-serif color: #2a3940">
-    <h3 style=" color: #2a3940; font-weight: 400; margin: 0">
-      Dear {{user.parent.name.first}},
-    </h3>
-    <p
-      style="
-        font-size: 17px;
-        color: #2a3940;
-        
-        margin: 20px 0;
-      "
-    >
+
+<!-- TOP BLUE BAR -->
+<tr>
+<td
+  height="8"
+  bgcolor="#0D5CC7"
+  style="background:#0D5CC7;"
+></td>
+</tr>
+
+<!-- LOGO -->
+<tr>
+<td
+  align="center"
+  style="padding:30px 25px 25px;background:#ffffff;"
+>
+<img
+  src="https://myhealthopinions.com/images/logo/My-Health-Opinions.png"
+  alt="My Health Opinions"
+  width="320"
+  style="
+    display:block;
+    width:320px;
+    max-width:90%;
+    height:auto;
+    border:0;
+  "
+/>
+</td>
+</tr>
+
+<!-- ORANGE ACCENT -->
+<tr>
+<td
+  height="3"
+  bgcolor="#FF7A00"
+  style="background:#FF7A00;"
+></td>
+</tr>
+
+<!-- HERO -->
+<tr>
+<td
+  align="center"
+  style="padding:35px 40px 10px;"
+>
+
+<h1
+  style="
+    margin:22px 0 10px;
+    font-size:30px;
+    line-height:38px;
+    font-weight:700;
+    color:#0D5CC7;
+  "
+>
+Parental Consent Required
+</h1>
+
+<p
+  style="
+    margin:0;
+    font-size:17px;
+    line-height:28px;
+    color:#5d6875;
+  "
+>
+Your approval is required for your child's participation.
+</p>
+
+</td>
+</tr>
+
+<!-- GREETING -->
+<tr>
+<td style="padding:30px 55px 10px;">
+
+<p
+  style="
+    margin:0 0 18px;
+    font-size:21px;
+    line-height:30px;
+    font-weight:600;
+    color:#25313d;
+  "
+>
+Dear {{user.parent.name.first}},
+</p>
+
+<p
+  style="
+    margin:0 0 18px;
+    font-size:16px;
+    line-height:28px;
+    color:#4b5865;
+  "
+>
 We hope this message finds you well.
 </p>
+
 <p
-      style="
-        font-size: 17px;
-        color: #2a3940;
-        
-        margin: 20px 0;
-      "
-    >
-Your child, {{user.name.first}}, has registered on <a href="https://{{user.origin}}">My Health Opinions</a>, an online survey and market research panel platform published by Frequent Research Fieldwork Solutions Pvt. Ltd. As they have indicated that they are under the age of 18.
+  style="
+    margin:0;
+    font-size:16px;
+    line-height:28px;
+    color:#4b5865;
+  "
+>
+Your child,
+<strong style="color:#25313d;">{{user.name.first}}</strong>,
+has registered on
+<a
+  href="https://{{user.origin}}"
+  target="_blank"
+  style="color:#0D5CC7;text-decoration:none;font-weight:bold;"
+>
+MyHealthOpinions
+</a>,
+an online survey and market research panel platform published by
+Frequent Research Fieldwork Solutions Pvt. Ltd., and has indicated
+that they are under the age of 18.
+</p>
+
+</td>
+</tr>
+
+<!-- ABOUT CARD -->
+<tr>
+<td style="padding:25px 55px;">
+
+<table
+  width="100%"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  style="
+    border:1px solid #cfe0f5;
+    border-radius:12px;
+    background:#EAF3FF;
+  "
+>
+<tr>
+<td style="padding:25px 28px;">
+
+<p
+  style="
+    margin:0 0 12px;
+    font-size:14px;
+    font-weight:bold;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#0D5CC7;
+  "
+>
+About MyHealthOpinions
 </p>
 
 <p
-      style="
-        font-size: 17px;
-        color: #2a3940;
-        
-        margin: 20px 0;
-      "
-    >
-<a href="https://{{user.origin}}">
-My Health Opinions
-</a> 
-allows members to participate in surveys and earn rewards by sharing opinions on various topics. We are committed to maintain a safe and secure environment for all participants, especially minors.
+  style="
+    margin:0;
+    font-size:15px;
+    line-height:25px;
+    color:#4b5865;
+  "
+>
+<a
+  href="https://{{user.origin}}"
+  target="_blank"
+  style="color:#0D5CC7;text-decoration:none;font-weight:bold;"
+>
+MyHealthOpinions
+</a>
+allows members to participate in surveys and earn rewards by
+sharing opinions on various topics. We are committed to maintaining
+a safe and secure environment for all participants, especially minors.
 </p>
-<h3>
-  Why You Are Receiving This Email
-</h3>
+
+</td>
+</tr>
+</table>
+
+</td>
+</tr>
+
+<!-- WHY RECEIVING -->
+<tr>
+<td style="padding:5px 55px 10px;">
+
+<h2
+  style="
+    margin:0 0 12px;
+    font-size:20px;
+    line-height:28px;
+    font-weight:700;
+    color:#25313d;
+  "
+>
+Why You Are Receiving This Email
+</h2>
 
 <p
-      style="
-        font-size: 17px;
-        color: #2a3940;
-        
-        margin: 20px 0;
-      "
-    >
-During registration, your child provided your email address as the {{user.parent.relation}}. In accordance with our Child Protection and Privacy Policy, we require verified parental approval before allowing access to our platform.
+  style="
+    margin:0;
+    font-size:16px;
+    line-height:28px;
+    color:#4b5865;
+  "
+>
+During registration, your child provided your email address as the
+<strong style="color:#25313d;">{{user.parent.relation}}</strong>.
+In accordance with our Child Protection and Privacy Policy, we require
+verified parental approval before allowing access to our platform.
 </p>
-<h3>
-  What We Collect
-</h3>
+
+</td>
+</tr>
+
+<!-- WHAT WE COLLECT -->
+<tr>
+<td style="padding:25px 55px 10px;">
+
+<h2
+  style="
+    margin:0 0 12px;
+    font-size:20px;
+    line-height:28px;
+    font-weight:700;
+    color:#25313d;
+  "
+>
+What We Collect
+</h2>
 
 <p
-      style="
-        font-size: 17px;
-        color: #2a3940;
-
-        margin: 20px 0;
-      "
-    >
+  style="
+    margin:0 0 12px;
+    font-size:16px;
+    line-height:28px;
+    color:#4b5865;
+  "
+>
 With your consent, we may collect:
 </p>
-<ul style="color: #2a3940;" >
-  <li>
-     Basic profile information (name, age, gender)
-  </li>
-  <li>
-     Survey participation responses
-  </li>
-  <li>
-     Reward-related details (if applicable)
-  </li>
-</ul>
 
-<h3>
-  Your Rights as a Parent/Guardian
-</h3>
+<table
+  width="100%"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+>
+<tr>
+<td
+  width="25"
+  valign="top"
+  style="padding:5px 0;font-size:18px;color:#0D5CC7;"
+>
+&#8226;
+</td>
+<td
+  style="
+    padding:5px 0;
+    font-size:16px;
+    line-height:25px;
+    color:#4b5865;
+  "
+>
+Basic profile information (name, age, gender)
+</td>
+</tr>
+
+<tr>
+<td
+  width="25"
+  valign="top"
+  style="padding:5px 0;font-size:18px;color:#0D5CC7;"
+>
+&#8226;
+</td>
+<td
+  style="
+    padding:5px 0;
+    font-size:16px;
+    line-height:25px;
+    color:#4b5865;
+  "
+>
+Survey participation responses
+</td>
+</tr>
+
+<tr>
+<td
+  width="25"
+  valign="top"
+  style="padding:5px 0;font-size:18px;color:#0D5CC7;"
+>
+&#8226;
+</td>
+<td
+  style="
+    padding:5px 0;
+    font-size:16px;
+    line-height:25px;
+    color:#4b5865;
+  "
+>
+Reward-related details, if applicable
+</td>
+</tr>
+</table>
+
+</td>
+</tr>
+
+<!-- PARENT RIGHTS -->
+<tr>
+<td style="padding:25px 55px 10px;">
+
+<h2
+  style="
+    margin:0 0 12px;
+    font-size:20px;
+    line-height:28px;
+    font-weight:700;
+    color:#25313d;
+  "
+>
+Your Rights as a Parent/Guardian
+</h2>
 
 <p
-      style="
-        font-size: 17px;
-        color: #2a3940;
-        
-        margin: 20px 0;
-      "
-    >
+  style="
+    margin:0 0 12px;
+    font-size:16px;
+    line-height:28px;
+    color:#4b5865;
+  "
+>
 You have the right to:
 </p>
-<ul style="color: #2a3940;">
-  <li>
-  Review your child's information {% comment %} shared with us (only), on an exclusive request on email {% endcomment %}
-  </li>
-  <li>
-    Withdraw consent at any time {% comment %} by making a request on <a mailto:support@{{user.origin}}>support@{{user.origin}}</a> {% endcomment %}
-  </li>
-  <li>
-    Request account deletion {% comment %} by generating a support ticket or writing email to <a mailto:support@{{user.origin}}>support@{{user.origin}}</a> {% endcomment %}
-  </li>
-    <li>
-      Contact us for any clarification 
-    </li>
-  
-  </ul>
-  <p
-      style="
-        font-size: 17px;
-        color: #2a3940;
-        
-        margin: 20px 0;
-      "
-    >
-For assistance, please contact us at <a href="mailto:support@{{user.origin}}">support@{{user.origin}}</a>
-</p>
-<p
-      style="
-        font-size: 17px;
-        color: #2a3940;
-        
-        margin: 20px 0;
-      "
-    >
-We appreciate your cooperation in helping us maintain a safe and responsible research environment.
-</p>
- <hr style="border: 0; border-top: 2px solid #e8e8e8; margin: 30px 0" />
 
-    {% include  "mailer/footer.liquid" %}
-  </div>
-</div>
+<table
+  width="100%"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+>
+<tr>
+<td
+  width="25"
+  valign="top"
+  style="padding:5px 0;font-size:18px;color:#0D5CC7;"
+>
+&#8226;
+</td>
+<td
+  style="
+    padding:5px 0;
+    font-size:16px;
+    line-height:25px;
+    color:#4b5865;
+  "
+>
+Review your child's information shared with us upon request by email
+</td>
+</tr>
+
+<tr>
+<td
+  width="25"
+  valign="top"
+  style="padding:5px 0;font-size:18px;color:#0D5CC7;"
+>
+&#8226;
+</td>
+<td
+  style="
+    padding:5px 0;
+    font-size:16px;
+    line-height:25px;
+    color:#4b5865;
+  "
+>
+Withdraw consent at any time
+</td>
+</tr>
+
+<tr>
+<td
+  width="25"
+  valign="top"
+  style="padding:5px 0;font-size:18px;color:#0D5CC7;"
+>
+&#8226;
+</td>
+<td
+  style="
+    padding:5px 0;
+    font-size:16px;
+    line-height:25px;
+    color:#4b5865;
+  "
+>
+Request account deletion
+</td>
+</tr>
+
+<tr>
+<td
+  width="25"
+  valign="top"
+  style="padding:5px 0;font-size:18px;color:#0D5CC7;"
+>
+&#8226;
+</td>
+<td
+  style="
+    padding:5px 0;
+    font-size:16px;
+    line-height:25px;
+    color:#4b5865;
+  "
+>
+Contact us for any clarification
+</td>
+</tr>
+</table>
+
+</td>
+</tr>
+
+<!-- SUPPORT CARD -->
+<tr>
+<td style="padding:25px 55px 35px;">
+
+<table
+  width="100%"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  style="
+    border:1px solid #ffd199;
+    border-radius:10px;
+    background:#fff8ef;
+  "
+>
+<tr>
+
+<td
+  width="70"
+  align="center"
+  style="padding:22px 10px 22px 20px;"
+>
+
+<table
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  width="48"
+  height="48"
+  style="
+    width:48px;
+    height:48px;
+    background:#FFD199;
+    border-radius:50%;
+  "
+>
+<tr>
+<td align="center" valign="middle">
+
+<span
+  style="
+    font-size:22px;
+    color:#E66400;
+    font-weight:bold;
+  "
+>
+!
+</span>
+
+</td>
+</tr>
+</table>
+
+</td>
+
+<td style="padding:22px 20px 22px 10px;">
+
+<p
+  style="
+    margin:0 0 7px;
+    font-size:16px;
+    font-weight:bold;
+    color:#25313d;
+  "
+>
+Need assistance?
+</p>
+
+<p
+  style="
+    margin:0;
+    font-size:14px;
+    line-height:23px;
+    color:#5f6975;
+  "
+>
+For assistance or clarification, please contact us at
+<a
+  href="mailto:support@{{user.origin}}"
+  style="
+    color:#0D5CC7;
+    text-decoration:none;
+    font-weight:bold;
+  "
+>
+support@{{user.origin}}
+</a>.
+</p>
+
+</td>
+
+</tr>
+</table>
+
+</td>
+</tr>
+
+<!-- CLOSING MESSAGE -->
+<tr>
+<td style="padding:0 55px 25px;">
+
+<p
+  style="
+    margin:0;
+    font-size:16px;
+    line-height:28px;
+    color:#4b5865;
+  "
+>
+We appreciate your cooperation in helping us maintain a safe and
+responsible research environment.
+</p>
+
+</td>
+</tr>
+
+<!-- DIVIDER -->
+<tr>
+<td style="padding:0 55px;">
+
+<div
+  style="
+    height:1px;
+    background:#e5e9ee;
+  "
+></div>
+
+</td>
+</tr>
+
+<!-- FOOTER -->
+<tr>
+<td style="padding:20px 35px 35px;">
+
+{% include "mailer/footer.liquid" %}
+
+</td>
+</tr>
+
+<!-- BOTTOM ORANGE BAR -->
+<tr>
+<td
+  height="8"
+  bgcolor="#FF7A00"
+  style="background:#FF7A00;"
+></td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>

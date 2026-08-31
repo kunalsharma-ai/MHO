@@ -1,64 +1,500 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>New Support Ticket</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f7f7f7;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            background: #fff;
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 32px 24px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-        }
-        h2 {
-            color: #2d6cdf;
-            margin-top: 0;
-        }
-        .ticket-info {
-            margin: 24px 0;
-            padding: 16px;
-            background: #f0f4fa;
-            border-radius: 6px;
-        }
-        .ticket-info strong {
-            display: inline-block;
-            width: 110px;
-            color: #333;
-        }
-        .footer {
-            margin-top: 32px;
-            color: #888;
-            font-size: 13px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Support Ticket</title>
 </head>
-<body>
-    <div class="container">
-        <h2>New Support Ticket Created</h2>
-        <p>
-            A new support ticket has been created by the user below. Please review the ticket and take the necessary action.
-        </p>
-        <div class="ticket-info">
-            <div><strong>Name:</strong> {{ user.name }}</div>
-            <div><strong>Email:</strong> {{ user.email }}</div>
-            <div><strong>Ticket No:</strong> {{ data.ticketNo }}</div>
-            <div><strong>Subject:</strong> {{ data.subject }}</div>
-        </div>
-        <p>
-            If you need any additional information, please let us know.
-        </p>
-        <div class="footer">
-            Thank you,<br>
-            Support Team
-        </div>
-    </div>
+
+<body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
+
+<table
+  width="100%"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  bgcolor="#f4f7fb"
+  style="margin:0;padding:0;background:#f4f7fb;"
+>
+<tr>
+<td align="center" style="padding:35px 15px;">
+
+<table
+  width="680"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  bgcolor="#ffffff"
+  style="
+    width:680px;
+    max-width:680px;
+    background:#ffffff;
+    border-radius:14px;
+    overflow:hidden;
+  "
+>
+
+<!-- TOP BLUE BAR -->
+<tr>
+<td
+  height="8"
+  bgcolor="#0D5CC7"
+  style="background:#0D5CC7;"
+></td>
+</tr>
+
+<!-- LOGO -->
+<tr>
+<td
+  align="center"
+  style="padding:30px 25px 25px;background:#ffffff;"
+>
+<img
+  src="https://myhealthopinions.com/images/logo/My-Health-Opinions.png"
+  alt="My Health Opinions"
+  width="320"
+  style="
+    display:block;
+    width:320px;
+    max-width:90%;
+    height:auto;
+    border:0;
+  "
+/>
+</td>
+</tr>
+
+<!-- ORANGE ACCENT -->
+<tr>
+<td
+  height="3"
+  bgcolor="#FF7A00"
+  style="background:#FF7A00;"
+></td>
+</tr>
+
+<!-- HERO -->
+<tr>
+<td
+  align="center"
+  style="padding:35px 40px 10px;"
+>
+
+<h1
+  style="
+    margin:22px 0 10px;
+    font-size:30px;
+    line-height:38px;
+    font-weight:700;
+    color:#0D5CC7;
+  "
+>
+New Support Ticket
+</h1>
+
+<p
+  style="
+    margin:0;
+    font-size:17px;
+    line-height:28px;
+    color:#5d6875;
+  "
+>
+A new support request requires your attention.
+</p>
+
+</td>
+</tr>
+
+<!-- INTRODUCTION -->
+<tr>
+<td style="padding:30px 55px 10px;">
+
+<p
+  style="
+    margin:0 0 18px;
+    font-size:21px;
+    line-height:30px;
+    font-weight:600;
+    color:#25313d;
+  "
+>
+New Support Ticket Created
+</p>
+
+<p
+  style="
+    margin:0;
+    font-size:16px;
+    line-height:28px;
+    color:#4b5865;
+  "
+>
+A new support ticket has been created by a MyHealthOpinions user.
+Please review the ticket details below and take the necessary action.
+</p>
+
+</td>
+</tr>
+
+<!-- TICKET DETAILS CARD -->
+<tr>
+<td style="padding:25px 55px;">
+
+<table
+  width="100%"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  style="
+    border:1px solid #cfe0f5;
+    border-radius:12px;
+    background:#EAF3FF;
+  "
+>
+
+<!-- CARD TITLE -->
+<tr>
+<td style="padding:25px 28px 15px;">
+
+<p
+  style="
+    margin:0;
+    font-size:14px;
+    font-weight:bold;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#0D5CC7;
+  "
+>
+Ticket Details
+</p>
+
+</td>
+</tr>
+
+<!-- NAME -->
+<tr>
+<td style="padding:0 28px;">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+
+<td
+  width="120"
+  style="
+    padding:10px 0;
+    font-size:15px;
+    color:#657383;
+    vertical-align:top;
+  "
+>
+Name
+</td>
+
+<td
+  style="
+    padding:10px 0;
+    font-size:16px;
+    font-weight:600;
+    color:#25313d;
+    vertical-align:top;
+  "
+>
+{{ user.name }}
+</td>
+
+</tr>
+</table>
+
+</td>
+</tr>
+
+<!-- DIVIDER -->
+<tr>
+<td style="padding:0 28px;">
+<div style="height:1px;background:#c9d9ed;"></div>
+</td>
+</tr>
+
+<!-- EMAIL -->
+<tr>
+<td style="padding:0 28px;">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+
+<td
+  width="120"
+  style="
+    padding:10px 0;
+    font-size:15px;
+    color:#657383;
+    vertical-align:top;
+  "
+>
+Email
+</td>
+
+<td
+  style="
+    padding:10px 0;
+    font-size:16px;
+    font-weight:600;
+    color:#25313d;
+    vertical-align:top;
+    word-break:break-word;
+  "
+>
+{{ user.email }}
+</td>
+
+</tr>
+</table>
+
+</td>
+</tr>
+
+<!-- DIVIDER -->
+<tr>
+<td style="padding:0 28px;">
+<div style="height:1px;background:#c9d9ed;"></div>
+</td>
+</tr>
+
+<!-- TICKET NUMBER -->
+<tr>
+<td style="padding:0 28px;">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+
+<td
+  width="120"
+  style="
+    padding:10px 0;
+    font-size:15px;
+    color:#657383;
+    vertical-align:top;
+  "
+>
+Ticket No.
+</td>
+
+<td
+  style="
+    padding:10px 0;
+    font-size:16px;
+    font-weight:700;
+    color:#0D5CC7;
+    vertical-align:top;
+  "
+>
+{{ data.ticketNo }}
+</td>
+
+</tr>
+</table>
+
+</td>
+</tr>
+
+<!-- DIVIDER -->
+<tr>
+<td style="padding:0 28px;">
+<div style="height:1px;background:#c9d9ed;"></div>
+</td>
+</tr>
+
+<!-- SUBJECT -->
+<tr>
+<td style="padding:0 28px 20px;">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+
+<td
+  width="120"
+  style="
+    padding:10px 0;
+    font-size:15px;
+    color:#657383;
+    vertical-align:top;
+  "
+>
+Subject
+</td>
+
+<td
+  style="
+    padding:10px 0;
+    font-size:16px;
+    font-weight:600;
+    color:#25313d;
+    vertical-align:top;
+  "
+>
+{{ data.subject }}
+</td>
+
+</tr>
+</table>
+
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+
+<!-- ACTION NOTICE -->
+<tr>
+<td style="padding:5px 55px 35px;">
+
+<table
+  width="100%"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  style="
+    border:1px solid #ffd199;
+    border-radius:10px;
+    background:#fff8ef;
+  "
+>
+<tr>
+
+<td
+  width="70"
+  align="center"
+  style="padding:22px 10px 22px 20px;"
+>
+
+<table
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  width="48"
+  height="48"
+  style="
+    width:48px;
+    height:48px;
+    background:#FFD199;
+    border-radius:50%;
+  "
+>
+<tr>
+<td align="center" valign="middle">
+
+<span
+  style="
+    font-size:22px;
+    color:#E66400;
+    font-weight:bold;
+  "
+>
+!
+</span>
+
+</td>
+</tr>
+</table>
+
+</td>
+
+<td style="padding:22px 20px 22px 10px;">
+
+<p
+  style="
+    margin:0 0 7px;
+    font-size:16px;
+    font-weight:bold;
+    color:#25313d;
+  "
+>
+Action Required
+</p>
+
+<p
+  style="
+    margin:0;
+    font-size:14px;
+    line-height:23px;
+    color:#5f6975;
+  "
+>
+Please review the ticket and respond to the user as soon as possible.
+If additional information is required, follow up with the user using
+the contact details provided above.
+</p>
+
+</td>
+
+</tr>
+</table>
+
+</td>
+</tr>
+
+<!-- DIVIDER -->
+<tr>
+<td style="padding:0 55px;">
+
+<div
+  style="
+    height:1px;
+    background:#e5e9ee;
+  "
+></div>
+
+</td>
+</tr>
+
+<!-- SUPPORT MESSAGE -->
+<tr>
+<td
+  align="center"
+  style="padding:28px 55px 10px;"
+>
+
+<p
+  style="
+    margin:0;
+    font-size:15px;
+    line-height:25px;
+    color:#66717e;
+  "
+>
+Please review the ticket and take the necessary action.
+</p>
+
+</td>
+</tr>
+
+<!-- FOOTER -->
+<tr>
+<td style="padding:20px 35px 35px;">
+
+{% include "mailer/footer.liquid" %}
+
+</td>
+</tr>
+
+<!-- BOTTOM ORANGE BAR -->
+<tr>
+<td
+  height="8"
+  bgcolor="#FF7A00"
+  style="background:#FF7A00;"
+></td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
 </body>
 </html>

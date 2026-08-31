@@ -41,7 +41,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useForm } from "react-hook-form";
 
-import { Form } from "@/components";
+import { Form,Datatable } from "@/components";
 import PopUp from "@/componentsMHO/PopUp";
 import { api, loadData, Page } from "@/util";
 import DataList from "@/componentsMHO/DataList";
@@ -49,6 +49,9 @@ import { useMember } from "@/Context";
 import LoadingOverlay from "@/componentsMHO/LoadingOverlay";
 import { useToast } from "@/hooks";
 import MyAccountPoints from "../../components/MyAccountPoints";
+import {useTourActive} from "@/Context/tourStore";
+import mockRewardsProcessed from "@/mockData/rewardProcessed";
+
 
 const paymentMethods = {
   paypal: "/images/payment/paypal.png",
@@ -586,6 +589,7 @@ linear-gradient(
           direction={"column"}
           alignItems="center"
           // py={{ xs: 1, md: 0 }}
+          data-tour="myaccount-profile-info"
         >
           {userData.map((item, index) => {
             return (
@@ -664,6 +668,7 @@ linear-gradient(
 
       {/* Payment Section */}
       <Box
+      data-tour="myaccount-payment"
         sx={{
           width: "100%",
 
@@ -681,6 +686,7 @@ linear-gradient(
 
       {/* Social Section */}
       <Box
+       data-tour="myaccount-social"
         sx={{
           width: "100%",
 
@@ -1489,6 +1495,7 @@ function Summary() {
   const [points, setPoints] = React.useState(0); //todo: set from api call
   const [conversionRate, setConversionRate] = React.useState(1); //todo: set conversion rate from api call
   const [threshold, setThreshold] = React.useState(1500); //todo: set from server config
+  const tourActive = useTourActive();
   React.useEffect(() => {
     api
       .get(`/api/v1/me/points`)
@@ -1528,13 +1535,62 @@ function Summary() {
     //   ),
     // },
     {
-      label: "Rewards Processed Summary",
-      render: (
-        <Grid size={12} container justifyContent="center" py={7}>
-          No Reward Processed yet.
-        </Grid>
-      ),
-    },
+  label: "Rewards Processed Summary",
+  render: tourActive ? (
+    <Grid size={12} data-tour="myaccount-rewards-processed">
+      <Datatable
+        isLoading={false}
+        pagination={[10, 20, 50]}
+        pageSize={20}
+        hideColumnSelector
+        hideDownload
+        noDataMsg="No Record Found."
+        data={mockRewardsProcessed.data}
+        columns={[
+          {
+            id: "survey",
+            label: "Survey Name",
+            render: (info) => info.survey?.name,
+          },
+          {
+            id: "processedAt",
+            label: "Processed On",
+            render: (info) => new Date(info.processedAt).toLocaleString(),
+          },
+          {
+            id: "points",
+            label: "Points",
+            render: (info) => `${info.points} pts`,
+          },
+          {
+            id: "method",
+            label: "Payment Method",
+            render: (info) => info.method,
+          },
+          {
+            id: "status",
+            label: "Status",
+            render: (info) => (
+              <span style={{ textTransform: "capitalize" }}>
+                {info.status}
+              </span>
+            ),
+          },
+        ]}
+      />
+    </Grid>
+  ) : (
+    <Grid
+      size={12}
+      container
+      justifyContent="center"
+      py={7}
+      data-tour="myaccount-rewards-processed"
+    >
+      No Reward Processed yet.
+    </Grid>
+  ),
+},
     {
       label: "Rejected Responses",
       render: (

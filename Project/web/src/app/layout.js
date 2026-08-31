@@ -7,6 +7,7 @@ import "@/lib/enhancements.js";
 import { ContextProviders } from "@/Context";
 import { GoogleTagManager } from "@next/third-parties/google";
 import ChatWidget from "@/componentsMHO/ChatWidget";
+import RecentActivityPopup from "@/componentsMHO/RecentActivityPopup";
 
 export default function RootLayout({ children }) {
   return (
@@ -51,7 +52,7 @@ export default function RootLayout({ children }) {
           <ContextProviders>
             <CssBaseline />
             <main role="main">{children}</main>
-            <ChatWidget />
+            {/* <ChatWidget /> */}
             <Toast />
           </ContextProviders>
         </Providers>

@@ -8,9 +8,10 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import XIcon from "@mui/icons-material/X";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import YouTubeIcon from "@mui/icons-material/YouTube";
+import InstagramIcon from "@mui/icons-material/Instagram";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-
+import { api, loadData } from "@/util";
 const MotionBox = motion.create(Box);
 const MotionGrid = motion.create(Grid);
 const footerItem = {
@@ -28,10 +29,32 @@ const footerItem = {
   },
 };
 
+const socialIcons = {
+  linkedin: LinkedInIcon,
+  facebook: FacebookIcon,
+  twitter: XIcon,
+  x: XIcon,
+  youtube: YouTubeIcon,
+  instagram: InstagramIcon,
+};
+
 function Footer({ sections = [] }) {
+  const [socials, setSocials] = React.useState([]);
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  React.useEffect(() => {
+    loadData(api.get("/api/v1/socials"), (resp) => setSocials(resp.data || []));
+  }, []);
+
+  const availableSocials = socials.filter(
+    (social) =>
+      social?.url &&
+      typeof social.url === "string" &&
+      social.url.trim() !== "" &&
+      socialIcons[social.platform?.toLowerCase()],
+  );
 
   // Handle scroll for home page sections
   const handleScroll = (ref) => {
@@ -616,175 +639,65 @@ linear-gradient(135deg,#061B4A 0%,#0A2E73 35%,#12489D 70%,#1B59B5 100%)
               width={{ xs: "240px", xl: "280px" }}
             />
           </MotionBox>
-          <Box display="flex" alignItems="center" gap={2} mt={1} pl={1}>
-            <MotionBox
-              whileHover={{
-                y: -6,
-                scale: 1.15,
-                rotate: 8,
-              }}
-              transition={{ duration: 0.25 }}
-            >
-              <IconButton
-                component="a"
-                href="https://in.linkedin.com/company/frequentresearch"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="linkedin"
-                sx={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: "50%",
-                  bgcolor: "rgba(255,255,255,.08)",
-                  color: "white",
-                  transition: ".35s",
-                  "&:hover": {
-                    bgcolor: "secondary.main",
-                    color: "#fff",
-                    transform: "translateY(-4px)",
-                    boxShadow: (theme) => `
-                0 0 18px ${theme.palette.secondary.main}88
-                `,
-                  },
-                  "&:focus-visible": {
-                    outline: "2px solid",
-                    outlineColor: "secondary.dark",
-                    outlineOffset: "2px",
-                  },
-                }}
-              >
-                <LinkedInIcon sx={{ fontSize: 36 }} />
-              </IconButton>
-            </MotionBox>
-            <MotionBox
-              whileHover={{
-                y: -6,
-                scale: 1.15,
-                rotate: 8,
-              }}
-              transition={{ duration: 0.25 }}
-            >
-              <IconButton
-                component="a"
-                target="_blank"
-                href="https://www.facebook.com/frequentrfs/"
-                rel="noopener noreferrer"
-                aria-label="facebook"
-                sx={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: "50%",
-                  bgcolor: "rgba(255,255,255,.08)",
-                  color: "white",
-                  transition: ".35s",
-                  "&:hover": {
-                    bgcolor: "secondary.main",
-                    color: "#fff",
-                    transform: "translateY(-4px)",
-                    boxShadow: (theme) => `
-                0 0 18px ${theme.palette.secondary.main}88
-                `,
-                  },
-                  "&:focus-visible": {
-                    outline: "2px solid",
-                    outlineColor: "secondary.dark",
-                    outlineOffset: "2px",
-                  },
-                }}
-              >
-                <FacebookIcon
-                  sx={{
-                    fontSize: "36px",
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={2}
+            mt={1}
+            pl={1}
+            flexWrap="wrap"
+          >
+            {availableSocials.map((social) => {
+              const platform = social.platform?.toLowerCase();
+              const Icon = socialIcons[platform];
+
+              return (
+                <MotionBox
+                  key={social._id || platform}
+                  whileHover={{
+                    y: -6,
+                    scale: 1.15,
+                    rotate: 8,
                   }}
-                />
-              </IconButton>
-            </MotionBox>
-            <MotionBox
-              whileHover={{
-                y: -6,
-                scale: 1.15,
-                rotate: 8,
-              }}
-              transition={{ duration: 0.25 }}
-            >
-              <IconButton
-                component="a"
-                target="_blank"
-                href="https://twitter.com/frequentrfs"
-                rel="noopener noreferrer"
-                aria-label="twitter"
-                sx={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: "50%",
-                  bgcolor: "rgba(255,255,255,.08)",
-                  color: "white",
-                  transition: ".35s",
-                  "&:hover": {
-                    bgcolor: "secondary.main",
-                    color: "#fff",
-                    transform: "translateY(-4px)",
-                    boxShadow: (theme) => `
-                0 0 18px ${theme.palette.secondary.main}88
-                `,
-                  },
-                  "&:focus-visible": {
-                    outline: "2px solid",
-                    outlineColor: "secondary.dark",
-                    outlineOffset: "2px",
-                  },
-                }}
-              >
-                <XIcon
-                  sx={{
-                    fontSize: "30px",
-                  }}
-                />
-              </IconButton>
-            </MotionBox>
-            <MotionBox
-              whileHover={{
-                y: -6,
-                scale: 1.15,
-                rotate: 8,
-              }}
-              transition={{ duration: 0.25 }}
-            >
-              <IconButton
-                component="a"
-                target="_blank"
-                href="https://www.youtube.com/channel/UCLxmn2kq4aACAHaL2eT6QIQ"
-                rel="noopener noreferrer"
-                aria-label="youtube"
-                sx={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: "50%",
-                  bgcolor: "rgba(255,255,255,.08)",
-                  color: "white",
-                  transition: ".35s",
-                  "&:hover": {
-                    bgcolor: "secondary.main",
-                    color: "#fff",
-                    transform: "translateY(-4px)",
-                    boxShadow: (theme) => `
-                0 0 18px ${theme.palette.secondary.main}88
-                `,
-                  },
-                  "&:focus-visible": {
-                    outline: "2px solid",
-                    outlineColor: "secondary.dark",
-                    outlineOffset: "2px",
-                  },
-                }}
-              >
-                <YouTubeIcon
-                  sx={{
-                    fontSize: "36px",
-                  }}
-                />
-              </IconButton>
-            </MotionBox>
+                  transition={{ duration: 0.25 }}
+                >
+                  <IconButton
+                    component="a"
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.platform}
+                    sx={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: "50%",
+                      bgcolor: "rgba(255,255,255,.08)",
+                      color: "white",
+                      transition: ".35s",
+                      "&:hover": {
+                        bgcolor: "secondary.main",
+                        color: "#fff",
+                        transform: "translateY(-4px)",
+                        boxShadow: (theme) =>
+                          `0 0 18px ${theme.palette.secondary.main}88`,
+                      },
+                      "&:focus-visible": {
+                        outline: "2px solid",
+                        outlineColor: "secondary.dark",
+                        outlineOffset: "2px",
+                      },
+                    }}
+                  >
+                    <Icon
+                      sx={{
+                        fontSize:
+                          platform === "twitter" || platform === "x" ? 30 : 36,
+                      }}
+                    />
+                  </IconButton>
+                </MotionBox>
+              );
+            })}
           </Box>
         </MotionGrid>
 

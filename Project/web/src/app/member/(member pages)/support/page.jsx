@@ -25,6 +25,8 @@ import { api, Page } from "@/util";
 import { useToast } from "@/hooks";
 
 import { motion, AnimatePresence } from "framer-motion";
+import {useTourActive} from "@/Context/tourStore";
+import mockSupportTickets from "@/mockData/support";
 
 const MotionBox = motion.create(Box);
 const MotionGrid = motion.create(Grid);
@@ -92,6 +94,13 @@ function TabPanel({ children, value, index }) {
 }
 export default function () {
   const [activeTab, setActiveTab] = React.useState(0); // set to 1 for Page to default to Create Ticket Tab
+
+  const tourActive = useTourActive();
+
+  React.useEffect(() => {
+    if (tourActive) setActiveTab(1);
+  }, [tourActive]);
+
   const tabs = [
     {
       label: "F.A.Q.",
@@ -102,6 +111,7 @@ export default function () {
       render: <ContactSupport />,
     },
   ];
+  
 
   return (
     <Grid
@@ -271,11 +281,18 @@ function TicketList({ setCreateTicket, setActiveTicket, reload }) {
   const [ticketStatus, setTicketStatus] = React.useState("all");
 
   const [isLoading, setIsLoading] = React.useState(true);
+  const tourActive = useTourActive();
 
   React.useEffect(() => {
     if (!user) return;
     const fetchData = async () => {
       setIsLoading(true);
+      if(tourActive) {
+        setData(mockSupportTickets.data);
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const resp = await api.post(`/api/v1/support`, {
           "issueRaisedBy.email": user.mail,
@@ -290,13 +307,18 @@ function TicketList({ setCreateTicket, setActiveTicket, reload }) {
     };
 
     fetchData();
-  }, [user, dateRange, reload]);
+  }, [user, dateRange, reload,tourActive]);
 
   React.useEffect(() => {
+    if(tourActive) {
+      setData(mockSupportTickets.data);
+      setIsLoading(false);
+      return;
+    }
     if (!isLoading) {
       setActiveTicket(Array.isArray(data) && data.length > 0);
     }
-  }, [data, isLoading, setActiveTicket]);
+  }, [data, isLoading, setActiveTicket,tourActive]);
 
   const columns = [
     {
@@ -370,6 +392,7 @@ function TicketList({ setCreateTicket, setActiveTicket, reload }) {
       py={2}
       justifyContent="center"
       sx={{ border: `1px solid #e0e0e0` }}
+      data-tour="support-tickets-table"
     >
       <Datatable
         isLoading={isLoading}

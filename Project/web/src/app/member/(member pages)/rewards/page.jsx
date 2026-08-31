@@ -6,71 +6,109 @@ import { useMember } from "@/Context";
 import { Datatable } from "@/components";
 import { DateRangeSelector } from "@/components/Form";
 import { motion } from "framer-motion";
+import { useTourActive } from "@/Context/tourStore";
+import mockRewards from "@/mockData/rewards";
 
-import { api, Page } from "@/util";
+import { api, Page, loadData } from "@/util";
 import PopUp from "@/componentsMHO/PopUp";
 
 export default function page() {
   const [user] = [useMember()];
   const [data, setData] = React.useState([]);
   const [dateRange, setDateRange] = React.useState([]);
+  // True only while Joyride is actively showing the Rewards tour step on
+  // this route (see hooks/useOnboardingTour.js, which broadcasts this via
+  // tourStore). Drives which data source the table below reads from.
+  const tourActive = useTourActive();
 
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     if (!user) return;
+    setIsLoading(true);
 
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        let filters = {};
+    if (tourActive) {
+      setData(mockRewards.data);
+      setIsLoading(false);
+      return;
+    }
 
-        if (Array.isArray(dateRange) && dateRange.length === 2) {
-          filters.dateRange = dateRange;
-        }
-        const resp = await api.post(`/api/v1/rewards`, filters);
-        setData(resp.data);
-      } catch (error) {
-        console.error("Failed to fetch responses:", error);
-      } finally {
-        setIsLoading(false);
-      }
+    let filters = {
+      status: {
+        $nin: ["invited"],
+      },
     };
 
-    fetchData();
-  }, [user, dateRange]);
-  // return <pre>{JSON.stringify(data,null,2)}</pre>
+    if (Array.isArray(dateRange) && dateRange.length === 2) {
+      filters.dateRange = dateRange;
+    }
+
+    loadData(
+      api.post(`/api/v1/response`, filters),
+      (resp) => {
+        setData(resp.data);
+      },
+      () => {
+        setIsLoading(false);
+      }
+    );
+  }, [user, dateRange, tourActive]);
+
+  // return <pre>{JSON.stringify(data, null, 2)}</pre>;
+
   const columns = [
     {
-      id: "createdAt",
-      label: "date",
-      render: (info) => new Date(info.createdAt).showDate(),
+      id: "surveyname",
+      label: "Survey Name",
+      render: (info) => info?.survey?.name,
       feature: ["searchable", "sortable", "lockable"],
     },
     {
-      id: "activity",
-      label: "activity",
-      data: "activity",
-      feature: ["searchable", "sortable", "lockable"],
+      id: "start time",
+      label: "Start time",
+      render: (info) => new Date(info.timeline.start).toLocaleString(),
+      feature: ["sortable", "lockable"],
     },
     {
-      id: "reward",
-      label: "reward",
-      render: (info) => `${info.reward} Points`,
-      feature: ["searchable", "sortable", "lockable"],
+      id: "loi",
+      label: "Length of Interview",
+      width: 220,
+      render: (info) =>
+        (new Date(info.updatedAt) - new Date(info.timeline.start))?.toTime(),
+      feature: ["sortable", "lockable"],
     },
     {
       id: "status",
-      label: "status",
-      data: "status",
+      label: "Status",
+      render: (info) =>
+        info.source === "internal" && info.status === "dropout" ? (
+          <Page.Link href={`/survey?name=${info.survey.slug}`}>
+            Continue
+          </Page.Link>
+        ) : (
+          <Page.Text
+            sx={{
+              fontSize: 13,
+              textTransform: "capitalize",
+              color: info.status === "dropout" ? "red" : "black",
+            }}
+          >
+            {info.status}
+          </Page.Text>
+        ),
       feature: ["filterable", "sortable", "lockable"],
     },
     {
-      id: "balance",
-      label: "balance",
-      data: "balance",
+      id: "rewards",
+      label: "Rewards",
+      render: (info) => (
+        <span>
+          {info.status === "complete" ? info.points : 0} Points
+        </span>
+      ),
     },
   ];
+
   return (
     <Grid
       size={12}
@@ -80,7 +118,9 @@ export default function page() {
       sx={{ border: `1px solid #e0e0e0` }}
     >
       {/* <RewardStatus /> */}
+
       <motion.div
+        data-tour="reward-history-table"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
@@ -101,8 +141,9 @@ export default function page() {
                 onUpdate={(e) => {
                   setDateRange(
                     e.map(
-                      (d) => new Date(d.toDate()).toISOString().split("T")[0],
-                    ),
+                      (d) =>
+                        new Date(d.toDate()).toISOString().split("T")[0]
+                    )
                   );
                 }}
               />
@@ -138,14 +179,19 @@ function RewardStatus() {
   const [points, setPoints] = React.useState(0);
   const [conversionRate, setConversionRate] = React.useState(1);
   const [threshold, setThreshold] = React.useState(1500);
+
   React.useEffect(() => {
     setLoading(true);
+
     api
       .get(`/api/v1/me/points`)
       .then((resp) => {
-        if (resp.status === "error") router.replace("/survey?name=welcome");
-        // if (!resp.data) return useToast(resp);
+        if (resp.status === "error") {
+          router.replace("/survey?name=welcome");
+        }
+
         let data = resp.data;
+
         setPoints(data.totalPoints);
         setThreshold(data.threshold);
         setConversionRate(data.conversionRate);
@@ -155,7 +201,9 @@ function RewardStatus() {
         setLoading(false);
       });
   }, []);
+
   if (loading) return <></>;
+
   return (
     <>
       <Grid
@@ -183,6 +231,7 @@ function RewardStatus() {
           <Typography fontSize={{ xs: 14, md: 13, xl: 14 }}>
             Reward Points
           </Typography>
+
           <Typography
             sx={{
               fontWeight: "600",
@@ -196,6 +245,7 @@ function RewardStatus() {
             {(Number(points) * Number(conversionRate)).toMoney("USD")})
           </Typography>
         </Grid>
+
         <Grid
           size={{ xs: 12, md: 6 }}
           container
@@ -215,7 +265,7 @@ function RewardStatus() {
               fontWeight: 600,
               borderRadius: 2,
             }}
-            onClick={(e) => {
+            onClick={() => {
               setOpen(true);
             }}
           >
@@ -226,7 +276,10 @@ function RewardStatus() {
         <Grid size={12} mt={1}>
           <LinearProgress
             variant="determinate"
-            value={Math.min(Math.round((points / threshold) * 100), 100)} // value is percentage
+            value={Math.min(
+              Math.round((points / threshold) * 100),
+              100
+            )}
             sx={{
               height: 20,
               borderRadius: 5,
@@ -237,6 +290,7 @@ function RewardStatus() {
               },
             }}
           />
+
           {threshold > points && (
             <Typography fontSize="13px" mt={1} ml={1}>
               Get <b>{threshold - points}</b> more points to redeem
@@ -249,24 +303,16 @@ function RewardStatus() {
           container
           justifyContent={{ xs: "center", md: "space-between" }}
           mt={2}
-          // todo: Hiding till management decides what to do with this section
         >
-          <Typography
-            fontSize="15px"
-            // sx={{ bgcolor: "#fff", borderRadius: 3, px: 3, py: 1 }}
-          >
+          <Typography fontSize="15px">
             Total Surveys: <b>20</b>
           </Typography>
-          <Typography
-            fontSize="15px"
-            // sx={{ bgcolor: "#fff", borderRadius: 3, px: 3, py: 1 }}
-          >
+
+          <Typography fontSize="15px">
             Earnings: <b>$20</b>
           </Typography>
-          <Typography
-            fontSize="15px"
-            // sx={{ bgcolor: "#fff", borderRadius: 3, px: 3, py: 1 }}
-          >
+
+          <Typography fontSize="15px">
             Pending: <b>$20</b>
           </Typography>
         </Grid>
@@ -285,6 +331,7 @@ function RewardStatus() {
 function RedeemForm({ open, onClose }) {
   const [points, setPoints] = React.useState(0);
   const [method, setMethod] = React.useState("");
+
   return (
     <PopUp open={open} onClose={onClose} hideTitle={true} maxWidth={"sm"}>
       <Grid
@@ -301,9 +348,10 @@ function RedeemForm({ open, onClose }) {
         </Typography>
 
         <Typography fontSize={14} textAlign="center" mb={3}>
-          You have <b>1200</b> points available for redemption. Please enter the
-          number of points you wish to redeem below.
+          You have <b>1200</b> points available for redemption. Please enter
+          the number of points you wish to redeem below.
         </Typography>
+
         <Page.InputTextField
           label="Points to Redeem"
           value={points}
@@ -336,6 +384,7 @@ function RedeemForm({ open, onClose }) {
           >
             Cancel
           </Button>
+
           <Button
             color="secondary"
             variant="contained"

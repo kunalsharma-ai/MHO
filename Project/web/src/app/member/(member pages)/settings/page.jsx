@@ -103,6 +103,7 @@ function ChangePassword() {
   });
   return (
     <Grid
+    data-tour="settings-password"
       size={12}
       container
       spacing={2}
@@ -238,7 +239,7 @@ function SurveyNotification() {
   }, [selected, initialSelected]);
 
   return (
-    <Grid size={12} container spacing={2}>
+    <Grid data-tour="settings-notifications" size={12} container spacing={2}>
       <Box
         width="100%"
         display={"flex"}
@@ -458,7 +459,7 @@ function ChangeEmail() {
 
 function TermsAndConditions() {
   return (
-    <Grid size={12} container spacing={2} my={2}>
+    <Grid data-tour="settings-terms" size={12} container spacing={2} my={2}>
       <Box
         width="100%"
         display={"flex"}
