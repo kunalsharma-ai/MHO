@@ -108,6 +108,7 @@ export default function SignUp({
   const [query, member] = [useQuery(), useMember()];
   const [isInvalidUser, setIsInvalidUser] = React.useState(false);
   const [btnDisabled, setBtnDisabled] = React.useState(true);
+  const [salutationChange, setSalutationchange] = React.useState(false);
 
   const RESEND_SECONDS = 60;
 
@@ -239,9 +240,18 @@ export default function SignUp({
       }
     });
   }, [telemetry]);
-  React.useEffect(() => {
+ React.useEffect(() => {
     form.setValue("category", userType);
   }, [userType]);
+
+  const genderValue = form.watch("gender");     
+  React.useEffect(() => {                          
+    if (salutationChange) return;                  
+    const map = { Male: "Mr.", Female: "Ms.", Other: "Mx." };   
+    if (genderValue && map[genderValue]) {         
+      form.setValue("name.salutation", map[genderValue]);   
+    }                                               
+  }, [genderValue, salutationChange]); 
   let minDOB = new Date();
   minDOB.setFullYear(minDOB.getFullYear() - 120);
   let maxDOB = new Date();
@@ -664,17 +674,18 @@ export default function SignUp({
 
                       <Grid size={{ xs: 12, md: 3 }}>
                         <Form.Select
-                          {...register("name.salutation")}
-                          control={control}
-                          options={[
-                            { value: "Mr.", label: "Mr." },
-                            { value: "Ms.", label: "Ms." },
-                            { value: "Mrs.", label: "Mrs." },
-                            { value: "Dr.", label: "Dr." },
-                            { value: "Prof.", label: "Prof." },
-                            { value: "Mx. ", label: "Mx." },
-                          ]}
-                          labelText="Sal."
+  {...register("name.salutation")}
+  control={control}
+  onChange={() => setSalutationchange(true)}   
+  options={[
+    { value: "Mr.", label: "Mr." },
+    { value: "Ms.", label: "Ms." },
+    { value: "Mrs.", label: "Mrs." },
+    { value: "Dr.", label: "Dr." },
+    { value: "Prof.", label: "Prof." },
+    { value: "Mx.", label: "Mx." },   
+  ]}
+  labelText="Sal."
                           sx={{
                             "& .MuiOutlinedInput-root": {
                               height: 54,
