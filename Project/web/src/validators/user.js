@@ -26,6 +26,7 @@ const email = {
 
 const user = {
   name: {
+    salutation: { required: "Salutation is Required" },
     first: {
       required: "First Name is Required",
       pattern: {
@@ -54,7 +55,7 @@ const user = {
     },
   },
   phone: {
-    required: "Phone Number is Required",
+    //required: "Phone Number is Required",
   },
   dob: {
     required: "Date of Birth is Required",

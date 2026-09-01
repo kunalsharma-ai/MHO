@@ -92,6 +92,14 @@ const socials = [
     icon: <X sx={{ color: "black", fontSize: "22px" }} />,
   },
 ];
+const SALUTATION_OPTIONS = [
+  { label: "Mr.", value: "Mr." },
+  { label: "Mrs.", value: "Mrs." },
+  { label: "Ms.", value: "Ms." },
+  { label: "Mx.", value: "Mx." },
+  { label: "Dr.", value: "Dr." },
+  { label: "Prof.", value: "Prof." },
+];
 
 export default function SignUp({
   open,
@@ -114,6 +122,11 @@ export default function SignUp({
 
   const [cooldown, setCooldown] = React.useState(0);
 
+  const GENDER_SALUTATION_MAP = {
+  Male: ["Mr.", "Dr.", "Prof."],
+  Female: ["Ms.", "Mrs.", "Dr.", "Prof."],
+  Other: ["Mx.", "Dr.", "Prof."],
+};
   React.useEffect(() => {
     if (cooldown <= 0) return;
 
@@ -150,7 +163,7 @@ export default function SignUp({
     defaultValues: {
       category: "",
       name: {
-        salutation: "Mr.",
+        salutation: "",
         first: "",
         last: "",
       },
@@ -173,6 +186,7 @@ export default function SignUp({
     register,
     handleSubmit,
     reset,
+    setFocus,
     formState: { errors, isDirty },
   } = form;
 
@@ -241,17 +255,31 @@ export default function SignUp({
     });
   }, [telemetry]);
  React.useEffect(() => {
-    form.setValue("category", userType);
-  }, [userType]);
+  form.setValue("category", userType);
+}, [userType]);
 
-  const genderValue = form.watch("gender");     
-  React.useEffect(() => {                          
-    if (salutationChange) return;                  
-    const map = { Male: "Mr.", Female: "Ms.", Other: "Mx." };   
-    if (genderValue && map[genderValue]) {         
-      form.setValue("name.salutation", map[genderValue]);   
-    }                                               
-  }, [genderValue, salutationChange]); 
+const genderValue = form.watch("gender");
+const salutation = form.watch("name.salutation");
+
+React.useEffect(() => {
+  if (!genderValue) return;
+ 
+  const validSalutations = GENDER_SALUTATION_MAP[genderValue] || [];
+ 
+  if (!salutation) {
+    setFocus("name.salutation");
+    return;
+  }
+  const selectedSalutation = SALUTATION_OPTIONS.find(
+    (option) => option.value === salutation
+  );
+ 
+  if (!selectedSalutation?.genderBased) return;
+ 
+  if (!validSalutations.includes(salutation)) {
+    setFocus("name.salutation");
+  }
+}, [genderValue, salutation, setFocus]);
   let minDOB = new Date();
   minDOB.setFullYear(minDOB.getFullYear() - 120);
   let maxDOB = new Date();
@@ -294,7 +322,7 @@ export default function SignUp({
       const timer = setTimeout(() => {
         onClose();
         router.replace("/");
-      }, 60000);
+      }, 30000);
 
       return () => clearTimeout(timer);
     }
@@ -673,19 +701,20 @@ export default function SignUp({
                       )}
 
                       <Grid size={{ xs: 12, md: 3 }}>
-                        <Form.Select
+                    <Form.Select
+                   
   {...register("name.salutation")}
   control={control}
-  onChange={() => setSalutationchange(true)}   
-  options={[
-    { value: "Mr.", label: "Mr." },
-    { value: "Ms.", label: "Ms." },
-    { value: "Mrs.", label: "Mrs." },
-    { value: "Dr.", label: "Dr." },
-    { value: "Prof.", label: "Prof." },
-    { value: "Mx.", label: "Mx." },   
-  ]}
+  options={
+    genderValue
+      ? SALUTATION_OPTIONS.filter((option) =>
+          GENDER_SALUTATION_MAP[genderValue]?.includes(option.value)
+        )
+      : SALUTATION_OPTIONS
+  }
   labelText="Sal."
+  errors={errors?.name?.salutation}
+  validations={user.name.salutation}
                           sx={{
                             "& .MuiOutlinedInput-root": {
                               height: 54,
@@ -799,6 +828,7 @@ export default function SignUp({
                           control={control}
                           labelText="Phone"
                           // onlyCountries={ [country] }
+                          
                           selectedCountry={country}
                           disableDropdown={Boolean(country)}
                           validations={user.phone}
@@ -1373,7 +1403,7 @@ export default function SignUp({
                       color: "text.secondary",
                     }}
                   >
-                    This window will automatically close in 60 seconds.
+                    This window will automatically close in 30 seconds.
                   </Typography>
                 </Box>
               </Grid>
