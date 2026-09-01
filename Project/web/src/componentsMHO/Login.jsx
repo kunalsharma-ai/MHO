@@ -570,7 +570,7 @@ function LoginCard({ onClose, setCardType, setOpenSignUp }) {
           <Box
             sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 2 }}
           >
-            <Box
+            {/* <Box
               sx={{
                 px: 2,
                 py: 1.5,
@@ -649,7 +649,7 @@ function LoginCard({ onClose, setCardType, setOpenSignUp }) {
                   ))}
                 </ToggleButtonGroup>
               </Box>
-            </Box>
+            </Box> */}
             <Box
               sx={{
                 p: 3,
