@@ -22,6 +22,7 @@ import LoadingOverlay from "@/componentsMHO/LoadingOverlay";
 import { useMember, useQuery } from "@/Context";
 import FeedbackForm from "@/componentsMHO/FeedbackForm";
 import { Popup } from "@/components/Popup";
+import RecentActivityPopup from "@/componentsMHO/RecentActivityPopup";
 
 export default function Home() {
   const query = useQuery();
@@ -151,6 +152,7 @@ export default function Home() {
             <KeyboardArrowUpIcon sx={{ fontSize: "30px" }} />
           </Fab>
         </Zoom>
+        <RecentActivityPopup ToTopButtonVisible={visible} />
         <SignUp
           userType={userType}
           setUserType={setUserType}

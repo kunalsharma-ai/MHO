@@ -119,6 +119,7 @@ export default function () {
       />
       <Grid container size={12} justifyContent="center" mt={2}>
         <Grid
+          data-tour="profiles-survey-form"
           size={{ xs: 11, md: 10 }}
           sx={{
             bgcolor: (theme) => theme.palette.cardbg.main,
@@ -219,6 +220,7 @@ function ProfileTabs({ profiles, query, onChange }) {
   if ([undefined, null].includes(activeTab)) return <></>;
   return (
     <Tabs
+    data-tour="profiles-tabs"
       value={activeTab}
       onChange={(_, v) => {
         onChange(tabs[v].link);

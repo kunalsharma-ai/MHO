@@ -474,7 +474,7 @@ function StatusMessage({ type, points, link, starRatingChanged }) {
 }
 export default page;
 
-function StarRating({ onChange }) {
+function StarRating({ onChange, }) {
   const [value, setValue] = React.useState(3.5);
   const [hover, setHover] = React.useState(-1);
 

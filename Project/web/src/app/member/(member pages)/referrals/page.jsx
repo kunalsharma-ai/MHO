@@ -29,6 +29,8 @@ import { Datatable } from "@/components";
 import { useMember } from "@/Context";
 import { useToast } from "@/hooks";
 import { motion, AnimatePresence } from "framer-motion";
+import {useTourActive} from "@/Context/tourStore";
+import mockReferrals from "@/mockData/referral";
 
 const MotionGrid = motion.create(Grid);
 
@@ -67,21 +69,34 @@ export default function page() {
     alreadyRegistered: [],
     invited: [],
   });
+  const tourActive = useTourActive();
 
-  React.useEffect(() => {
-    if (!window) return;
-    if (!user) return;
-    setReferralLink(`${window.location.origin}/?ref=${user._id}&signup`);
-    api
-      .post(`/api/v1/user`, {
-        referredBy: user._id,
-      })
-      .then((resp) => {
-        if ("data" in resp) {
-          setReferrals(resp.data);
-        }
-      });
-  }, [user]);
+React.useEffect(() => {
+  if (!window) return;
+  if (!user) return;
+  setReferralLink(`${window.location.origin}/?ref=${user._id}&signup`);
+
+  let cancelled = false;
+
+  if (tourActive) {
+    setReferrals(mockReferrals.data);
+    return;
+  }
+
+  api
+    .post(`/api/v1/user`, { referredBy: user._id })
+    .then((resp) => {
+      if (cancelled) return;   // <- ye check zaroori hai
+      if ("data" in resp) {
+        setReferrals(resp.data);
+      }
+    });
+
+  return () => {
+    cancelled = true;  // <- jab effect dobara chale (tourActive badle), purana call cancel maana jaega
+  };
+}, [user, tourActive]);
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(referralLink);
@@ -306,7 +321,7 @@ export default function page() {
 
         <InvitedEmails sentInvites={sentInvites} />
       </MotionGrid>
-      <MotionGrid variants={fadeUp} size={12}>
+      <MotionGrid variants={fadeUp} size={12} data-tour="referrals-history-table">
         <Datatable
           isLoading={false}
           pagination={[10, 20, 50, 100]}

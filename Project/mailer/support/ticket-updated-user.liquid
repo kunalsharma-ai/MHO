@@ -1,67 +1,387 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Support Ticket Updated</title>
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #f7f7f7;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            background-color: #ffffff;
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 32px 24px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-        }
-        .header {
-            border-bottom: 1px solid #e0e0e0;
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-        }
-        .ticket-id {
-            background: #e3f2fd;
-            color: #1565c0;
-            display: inline-block;
-            padding: 6px 14px;
-            border-radius: 4px;
-            font-weight: bold;
-            margin: 12px 0;
-            font-size: 1.1em;
-            letter-spacing: 1px;
-        }
-        .footer {
-            margin-top: 32px;
-            color: #888;
-            font-size: 0.95em;
-            border-top: 1px solid #e0e0e0;
-            padding-top: 16px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support Ticket Updated</title>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h2>Support Ticket [{{reply.ticketNo}}] Updated</h2>
-        </div>
-        {{reply.message}}
-        <div>
-            <span class="ticket-id">Ticket ID: {{reply.ticketNo}}</span>
-        </div>
-        <p>
-            In case you have any additional details to share, <strong>please do not reply to this email</strong>. To add more information or respond, please use the Support Ticket system only.
-        </p>
-        <p>
-            Thank you for your patience and cooperation.
-        </p>
-        <div class="footer">
-            Best regards,<br>
-            Support Team
-        </div>
-    </div>
+
+<body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
+
+<table
+  width="100%"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  bgcolor="#f4f7fb"
+  style="margin:0;padding:0;background:#f4f7fb;"
+>
+<tr>
+<td align="center" style="padding:35px 15px;">
+
+<table
+  width="680"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  bgcolor="#ffffff"
+  style="
+    width:680px;
+    max-width:680px;
+    background:#ffffff;
+    border-radius:14px;
+    overflow:hidden;
+  "
+>
+
+<!-- TOP BLUE BAR -->
+<tr>
+<td height="8" bgcolor="#0D5CC7" style="background:#0D5CC7;"></td>
+</tr>
+
+<!-- LOGO -->
+<tr>
+<td align="center" style="padding:30px 25px 25px;background:#ffffff;">
+<img
+  src="https://myhealthopinions.com/images/logo/My-Health-Opinions.png"
+  alt="My Health Opinions"
+  width="320"
+  style="
+    display:block;
+    width:320px;
+    max-width:90%;
+    height:auto;
+    border:0;
+  "
+/>
+</td>
+</tr>
+
+<!-- ORANGE ACCENT -->
+<tr>
+<td height="3" bgcolor="#FF7A00" style="background:#FF7A00;"></td>
+</tr>
+
+<!-- HERO -->
+<tr>
+<td align="center" style="padding:35px 40px 10px;">
+
+
+<h1
+  style="
+    margin:22px 0 10px;
+    font-size:30px;
+    line-height:38px;
+    font-weight:700;
+    color:#0D5CC7;
+  "
+>
+Support Ticket Updated
+</h1>
+
+<p
+  style="
+    margin:0;
+    font-size:17px;
+    line-height:28px;
+    color:#5d6875;
+  "
+>
+There has been an update to your support request.
+</p>
+
+</td>
+</tr>
+
+<!-- MESSAGE -->
+<tr>
+<td style="padding:30px 55px 10px;">
+
+<p
+  style="
+    margin:0 0 18px;
+    font-size:21px;
+    line-height:30px;
+    font-weight:600;
+    color:#25313d;
+  "
+>
+Hello {{user.name}},
+</p>
+
+<p
+  style="
+    margin:0;
+    font-size:16px;
+    line-height:28px;
+    color:#4b5865;
+  "
+>
+Your support ticket has been updated by our support team. Please find
+the latest response below.
+</p>
+
+</td>
+</tr>
+
+<!-- RESPONSE CARD -->
+<tr>
+<td style="padding:25px 55px 10px;">
+
+<table
+  width="100%"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  style="
+    border:1px solid #cfe0f5;
+    border-radius:12px;
+    background:#EAF3FF;
+  "
+>
+<tr>
+<td style="padding:25px 28px;">
+
+<p
+  style="
+    margin:0 0 15px;
+    font-size:14px;
+    font-weight:bold;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#0D5CC7;
+  "
+>
+Latest Response
+</p>
+
+<table
+  width="100%"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  style="
+    background:#ffffff;
+    border-left:4px solid #0D5CC7;
+    border-radius:6px;
+  "
+>
+<tr>
+<td
+  style="
+    padding:18px 20px;
+    font-size:16px;
+    line-height:28px;
+    color:#4b5865;
+  "
+>
+{{reply.message}}
+</td>
+</tr>
+</table>
+
+</td>
+</tr>
+</table>
+
+</td>
+</tr>
+
+<!-- TICKET ID -->
+<tr>
+<td align="center" style="padding:25px 55px 20px;">
+
+<p
+  style="
+    margin:0 0 10px;
+    font-size:14px;
+    color:#657383;
+  "
+>
+Ticket ID
+</p>
+
+<div
+  style="
+    display:inline-block;
+    background:#EAF3FF;
+    border:1px solid #cfe0f5;
+    border-radius:8px;
+    padding:10px 20px;
+    font-size:17px;
+    line-height:24px;
+    font-weight:700;
+    letter-spacing:1px;
+    color:#0D5CC7;
+  "
+>
+{{reply.ticketNo}}
+</div>
+
+</td>
+</tr>
+
+<!-- SUPPORT NOTICE -->
+<tr>
+<td style="padding:10px 55px 35px;">
+
+<table
+  width="100%"
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  style="
+    border:1px solid #ffd199;
+    border-radius:10px;
+    background:#fff8ef;
+  "
+>
+<tr>
+
+<td
+  width="70"
+  align="center"
+  style="padding:22px 10px 22px 20px;"
+>
+
+<table
+  border="0"
+  cellspacing="0"
+  cellpadding="0"
+  width="48"
+  height="48"
+  style="
+    width:48px;
+    height:48px;
+    background:#FFD199;
+    border-radius:50%;
+  "
+>
+<tr>
+<td align="center" valign="middle">
+
+<span
+  style="
+    font-size:22px;
+    color:#E66400;
+    font-weight:bold;
+  "
+>
+!
+</span>
+
+</td>
+</tr>
+</table>
+
+</td>
+
+<td style="padding:22px 20px 22px 10px;">
+
+<p
+  style="
+    margin:0 0 7px;
+    font-size:16px;
+    font-weight:bold;
+    color:#25313d;
+  "
+>
+Need to add more information?
+</p>
+
+<p
+  style="
+    margin:0;
+    font-size:14px;
+    line-height:23px;
+    color:#5f6975;
+  "
+>
+Please do not reply to this email. To provide additional details or
+respond to the support team, please use the Support Ticket system.
+</p>
+
+</td>
+
+</tr>
+</table>
+
+</td>
+</tr>
+
+<!-- CLOSING -->
+<tr>
+<td align="center" style="padding:0 55px 15px;">
+
+<p
+  style="
+    margin:0;
+    font-size:15px;
+    line-height:25px;
+    color:#66717e;
+  "
+>
+Thank you for your patience and cooperation.
+</p>
+
+</td>
+</tr>
+
+<!-- DIVIDER -->
+<tr>
+<td style="padding:0 55px;">
+<div style="height:1px;background:#e5e9ee;"></div>
+</td>
+</tr>
+
+<!-- SUPPORT -->
+<tr>
+<td align="center" style="padding:28px 55px 10px;">
+
+<p
+  style="
+    margin:0;
+    font-size:15px;
+    line-height:25px;
+    color:#66717e;
+  "
+>
+Need help? Our support team is here to assist you.
+</p>
+
+<p style="margin:7px 0 0;font-size:15px;">
+<a
+  href="mailto:support@myhealthopinions.com"
+  style="
+    color:#0D5CC7;
+    text-decoration:none;
+    font-weight:bold;
+  "
+>
+support@myhealthopinions.com
+</a>
+</p>
+
+</td>
+</tr>
+
+<!-- FOOTER -->
+<tr>
+<td style="padding:20px 35px 35px;">
+{% include "mailer/footer.liquid" %}
+</td>
+</tr>
+
+<!-- BOTTOM ORANGE BAR -->
+<tr>
+<td height="8" bgcolor="#FF7A00" style="background:#FF7A00;"></td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
 </body>
 </html>

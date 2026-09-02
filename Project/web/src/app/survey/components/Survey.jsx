@@ -10,6 +10,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { redirect } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import CustomStepIcon from "./CustomStepIcon";
@@ -84,8 +85,13 @@ export default function Survey({
     console.log(data);
     saveOrUpdateAnswers.mutate(data);
   };
+  
   async function onNext() {
-    console.log(survey);
+    let { link } = survey;
+    if (link && link != "") {
+      link = link.replace(/\$uid/g, survey.respID);
+      return redirect(link);
+    }
     if ([null, undefined].includes(currentPage)) return setCurrentPage(0);
     const isValid = await form.trigger(pages[currentPage]);
     if (!isValid)
@@ -120,7 +126,6 @@ export default function Survey({
         return;
       }
     }
-
     setCurrentPage(currentPage + 1);
   }
 

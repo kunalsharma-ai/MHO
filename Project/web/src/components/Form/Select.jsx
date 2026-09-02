@@ -502,7 +502,10 @@ export default function Select({
                               <span>{option.label}</span>
                             </div>
                           ) : (
-                            option.label
+                            <div className={attr.className}>
+                              {" "}
+                              {option.label}
+                            </div>
                           )}
                         </li>
                       )}

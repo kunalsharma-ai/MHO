@@ -8,10 +8,11 @@ import {
   Grid,
   Typography,
   CircularProgress,
+  Rating,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
-import OnboardingTour from "../../components/OnboardingTour";
+//import OnboardingTour from "../../components/OnboardingTour";
 
 import { useMember, useQuery } from "@/Context";
 import { Datatable } from "@/components";
@@ -26,6 +27,7 @@ import {
   CheckCircle as CheckCircleIcon,
   Cancel as CancelIcon,
   Stars as StarsIcon,
+  Star as StarIcon,
   AttachMoney as AttachMoneyIcon,
   Payments as PaymentsIcon,
 } from "@mui/icons-material";
@@ -137,9 +139,12 @@ export default function page() {
         gap: 2.5,
       }}
     >
-      <OnboardingTour greeting={greeting} userName={member?.name.first}/> 
-
-      <MotionBox variants={fadeUp} initial="hidden" animate="visible" data-tour="greeting">
+      <MotionBox
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
+        data-tour="greeting"
+      >
         <Box
           sx={{
             my: 1.5,
@@ -211,31 +216,31 @@ export default function page() {
         <SurveyPoints onUpdate={onPointsUpdate} />
       </Grid>
       <Grid size={12} data-tour="stats">
-          <Stats threshold={threshold} conversionRate={conversionRate} />
+        <Stats threshold={threshold} conversionRate={conversionRate} />
       </Grid>
-     <Grid size={12} data-tour="surveys">
-         <Surveys />
+      <Grid size={12} data-tour="surveys">
+        <Surveys />
       </Grid>
-     <MotionGrid
-      initial={{ opacity: 0, y: 35 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      size={12}
-      px={{ xs: 2, md: 3 }}
-      py={2}
-      mt={1}
-      justifyContent="center"
-      data-tour="survey-history"
-      sx={{
-      borderRadius: "16px",
-      background: "#ffffff",
-      border: "1px solid rgba(226, 232, 240, 0.8)",
-      boxShadow: "0 4px 25px rgba(0, 0, 0, 0.02)",
-  }}
->
-  <SurveyHistory />
-</MotionGrid>
+      <MotionGrid
+        initial={{ opacity: 0, y: 35 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        size={12}
+        px={{ xs: 2, md: 3 }}
+        py={2}
+        mt={1}
+        justifyContent="center"
+        data-tour="survey-history"
+        sx={{
+          borderRadius: "16px",
+          background: "#ffffff",
+          border: "1px solid rgba(226, 232, 240, 0.8)",
+          boxShadow: "0 4px 25px rgba(0, 0, 0, 0.02)",
+        }}
+      >
+        <SurveyHistory />
+      </MotionGrid>
     </Grid>
   );
 }
@@ -932,6 +937,26 @@ export function SurveyHistory() {
           </Box>
         );
       },
+    },
+    {
+      id: "surveyFeedback",
+      label: "Survey Feedback",
+      render: (info) => (
+        <Page.Box
+          title={`${info.rating} Stars`}
+          sx={{ width: 200, display: "flex", alignItems: "center" }}
+        >
+          <Rating
+            name="survey-feedback"
+            value={info.rating}
+            precision={0.5}
+            readOnly
+            emptyIcon={
+              <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
+            }
+          />
+        </Page.Box>
+      ),
     },
   ];
 

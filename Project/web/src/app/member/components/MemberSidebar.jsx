@@ -14,6 +14,8 @@ import SurveyPointsSidebar from "./SurveyPointsSidebar";
 import CurrentUser from "./CurrentUser";
 import { Page } from "@/util";
 import { motion } from "framer-motion";
+import OnboardingTour from "./OnboardingTour";
+import { useMember } from "@/Context"
 
 const MotionBox = motion.create(Box);
 const sidebarVariants = {
@@ -78,9 +80,12 @@ export default function MemberSidebar({ children }) {
 
   const theme = useTheme();
   const isLgUp = useMediaQuery(theme.breakpoints.up("lg"));
-
+  const member = useMember();
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
   return (
-    <Box display="flex">
+   <Box display="flex">
+      <OnboardingTour member ={member} greeting={greeting} userName={member?.name?.first} />
       {/* Sidebar */}
       <MotionBox
         variants={sidebarVariants}

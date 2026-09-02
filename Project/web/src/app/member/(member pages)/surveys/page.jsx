@@ -30,6 +30,8 @@ import { loadData, api } from "@/util";
 import { useQuery } from "@/Context";
 import { SurveyPoints } from "../../components";
 import { SurveyHistory } from "../dashboard/page";
+import {useTourActive} from "@/Context/tourStore";
+import mockSurveys from "@/mockData/surveys";
 
 const permittedStatus = ["invited", "dropout"];
 
@@ -82,8 +84,14 @@ export default function SurveyDashboard() {
   const [query] = [useQuery()];
   const [surveys, setSurveys] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const tourActive = useTourActive();
   React.useEffect(() => {
     setIsLoading(true);
+    if(tourActive){
+      
+      setIsLoading(false);
+      return;
+    }
     loadData(
       api.post(`/api/v1/me/survey`, { source: query.source, status: "active" }),
       (resp) => {
@@ -91,7 +99,7 @@ export default function SurveyDashboard() {
       },
       () => setIsLoading(false),
     );
-  }, [query]);
+  }, [query,tourActive]);
 
   // const dummySurveys = [
   //   {
@@ -167,8 +175,8 @@ export default function SurveyDashboard() {
   //     participationStatus: "invited",
   //   },
   // ];
-
-  const availableSurveys = surveys?.filter((s) =>
+ const displayedSurveys = tourActive ? mockSurveys.data: surveys;
+  const availableSurveys = displayedSurveys?.filter((s) =>
     permittedStatus.includes(s.participationStatus),
   );
   // const availableSurveys = dummySurveys?.filter((s) =>
@@ -254,15 +262,20 @@ export default function SurveyDashboard() {
         <SurveyPoints onUpdate={() => {}} />
       </MotionGrid>
       {availableSurveys.length !== 0 && !isLoading && (
+        <Box data-tour="surveys-stats">
         <SurveyStat stats={stats} isLoading={isLoading} />
+        </Box>
       )}
       <MotionBox variants={fadeUp}>
         <Divider sx={{ my: 2, bgcolor: "#ffe" }} />
       </MotionBox>
-      <SurveyList surveys={surveys} query={query} isLoading={isLoading} />
+      <Box 
+       data-tour="surveys-list">
+      <SurveyList surveys={displayedSurveys} query={query} isLoading={isLoading} />
+      </Box>
       {/* <SurveyList surveys={dummySurveys} query={query} isLoading={isLoading} /> */}
       <Divider sx={{ my: 2, bgcolor: "#ffe" }} />
-      <MotionBox variants={fadeUp}>
+      <MotionBox  data-tour="surveys-historys" variants={fadeUp}>
         <SurveyHistory />
       </MotionBox>
     </MotionBox>
