@@ -170,7 +170,7 @@ export default function page() {
                 <Page.Text
                   sx={{
                     flex: 1,
-                    textAlign: "center",
+                    textAlign: "right",
                     // ml: {
                     //   xs: 0,
                     //   md: survey?.slug === "welcome" ? 0 : "-240px",

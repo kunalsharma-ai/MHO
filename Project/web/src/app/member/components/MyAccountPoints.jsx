@@ -56,6 +56,7 @@ export default function MyAccountPoints() {
       sx={{ width: "100%" }}
     >
       <Box
+      data-tour="myaccount-current-rewards"
         sx={{
           width: "100%",
           borderRadius: "22px",

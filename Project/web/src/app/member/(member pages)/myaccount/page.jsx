@@ -203,7 +203,7 @@ function Stats() {
   ];
 
   return (
-    <Grid container spacing={2} my={2}>
+    <Grid container spacing={2} my={2} data-tour="myaccount-stats-cards">
       {stats.map((item, index) => (
         <Grid
           key={index}
@@ -1253,7 +1253,7 @@ function SocialAccounts({ user }) {
       ),
     );
   }, [user]);
-  console.table(contact);
+  
   const handleChange = (key) => (e) => {
     setContact((prev) => ({
       ...prev,
