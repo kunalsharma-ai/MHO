@@ -6,7 +6,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Header from "@/componentsMHO/Header";
 import Footer from "@/componentsMHO/Footer";
 import JoinPanel from "@/componentsMHO/JoinPanel";
-import SignUp from "@/componentsMHO/SignUp";
+import SignUp from "@/componentsMHO/SignUp_2026-09--03";
 import Login from "@/componentsMHO/Login";
 import LoadingOverlay from "@/componentsMHO/LoadingOverlay";
 

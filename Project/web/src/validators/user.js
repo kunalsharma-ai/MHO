@@ -14,19 +14,21 @@ const email = {
       return true;
     return false;
   },
-  checkDuplicate: async function (v){
-    let resp=await api.post("/api/v1/user/check",{mail:v});
-    const {data}=resp;
-    if(isNaN(data))return false;
-    if(data>0)return false;
+  checkDuplicate: async function (v) {
+    let resp = await api.post("/api/v1/user/check", { mail: v });
+    const { data } = resp;
+    if (isNaN(data)) return false;
+    if (data > 0) return false;
     return true;
     return false;
-},
+  },
 };
 
 const user = {
   name: {
-    salutation: { required: "Salutation is Required" },
+    salutation: {
+      required: "Salutation is Required"
+    },
     first: {
       required: "First Name is Required",
       pattern: {
@@ -50,7 +52,7 @@ const user = {
       if (!email.format(v)) return "Invalid E-Mail";
       if (!(await email.validateDomain(v))) return "E-Mail Address not valid";
       if (!(await email.checkDuplicate(v))) return "This email is already registered";
-      
+
       return;
     },
   },
