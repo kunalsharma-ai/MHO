@@ -376,7 +376,7 @@ function SetPasswordForm({ form }) {
       >
         Create Password
       </Page.MuiButton>
-      <Grid
+      {/* <Grid
         sx={{
           borderRadius: 2,
           bgcolor: "primary.light",
@@ -414,7 +414,7 @@ function SetPasswordForm({ form }) {
             At least <b>One Special Character</b> (e.g., @, #, $, &)
           </ListItem>
         </List>
-      </Grid>
+      </Grid> */}
     </>
   );
 }

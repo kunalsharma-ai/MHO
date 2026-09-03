@@ -1,18 +1,11 @@
 "use client";
 import React from "react";
-import { usePathname,useRouter} from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { STATUS, ACTIONS, EVENTS } from "react-joyride";
 import { api, loadData } from "@/util";
-import {setTourActive} from "@/Context/tourStore";
-//import mockRewards from "@/mockData/rewards";
-//import { Box, Typography, Table, TableHead, TableBody, TableRow, TableCell } from "@mui/material";
-
-
+import { setTourActive } from "@/Context/tourStore";
 
 const TOUR_SEEN_QUESTION = "tourSeenRoutes";
-
-
-
 
 function normalizeSeenArray(value) {
   if (Array.isArray(value)) return value;
@@ -21,19 +14,19 @@ function normalizeSeenArray(value) {
       const parsed = JSON.parse(value);
       if (Array.isArray(parsed)) return parsed;
     } catch {
-      // not JSON - ignore
+      
     }
   }
   return [];
 }
 
+function saveSeenRoutesArray(routesArray) {
 
-function saveSeenRoutesArray(tourSeenRoutes) {
-  // throw new Error("Testing");
-// console.log({routesArray: tourSeenRoutes})
-  api.patch("/api/v1/me/answer", { tourSeenRoutes }).catch((err) => {
-    console.warn("useOnboardingTour: failed to persist seen routes", err);
-  });
+  api
+    .patch("/api/v1/me/answer", { [TOUR_SEEN_QUESTION]: JSON.stringify(routesArray) })
+    .catch((err) => {
+      console.warn("useOnboardingTour: failed to persist seen routes", err);
+    });
 }
 
 function fillTemplate(text, { userName, greeting }) {
@@ -42,26 +35,18 @@ function fillTemplate(text, { userName, greeting }) {
     .replace(/{{\s*greeting\s*}}/gi, greeting?.trim() || "Hello");
 }
 
-/**
- * @param {object} member - the logged-in user document (from useMember()).
- * @param {string} userName - used to fill {{name}} in step copy.
- * @param {string} greeting - used to fill {{greeting}} in step copy.
- */
 export default function useOnboardingTour({ member, userName = "", greeting = "" }) {
   const pathname = usePathname();
-  const router=useRouter();
+  const router = useRouter();
 
   const [allSteps, setAllSteps] = React.useState([]);
   const [run, setRun] = React.useState(false);
-  
   const [localStepIndex, setLocalStepIndex] = React.useState(0);
- 
   const [seenRoutesArray, setSeenRoutesArray] = React.useState([]);
   const [seenRoutesLoaded, setSeenRoutesLoaded] = React.useState(false);
 
   const triggeredRoutesRef = React.useRef(new Set());
 
-  
   const seenRoutes = React.useMemo(() => {
     const map = {};
     for (const route of seenRoutesArray) map[route] = true;
@@ -80,7 +65,7 @@ export default function useOnboardingTour({ member, userName = "", greeting = ""
     return order;
   }, [allSteps]);
 
-    const nextRoute = React.useMemo(() => {
+  const nextRoute = React.useMemo(() => {
     const idx = routeOrder.indexOf(pathname);
     if (idx === -1 || idx === routeOrder.length - 1) return null;
     return routeOrder[idx + 1];
@@ -104,7 +89,6 @@ export default function useOnboardingTour({ member, userName = "", greeting = ""
     return offset;
   }, [routeOrder, stepCountByRoute, pathname]);
 
-
   React.useEffect(() => {
     setLocalStepIndex(0);
   }, [pathname]);
@@ -113,20 +97,16 @@ export default function useOnboardingTour({ member, userName = "", greeting = ""
   const globalTotal = allSteps.length;
 
   const steps = React.useMemo(() => {
-    return allSteps
-      .filter((s) => s.route === pathname)
-      .map((s) => ({
-        target: s.target,
-        title: fillTemplate(s.title, { userName, greeting }),
-        content: fillTemplate(s.content, { userName, greeting }),
-       
-        placement: s.placement || "auto",
-      
-        buttons: ["back", "primary", "skip"],
-      }));
+    const matched = allSteps.filter((s) => s.route === pathname);
+    return matched.map((s) => ({
+      target: s.target,
+      title: fillTemplate(s.title, { userName, greeting }),
+      content: fillTemplate(s.content, { userName, greeting }),
+      placement: s.placement || "auto",
+      buttons: ["back", "primary", "skip"],
+    }));
   }, [allSteps, pathname, userName, greeting]);
 
-  
   React.useEffect(() => {
     loadData(api.get(`/data/tour.json`), async (resp) => {
       if (Array.isArray(resp)) setAllSteps(resp);
@@ -134,6 +114,7 @@ export default function useOnboardingTour({ member, userName = "", greeting = ""
   }, []);
 
   const memberId = member?._id;
+
   React.useEffect(() => {
     if (!memberId) return;
 
@@ -141,17 +122,12 @@ export default function useOnboardingTour({ member, userName = "", greeting = ""
       .post("/api/v1/me", { questions: [TOUR_SEEN_QUESTION] })
       .then((resp) => {
         const raw = resp?.data?.[TOUR_SEEN_QUESTION];
-        if(raw instanceof Array)
-        setSeenRoutesArray(raw);
-      else 
-        setSeenRoutesArray([raw]);
+        setSeenRoutesArray(normalizeSeenArray(raw));
       })
       .catch((err) => {
         console.warn("useOnboardingTour: failed to load seen routes", err);
-        
       })
-      .finally(()=>{
-        
+      .finally(() => {
         setSeenRoutesLoaded(true);
       });
   }, [memberId]);
@@ -174,15 +150,12 @@ export default function useOnboardingTour({ member, userName = "", greeting = ""
     
   }, [pathname, steps, hasMember, seenRoutesLoaded, seenRoutesKey]);
 
-
   const pauseTourForNow = React.useCallback(() => {
     triggeredRoutesRef.current.delete(pathname);
   }, [pathname]);
 
-  
   const completeCurrentRoute = React.useCallback(() => {
     setSeenRoutesArray((prev) => {
-      console.log(prev)
       if (prev.includes(pathname)) return prev;
       const updated = [...prev, pathname];
       saveSeenRoutesArray(updated);
@@ -193,14 +166,12 @@ export default function useOnboardingTour({ member, userName = "", greeting = ""
   const handleJoyrideCallback = React.useCallback(
     (data) => {
       const { status, action, type, index } = data;
-      console.log("JOYRIDE CALLBACK:", { status, action, type, index });
 
       if (typeof index === "number") setLocalStepIndex(index);
 
       if (status === STATUS.FINISHED) {
         setRun(false);
         completeCurrentRoute();
-  
         if (nextRoute) {
           router.push(nextRoute);
         }
@@ -214,18 +185,22 @@ export default function useOnboardingTour({ member, userName = "", greeting = ""
       }
 
       if (type === EVENTS.TARGET_NOT_FOUND) {
-        console.warn("useOnboardingTour: target not found for step", data);
+        console.warn("❌ target not found for step", data);
       }
     },
     [completeCurrentRoute, pauseTourForNow, nextRoute, router],
   );
 
-  
+  React.useEffect(() => {
+    setTourActive(run);
+  }, [run]);
 
-React.useEffect(() => {
-  setTourActive(run);
-}, [run]);
-  
-  
-  return { run, steps, handleJoyrideCallback, globalCurrent, globalTotal, isLastRouteInTour:nextRoute===null };
+  return {
+    run,
+    steps,
+    handleJoyrideCallback,
+    globalCurrent,
+    globalTotal,
+    isLastRouteInTour: nextRoute === null,
+  };
 }

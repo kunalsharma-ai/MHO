@@ -62,10 +62,7 @@ export default function OnboardingTour({ member, userName = "", greeting = "" })
     <Joyride
       run={run}
       steps={steps}
-      callback={e=>{
-        console.log("something is happening");
-        handleJoyrideCallback(e)}}
-      
+      onEvent={handleJoyrideCallback}
       continuous
       options={JOYRIDE_OPTIONS}
       styles={JOYRIDE_STYLES}

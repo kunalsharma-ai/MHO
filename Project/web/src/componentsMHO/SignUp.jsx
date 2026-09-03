@@ -46,7 +46,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import PopUp from "./PopUp";
 import { Form, RequiredLabel } from "@/components";
-import { api, loadData, Page } from "@/util";
+import { api, Page } from "@/util";
 import user from "@/validators/user";
 import { useToast } from "@/hooks";
 import { useMember, useQuery, useTelemetry } from "@/Context";
@@ -101,6 +101,11 @@ export default function SignUp({
 
   const [cooldown, setCooldown] = React.useState(0);
 
+  const GENDER_SALUTATION_MAP = {
+  Male: ["Mr.", "Dr.", "Prof."],
+  Female: ["Ms.", "Mrs.", "Dr.", "Prof."],
+  Other: ["Mx.", "Dr.", "Prof."],
+};
   React.useEffect(() => {
     if (cooldown <= 0) return;
 
@@ -137,7 +142,7 @@ export default function SignUp({
     defaultValues: {
       category: "",
       name: {
-        salutation: "Mr.",
+        salutation: "",
         first: "",
         last: "",
       },
@@ -160,31 +165,9 @@ export default function SignUp({
     register,
     handleSubmit,
     reset,
+    setFocus,
     formState: { errors, isDirty },
   } = form;
-
-  const [socials, setSocials] = React.useState([]);
-
-  React.useEffect(() => {
-    loadData(api.get("/api/v1/socials"), (resp) => setSocials(resp.data || []));
-  }, []);
-
-  const socialsData = socials
-    .filter(
-      (social) =>
-        social?.url &&
-        typeof social.url === "string" &&
-        social.url.trim() !== "",
-    )
-    .map((social) => {
-      const name = social.platform?.toLowerCase();
-
-      return {
-        name,
-        link: social.url,
-        icon: socialIcons[name] || <LoginIcon />,
-      };
-    });
 
   const [providers, setProviders] = React.useState([]);
   React.useEffect(() => {
@@ -304,7 +287,7 @@ export default function SignUp({
       const timer = setTimeout(() => {
         onClose();
         router.replace("/");
-      }, 60000);
+      }, 30000);
 
       return () => clearTimeout(timer);
     }
@@ -683,19 +666,20 @@ export default function SignUp({
                       )}
 
                       <Grid size={{ xs: 12, md: 3 }}>
-                        <Form.Select
-                          {...register("name.salutation")}
-                          control={control}
-                          onChange={() => setSalutationchange(true)}
-                          options={[
-                            { value: "Mr.", label: "Mr." },
-                            { value: "Ms.", label: "Ms." },
-                            { value: "Mrs.", label: "Mrs." },
-                            { value: "Dr.", label: "Dr." },
-                            { value: "Prof.", label: "Prof." },
-                            { value: "Mx.", label: "Mx." },
-                          ]}
-                          labelText="Sal."
+                    <Form.Select
+                   
+  {...register("name.salutation")}
+  control={control}
+  options={
+    genderValue
+      ? SALUTATION_OPTIONS.filter((option) =>
+          GENDER_SALUTATION_MAP[genderValue]?.includes(option.value)
+        )
+      : SALUTATION_OPTIONS
+  }
+  labelText="Sal."
+  errors={errors?.name?.salutation}
+  validations={user.name.salutation}
                           sx={{
                             "& .MuiOutlinedInput-root": {
                               height: 54,
@@ -810,6 +794,7 @@ export default function SignUp({
                           control={control}
                           labelText="Phone"
                           // onlyCountries={ [country] }
+                          
                           selectedCountry={country}
                           disableDropdown={Boolean(country)}
                           validations={user.phone}
@@ -1179,16 +1164,39 @@ export default function SignUp({
                           alignItems: "center",
                         }}
                       >
-                        <Page.Text
-                          sx={{ fontSize: "13px", color: "text.secondary" }}
-                        >
-                          Follow us on
-                        </Page.Text>
-                        <Page.Box
-                          sx={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            gap: "20px",
+                        {socials.map((social) => (
+                          <motion.div
+                            key={social.name}
+                            whileHover={{
+                              y: -5,
+                              scale: 1.15,
+                              rotate: social.name === "twitter" ? 8 : 0,
+                            }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 350,
+                              damping: 15,
+                            }}
+                          >
+                            <Page.Link
+                              href={social.link}
+                              underline="none"
+                              target="_blank"
+                              sx={{
+                                width: 46,
+                                height: 46,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                borderRadius: "50%",
+                                transition: "all .25s ease",
+                                color: "inherit",
+
+                                "&:hover": {
+                                  background: "rgba(1,35,98,.08)",
+                                  boxShadow: "0 8px 20px rgba(1,35,98,.15)",
+                                },
 
                             justifyContent: "center",
                             alignItems: "center",
@@ -1379,7 +1387,7 @@ export default function SignUp({
                       color: "text.secondary",
                     }}
                   >
-                    This window will automatically close in 60 seconds.
+                    This window will automatically close in 30 seconds.
                   </Typography>
                 </Box>
               </Grid>

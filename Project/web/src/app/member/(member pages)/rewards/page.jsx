@@ -16,9 +16,7 @@ export default function page() {
   const [user] = [useMember()];
   const [data, setData] = React.useState([]);
   const [dateRange, setDateRange] = React.useState([]);
-  // True only while Joyride is actively showing the Rewards tour step on
-  // this route (see hooks/useOnboardingTour.js, which broadcasts this via
-  // tourStore). Drives which data source the table below reads from.
+ 
   const tourActive = useTourActive();
 
   const [isLoading, setIsLoading] = React.useState(true);
@@ -120,7 +118,7 @@ export default function page() {
       {/* <RewardStatus /> */}
 
       <motion.div
-        data-tour="reward-history-table"
+        data-tour="rewards-history-table"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{

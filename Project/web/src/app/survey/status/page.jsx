@@ -13,7 +13,7 @@ import {
 import { api, loadData, Page } from "@/util";
 import { useQuery } from "@/Context";
 
-function page() {
+export default function page() {
   const [status, setStatus] = React.useState({ type: "terminate", points: 0 });
   const logo = "/images/logo/My-Health-Opinions.png";
   const background = "/images/logo/groupofpeople.jpg";
@@ -472,7 +472,7 @@ function StatusMessage({ type, points, link, starRatingChanged }) {
     </>
   );
 }
-export default page;
+
 
 function StarRating({ onChange, }) {
   const [value, setValue] = React.useState(3.5);
