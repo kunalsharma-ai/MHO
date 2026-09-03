@@ -37,11 +37,12 @@ import {
     Microsoft,
     Login as LoginIcon,
     YouTube,
+    Instagram,
 } from "@mui/icons-material";
 import { motion, AnimatePresence } from "framer-motion";
 import PopUp from "./PopUp";
 import { Form, RequiredLabel } from "@/components";
-import { api, Page } from "@/util";
+import { api, loadData, Page } from "@/util";
 import user from "@/validators/user";
 import { useToast } from "@/hooks";
 import { useMember, useQuery, useTelemetry } from "@/Context";
@@ -49,6 +50,16 @@ import MapComponent from "@/components/Map"; //Temporary Import
 import Captcha from "./Captcha";
 const MotionBox = motion.create(Box);
 const MotionGrid = motion.create(Grid);
+
+const socialIcons = {
+    linkedin: <LinkedIn sx={ { color: "#0077B5", fontSize: "28px" } } />,
+    facebook: <Facebook sx={ { color: "#1877F2", fontSize: "28px" } } />,
+    youtube: <YouTube sx={ { color: "#FF0000", fontSize: "28px" } } />,
+    twitter: <X sx={ { color: "black", fontSize: "22px" } } />,
+    x: <X sx={ { color: "black", fontSize: "22px" } } />,
+    instagram: <Instagram sx={ { color: "#E4405F", fontSize: "28px" } } />,
+};
+
 function capitalizeName(str) {
     if (!str) return "";
     return str
@@ -112,6 +123,25 @@ export default function SignUp({
     const [salutationChange, setSalutationchange] = React.useState(false);
     const RESEND_SECONDS = 60;
     const [cooldown, setCooldown] = React.useState(0);
+    const [socials, setSocials] = React.useState([]);
+    React.useEffect(() => {
+        loadData(
+            api.get(`/api/v1/socials`),
+            resp => {
+                setSocials(resp.data.filter(
+                    (social) =>
+                        social?.url &&
+                        typeof social.url === "string" &&
+                        social.url.trim() !== "" &&
+                        socialIcons[social.platform?.toLowerCase()],
+                ).map((social) => ({
+                    name: social.platform,
+                    link: social.url,
+                    icon: socialIcons[social.platform?.toLowerCase()],
+                })))
+            }
+        )
+    }, [])
     const GENDER_SALUTATION_MAP = {
         Male: ["Mr.", "Dr.", "Prof."],
         Female: ["Ms.", "Mrs.", "Dr.", "Prof."],
@@ -174,6 +204,7 @@ export default function SignUp({
         formState: { errors, isDirty },
     } = form;
     const [providers, setProviders] = React.useState([]);
+
     React.useEffect(() => {
         api.post("/api/v1/auth/socials", {}).then((resp) => {
             setProviders(resp?.data ?? []);
@@ -293,6 +324,7 @@ export default function SignUp({
             return () => clearTimeout(timer);
         }
     }, [status]);
+    // return <pre>{ JSON.stringify(socials, null, 2) }</pre>
     return (
         <>
             <PopUp
