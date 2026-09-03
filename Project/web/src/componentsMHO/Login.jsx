@@ -576,7 +576,7 @@ function LoginCard({ onClose, setCardType, setOpenSignUp, socials }) {
           <Box
             sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 2 }}
           >
-            <Box
+            {/* <Box
               sx={{
                 px: 2,
                 py: 1.5,
@@ -655,7 +655,7 @@ function LoginCard({ onClose, setCardType, setOpenSignUp, socials }) {
                   ))}
                 </ToggleButtonGroup>
               </Box>
-            </Box>
+            </Box> */}
             <Box
               sx={{
                 p: 3,
@@ -1052,10 +1052,48 @@ function LoginCard({ onClose, setCardType, setOpenSignUp, socials }) {
   );
 }
 
+const RESET_LIMIT_COOKIE = "forgotPasswordRequests";
+const MAX_REQUESTS_PER_DAY = 5;
+
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+function setCookie(name, value, hours) {
+  const expires = new Date(Date.now() + hours * 60 * 60 * 1000).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+}
+
+function canSendResetRequest() {
+  const stored = getCookie(RESET_LIMIT_COOKIE);
+  if (!stored) return true;
+  try {
+    const data = JSON.parse(stored);
+    return data.count < MAX_REQUESTS_PER_DAY;
+  } catch (e) {
+    return true;
+  }
+}
+
+function recordResetRequest() {
+  const stored = getCookie(RESET_LIMIT_COOKIE);
+  let count = 1;
+  if (stored) {
+    try {
+      const data = JSON.parse(stored);
+      count = data.count + 1;
+    } catch (e) {}
+  }
+  setCookie(RESET_LIMIT_COOKIE, JSON.stringify({ count }), 24);
+}
+
 function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
   const [stage, setStage] = React.useState("user"); //user,otp,password
   const [user, setUser] = React.useState("");
   const [timeout, updateTimeout] = React.useState(30);
+  const [limitError,setLimitError]=React.useState(null);
+
   // const router = useRouter();
   React.useEffect(() => {
     setTimeout(() => {
@@ -1067,9 +1105,15 @@ function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
   const form = useForm({});
 
   async function sendOTP(e) {
+    if(!canSendResetRequest()){
+      setLimitError("Maximum request reached for today. Please try again after 24 hours.");
+      return ;
+    }
+    setLimitError(null);
     const resp = await api.post(`/api/v1/forgot-password`, { user });
     useToast(resp);
     if (resp.status === "error") return;
+    recordResetRequest();
     setStage("otp");
   }
 
@@ -1170,138 +1214,90 @@ function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
         }}
       >
         <Grid container flexDirection="column" gap={2} size={12}>
-          {stage === "user" && (
-            <>
-              <Box>
-                <Typography
-                  sx={{
-                    mb: 1,
-                    fontWeight: 600,
-                    color: "text.primary",
-                  }}
-                >
-                  Registered Email Address
-                </Typography>
-                <Page.Input
-                  name="user"
-                  // label="Registered E-mail"
-                  onChange={(e) => setUser(e.target.value)}
-                  control={form.control}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      height: 54,
-                      borderRadius: 3,
-                      background: "#fff",
-                      transition: ".25s",
+        {stage === "user" && (
+  <>
+    <Box>
+      <Typography sx={{ mb: 1, fontWeight: 600, color: "text.primary" }}>
+        Registered Email Address
+      </Typography>
+      <Page.Input
+        name="user"
+        onChange={(e) => setUser(e.target.value)}
+        control={form.control}
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            height: 54,
+            borderRadius: 3,
+            background: "#fff",
+            transition: ".25s",
+            "&:hover": { boxShadow: "0 3px 12px rgba(0,0,0,.04)" },
+            "&.Mui-focused": { boxShadow: "0 8px 24px rgba(1,35,98,.08)" },
+          },
+        }}
+      />
+    </Box>
 
-                      "&:hover": {
-                        boxShadow: "0 3px 12px rgba(0,0,0,.04)",
-                      },
+    {limitError && (
+      <Typography sx={{ color: "error.main", fontSize: 13, fontWeight: 600 }}>
+        {limitError}
+      </Typography>
+    )}
 
-                      "&.Mui-focused": {
-                        boxShadow: "0 8px 24px rgba(1,35,98,.08)",
-                      },
-                    },
-                  }}
-                />
-              </Box>
-              <Box
-                sx={{
-                  p: 2.5,
-                  borderRadius: 3,
-                  bgcolor: "#f8fafc",
-                  border: "1px solid #e8edf5",
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontWeight: 700,
-                    mb: 1,
-                    color: "primary.main",
-                  }}
-                >
-                  What happens next?
-                </Typography>
+    <Page.MuiButton
+      variant="contained"
+      color="primary"
+      disabled={!user}
+      onClick={sendOTP}
+      endIcon={<SendIcon />}
+      sx={{
+        mt: 1,
+        height: 54,
+        borderRadius: 3,
+        fontWeight: 700,
+        textTransform: "none",
+        color: "#fff",
+        background: "linear-gradient(135deg,#012362 0%,#0b4bb3 100%)",
+        boxShadow: "0 12px 30px rgba(1,35,98,.22)",
+        "&:hover": {
+          background: "linear-gradient(135deg,#001b55 0%,#063686 100%)",
+          transform: "translateY(-2px)",
+          boxShadow: "0 18px 40px rgba(1,35,98,.30)",
+        },
+        "&.Mui-disabled": { background: "#cbd5e1", color: "#fff" },
+      }}
+    >
+      Send Reset Link
+    </Page.MuiButton>
 
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 1.25,
-                  }}
-                >
-                  {[
-                    "We'll verify your email address.",
-                    "A secure reset link will be sent.",
-                    "Create your new password.",
-                    "Sign back into your account.",
-                  ].map((item) => (
-                    <Box
-                      key={item}
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1.25,
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          width: 7,
-                          height: 7,
-                          borderRadius: "50%",
-                          bgcolor: "secondary.main",
-                          flexShrink: 0,
-                        }}
-                      />
-
-                      <Typography
-                        sx={{
-                          fontSize: 14,
-                          color: "text.secondary",
-                        }}
-                      >
-                        {item}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
-              </Box>
-
-              <Page.MuiButton
-                variant="contained"
-                color="primary"
-                disabled={!user}
-                onClick={sendOTP}
-                endIcon={<SendIcon />}
-                sx={{
-                  mt: 1,
-                  height: 54,
-                  borderRadius: 3,
-                  fontWeight: 700,
-                  textTransform: "none",
-                  color: "#fff",
-
-                  background: "linear-gradient(135deg,#012362 0%,#0b4bb3 100%)",
-
-                  boxShadow: "0 12px 30px rgba(1,35,98,.22)",
-
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg,#001b55 0%,#063686 100%)",
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 18px 40px rgba(1,35,98,.30)",
-                  },
-
-                  "&.Mui-disabled": {
-                    background: "#cbd5e1",
-                    color: "#fff",
-                  },
-                }}
-              >
-                Send Reset Link
-              </Page.MuiButton>
-            </>
-          )}
+   
+    <Box
+      sx={{
+        p: 2.5,
+        borderRadius: 3,
+        bgcolor: "#f8fafc",
+        border: "1px solid #e8edf5",
+      }}
+    >
+      <Typography sx={{ fontWeight: 700, mb: 1, color: "primary.main" }}>
+        What happens next?
+      </Typography>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
+        {[
+          "We'll verify your email address.",
+          "A secure reset link will be sent.",
+          "Create your new password.",
+          "Sign back into your account.",
+        ].map((item) => (
+          <Box key={item} sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
+            <Box sx={{ width: 7, height: 7, borderRadius: "50%", bgcolor: "secondary.main", flexShrink: 0 }} />
+            <Typography sx={{ fontSize: 14, color: "text.secondary" }}>{item}</Typography>
+          </Box>
+        ))}
+      </Box>
+    </Box>
+  </>
+)}
+               
 
           {stage === "otp" && (
             <Box
