@@ -29,6 +29,7 @@ import {
   Microsoft,
   Login as LoginIcon,
   YouTube,
+  Instagram,
 } from "@mui/icons-material";
 import { api, loadData, Page, submitWithAjax } from "@/util";
 import { useForm } from "react-hook-form";
@@ -44,6 +45,15 @@ import { motion, AnimatePresence } from "framer-motion";
 const MotionBox = motion.create(Box);
 const MotionGrid = motion.create(Grid);
 
+const socialIcons = {
+  linkedin: <LinkedIn sx={{ color: "#0077B5", fontSize: "28px" }} />,
+  facebook: <Facebook sx={{ color: "#1877F2", fontSize: "28px" }} />,
+  youtube: <YouTube sx={{ color: "#FF0000", fontSize: "28px" }} />,
+  twitter: <X sx={{ color: "black", fontSize: "22px" }} />,
+  x: <X sx={{ color: "black", fontSize: "22px" }} />,
+  instagram: <Instagram sx={{ color: "#E4405F", fontSize: "28px" }} />,
+};
+
 function Login({ open, onClose, setOpenSignUp }) {
   const [cardType, setCardType] = React.useState("login");
   const router = useRouter();
@@ -55,45 +65,19 @@ function Login({ open, onClose, setOpenSignUp }) {
     loadData(api.get("/api/v1/socials"), (resp) => setSocials(resp.data || []));
   }, []);
 
-  const getSocialUrl = (platform, fallback = "#") => {
-    return (
-      socials.find(
-        (social) => social.platform?.toLowerCase() === platform.toLowerCase(),
-      )?.url || fallback
-    );
-  };
-
-  const socialsData = [
-    {
-      name: "linkedin",
-      link: getSocialUrl(
-        "Linkedin",
-        "https://www.linkedin.com/company/my-health-opinions/",
-      ),
-      icon: <LinkedIn sx={{ color: "#0077B5", fontSize: "28px" }} />,
-    },
-    {
-      name: "facebook",
-      link: getSocialUrl(
-        "Facebook",
-        "https://www.facebook.com/FrequentResearchFieldwork/",
-      ),
-      icon: <Facebook sx={{ color: "#1877F2", fontSize: "28px" }} />,
-    },
-    {
-      name: "youtube",
-      link: getSocialUrl(
-        "Youtube",
-        "https://www.youtube.com/channel/UCLxmn2kq4aACAHaL2eT6QIQ",
-      ),
-      icon: <YouTube sx={{ color: "#FF0000", fontSize: "28px" }} />,
-    },
-    {
-      name: "twitter",
-      link: getSocialUrl("Twitter", "https://twitter.com/frequentrfs"),
-      icon: <X sx={{ color: "black", fontSize: "22px" }} />,
-    },
-  ];
+  const socialsData = socials
+    .filter(
+      (social) =>
+        social?.url &&
+        typeof social.url === "string" &&
+        social.url.trim() !== "" &&
+        socialIcons[social.platform?.toLowerCase()],
+    )
+    .map((social) => ({
+      name: social.platform,
+      link: social.url,
+      icon: socialIcons[social.platform?.toLowerCase()],
+    }));
 
   return (
     <Dialog

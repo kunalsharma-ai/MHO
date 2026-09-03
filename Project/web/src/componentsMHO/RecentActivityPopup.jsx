@@ -212,9 +212,14 @@ const activityTypes = [
 ];
 
 const DISPLAY_TIME = 7000;
-const INITIAL_DELAY = 3000;
-const BETWEEN_DELAY = 2500;
 const QUEUE_SIZE = 25;
+
+const randomDelay = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+
+const getInitialDelay = () => randomDelay(4000, 10000);
+
+const getBetweenDelay = () => randomDelay(8000, 20000);
 
 const randomItem = (array) => {
   return array[Math.floor(Math.random() * array.length)];
@@ -251,7 +256,6 @@ const generateQueue = (count = QUEUE_SIZE) => {
 
   return queue;
 };
-
 export default function RecentActivityPopup({ ToTopButtonVisible }) {
   const pathname = usePathname();
 
@@ -272,29 +276,22 @@ export default function RecentActivityPopup({ ToTopButtonVisible }) {
 
     const showActivity = () => {
       setVisible(true);
-
       hideTimer = setTimeout(() => {
         setVisible(false);
-
         nextTimer = setTimeout(() => {
           setCurrentIndex((prev) => {
             const nextIndex = prev + 1;
-
             if (nextIndex >= activityQueue.length) {
               setActivityQueue(generateQueue());
               return 0;
             }
-
             return nextIndex;
           });
-
           showActivity();
-        }, BETWEEN_DELAY);
+        }, getBetweenDelay());
       }, DISPLAY_TIME);
     };
-
-    showTimer = setTimeout(showActivity, INITIAL_DELAY);
-
+    showTimer = setTimeout(showActivity, getInitialDelay());
     return () => {
       clearTimeout(showTimer);
       clearTimeout(hideTimer);

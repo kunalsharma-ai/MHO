@@ -40,6 +40,7 @@ import {
   Microsoft,
   Login as LoginIcon,
   YouTube,
+  Instagram,
 } from "@mui/icons-material";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -69,6 +70,15 @@ function capitalizeName(str) {
     .join("");
 }
 const today = new Date();
+
+const socialIcons = {
+  linkedin: <LinkedIn sx={{ color: "#0077B5", fontSize: "28px" }} />,
+  facebook: <Facebook sx={{ color: "#1877F2", fontSize: "28px" }} />,
+  youtube: <YouTube sx={{ color: "#FF0000", fontSize: "28px" }} />,
+  twitter: <X sx={{ color: "black", fontSize: "22px" }} />,
+  x: <X sx={{ color: "black", fontSize: "22px" }} />,
+  instagram: <Instagram sx={{ color: "#E4405F", fontSize: "22px" }} />,
+};
 
 export default function SignUp({
   open,
@@ -123,7 +133,7 @@ export default function SignUp({
   }, []);
 
   const form = useForm({
-    mode:"onBlur",
+    mode: "onBlur",
     defaultValues: {
       category: "",
       name: {
@@ -159,45 +169,22 @@ export default function SignUp({
     loadData(api.get("/api/v1/socials"), (resp) => setSocials(resp.data || []));
   }, []);
 
-  const getSocialUrl = (platform, fallback = "#") => {
-    return (
-      socials.find(
-        (social) => social.platform?.toLowerCase() === platform.toLowerCase(),
-      )?.url || fallback
-    );
-  };
+  const socialsData = socials
+    .filter(
+      (social) =>
+        social?.url &&
+        typeof social.url === "string" &&
+        social.url.trim() !== "",
+    )
+    .map((social) => {
+      const name = social.platform?.toLowerCase();
 
-  const socialsData = [
-    {
-      name: "linkedin",
-      link: getSocialUrl(
-        "Linkedin",
-        "https://www.linkedin.com/company/my-health-opinions/",
-      ),
-      icon: <LinkedIn sx={{ color: "#0077B5", fontSize: "28px" }} />,
-    },
-    {
-      name: "facebook",
-      link: getSocialUrl(
-        "Facebook",
-        "https://www.facebook.com/FrequentResearchFieldwork/",
-      ),
-      icon: <Facebook sx={{ color: "#1877F2", fontSize: "28px" }} />,
-    },
-    {
-      name: "youtube",
-      link: getSocialUrl(
-        "Youtube",
-        "https://www.youtube.com/channel/UCLxmn2kq4aACAHaL2eT6QIQ",
-      ),
-      icon: <YouTube sx={{ color: "#FF0000", fontSize: "28px" }} />,
-    },
-    {
-      name: "twitter",
-      link: getSocialUrl("Twitter", "https://twitter.com/frequentrfs"),
-      icon: <X sx={{ color: "black", fontSize: "22px" }} />,
-    },
-  ];
+      return {
+        name,
+        link: social.url,
+        icon: socialIcons[name] || <LoginIcon />,
+      };
+    });
 
   const [providers, setProviders] = React.useState([]);
   React.useEffect(() => {
@@ -263,18 +250,18 @@ export default function SignUp({
       }
     });
   }, [telemetry]);
- React.useEffect(() => {
+  React.useEffect(() => {
     form.setValue("category", userType);
   }, [userType]);
 
-  const genderValue = form.watch("gender");     
-  React.useEffect(() => {                          
-    if (salutationChange) return;                  
-    const map = { Male: "Mr.", Female: "Ms.", Other: "Mx." };   
-    if (genderValue && map[genderValue]) {         
-      form.setValue("name.salutation", map[genderValue]);   
-    }                                               
-  }, [genderValue, salutationChange]); 
+  const genderValue = form.watch("gender");
+  React.useEffect(() => {
+    if (salutationChange) return;
+    const map = { Male: "Mr.", Female: "Ms.", Other: "Mx." };
+    if (genderValue && map[genderValue]) {
+      form.setValue("name.salutation", map[genderValue]);
+    }
+  }, [genderValue, salutationChange]);
   let minDOB = new Date();
   minDOB.setFullYear(minDOB.getFullYear() - 120);
   let maxDOB = new Date();
@@ -697,18 +684,18 @@ export default function SignUp({
 
                       <Grid size={{ xs: 12, md: 3 }}>
                         <Form.Select
-  {...register("name.salutation")}
-  control={control}
-  onChange={() => setSalutationchange(true)}   
-  options={[
-    { value: "Mr.", label: "Mr." },
-    { value: "Ms.", label: "Ms." },
-    { value: "Mrs.", label: "Mrs." },
-    { value: "Dr.", label: "Dr." },
-    { value: "Prof.", label: "Prof." },
-    { value: "Mx.", label: "Mx." },   
-  ]}
-  labelText="Sal."
+                          {...register("name.salutation")}
+                          control={control}
+                          onChange={() => setSalutationchange(true)}
+                          options={[
+                            { value: "Mr.", label: "Mr." },
+                            { value: "Ms.", label: "Ms." },
+                            { value: "Mrs.", label: "Mrs." },
+                            { value: "Dr.", label: "Dr." },
+                            { value: "Prof.", label: "Prof." },
+                            { value: "Mx.", label: "Mx." },
+                          ]}
+                          labelText="Sal."
                           sx={{
                             "& .MuiOutlinedInput-root": {
                               height: 54,
@@ -730,7 +717,7 @@ export default function SignUp({
                           }}
                         />
                       </Grid>
-                    <Grid size={{ xs: 12, md: 4.5 }}>
+                      <Grid size={{ xs: 12, md: 4.5 }}>
                         <Form.Input
                           {...register("name.first")}
                           control={control}
@@ -788,7 +775,7 @@ export default function SignUp({
                           }}
                         />
                       </Grid>
-                       <Grid size={{xs:12,md:6}}>
+                      <Grid size={{ xs: 12, md: 6 }}>
                         <Form.Input
                           {...register("mail")}
                           control={control}
@@ -816,7 +803,8 @@ export default function SignUp({
                             },
                           }}
                         />
-                      </Grid><Grid size={ {xs:12,md:6} }>
+                      </Grid>
+                      <Grid size={{ xs: 12, md: 6 }}>
                         <Form.Phone
                           {...register("phone")}
                           control={control}
@@ -873,7 +861,7 @@ export default function SignUp({
                         />
                       </Grid>
 
-                        <Grid size={{ xs: 12, md: 6 }}>
+                      <Grid size={{ xs: 12, md: 6 }}>
                         <GenderRadioGroup
                           name={"gender"}
                           control={control}
@@ -882,9 +870,6 @@ export default function SignUp({
                           validations={user.gender}
                         />
                       </Grid>
-
-                      
-                     
 
                       <Collapse in={!!btnDisabled} sx={{ width: "100%" }}>
                         <Grid
@@ -1178,87 +1163,85 @@ export default function SignUp({
                         </Box>
                       </Grid>
                     </Grid>
-                    <Grid
-                      container
-                      size={12}
-                      alignItems="center"
-                      justifyContent="center"
-                      spacing={4}
-                      sx={{
-                        // position: "absolute",
-                        // bottom: 10,
-                        // left: 0,
-                        // right: 0,
-                        // zIndex: 2,
-                        borderTop: "1px solid",
-                        borderColor: "divider",
-                        pt: 2,
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Page.Text
-                        sx={{ fontSize: "13px", color: "text.secondary" }}
-                      >
-                        Follow us on
-                      </Page.Text>
-                      <Page.Box
+                    {socialsData.length > 0 && (
+                      <Grid
+                        container
+                        size={12}
+                        alignItems="center"
+                        justifyContent="center"
+                        spacing={4}
                         sx={{
+                          borderTop: "1px solid",
+                          borderColor: "divider",
+                          pt: 2,
+                          mt: 1,
                           display: "flex",
-                          flexWrap: "wrap",
-                          gap: "20px",
-
-                          justifyContent: "center",
                           alignItems: "center",
-                          listStyle: "none",
-                          textDecoration: "none",
                         }}
                       >
-                        {socialsData.map((social) => (
-                          <motion.div
-                            key={social.name}
-                            whileHover={{
-                              y: -5,
-                              scale: 1.15,
-                              rotate: social.name === "twitter" ? 8 : 0,
-                            }}
-                            whileTap={{ scale: 0.95 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 350,
-                              damping: 15,
-                            }}
-                          >
-                            <Page.Link
-                              href={social.link}
-                              underline="none"
-                              target="_blank"
-                              sx={{
-                                width: 46,
-                                height: 46,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                borderRadius: "50%",
-                                transition: "all .25s ease",
-                                color: "inherit",
+                        <Page.Text
+                          sx={{ fontSize: "13px", color: "text.secondary" }}
+                        >
+                          Follow us on
+                        </Page.Text>
+                        <Page.Box
+                          sx={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: "20px",
 
-                                "&:hover": {
-                                  background: "rgba(1,35,98,.08)",
-                                  boxShadow: "0 8px 20px rgba(1,35,98,.15)",
-                                },
-
-                                "& svg": {
-                                  transition: "transform .25s ease",
-                                },
+                            justifyContent: "center",
+                            alignItems: "center",
+                            listStyle: "none",
+                            textDecoration: "none",
+                          }}
+                        >
+                          {socialsData.map((social) => (
+                            <motion.div
+                              key={social.name}
+                              whileHover={{
+                                y: -5,
+                                scale: 1.15,
+                                rotate: social.name === "twitter" ? 8 : 0,
+                              }}
+                              whileTap={{ scale: 0.95 }}
+                              transition={{
+                                type: "spring",
+                                stiffness: 350,
+                                damping: 15,
                               }}
                             >
-                              {social.icon}
-                            </Page.Link>
-                          </motion.div>
-                        ))}
-                      </Page.Box>
-                    </Grid>
+                              <Page.Link
+                                href={social.link}
+                                underline="none"
+                                target="_blank"
+                                sx={{
+                                  width: 46,
+                                  height: 46,
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  borderRadius: "50%",
+                                  transition: "all .25s ease",
+                                  color: "inherit",
+
+                                  "&:hover": {
+                                    background: "rgba(1,35,98,.08)",
+                                    boxShadow: "0 8px 20px rgba(1,35,98,.15)",
+                                  },
+
+                                  "& svg": {
+                                    transition: "transform .25s ease",
+                                  },
+                                }}
+                              >
+                                {social.icon}
+                              </Page.Link>
+                            </motion.div>
+                          ))}
+                        </Page.Box>
+                      </Grid>
+                    )}
                   </MotionGrid>
                 </Grid>
               </Grid>
