@@ -70,25 +70,6 @@ function Footer({ sections = [] }) {
     }
   };
 
-  // Handle navigation
-  const handleNavigation = (path, sectionLabel = null) => {
-    if (pathname === path) {
-      // If already on the target page
-      if (path === "/" && sectionLabel) {
-        const section = sections.find((s) => s.label === sectionLabel);
-        if (section) handleScroll(section.ref);
-      }
-      return;
-    }
-
-    // If navigating to home with a section
-    if (path === "/" && sectionLabel) {
-      router.push(`/?section=${encodeURIComponent(sectionLabel)}`);
-    } else {
-      router.push(path);
-    }
-  };
-
   // Handle scrolling when arriving on home page with a section query
   useEffect(() => {
     if (pathname === "/") {
@@ -106,19 +87,12 @@ function Footer({ sections = [] }) {
     }
   }, [pathname, searchParams, sections, router]);
 
-  // Handle external navigation
-  const handleExternalNavigation = (url) => {
-    window.open(url, "_blank", "noopener,noreferrer");
-  };
-
   const handleKeyDown = (e, handler) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       handler();
     }
   };
-
-  const aboutSection = sections?.find((s) => s.label === "ABOUT US");
 
   return (
     <Grid
@@ -292,25 +266,31 @@ linear-gradient(135deg,#061B4A 0%,#0A2E73 35%,#12489D 70%,#1B59B5 100%)
             role="button"
             tabIndex={0}
             onClick={() => {
-              handleNavigation("/", "ABOUT US");
+              const section = sections.find((s) => s.label === "ABOUT US");
+              if (section) handleScroll(section.ref);
             }}
             onKeyDown={(e) =>
-              handleKeyDown(e, () => handleNavigation("/", "ABOUT US"))
+              handleKeyDown(e, () => {
+                const section = sections.find((s) => s.label === "ABOUT US");
+                if (section) handleScroll(section.ref);
+              })
             }
             sx={{
               color: "rgba(255,255,255,.82)",
               transition: ".3s",
+              position: "relative",
+
               "&:hover": {
                 cursor: "pointer",
                 color: "secondary.main",
                 transform: "translateX(8px)",
               },
+
               "&:focus-visible": {
                 outline: "2px solid",
                 outlineColor: "secondary.dark",
                 outlineOffset: "2px",
               },
-              position: "relative",
 
               "&::before": {
                 content: '""',
@@ -330,286 +310,81 @@ linear-gradient(135deg,#061B4A 0%,#0A2E73 35%,#12489D 70%,#1B59B5 100%)
           >
             About Us
           </Typography>
-          <Typography
-            role="button"
-            tabIndex={0}
-            onClick={() => handleNavigation("/cookies")}
-            onKeyDown={(e) =>
-              handleKeyDown(e, () => handleNavigation("/cookies"))
-            }
-            sx={{
-              color: "rgba(255,255,255,.82)",
-              transition: ".3s",
-              "&:hover": {
-                cursor: "pointer",
-                color: "secondary.main",
-                transform: "translateX(8px)",
-              },
-              "&:focus-visible": {
-                outline: "2px solid",
-                outlineColor: "secondary.dark",
-                outlineOffset: "2px",
-              },
-              position: "relative",
 
-              "&::before": {
-                content: '""',
-                position: "absolute",
-                left: -18,
-                top: "50%",
-                width: 0,
-                height: 2,
-                bgcolor: "secondary.main",
+          {/* All other links - open in new tab */}
+          {[
+            {
+              label: "Cookies Policy",
+              href: "/cookies",
+            },
+            {
+              label: "Terms of Use",
+              href: "/terms",
+            },
+            {
+              label: "Profiling and Quality Scoring",
+              href: "/profiling",
+            },
+            {
+              label: "Privacy Policy",
+              href: "/privacy",
+            },
+            {
+              label: "GDPR Compliance",
+              href: "/gdpr",
+            },
+            {
+              label: "Healthcare Panel Book",
+              href: "https://panels.frequentresearch.com/",
+            },
+            {
+              label: "FAQ",
+              href: "/faq",
+            },
+          ].map((link) => (
+            <Typography
+              key={link.href}
+              component="a"
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                color: "rgba(255,255,255,.82)",
                 transition: ".3s",
-              },
+                textDecoration: "none",
+                position: "relative",
 
-              "&:hover::before": {
-                width: 10,
-              },
-            }}
-          >
-            Cookies Policy
-          </Typography>
-          <Typography
-            role="button"
-            tabIndex={0}
-            onClick={() => handleNavigation("/terms")}
-            onKeyDown={(e) =>
-              handleKeyDown(e, () => handleNavigation("/terms"))
-            }
-            sx={{
-              color: "rgba(255,255,255,.82)",
-              transition: ".3s",
-              "&:hover": {
-                cursor: "pointer",
-                color: "secondary.main",
-                transform: "translateX(8px)",
-              },
-              "&:focus-visible": {
-                outline: "2px solid",
-                outlineColor: "secondary.dark",
-                outlineOffset: "2px",
-              },
-              position: "relative",
+                "&:hover": {
+                  cursor: "pointer",
+                  color: "secondary.main",
+                  transform: "translateX(8px)",
+                },
 
-              "&::before": {
-                content: '""',
-                position: "absolute",
-                left: -18,
-                top: "50%",
-                width: 0,
-                height: 2,
-                bgcolor: "secondary.main",
-                transition: ".3s",
-              },
+                "&:focus-visible": {
+                  outline: "2px solid",
+                  outlineColor: "secondary.dark",
+                  outlineOffset: "2px",
+                },
 
-              "&:hover::before": {
-                width: 10,
-              },
-            }}
-          >
-            Terms of Use
-          </Typography>
-          <Typography
-            role="button"
-            tabIndex={0}
-            onClick={() => handleNavigation("/profiling")}
-            onKeyDown={(e) =>
-              handleKeyDown(e, () => handleNavigation("/profiling"))
-            }
-            sx={{
-              color: "rgba(255,255,255,.82)",
-              transition: ".3s",
-              "&:hover": {
-                cursor: "pointer",
-                color: "secondary.main",
-                transform: "translateX(8px)",
-              },
-              "&:focus-visible": {
-                outline: "2px solid",
-                outlineColor: "secondary.dark",
-                outlineOffset: "2px",
-              },
-              position: "relative",
+                "&::before": {
+                  content: '""',
+                  position: "absolute",
+                  left: -18,
+                  top: "50%",
+                  width: 0,
+                  height: 2,
+                  bgcolor: "secondary.main",
+                  transition: ".3s",
+                },
 
-              "&::before": {
-                content: '""',
-                position: "absolute",
-                left: -18,
-                top: "50%",
-                width: 0,
-                height: 2,
-                bgcolor: "secondary.main",
-                transition: ".3s",
-              },
-
-              "&:hover::before": {
-                width: 10,
-              },
-            }}
-          >
-            Profiling and Quality Scoring
-          </Typography>
-          <Typography
-            role="button"
-            tabIndex={0}
-            onClick={() => handleNavigation("/privacy")}
-            onKeyDown={(e) =>
-              handleKeyDown(e, () => handleNavigation("/privacy"))
-            }
-            sx={{
-              color: "rgba(255,255,255,.82)",
-              transition: ".3s",
-              "&:hover": {
-                cursor: "pointer",
-                color: "secondary.main",
-                transform: "translateX(8px)",
-              },
-              "&:focus-visible": {
-                outline: "2px solid",
-                outlineColor: "secondary.dark",
-                outlineOffset: "2px",
-              },
-              position: "relative",
-
-              "&::before": {
-                content: '""',
-                position: "absolute",
-                left: -18,
-                top: "50%",
-                width: 0,
-                height: 2,
-                bgcolor: "secondary.main",
-                transition: ".3s",
-              },
-
-              "&:hover::before": {
-                width: 10,
-              },
-            }}
-          >
-            Privacy Policy
-          </Typography>
-          <Typography
-            role="button"
-            tabIndex={0}
-            onClick={() => handleNavigation("/gdpr")}
-            onKeyDown={(e) => handleKeyDown(e, () => handleNavigation("/gdpr"))}
-            sx={{
-              color: "rgba(255,255,255,.82)",
-              transition: ".3s",
-              "&:hover": {
-                cursor: "pointer",
-                color: "secondary.main",
-                transform: "translateX(8px)",
-              },
-              "&:focus-visible": {
-                outline: "2px solid",
-                outlineColor: "secondary.dark",
-                outlineOffset: "2px",
-              },
-              position: "relative",
-
-              "&::before": {
-                content: '""',
-                position: "absolute",
-                left: -18,
-                top: "50%",
-                width: 0,
-                height: 2,
-                bgcolor: "secondary.main",
-                transition: ".3s",
-              },
-
-              "&:hover::before": {
-                width: 10,
-              },
-            }}
-          >
-            GDPR Compliance
-          </Typography>
-          <Typography
-            role="button"
-            tabIndex={0}
-            onClick={() =>
-              handleExternalNavigation("//panels.frequentresearch.com/")
-            }
-            onKeyDown={(e) =>
-              handleKeyDown(e, () =>
-                handleExternalNavigation("//panels.frequentresearch.com/"),
-              )
-            }
-            sx={{
-              color: "rgba(255,255,255,.82)",
-              transition: ".3s",
-              "&:hover": {
-                cursor: "pointer",
-                color: "secondary.main",
-                transform: "translateX(8px)",
-              },
-              "&:focus-visible": {
-                outline: "2px solid",
-                outlineColor: "secondary.dark",
-                outlineOffset: "2px",
-              },
-              position: "relative",
-
-              "&::before": {
-                content: '""',
-                position: "absolute",
-                left: -18,
-                top: "50%",
-                width: 0,
-                height: 2,
-                bgcolor: "secondary.main",
-                transition: ".3s",
-              },
-
-              "&:hover::before": {
-                width: 10,
-              },
-            }}
-          >
-            Healthcare Panel Book
-          </Typography>
-          <Typography
-            role="button"
-            tabIndex={0}
-            onClick={() => handleNavigation("/faq")}
-            onKeyDown={(e) => handleKeyDown(e, () => handleNavigation("/faq"))}
-            sx={{
-              color: "rgba(255,255,255,.82)",
-              transition: ".3s",
-              "&:hover": {
-                cursor: "pointer",
-                color: "secondary.main",
-                transform: "translateX(8px)",
-              },
-              "&:focus-visible": {
-                outline: "2px solid",
-                outlineColor: "secondary.dark",
-                outlineOffset: "2px",
-              },
-              position: "relative",
-
-              "&::before": {
-                content: '""',
-                position: "absolute",
-                left: -18,
-                top: "50%",
-                width: 0,
-                height: 2,
-                bgcolor: "secondary.main",
-                transition: ".3s",
-              },
-
-              "&:hover::before": {
-                width: 10,
-              },
-            }}
-          >
-            FAQ
-          </Typography>
+                "&:hover::before": {
+                  width: 10,
+                },
+              }}
+            >
+              {link.label}
+            </Typography>
+          ))}
         </MotionGrid>
 
         <MotionGrid
@@ -769,7 +544,7 @@ linear-gradient(135deg,#061B4A 0%,#0A2E73 35%,#12489D 70%,#1B59B5 100%)
             display="flex"
             alignItems="center"
             component="a"
-            href="tel:+919810459700"
+            href="tel:+918130015743"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -797,7 +572,7 @@ linear-gradient(135deg,#061B4A 0%,#0A2E73 35%,#12489D 70%,#1B59B5 100%)
               }}
             />
             <Typography sx={{ fontSize: { xs: "14px", xl: "16px" } }}>
-              +919810459700
+              +918130015743
             </Typography>
           </Box>
           <Box

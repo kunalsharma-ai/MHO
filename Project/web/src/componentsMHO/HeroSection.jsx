@@ -805,10 +805,10 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
 
           {[
             {
-              title: "Healthcare Professional",
-              subtitle: "Doctors, Nurses & Allied Health Professionals",
-              image: "/images/home/forms/doctor-type.png",
-              onClick: handleDoctorClick,
+              title: "Caregiver",
+              subtitle: "Family & Care Support",
+              image: "/images/home/forms/caregiver.png",
+              onClick: handleCaregiverClick,
             },
             {
               title: "Patient",
@@ -817,10 +817,10 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
               onClick: handlePatientClick,
             },
             {
-              title: "Caregiver",
-              subtitle: "Family & Care Support",
-              image: "/images/home/forms/caregiver.png",
-              onClick: handleCaregiverClick,
+              title: "Healthcare Professional",
+              subtitle: "Doctors, Nurses & Allied Health Professionals",
+              image: "/images/home/forms/doctor-type.png",
+              onClick: handleDoctorClick,
             },
           ].map((item) => (
             <MotionBox

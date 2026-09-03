@@ -40,6 +40,7 @@ import {
   Microsoft,
   Login as LoginIcon,
   YouTube,
+  Instagram,
 } from "@mui/icons-material";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -70,36 +71,14 @@ function capitalizeName(str) {
 }
 const today = new Date();
 
-const socials = [
-  {
-    name: "linkedin",
-    link: "https://www.linkedin.com/company/my-health-opinions/",
-    icon: <LinkedIn sx={{ color: "#0077B5", fontSize: "28px" }} />,
-  },
-  {
-    name: "facebook",
-    link: "https://www.facebook.com/frequentrfs/",
-    icon: <Facebook sx={{ color: "#1877F2", fontSize: "28px" }} />,
-  },
-  {
-    name: "youtube",
-    link: "https://www.youtube.com/channel/UCLxmn2kq4aACAHaL2eT6QIQ",
-    icon: <YouTube sx={{ color: "#FF0000", fontSize: "28px" }} />,
-  },
-  {
-    name: "twitter",
-    link: "https://twitter.com/frequentrfs",
-    icon: <X sx={{ color: "black", fontSize: "22px" }} />,
-  },
-];
-const SALUTATION_OPTIONS = [
-  { label: "Mr.", value: "Mr." },
-  { label: "Mrs.", value: "Mrs." },
-  { label: "Ms.", value: "Ms." },
-  { label: "Mx.", value: "Mx." },
-  { label: "Dr.", value: "Dr." },
-  { label: "Prof.", value: "Prof." },
-];
+const socialIcons = {
+  linkedin: <LinkedIn sx={{ color: "#0077B5", fontSize: "28px" }} />,
+  facebook: <Facebook sx={{ color: "#1877F2", fontSize: "28px" }} />,
+  youtube: <YouTube sx={{ color: "#FF0000", fontSize: "28px" }} />,
+  twitter: <X sx={{ color: "black", fontSize: "22px" }} />,
+  x: <X sx={{ color: "black", fontSize: "22px" }} />,
+  instagram: <Instagram sx={{ color: "#E4405F", fontSize: "22px" }} />,
+};
 
 export default function SignUp({
   open,
@@ -159,7 +138,7 @@ export default function SignUp({
   }, []);
 
   const form = useForm({
-    mode:"onBlur",
+    mode: "onBlur",
     defaultValues: {
       category: "",
       name: {
@@ -254,32 +233,18 @@ export default function SignUp({
       }
     });
   }, [telemetry]);
- React.useEffect(() => {
-  form.setValue("category", userType);
-}, [userType]);
+  React.useEffect(() => {
+    form.setValue("category", userType);
+  }, [userType]);
 
-const genderValue = form.watch("gender");
-const salutation = form.watch("name.salutation");
-
-React.useEffect(() => {
-  if (!genderValue) return;
- 
-  const validSalutations = GENDER_SALUTATION_MAP[genderValue] || [];
- 
-  if (!salutation) {
-    setFocus("name.salutation");
-    return;
-  }
-  const selectedSalutation = SALUTATION_OPTIONS.find(
-    (option) => option.value === salutation
-  );
- 
-  if (!selectedSalutation?.genderBased) return;
- 
-  if (!validSalutations.includes(salutation)) {
-    setFocus("name.salutation");
-  }
-}, [genderValue, salutation, setFocus]);
+  const genderValue = form.watch("gender");
+  React.useEffect(() => {
+    if (salutationChange) return;
+    const map = { Male: "Mr.", Female: "Ms.", Other: "Mx." };
+    if (genderValue && map[genderValue]) {
+      form.setValue("name.salutation", map[genderValue]);
+    }
+  }, [genderValue, salutationChange]);
   let minDOB = new Date();
   minDOB.setFullYear(minDOB.getFullYear() - 120);
   let maxDOB = new Date();
@@ -736,7 +701,7 @@ React.useEffect(() => {
                           }}
                         />
                       </Grid>
-                    <Grid size={{ xs: 12, md: 4.5 }}>
+                      <Grid size={{ xs: 12, md: 4.5 }}>
                         <Form.Input
                           {...register("name.first")}
                           control={control}
@@ -794,7 +759,7 @@ React.useEffect(() => {
                           }}
                         />
                       </Grid>
-                       <Grid size={{xs:12,md:6}}>
+                      <Grid size={{ xs: 12, md: 6 }}>
                         <Form.Input
                           {...register("mail")}
                           control={control}
@@ -822,7 +787,8 @@ React.useEffect(() => {
                             },
                           }}
                         />
-                      </Grid><Grid size={ {xs:12,md:6} }>
+                      </Grid>
+                      <Grid size={{ xs: 12, md: 6 }}>
                         <Form.Phone
                           {...register("phone")}
                           control={control}
@@ -880,7 +846,7 @@ React.useEffect(() => {
                         />
                       </Grid>
 
-                        <Grid size={{ xs: 12, md: 6 }}>
+                      <Grid size={{ xs: 12, md: 6 }}>
                         <GenderRadioGroup
                           name={"gender"}
                           control={control}
@@ -889,9 +855,6 @@ React.useEffect(() => {
                           validations={user.gender}
                         />
                       </Grid>
-
-                      
-                     
 
                       <Collapse in={!!btnDisabled} sx={{ width: "100%" }}>
                         <Grid
@@ -1185,40 +1148,20 @@ React.useEffect(() => {
                         </Box>
                       </Grid>
                     </Grid>
-                    <Grid
-                      container
-                      size={12}
-                      alignItems="center"
-                      justifyContent="center"
-                      spacing={4}
-                      sx={{
-                        // position: "absolute",
-                        // bottom: 10,
-                        // left: 0,
-                        // right: 0,
-                        // zIndex: 2,
-                        borderTop: "1px solid",
-                        borderColor: "divider",
-                        pt: 2,
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Page.Text
-                        sx={{ fontSize: "13px", color: "text.secondary" }}
-                      >
-                        Follow us on
-                      </Page.Text>
-                      <Page.Box
+                    {socialsData.length > 0 && (
+                      <Grid
+                        container
+                        size={12}
+                        alignItems="center"
+                        justifyContent="center"
+                        spacing={4}
                         sx={{
+                          borderTop: "1px solid",
+                          borderColor: "divider",
+                          pt: 2,
+                          mt: 1,
                           display: "flex",
-                          flexWrap: "wrap",
-                          gap: "20px",
-
-                          justifyContent: "center",
                           alignItems: "center",
-                          listStyle: "none",
-                          textDecoration: "none",
                         }}
                       >
                         {socials.map((social) => (
@@ -1255,17 +1198,58 @@ React.useEffect(() => {
                                   boxShadow: "0 8px 20px rgba(1,35,98,.15)",
                                 },
 
-                                "& svg": {
-                                  transition: "transform .25s ease",
-                                },
+                            justifyContent: "center",
+                            alignItems: "center",
+                            listStyle: "none",
+                            textDecoration: "none",
+                          }}
+                        >
+                          {socialsData.map((social) => (
+                            <motion.div
+                              key={social.name}
+                              whileHover={{
+                                y: -5,
+                                scale: 1.15,
+                                rotate: social.name === "twitter" ? 8 : 0,
+                              }}
+                              whileTap={{ scale: 0.95 }}
+                              transition={{
+                                type: "spring",
+                                stiffness: 350,
+                                damping: 15,
                               }}
                             >
-                              {social.icon}
-                            </Page.Link>
-                          </motion.div>
-                        ))}
-                      </Page.Box>
-                    </Grid>
+                              <Page.Link
+                                href={social.link}
+                                underline="none"
+                                target="_blank"
+                                sx={{
+                                  width: 46,
+                                  height: 46,
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  borderRadius: "50%",
+                                  transition: "all .25s ease",
+                                  color: "inherit",
+
+                                  "&:hover": {
+                                    background: "rgba(1,35,98,.08)",
+                                    boxShadow: "0 8px 20px rgba(1,35,98,.15)",
+                                  },
+
+                                  "& svg": {
+                                    transition: "transform .25s ease",
+                                  },
+                                }}
+                              >
+                                {social.icon}
+                              </Page.Link>
+                            </motion.div>
+                          ))}
+                        </Page.Box>
+                      </Grid>
+                    )}
                   </MotionGrid>
                 </Grid>
               </Grid>
