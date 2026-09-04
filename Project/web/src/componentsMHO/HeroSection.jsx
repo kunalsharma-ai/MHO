@@ -265,7 +265,7 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
   const translateX = useTransform(x, (v) => `${wrap(-trackWidth, 0, v)}px`);
   return (
     <Box
-      sx={{
+      sx={ {
         position: "relative",
         height: "100vh",
         width: "100%",
@@ -275,19 +275,19 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
         alignItems: "center",
 
         bgcolor: "primary.main",
-      }}
+      } }
     >
-      {BannerData.map((banner, index) => (
+      { BannerData.map((banner, index) => (
         <motion.div
-          key={index}
-          initial={false}
-          animate={{
+          key={ index }
+          initial={ false }
+          animate={ {
             opacity: index === currentSlide ? 1 : 0,
             scale: index === currentSlide ? 1.09 : 1.08,
             x: index === currentSlide ? -15 : 0,
             y: index === currentSlide ? -8 : 0,
-          }}
-          transition={{
+          } }
+          transition={ {
             opacity: {
               duration: 1.2,
               ease: "easeInOut",
@@ -304,31 +304,31 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
               duration: 8,
               ease: "linear",
             },
-          }}
-          style={{
+          } }
+          style={ {
             position: "absolute",
             inset: 0,
             zIndex: 1,
             pointerEvents: "none",
             overflow: "hidden",
-          }}
+          } }
         >
           <Image
-            src={banner.backgroundImg}
+            src={ banner.backgroundImg }
             alt=""
             fill
-            priority={index === 0}
-            loading={index === 0 ? "eager" : "lazy"}
+            priority={ index === 0 }
+            loading={ index === 0 ? "eager" : "lazy" }
             sizes="100vw"
-            style={{
+            style={ {
               objectFit: "cover",
-            }}
+            } }
           />
         </motion.div>
-      ))}
+      )) }
 
       <Box
-        sx={{
+        sx={ {
           position: "absolute",
           inset: 0,
           zIndex: 2,
@@ -338,15 +338,15 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
       ${theme.palette.primary.main}99 45%,
       ${theme.palette.secondary.main}88 100%
     )`,
-        }}
+        } }
       />
 
       <MotionGrid
-        size={10}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7 }}
-        sx={{
+        size={ 10 }
+        initial={ { opacity: 0 } }
+        animate={ { opacity: 1 } }
+        transition={ { duration: 0.7 } }
+        sx={ {
           position: "relative",
           zIndex: 3,
           display: "flex",
@@ -364,13 +364,13 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
             xl: 16,
           },
           textAlign: isMobile ? "center" : "left",
-        }}
+        } }
       >
         <MotionBox
-          variants={surveyCarousel}
+          variants={ surveyCarousel }
           initial="hidden"
           animate="visible"
-          sx={{
+          sx={ {
             // position: "absolute",
             // left: { lg: 50, xl: 70 },
             // bottom: 20,
@@ -380,21 +380,21 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
             width: "60%",
             overflow: "hidden",
             display: { xs: "none", lg: "block" },
-          }}
+          } }
         >
           <Typography
-            sx={{
+            sx={ {
               color: "rgba(255,255,255,.72)",
               fontSize: { lg: 11, xl: 12 },
               my: { xl: 1 },
-            }}
+            } }
           >
             Browse a few of our paid surveys
           </Typography>
           <Box
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-            sx={{
+            onMouseEnter={ () => setPaused(true) }
+            onMouseLeave={ () => setPaused(false) }
+            sx={ {
               py: 1,
               my: -1,
               overflow: "hidden",
@@ -402,28 +402,28 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                 "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
               WebkitMaskImage:
                 "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-            }}
+            } }
           >
             <motion.div
-              ref={trackRef}
-              style={{
+              ref={ trackRef }
+              style={ {
                 display: "flex",
                 gap: 20,
                 width: "max-content",
                 x: translateX,
-              }}
+              } }
             >
-              {cards.map((survey, index) => (
+              { cards.map((survey, index) => (
                 <MotionBox
-                  key={`${survey.title}-${index}`}
-                  whileHover={{
+                  key={ `${survey.title}-${index}` }
+                  whileHover={ {
                     y: -5,
                     scale: 1.03,
-                  }}
-                  transition={{
+                  } }
+                  transition={ {
                     duration: 0.2,
-                  }}
-                  sx={{
+                  } }
+                  sx={ {
                     width: 250,
                     minHeight: { lg: 200, xl: 240 },
                     flexShrink: 0,
@@ -441,16 +441,16 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                       boxShadow: (theme) =>
                         `0 15px 35px ${theme.palette.secondary.main}30`,
                     },
-                  }}
+                  } }
                 >
                   <Box
                     display="flex"
                     justifyContent="space-between"
                     alignItems="center"
-                    mb={1}
+                    mb={ 1 }
                   >
                     <Box
-                      sx={{
+                      sx={ {
                         px: 1.25,
                         py: 0.5,
                         borderRadius: 5,
@@ -461,27 +461,27 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                           lg: 11,
                           xl: 12,
                         },
-                      }}
+                      } }
                     >
-                      {survey.category}
+                      { survey.category }
                     </Box>
 
                     <Typography
-                      sx={{
+                      sx={ {
                         color: "#fff",
                         fontWeight: 700,
                         fontSize: {
                           lg: 18,
                           xl: 20,
                         },
-                      }}
+                      } }
                     >
-                      {survey.reward}
+                      { survey.reward }
                     </Typography>
                   </Box>
 
                   <Typography
-                    sx={{
+                    sx={ {
                       color: "#fff",
                       fontWeight: 700,
                       fontSize: {
@@ -491,13 +491,13 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                       lineHeight: 1.35,
                       minHeight: 52,
                       mt: 1,
-                    }}
+                    } }
                   >
-                    {survey.title}
+                    { survey.title }
                   </Typography>
 
                   <Typography
-                    sx={{
+                    sx={ {
                       color: "rgba(255,255,255,.72)",
                       fontSize: {
                         lg: 13,
@@ -511,28 +511,28 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                       display: "-webkit-box",
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: "vertical",
-                    }}
+                    } }
                   >
-                    {survey.description}
+                    { survey.description }
                   </Typography>
                   <Typography
-                    sx={{
+                    sx={ {
                       color: "rgba(255,255,255,.72)",
                       fontSize: {
                         lg: 12,
                         xl: 13,
                       },
                       mt: 1.8,
-                    }}
+                    } }
                   >
-                    {survey.duration}
+                    { survey.duration }
                   </Typography>
                   <Box
-                    sx={{
+                    sx={ {
                       mt: 1,
                       pt: 1.5,
                       borderTop: "1px solid rgba(255,255,255,.08)",
-                    }}
+                    } }
                   >
                     <Button
                       fullWidth
@@ -540,19 +540,19 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                       color="secondary"
                       size="small"
                       disableElevation
-                      onClick={(e) => {
+                      onClick={ (e) => {
                         e.stopPropagation();
 
                         setOpen(true);
-                      }}
+                      } }
                       endIcon={
                         <ArrowForwardIcon
-                          sx={{
+                          sx={ {
                             fontSize: 17,
-                          }}
+                          } }
                         />
                       }
-                      sx={{
+                      sx={ {
                         minWidth: 0,
                         height: 32,
                         px: 1.5,
@@ -579,35 +579,35 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                           ml: 0.4,
                           mr: 0,
                         },
-                      }}
+                      } }
                     >
                       Take Survey
                     </Button>
                   </Box>
                 </MotionBox>
-              ))}
+              )) }
             </motion.div>
           </Box>
         </MotionBox>
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentSlide}
-            variants={container}
+            key={ currentSlide }
+            variants={ container }
             initial="hidden"
             animate="visible"
-            exit={{
+            exit={ {
               opacity: 0,
               y: -20,
               filter: "blur(8px)",
               transition: {
                 duration: 0.35,
               },
-            }}
+            } }
           >
-            <motion.div variants={item}>
+            <motion.div variants={ item }>
               <Typography
                 variant="h4"
-                sx={{
+                sx={ {
                   fontSize: {
                     xs: "1.75rem",
                     sm: "2rem",
@@ -622,16 +622,16 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                   color: "white",
                   textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
                   maxWidth: isMobile ? "100%" : "800px",
-                }}
+                } }
               >
-                {currentBanner.title}
+                { currentBanner.title }
               </Typography>
             </motion.div>
 
-            <motion.div variants={item}>
+            <motion.div variants={ item }>
               <Typography
                 variant="h5"
-                sx={{
+                sx={ {
                   fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" },
                   fontWeight: 400,
                   lineHeight: 1.5,
@@ -639,30 +639,30 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                   color: "rgba(255,255,255,0.9)",
                   textShadow: "1px 1px 2px rgba(0,0,0,0.5)",
                   maxWidth: { xs: "100%", md: "600px" },
-                }}
+                } }
               >
-                {currentBanner.caption}
+                { currentBanner.caption }
               </Typography>
             </motion.div>
 
-            <motion.div variants={item}>
+            <motion.div variants={ item }>
               <Box
                 display="flex"
-                sx={{ width: "100%" }}
-                justifyContent={isMobile ? "center" : "flex-start"}
+                sx={ { width: "100%" } }
+                justifyContent={ isMobile ? "center" : "flex-start" }
               >
                 <MotionButton
-                  whileHover={{
+                  whileHover={ {
                     scale: 1.05,
                     y: -2,
-                  }}
-                  whileTap={{
+                  } }
+                  whileTap={ {
                     scale: 0.98,
-                  }}
+                  } }
                   variant="contained"
                   color="secondary"
-                  onClick={() => setOpen(!open)}
-                  sx={{
+                  onClick={ () => setOpen(!open) }
+                  sx={ {
                     bgcolor: "secondary.dark",
                     color: "common.white",
                     fontSize: { xs: "1rem", md: "1.1rem" },
@@ -690,7 +690,7 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                         0 0 70px ${theme.palette.secondary.main}44
                         `,
                     },
-                  }}
+                  } }
                 >
                   Join Now
                 </MotionButton>
@@ -700,7 +700,7 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
         </AnimatePresence>
       </MotionGrid>
       <Box
-        sx={{
+        sx={ {
           position: "absolute",
           top: 0,
           bottom: 0,
@@ -713,13 +713,13 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
           alignItems: "center",
           px: { lg: "1vw", xl: "4vw" },
           pt: { lg: "80px", xl: "40px" },
-        }}
+        } }
       >
         <MotionBox
-          variants={signupPanel}
+          variants={ signupPanel }
           initial="hidden"
           animate="visible"
-          sx={{
+          sx={ {
             position: "absolute",
             zIndex: 20,
 
@@ -768,26 +768,26 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
               background: "rgba(8,18,45,.12)",
               pointerEvents: "none",
             },
-          }}
+          } }
         >
-          <MotionBox variants={card}>
+          <MotionBox variants={ card }>
             <Typography
-              sx={{
+              sx={ {
                 color: "#fff",
                 fontSize: { lg: 22, xl: 30 },
                 fontWeight: 800,
                 textAlign: "center",
                 letterSpacing: 0.3,
                 textShadow: "0 3px 12px rgba(0,0,0,.5)",
-              }}
+              } }
             >
               Ready to Join?
             </Typography>
           </MotionBox>
 
-          <MotionBox variants={card}>
+          <MotionBox variants={ card }>
             <Typography
-              sx={{
+              sx={ {
                 color: "rgba(255,255,255,.92)",
                 textShadow: "0 2px 6px rgba(0,0,0,.4)",
                 textAlign: "center",
@@ -796,14 +796,20 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                 mt: { lg: 1, xl: 1.5 },
                 mb: { lg: 2, xl: 4 },
                 px: 1,
-              }}
+              } }
             >
               Select your profile and become part of our global healthcare
               research community.
             </Typography>
           </MotionBox>
 
-          {[
+          { [
+            {
+              title: "Healthcare Professional",
+              subtitle: "Doctors, Nurses & Allied Health Professionals",
+              image: "/images/home/forms/doctor-type.png",
+              onClick: handleDoctorClick,
+            },
             {
               title: "Caregiver",
               subtitle: "Family & Care Support",
@@ -816,27 +822,21 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
               image: "/images/home/forms/patient-type.png",
               onClick: handlePatientClick,
             },
-            {
-              title: "Healthcare Professional",
-              subtitle: "Doctors, Nurses & Allied Health Professionals",
-              image: "/images/home/forms/doctor-type.png",
-              onClick: handleDoctorClick,
-            },
           ].map((item) => (
             <MotionBox
-              key={item.title}
-              variants={card}
-              whileHover={{
+              key={ item.title }
+              variants={ card }
+              whileHover={ {
                 x: 8,
-              }}
-              transition={{
+              } }
+              transition={ {
                 x: { duration: 0.2 },
-              }}
+              } }
               role="button"
-              tabIndex={0}
-              onClick={item.onClick}
-              onKeyDown={(e) => handleKeyDown(e, item.onClick)}
-              sx={{
+              tabIndex={ 0 }
+              onClick={ item.onClick }
+              onKeyDown={ (e) => handleKeyDown(e, item.onClick) }
+              sx={ {
                 display: "flex",
                 alignItems: "center",
 
@@ -865,53 +865,53 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                   boxShadow: (theme) =>
                     `0 12px 30px ${theme.palette.secondary.main}40`,
                 },
-              }}
+              } }
             >
               <MotionBox
-                whileHover={{ rotate: 5, scale: 1.05 }}
-                transition={{ duration: 0.2 }}
+                whileHover={ { rotate: 5, scale: 1.05 } }
+                transition={ { duration: 0.2 } }
               >
                 <Avatar
-                  src={item.image}
-                  sx={{
+                  src={ item.image }
+                  sx={ {
                     width: 60,
                     height: 60,
                     mr: 2,
                     // border: "1px solid rgba(255,255,255,.9)",
                     // filter: "drop-shadow(0 20px 30px #999)",
-                  }}
+                  } }
                 />
               </MotionBox>
 
-              <Box flex={1}>
+              <Box flex={ 1 }>
                 <Typography
-                  sx={{
+                  sx={ {
                     color: "#fff",
                     fontWeight: 700,
                     fontSize: { lg: 16, xl: 18 },
                     textShadow: "0 2px 6px rgba(0,0,0,.4)",
-                  }}
+                  } }
                 >
-                  {item.title}
+                  { item.title }
                 </Typography>
 
                 <Typography
-                  sx={{
+                  sx={ {
                     color: "rgba(255,255,255,.82)",
 
                     textShadow: "0 2px 6px rgba(0,0,0,.3)",
                     fontSize: { lg: 12, xl: 13 },
                     mt: 0.5,
                     lineHeight: 1.5,
-                  }}
+                  } }
                 >
-                  {item.subtitle}
+                  { item.subtitle }
                 </Typography>
               </Box>
 
               <MotionBox
-                variants={arrow}
-                sx={{
+                variants={ arrow }
+                sx={ {
                   width: 38,
                   height: 38,
                   borderRadius: "50%",
@@ -921,12 +921,12 @@ const HeroSection = ({ open, setOpen, setUserType }) => {
                   justifyContent: "center",
                   color: "#fff",
                   transition: ".3s",
-                }}
+                } }
               >
                 <ArrowForwardIcon fontSize="small" />
               </MotionBox>
             </MotionBox>
-          ))}
+          )) }
         </MotionBox>
       </Box>
     </Box>

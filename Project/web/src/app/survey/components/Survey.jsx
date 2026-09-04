@@ -85,7 +85,7 @@ export default function Survey({
     console.log(data);
     saveOrUpdateAnswers.mutate(data);
   };
-  
+
   async function onNext() {
     let { link } = survey;
     if (link && link != "") {
@@ -199,7 +199,7 @@ export default function Survey({
             px: { xs: 0, md: 2 },
             flex: 1,
             // flexDirection: "column",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
             alignContent: "flex-start",
           }}
         >

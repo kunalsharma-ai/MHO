@@ -170,6 +170,7 @@ export function Terms({
           let resp = await api.patch(`/api/v1/me/parent-details`, data);
           user.update(resp.data);
         })}
+        style={{ padding: "16px" }}
       >
         <ParentDetailsForm form={form} submitLabel={"Submit"} />
       </form>

@@ -76,6 +76,10 @@ export default function DateField({
           return (
             <DatePicker
               {...field}
+              onChange={(value) => {
+                field.onChange(value ? value.toDate() : null);
+                field.onBlur();
+              }}
               open={open}
               onOpen={() => setOpen(true)}
               onClose={() => setOpen(false)}

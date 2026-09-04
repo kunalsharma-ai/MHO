@@ -45,12 +45,31 @@ function page() {
           }}
         >
           <ListItem>
-            <b>The Licensor</b> – Frequent Research Fieldwork Solutions Private
-            Limited.
+            <b>The Licensor</b> –{" "}
+            <Typography
+              component={"a"}
+              target="_blank"
+              href="https://www.frequentresearch.com"
+              fontSize={"16px"}
+              color="secondary.main"
+              fontWeight={600}
+            >
+              Frequent Research Fieldwork Solutions Private Limited
+            </Typography>
           </ListItem>
           <ListItem>
-            <b>The Licensee / Subscriber</b> – Individuals registered with My
-            Health Opinion Panel.
+            <b>The Licensee / Subscriber</b> – Individuals registered with{" "}
+            <Typography
+              component={"a"}
+              target="_blank"
+              href="/"
+              fontSize={"16px"}
+              color="secondary.main"
+              fontWeight={600}
+            >
+              MyHealthOpinions
+            </Typography>
+            .
           </ListItem>
           <ListItem>
             <b>The Product</b> – Survey Offers, Survey Rewards, Reward
@@ -101,7 +120,7 @@ function page() {
         >
           3. Usage Rights and Licensing Options
         </Typography>
-        <Typography fontSize={"16px"}>
+        <Typography fontSize={"16px"} pt={1}>
           The Licensor grants the Licensee the following non-exclusive and
           non-transferable rights to the purchased Product or Products:
         </Typography>

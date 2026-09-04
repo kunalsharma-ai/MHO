@@ -23,16 +23,25 @@ function page() {
       >
         <Typography fontSize={"16px"} lineHeight={"1.5"}>
           This Privacy Policy pertains to My Health Opinions ("My Health
-          Opinions," "we," "us," and "our"), an entity associated with Frequent
-          Research Fieldwork Solutions Private Limited. Our utmost priority at
-          My Health Opinions is safeguarding the privacy of your personal
-          information. Moreover, we are dedicated to thwarting any unauthorized
-          access to this data. The Privacy Policy lays out the specifics
-          regarding the collection of personal information from our members,
-          participants, users, business representatives, and others.
-          Additionally, it elucidates how we utilize this information, how it is
-          securely stored, and provides you with choices concerning the use of
-          your information.
+          Opinions," "we," "us," and "our"), an entity associated with{" "}
+          <Typography
+            component={"a"}
+            target="_blank"
+            href="https://www.frequentresearch.com"
+            fontSize={"16px"}
+            color="secondary.main"
+            fontWeight={600}
+          >
+            Frequent Research Fieldwork Solutions Private Limited
+          </Typography>
+          . Our utmost priority at My Health Opinions is safeguarding the
+          privacy of your personal information. Moreover, we are dedicated to
+          thwarting any unauthorized access to this data. The Privacy Policy
+          lays out the specifics regarding the collection of personal
+          information from our members, participants, users, business
+          representatives, and others. Additionally, it elucidates how we
+          utilize this information, how it is securely stored, and provides you
+          with choices concerning the use of your information.
         </Typography>
         <Typography
           fontSize={"18px"}
@@ -50,21 +59,31 @@ function page() {
           conducting surveys in adherence to market dynamics and industry codes
           of conduct. Our primary objective is to present intuitive visual
           story-based reporting based on the most reliable research data. My
-          Health Opinions operates in India under the incorporation of Frequent
-          Research Fieldwork Solutions Private Limited, established in 2017. Our
-          proprietary panel of healthcare professionals is managed globally and
-          includes primary care physicians, medical specialists, pharmacy
-          professionals, physician assistants, nurses, and various other
-          healthcare experts. We also survey individuals representing diverse
-          health issues, generating valuable market research data categorized by
-          geographical location, age bracket, and other significant factors. Our
-          operations encompass the My Health Opinions website, located at{" "}
+          Health Opinions operates in India under the incorporation of{" "}
+          <Typography
+            component={"a"}
+            target="_blank"
+            href="https://www.frequentresearch.com"
+            fontSize={"16px"}
+            color="secondary.main"
+            fontWeight={600}
+          >
+            Frequent Research Fieldwork Solutions Private Limited
+          </Typography>
+          , established in 2017. Our proprietary panel of healthcare
+          professionals is managed globally and includes primary care
+          physicians, medical specialists, pharmacy professionals, physician
+          assistants, nurses, and various other healthcare experts. We also
+          survey individuals representing diverse health issues, generating
+          valuable market research data categorized by geographical location,
+          age bracket, and other significant factors. Our operations encompass
+          the My Health Opinions website, located at{" "}
           <Typography
             component={"a"}
             href="/"
             fontSize={"16px"}
             color="secondary.main"
-            fontWeight={"bold"}
+            fontWeight={600}
           >
             https://myhealthopinions.com/
           </Typography>{" "}
@@ -181,9 +200,18 @@ function page() {
           our third-party service providers use various technologies, including
           cookies. For detailed information on what cookies are, the types of
           cookies we use, the reasons for using them, and how you can manage
-          their use, please refer to our Cookie Policy at the following link:
-          https://www.myhealthopinions.com/cookie-policy-cookies/ We are
-          committed to respecting your privacy and handling your Personal
+          their use, please refer to our Cookie Policy at the following link:{" "}
+          <Typography
+            component={"a"}
+            target="_blank"
+            href="https://www.myhealthopinions.com/cookies/"
+            fontSize={"16px"}
+            color="secondary.main"
+            fontWeight={600}
+          >
+            https://www.myhealthopinions.com/cookies/
+          </Typography>{" "}
+          We are committed to respecting your privacy and handling your Personal
           Information responsibly and in accordance with applicable laws and
           regulations.{" "}
         </Typography>
@@ -625,10 +653,35 @@ function page() {
           {" "}
           For any inquiries or concerns related to this Privacy Policy or the
           handling of your Personal Information, you can reach us through the
-          following means: Email: support@myhealthopinions.com Phone: 9810459700
-          My Health Opinions, C/O Frequent Research Fieldwork Solution Private
-          Limited, Mangolpur Kalan, New Delhi - 110085. We
-          encourage you to contact us if you have any questions, requests, or
+          following means: Address: <br />
+          <Typography fontSize={"16px"} fontWeight={600}>
+            My Health Opinions, C/O Frequent Research Fieldwork Solution Private
+            Limited, <br />
+            Mangolpur Kalan, <br />
+            New Delhi - 110085
+          </Typography>
+          Email:{" "}
+          <Typography
+            component={"a"}
+            href="mailto:support@myhealthopinions.com"
+            fontSize={"16px"}
+            color="secondary.main"
+            fontWeight={600}
+          >
+            support@myhealthopinions.com
+          </Typography>{" "}
+          <br /> Phone:{" "}
+          <Typography
+            component={"a"}
+            href="tel:+918130015743"
+            fontSize={"16px"}
+            color="secondary.main"
+            fontWeight={600}
+          >
+            +918130015743
+          </Typography>{" "}
+          <br />
+          We encourage you to contact us if you have any questions, requests, or
           feedback regarding your privacy and data protection. Our team will be
           happy to assist you and address any concerns you may have.
         </Typography>

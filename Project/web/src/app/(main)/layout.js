@@ -75,8 +75,8 @@ export default function MainLayout({ children }) {
             onClick={scrollToTop}
             sx={{
               position: "fixed",
-              bottom: 35,
-              right: 35,
+              bottom: 15,
+              left: 15,
               boxShadow: 4,
               zIndex: 999,
               color: "white",
