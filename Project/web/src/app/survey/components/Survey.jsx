@@ -32,6 +32,7 @@ export default function Survey({
 }) {
   const [currentPage, setCurrentPage] = React.useState(start);
   const [validationError, setValidationError] = React.useState(null);
+  
 
   const pages = survey.pages;
   const form = useForm({
@@ -199,7 +200,7 @@ export default function Survey({
             px: { xs: 0, md: 2 },
             flex: 1,
             // flexDirection: "column",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
             alignContent: "flex-start",
           }}
         >
@@ -215,6 +216,7 @@ export default function Survey({
                   user={user}
                   form={form}
                   disabled={!editMode}
+                  pageFields={pages[currentPage]?.slice(1)}
                 />
               ))
           )}

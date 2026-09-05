@@ -49,6 +49,7 @@ export default function MyAccountPoints() {
   const rewardAmount = Number(points) * Number(conversionRate);
 
   return (
+    <Box data-tour="myaccount-current-rewards" sx={{ width: "100%" }}>
     <Collapse
       in={!isLoading}
       timeout={500}
@@ -56,7 +57,7 @@ export default function MyAccountPoints() {
       sx={{ width: "100%" }}
     >
       <Box
-      data-tour="myaccount-current-rewards"
+      
         sx={{
           width: "100%",
           borderRadius: "22px",
@@ -371,5 +372,6 @@ export default function MyAccountPoints() {
         </Grid>
       </Box>
     </Collapse>
+    </Box>
   );
 }
