@@ -213,7 +213,7 @@ export default function SignUp({
     }, []);
     React.useEffect(() => {
     if (emailUnverified) {
-        setStatus("duplicate");
+        setStatus("unverified");
     }
 }, [emailUnverified]);
 
@@ -1512,6 +1512,156 @@ export default function SignUp({
                                 </Box>
                             </Grid>
                         ) }
+                         { status == "unverified" && (
+                            <Grid
+                                size={ 12 }
+                                container
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Box
+                                    sx={ {
+                                        width: "100%",
+                                        p: { xs: 3, md: 5 },
+                                        borderRadius: 4,
+                                        border: "1px solid",
+                                        borderColor: "#e8edf5",
+                                        boxShadow: "0 20px 60px rgba(0,0,0,.08)",
+                                        textAlign: "center",
+                                    } }
+                                >
+                                    <Avatar
+                                        sx={ {
+                                            width: 90,
+                                            height: 90,
+                                            mx: "auto",
+                                            mb: 3,
+                                            bgcolor: "#fff7e6",
+                                            color: "#fe7e00",
+                                        } }
+                                    >
+                                        <ErrorIcon sx={ { fontSize: 52 } } />
+                                    </Avatar>
+                                    <Typography
+                                        sx={ {
+                                            fontSize: { xs: 28, md: 34 },
+                                            fontWeight: 700,
+                                            color: "primary.main",
+                                        } }
+                                    >
+                                       Almost There! Let's Get You Started
+                                    </Typography>
+                                    
+                                    <Box
+                                        sx={ {
+                                            mt: 1,
+                                            p: 3,
+                                            borderRadius: 3,
+                                            bgcolor: "#fafbfc",
+                                            border: "1px solid #e5e7eb",
+                                            textAlign: "left",
+                                        } }
+                                    >
+                                     
+                                        <Stack spacing={ 2 }>
+                                            <Box display="flex" gap={ 1.5 }>
+                                           
+                                                <Typography>
+                                                  Welcome! We're excited to have you. To make sure your account is secure and ready for surveys, 
+                                                  you just need to verify your email address.
+                                                </Typography>
+                                            </Box>
+                                            <Typography
+                                            sx={ {
+                                                fontWeight: 700,
+                                                mb: 2,
+                                            } }
+                                        >
+                                            What should you do?
+                                        </Typography>
+                                            <Box display="flex" gap={ 1.5 } sx={ { mt: 1 }}>
+                                                <CheckCircleIcon color="secondary" />
+                                                <Typography>
+                                                  Please check your inbox (and Spam folder) for your unique verification link.
+                                                </Typography>
+                                            </Box>
+                                            <Box display="flex" gap={ 1.5 }>
+                                                <CheckCircleIcon color="secondary" />
+                                                <Typography>
+                                                   Clicking this link will activate your account, allowing you to create a password and start accessing opportunities right away!
+
+                                                </Typography>
+                                            </Box>
+                                        </Stack>
+                                    </Box>
+                                    <Stack
+                                        direction={ { xs: "column", sm: "row" } }
+                                        spacing={ 2 }
+                                        justifyContent="center"
+                                        mt={ 4 }
+                                    >
+                                        <motion.div
+                                            whileHover={ { y: -2 } }
+                                            whileTap={ { scale: 0.98 } }
+                                        >
+                                            <Page.MuiButton
+                                                variant="contained"
+                                                color="secondary"
+                                                disabled={ cooldown > 0 }
+                                                onClick={ async () => {
+                                               let resp = await api.post(`/api/v1/user/resend`, {
+                                                    ...form.watch(),
+                                                    mail: emailUnverified || form.watch("mail"),
+                                                    action: "resend-otp",
+                                               });
+                                                    useToast(resp);
+                                                    setCooldown(RESEND_SECONDS);
+                                                } }
+                                                sx={ {
+                                                    minWidth: 260,
+                                                    height: 54,
+                                                    borderRadius: 3,
+                                                    color: "#fff",
+                                                    fontWeight: 700,
+                                                    textTransform: "none",
+                                                } }
+                                            >
+                                                { cooldown > 0
+                                                    ? `Resend in ${cooldown}s`
+                                                    : "Resend Verification Email" }
+                                            </Page.MuiButton>
+                                        </motion.div>
+                                        <Page.MuiButton
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={ onClose }
+                                            sx={ {
+                                                minWidth: 180,
+                                                height: 54,
+                                                borderRadius: 3,
+                                                fontWeight: 700,
+                                                textTransform: "none",
+                                            } }
+                                        >
+                                            Go Home
+                                        </Page.MuiButton>
+                                    </Stack>
+                                    { cooldown > 0 && (
+                                        <Typography
+                                            sx={ {
+                                                mt: 2,
+                                                color: "text.secondary",
+                                                fontSize: 13,
+                                            } }
+                                        >
+                                            You can request another verification email once the
+                                            countdown finishes.
+                                        </Typography>
+                                    ) }
+                                </Box>
+                            </Grid>
+                        ) }
+
                     </>
                 }
             />
