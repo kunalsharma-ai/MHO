@@ -111,6 +111,7 @@ export default function SignUp({
     userType,
     setUserType,
     setOpenLogin,
+    emailUnverified,
 }) {
     const [telemetry, router] = [useTelemetry(), useRouter()];
     const [status, setStatus] = React.useState("signup"); // signup, success, duplicate
@@ -210,6 +211,13 @@ export default function SignUp({
             setProviders(resp?.data ?? []);
         });
     }, []);
+    React.useEffect(() => {
+    if (emailUnverified) {
+        setStatus("duplicate");
+    }
+}, [emailUnverified]);
+
+
     const providerIcons = {
         google: <Google />,
         github: <GitHub />,
@@ -1452,10 +1460,11 @@ export default function SignUp({
                                                 color="secondary"
                                                 disabled={ cooldown > 0 }
                                                 onClick={ async () => {
-                                                    let resp = await api.post(`/api/v1/user/resend`, {
-                                                        ...form.watch(),
-                                                        action: "resend-otp",
-                                                    });
+                                               let resp = await api.post(`/api/v1/user/resend`, {
+                                                    ...form.watch(),
+                                                    mail: emailUnverified || form.watch("mail"),
+                                                    action: "resend-otp",
+                                               });
                                                     useToast(resp);
                                                     setCooldown(RESEND_SECONDS);
                                                 } }
