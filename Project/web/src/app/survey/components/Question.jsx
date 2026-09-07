@@ -13,7 +13,7 @@ import SelectElement from "./Select";
 import MultiSelectElement from "./MultiSelect";
 import AddressElement from "./Address";
 import DocumentElement from "./Document";
-export default function Question({ que, user, form, disabled }) {
+export default function Question({ que, user, form, disabled,pageFields }) {
   if (que === "alternate-phone-whatsapp") return <></>;
   const question = useQuery({
     queryKey: ["question", que],
@@ -34,12 +34,12 @@ export default function Question({ que, user, form, disabled }) {
   ) : question.isError ? (
     <></>
   ) : Boolean(question.data) ? (
-    <Que question={question.data} form={form} disabled={disabled} />
+    <Que question={question.data} form={form} disabled={disabled} pageFields={pageFields} />
   ) : (
     <></>
   );
 }
-function Que({ question, form, disabled }) {
+function Que({ question, form, disabled, pageFields }) {
   if (!question || !question.name) return <></>;
   const parentValue = question.parent ? form.watch(question.parent) : null;
   const { data: options, isLoading } = useQuery({
@@ -68,6 +68,7 @@ function Que({ question, form, disabled }) {
           form={form}
           options={options}
           question={question}
+         
         />
       );
 
@@ -88,6 +89,7 @@ function Que({ question, form, disabled }) {
           form={form}
           question={question}
           options={options}
+           pageFields={pageFields}
         />
       );
 
@@ -98,6 +100,7 @@ function Que({ question, form, disabled }) {
           form={form}
           question={question}
           options={options}
+          pageFields={pageFields}
         />
       );
 

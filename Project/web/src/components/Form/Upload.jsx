@@ -37,6 +37,18 @@ function getCroppedImg(imageSrc, croppedAreaPixels, outputType = "image/jpeg") {
   });
 }
 
+// ===== File icon mapping (Font Awesome classes) =====
+const FILE_ICON_MAP = {
+  pdf: "fa-file-pdf",
+  doc: "fa-file-word",
+  docx: "fa-file-word",
+  xls: "fa-file-excel",
+  xlsx: "fa-file-excel",
+  jpg: "fa-file-image",
+  jpeg: "fa-file-image",
+  png: "fa-file-image",
+};
+
 export default function Upload({
   onUpload,
   label = "",
@@ -361,25 +373,29 @@ export default function Upload({
             </Grid>
           )}
         </Grid>
-      ) : (
+     ) : (
         // ------- NON-IMAGE FILE UPLOAD -------
         <Page.Box mt={1}>
-          <Page.MuiButton
-            variant="contained"
-            component="label"
-            color="secondary"
-            htmlFor="file-upload"
-          >
-            Upload File
-          </Page.MuiButton>
+          <Page.Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+            <Page.MuiButton
+              variant="contained"
+              component="label"
+              color="secondary"
+              htmlFor="file-upload"
+            >
+              Upload File
+            </Page.MuiButton>
+            <i
+              className="fas fa-file-pdf"
+              style={{ fontSize: 26, color: "#0A4DA5" }}
+            />
+          </Page.Box>
 
-          <Page.Text mt={1} fontSize={13}>
-            {multiple
-              ? Array.isArray(preview)
-                ? preview.join(", ")
-                : ""
-              : preview}
-          </Page.Text>
+          {preview && (
+            <Page.Text mt={1} fontSize={13} sx={{ color: "green" }}>
+              Your Document is uploaded
+            </Page.Text>
+          )}
 
           <input
             id="file-upload"

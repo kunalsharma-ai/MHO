@@ -311,11 +311,13 @@ function SetPasswordForm({ form }) {
               message: <Grid
         sx={{
           borderRadius: 2,
-         
-          
           py: 2,
           pl: 2,
           pr: { xs: 2, md: 8 },
+          color:"#000000 !important",
+          "& .MuiListItem-root,& p, & li":{
+            color:"#000000 !important"
+          }
         }}
       >
         <Page.Text fontSize={13}>Password should have:</Page.Text>

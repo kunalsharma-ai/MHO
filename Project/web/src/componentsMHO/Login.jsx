@@ -738,7 +738,7 @@ function LoginCard({ onClose, setCardType, setOpenSignUp, socials }) {
                   }}
                 />
               </Grid>
-              <Box
+              <Box  
                 sx={{
                   mt: 2,
                   px: 1.5,

@@ -24,11 +24,14 @@ export default function page() {
   React.useEffect(() => {
     if (!user) return;
     setIsLoading(true);
+    let cancelled = false;
 
     if (tourActive) {
       setData(mockRewards.data);
       setIsLoading(false);
-      return;
+      return()=>{
+        cancelled = true;
+      };
     }
 
     let filters = {
@@ -47,6 +50,7 @@ export default function page() {
         setData(resp.data);
       },
       () => {
+        if (cancelled) return;
         setIsLoading(false);
       }
     );

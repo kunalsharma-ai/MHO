@@ -9,19 +9,32 @@ export default function MultiSelectElement({
   form,
   options,
   disabled,
+  pageFields,
 }) {
   const [describe, setDescribe] = React.useState("");
   const isQuestionDisabled = disabled || !(question.isEditable ?? true);
   const errors = form?.formState?.errors;
   const value = form.watch(question.name);
+  
   function onChange(e, v) {
-    let tempDescribe = v.find((opt) => opt?.describeLabel !== "");
-    if (tempDescribe) setDescribe(tempDescribe.describeLabel);
-    else setDescribe("");
-    question?.children.map((child) => {
-      form.setValue(child, null);
-    });
+  let tempDescribe = v.find((opt) => opt?.describeLabel !== "");
+  if (tempDescribe) setDescribe(tempDescribe.describeLabel);
+  else setDescribe("");
+  question?.children.map((child) => {
+    form.setValue(child, null);
+  });
+
+  // ✅ NAYA
+  if (pageFields) {
+    const index = pageFields.indexOf(question.name);
+    if (index !== -1) {
+      pageFields.slice(index + 1).forEach((fieldName) => {
+        form.setValue(fieldName, null);
+      });
+    }
   }
+}
+  
 
   if (!options || options?.length === 0) return <></>;
   return (
