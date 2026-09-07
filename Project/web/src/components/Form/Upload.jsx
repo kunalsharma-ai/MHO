@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { Grid, Tooltip, Dialog, Slider, Button } from "@mui/material";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import Cropper from "react-easy-crop";
 import { Text } from "./";
 import { api, Page } from "@/util";
@@ -49,6 +50,12 @@ const FILE_ICON_MAP = {
   png: "fa-file-image",
 };
 
+function getFileIcon(fileName = "") {
+  const extension = fileName.split(".").pop()?.toLowerCase();
+
+  return FILE_ICON_MAP[extension] || "fa-file";
+}
+
 export default function Upload({
   onUpload,
   label = "",
@@ -65,6 +72,24 @@ export default function Upload({
 }) {
   const inputRef = React.useRef(null);
   const preview = form.watch(name); // could be string or array
+  const [selectedFileNames, setSelectedFileNames] = React.useState([]);
+  React.useEffect(() => {
+    if (!preview) {
+      setSelectedFileNames([]);
+      return;
+    }
+
+    if (multiple && Array.isArray(preview)) {
+      setSelectedFileNames(
+        preview.map((file) => {
+          const url = typeof file === "string" ? file : "";
+          return url.split("/").pop() || "Uploaded file";
+        }),
+      );
+    } else if (!multiple && typeof preview === "string") {
+      setSelectedFileNames([preview.split("/").pop() || "Uploaded file"]);
+    }
+  }, [preview, multiple]);
 
   const outputType = accept.includes("image") ? "image/webp" : "";
 
@@ -84,7 +109,7 @@ export default function Upload({
   function onSelectFile(e) {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
-
+    setSelectedFileNames(files.map((file) => file.name));
     const urls = files.map((f) => URL.createObjectURL(f));
 
     if (outputType === "image/webp" && !multiple) {
@@ -163,8 +188,12 @@ export default function Upload({
   // ============================
   function removeImage(index) {
     const arr = form.getValues(name) || [];
+
     arr.splice(index, 1);
+
     form.setValue(name, [...arr]);
+
+    setSelectedFileNames((prev) => prev.filter((_, i) => i !== index));
   }
 
   // ============================
@@ -373,39 +402,142 @@ export default function Upload({
             </Grid>
           )}
         </Grid>
-     ) : (
+      ) : (
         // ------- NON-IMAGE FILE UPLOAD -------
         <Page.Box mt={1}>
-          <Page.Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-            <Page.MuiButton
-              variant="contained"
-              component="label"
-              color="secondary"
-              htmlFor="file-upload"
-            >
-              Upload File
-            </Page.MuiButton>
-            <i
-              className="fas fa-file-pdf"
-              style={{ fontSize: 26, color: "#0A4DA5" }}
+          <Page.MuiButton
+            variant="contained"
+            component="label"
+            color="secondary"
+            htmlFor="file-upload"
+            endIcon={<UploadFileIcon />}
+          >
+            {multiple ? "Choose Files" : "Choose File"}
+            <input
+              id="file-upload"
+              type="file"
+              ref={inputRef}
+              hidden
+              accept={accept}
+              onChange={onSelectFile}
+              multiple={multiple}
             />
-          </Page.Box>
+          </Page.MuiButton>
+
+          {selectedFileNames.length > 0 && (
+            <Page.Box
+              sx={{
+                mt: 1.5,
+                display: "flex",
+                flexDirection: "column",
+                gap: 1,
+                width: "100%",
+                maxWidth: 550,
+              }}
+            >
+              {selectedFileNames.map((fileName, index) => (
+                <Page.Box
+                  key={`${fileName}-${index}`}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1.5,
+                    px: 1.5,
+                    py: 1.25,
+                    border: "1px solid",
+                    borderColor: "grey.200",
+                    borderRadius: 2,
+                    bgcolor: "grey.50",
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      borderColor: "secondary.main",
+                      bgcolor: "secondary.light",
+                    },
+                  }}
+                >
+                  <Page.Box
+                    sx={{
+                      width: 42,
+                      height: 42,
+                      borderRadius: 1.5,
+                      bgcolor: "white",
+                      border: "1px solid",
+                      borderColor: "grey.200",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <i
+                      className={`fas ${getFileIcon(fileName)}`}
+                      style={{
+                        fontSize: 21,
+                        color: "#0A4DA5",
+                      }}
+                    />
+                  </Page.Box>
+
+                  <Page.Box sx={{ minWidth: 0, flex: 1 }}>
+                    <Page.Text
+                      sx={{
+                        fontSize: 13,
+                        fontWeight: 600,
+                        color: "text.primary",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                      title={fileName}
+                    >
+                      {fileName}
+                    </Page.Text>
+
+                    <Page.Text
+                      sx={{
+                        fontSize: 11,
+                        color: "text.secondary",
+                        mt: 0.25,
+                      }}
+                    >
+                      File uploaded successfully
+                    </Page.Text>
+                  </Page.Box>
+
+                  {multiple && (
+                    <Button
+                      size="small"
+                      onClick={() => removeImage(index)}
+                      sx={{
+                        minWidth: 30,
+                        width: 30,
+                        height: 30,
+                        p: 0,
+                        borderRadius: 1,
+                        color: "text.secondary",
+                        flexShrink: 0,
+                        "&:hover": {
+                          color: "error.main",
+                          bgcolor: "error.light",
+                        },
+                      }}
+                    >
+                      <i
+                        className="fas fa-trash-alt"
+                        style={{ fontSize: 13 }}
+                      />
+                    </Button>
+                  )}
+                </Page.Box>
+              ))}
+            </Page.Box>
+          )}
 
           {preview && (
             <Page.Text mt={1} fontSize={13} sx={{ color: "green" }}>
               Your Document is uploaded
             </Page.Text>
           )}
-
-          <input
-            id="file-upload"
-            type="file"
-            ref={inputRef}
-            hidden
-            accept={accept}
-            onChange={onSelectFile}
-            multiple={multiple}
-          />
         </Page.Box>
       )}
     </>
