@@ -15,26 +15,25 @@ export default function MultiSelectElement({
   const isQuestionDisabled = disabled || !(question.isEditable ?? true);
   const errors = form?.formState?.errors;
   const value = form.watch(question.name);
-  
-  function onChange(e, v) {
-  let tempDescribe = v.find((opt) => opt?.describeLabel !== "");
-  if (tempDescribe) setDescribe(tempDescribe.describeLabel);
-  else setDescribe("");
-  question?.children.map((child) => {
-    form.setValue(child, null);
-  });
 
-  // ✅ NAYA
-  if (pageFields) {
-    const index = pageFields.indexOf(question.name);
-    if (index !== -1) {
-      pageFields.slice(index + 1).forEach((fieldName) => {
-        form.setValue(fieldName, null);
-      });
+  function onChange(e, v) {
+    let tempDescribe = v.find((opt) => opt?.describeLabel !== "");
+    if (tempDescribe) setDescribe(tempDescribe.describeLabel);
+    else setDescribe("");
+    question?.children.map((child) => {
+      form.setValue(child, null);
+    });
+
+    // ✅ NAYA
+    if (pageFields) {
+      const index = pageFields.indexOf(question.name);
+      if (index !== -1) {
+        pageFields.slice(index + 1).forEach((fieldName) => {
+          form.setValue(fieldName, null);
+        });
+      }
     }
   }
-}
-  
 
   if (!options || options?.length === 0) return <></>;
   return (
@@ -58,6 +57,7 @@ export default function MultiSelectElement({
           control={form.control}
           watch={form.watch}
           multiple={true}
+          maxSelections={question?.maxSelections}
           isDisabled={isQuestionDisabled}
           options={options.map((opt) => {
             if (typeof opt === "string")

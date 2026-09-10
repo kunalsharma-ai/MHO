@@ -8,6 +8,8 @@ import { Grid, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useToast } from "@/hooks";
 import { SideDrawer } from "@/components/Popup";
 
@@ -36,13 +38,13 @@ export default function () {
 
   return (
     <Page.Box
-      sx={ {
+      sx={{
         bgcolor: (theme) => theme.palette.page.main,
         p: { xs: 2, md: 3 },
-      } }
+      }}
     >
       <Datatable
-        columns={ [
+        columns={[
           {
             id: "name",
             label: "Category",
@@ -61,52 +63,50 @@ export default function () {
             render: (info) => (
               <>
                 <IconButton
-                  sx={ { p: 0 } }
-                  onClick={ () => {
+                  sx={{ p: 0 }}
+                  onClick={() => {
                     setOpen({ open: true, id: info._id });
-                  } }
+                  }}
                 >
                   <EditIcon fontSize="small" color="secondary" />
                 </IconButton>
                 <IconButton
-                  sx={ { p: 0 } }
-                  onClick={ async () => {
+                  sx={{ p: 0 }}
+                  onClick={async () => {
                     await api.put(`/api/v1/category/${info._id}`, {
-                      sortOrder: info.sortOrder + 1
-                    })
-                  } }
+                      sortOrder: info.sortOrder + 1,
+                    });
+                  }}
                 >
-                  ↑
+                  <KeyboardArrowUpIcon fontSize="small" color="primary" />
                 </IconButton>
                 <IconButton
-                  sx={ { p: 0 } }
-                  
-                  onClick={ async () => {
+                  sx={{ p: 0 }}
+                  onClick={async () => {
                     await api.put(`/api/v1/category/${info._id}`, {
-                      sortOrder: info.sortOrder - 1
-                    })
-                  } }
+                      sortOrder: info.sortOrder - 1,
+                    });
+                  }}
                 >
-                  ↓
+                  <KeyboardArrowDownIcon fontSize="small" color="primary" />
                 </IconButton>
-
               </>
             ),
           },
-        ] }
-        data={ categories }
-        isLoading={ isLoading }
-        pagination={ [10, 20, 50, 100] }
-        pageSize={ 10 }
+        ]}
+        data={categories}
+        isLoading={isLoading}
+        pagination={[10, 20, 50, 100]}
+        pageSize={10}
         hideColumnSelector
         hideDownload
         noDataMsg="No Record Found."
-        add={ () => {
+        add={() => {
           setOpen({ open: true, id: null });
-        } }
+        }}
         title={
           <Page.Text
-            sx={ {
+            sx={{
               fontSize: "18px",
               display: "inline-block",
               fontWeight: "600",
@@ -115,23 +115,23 @@ export default function () {
                 `2px solid ${theme.palette.secondary.dark}`,
               pb: 0.5,
               my: 1,
-            } }
+            }}
           >
             Account Category List
           </Page.Text>
         }
       />
       <SideDrawer
-        open={ open.open }
-        hideTitleBar={ true }
-        onClose={ () => setOpen({ open: false, id: null }) }
+        open={open.open}
+        hideTitleBar={true}
+        onClose={() => setOpen({ open: false, id: null })}
       >
         <CreateOrEditCategory
-          categoryID={ open.id }
-          categories={ categories }
-          onClose={ () => {
+          categoryID={open.id}
+          categories={categories}
+          onClose={() => {
             setOpen({ open: false, id: null });
-          } }
+          }}
         />
       </SideDrawer>
     </Page.Box>
@@ -152,6 +152,7 @@ function CreateOrEditCategory({ categoryID = null, onClose, categories }) {
         underfall: "",
         overfall: "",
       },
+      thresholdPoints: "",
       terms: [],
       showOnRegistration: false,
     },
@@ -190,156 +191,166 @@ function CreateOrEditCategory({ categoryID = null, onClose, categories }) {
   return (
     <Grid
       component="form"
-      onSubmit={ handleSubmit(onSubmit) }
+      onSubmit={handleSubmit(onSubmit)}
       container
-      spacing={ 2 }
-      size={ 12 }
-      sx={ {
+      spacing={2}
+      size={12}
+      sx={{
         bgcolor: "white",
         overflow: "hidden",
         borderRadius: "10px",
         boxShadow: 1,
         pb: 2,
         alignSelf: "flex-start",
-      } }
+      }}
     >
       <SectionTitle
-        title={ categoryID ? "Edit Category" : "Create Category" }
-        sx={ { justifyContent: "space-between" } }
+        title={categoryID ? "Edit Category" : "Create Category"}
+        sx={{ justifyContent: "space-between" }}
       >
-        <IconButton onClick={ onClose } sx={ { color: "secondary.main" } }>
+        <IconButton onClick={onClose} sx={{ color: "secondary.main" }}>
           <CloseIcon />
         </IconButton>
       </SectionTitle>
 
-      <Grid container size={ 12 } spacing={ 1.4 } sx={ { px: 2 } }>
+      <Grid container size={12} spacing={1.4} sx={{ px: 2 }}>
         <Form.Input
-          control={ control }
-          { ...form.register("name") }
+          control={control}
+          {...form.register("name")}
           label="Category Name"
         />
-        <Grid size={ 6 } container spacing={ 1.4 }>
+        <Grid size={6} container spacing={1.4}>
           <Form.Input
-            control={ control }
-            { ...form.register("age.min") }
+            control={control}
+            {...form.register("age.min")}
             type="number"
             label="Minimum Age"
           />
         </Grid>
-        <Grid size={ 6 }>
+        <Grid size={6}>
           <Form.Input
-            control={ control }
-            { ...form.register("age.max") }
+            control={control}
+            {...form.register("age.max")}
             type="number"
             label="Maximum Age"
           />
         </Grid>
-        <Grid size={ 6 }>
+        <Grid size={6}>
           <Form.Select
-            control={ control }
-            { ...form.register("age.underfall") }
+            control={control}
+            {...form.register("age.underfall")}
             label="Underfall Category"
-            options={ categories
+            options={categories
               .filter((category) => category.name !== watch("name"))
               .map((category) => ({
                 value: category.name,
                 label: category.name,
-              })) }
+              }))}
           />
         </Grid>
-        <Grid size={ 6 }>
+        <Grid size={6}>
           <Form.Select
-            control={ control }
-            { ...form.register("age.overfall") }
+            control={control}
+            {...form.register("age.overfall")}
             label="Overfall Category"
-            options={ categories
+            options={categories
               .filter((category) => category.name !== watch("name"))
               .map((category) => ({
                 value: category.name,
                 label: category.name,
-              })) }
+              }))}
           />
         </Grid>
 
-        <Form.Checkbox
-          control={ control }
-          { ...form.register(`showOnRegistration`) }
-          label={ `Show on signup page` }
-        />
+        <Grid size={6}>
+          <Form.Input
+            control={control}
+            {...form.register("thresholdPoints")}
+            type="number"
+            label="Threshold to Redeem"
+          />
+        </Grid>
+        <Grid size={6}>
+          <Form.Checkbox
+            control={control}
+            {...form.register(`showOnRegistration`)}
+            label={`Show on signup page`}
+          />
+        </Grid>
         <Form.TextEditor
-          control={ control }
+          control={control}
           name="termsMessage"
           label="Terms Message"
-          editorId={ id }
+          editorId={id}
           dialogScoped
         />
 
-        { fields.map((field, index) => (
+        {fields.map((field, index) => (
           <Grid
-            size={ 12 }
-            key={ field.id }
+            size={12}
+            key={field.id}
             container
             alignItems="center"
-            spacing={ 1 }
-            sx={ {
+            spacing={1}
+            sx={{
               p: 2,
               borderRadius: 2,
               border: `1px solid rgba(51, 169, 202, 0.4)`,
 
               bgcolor: "#f1f4f9",
-            } }
+            }}
           >
-            <Grid sx={ { flex: 1 } } container spacing={ 1 }>
+            <Grid sx={{ flex: 1 }} container spacing={1}>
               <Page.Box
                 display="flex"
                 justifyContent="space-between"
                 width="100%"
                 alignItems="center"
               >
-                <Page.Text sx={ { fontWeight: 600, color: "secondary.main" } }>
-                  Terms { index + 1 } Details
+                <Page.Text sx={{ fontWeight: 600, color: "secondary.main" }}>
+                  Terms {index + 1} Details
                 </Page.Text>
 
-                { fields.length > 1 && (
+                {fields.length > 1 && (
                   <IconButton
-                    sx={ { alignSelf: "flex-start" } }
+                    sx={{ alignSelf: "flex-start" }}
                     color="error"
-                    onClick={ () => remove(index) }
+                    onClick={() => remove(index)}
                   >
                     <DeleteIcon />
                   </IconButton>
-                ) }
+                )}
               </Page.Box>
               <Form.Input
-                control={ control }
-                { ...form.register(`terms.${index}.name`) }
-                label={ `Term Name` }
-              />{ " " }
+                control={control}
+                {...form.register(`terms.${index}.name`)}
+                label={`Term Name`}
+              />{" "}
               <Form.TextEditor
-                control={ control }
-                name={ `terms.${index}.body` }
-                label={ `Term Body` }
-                editorId={ id2 + index }
+                control={control}
+                name={`terms.${index}.body`}
+                label={`Term Body`}
+                editorId={id2 + index}
                 dialogScoped
-              />{ " " }
+              />{" "}
               <Form.Checkbox
-                control={ control }
-                { ...form.register(`terms.${index}.isRequired`) }
-                label={ `Term Required ` }
+                control={control}
+                {...form.register(`terms.${index}.isRequired`)}
+                label={`Term Required `}
               />
             </Grid>
           </Grid>
-        )) }
+        ))}
 
         <Page.MuiButton
           variant="outlined"
           size="small"
           color="secondary"
-          sx={ {
+          sx={{
             borderWidth: 2,
             fontWeight: 600,
-          } }
-          onClick={ () => append("") }
+          }}
+          onClick={() => append("")}
         >
           Add Term
         </Page.MuiButton>
@@ -347,20 +358,20 @@ function CreateOrEditCategory({ categoryID = null, onClose, categories }) {
 
       <Grid
         container
-        size={ 12 }
-        sx={ {
+        size={12}
+        sx={{
           justifyContent: "flex-end",
           mr: 2,
-        } }
+        }}
       >
         <Page.MuiButton
           type="submit"
           variant="contained"
           color="secondary"
-          sx={ {
+          sx={{
             color: "white",
             fontWeight: "bold",
-          } }
+          }}
         >
           Submit
         </Page.MuiButton>
