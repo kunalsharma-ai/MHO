@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parental Consent Confirmed</title>
+  </head>
+
+  <body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
+
+    <table
+      width="100%"
+      border="0"
+      cellspacing="0"
+      cellpadding="0"
+      bgcolor="#f4f7fb"
+      style="margin:0;padding:0;background:#f4f7fb;">
+      <tr>
+        <td align="center" style="padding:35px 15px;">
+
+          <table
+            width="680"
+            border="0"
+            cellspacing="0"
+            cellpadding="0"
+            bgcolor="#ffffff"
+            style="
+          width:680px;
+          max-width:680px;
+          background:#ffffff;
+          border-radius:14px;
+          overflow:hidden;
+        ">
+
+            <!-- TOP BLUE BAR -->
+            <tr>
+              <td
+                height="8"
+                bgcolor="#0D5CC7"
+                style="background:#0D5CC7;"></td>
+            </tr>
+
+            <!-- LOGO -->
+            <tr>
+              <td align="center" style="padding:30px 25px 25px;background:#ffffff;">
+                <img
+                  src="https://myhealthopinions.com/images/logo/My-Health-Opinions.png"
+                  alt="My Health Opinions"
+                  width="320"
+                  style="
+                display:block;
+                width:320px;
+                max-width:90%;
+                height:auto;
+                border:0;
+              " />
+              </td>
+            </tr>
+
+            <!-- ORANGE ACCENT -->
+            <tr>
+              <td
+                height="3"
+                bgcolor="#FF7A00"
+                style="background:#FF7A00;"></td>
+            </tr>
+
+            <!-- HERO -->
+            <tr>
+              <td align="center" style="padding:35px 40px 10px;">
+
+                <p style="
+              margin:0 0 8px;
+              font-size:14px;
+              line-height:22px;
+              font-weight:bold;
+              letter-spacing:1.5px;
+              text-transform:uppercase;
+              color:#FF7A00;
+            ">
+                  Consent Confirmed
+                </p>
+
+                <h1 style="
+              margin:0 0 10px;
+              font-size:30px;
+              line-height:38px;
+              font-weight:700;
+              color:#0D5CC7;
+            ">
+                  Thank You for Your Approval
+                </h1>
+
+                <p style="
+              margin:0;
+              font-size:17px;
+              line-height:28px;
+              color:#5d6875;
+            ">
+                  Your parental consent for
+                  <strong>{{ user.name.first }}</strong>
+                  has been successfully recorded.
+                </p>
+
+              </td>
+            </tr>
+
+            <!-- GREETING -->
+            <tr>
+              <td style="padding:30px 55px 10px;">
+
+                <p style="
+              margin:0 0 18px;
+              font-size:21px;
+              line-height:30px;
+              font-weight:600;
+              color:#25313d;
+            ">
+                  Dear {{ user.parent.name.first }},
+                </p>
+
+                <p style="
+              margin:0;
+              font-size:16px;
+              line-height:28px;
+              color:#4b5865;
+            ">
+                  Thank you for confirming your consent for your child,
+                  <strong>{{ user.name.first }}</strong>, to participate in 
+              MyHealthOpinions.
+                </p>
+
+              </td>
+            </tr>
+
+            <!-- CONSENT CARD -->
+            <tr>
+              <td style="padding:25px 55px;">
+
+                <table
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="
+                border:1px solid #cfe0f5;
+                border-radius:12px;
+                background:#EAF3FF;
+              ">
+                  <tr>
+                    <td style="padding:25px 28px;">
+
+                      <p style="
+                    margin:0 0 12px;
+                    font-size:14px;
+                    font-weight:bold;
+                    text-transform:uppercase;
+                    letter-spacing:1px;
+                    color:#0D5CC7;
+                  ">
+                        Consent Successfully Recorded
+                      </p>
+
+                      <p style="
+                    margin:0 0 12px;
+                    font-size:15px;
+                    line-height:25px;
+                    color:#4b5865;
+                  ">
+                        Your parental approval has been successfully 
+                    recorded, and
+                        <strong>{{ user.name.first }}</strong>'s registration 
+                    is now approved.
+                      </p>
+
+                      <p style="
+                    margin:0;
+                    font-size:15px;
+                    line-height:25px;
+                    color:#4b5865;
+                  ">
+                        {{ user.name.first }} may now participate in eligible 
+                    healthcare market research surveys and earn rewards
+                    by sharing their opinions.
+                      </p>
+
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+
+            <!-- MESSAGE -->
+            <tr>
+              <td style="padding:5px 55px 20px;">
+
+                <p style="
+              margin:0;
+              font-size:16px;
+              line-height:28px;
+              color:#4b5865;
+            ">
+                  We appreciate your cooperation and support in helping us 
+              maintain a safe and responsible research environment for
+              all participants.
+                </p>
+
+              </td>
+            </tr>
+
+            <!-- PARENT RIGHTS -->
+            <tr>
+              <td style="padding:15px 55px 35px;">
+
+                <table
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="
+                border:1px solid #ffd199;
+                border-radius:10px;
+                background:#fff8ef;
+              ">
+                  <tr>
+
+                    <td
+                      width="70"
+                      align="center"
+                      style="padding:22px 10px 22px 20px;">
+
+                      <table
+                        border="0"
+                        cellspacing="0"
+                        cellpadding="0"
+                        width="48"
+                        height="48"
+                        style="
+                      width:48px;
+                      height:48px;
+                      background:#FFD199;
+                      border-radius:50%;
+                    ">
+                        <tr>
+                          <td align="center" valign="middle">
+
+                            <span style="
+                          font-size:22px;
+                          color:#E66400;
+                          font-weight:bold;
+                        ">
+                              !
+                            </span>
+
+                          </td>
+                        </tr>
+                      </table>
+
+                    </td>
+
+                    <td style="padding:22px 20px 22px 10px;">
+
+                      <p style="
+                    margin:0 0 7px;
+                    font-size:16px;
+                    font-weight:bold;
+                    color:#25313d;
+                  ">
+                        Questions or Changes to Your Consent?
+                      </p>
+
+                      <p style="
+                    margin:0;
+                    font-size:14px;
+                    line-height:23px;
+                    color:#5f6975;
+                  ">
+                        If you have any questions, would like to withdraw 
+                    your consent, or request account deletion, please
+                    contact our support team.
+                      </p>
+
+                    </td>
+
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+
+            <!-- DIVIDER -->
+            <tr>
+              <td style="padding:10px 0;">
+                <div style="height:1px;background:#e5e9ee;"></div>
+              </td>
+            </tr>
+
+            {% include "mailer/footer.liquid" %}
+
+            <!-- BOTTOM ORANGE BAR -->
+            <tr>
+              <td
+                height="8"
+                bgcolor="#FF7A00"
+                style="background:#FF7A00;"></td>
+            </tr>
+
+          </table>
+
+        </td>
+      </tr>
+    </table>
+
+
+  </body>
+</html>

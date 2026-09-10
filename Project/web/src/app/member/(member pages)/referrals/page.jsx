@@ -17,6 +17,7 @@ import {
   TableRow,
   Tooltip,
   Collapse,
+  Chip,
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import AddIcon from "@mui/icons-material/Add";
@@ -29,7 +30,7 @@ import { Datatable } from "@/components";
 import { useMember } from "@/Context";
 import { useToast } from "@/hooks";
 import { motion, AnimatePresence } from "framer-motion";
-import {useTourActive} from "@/Context/tourStore";
+import { useTourActive } from "@/Context/tourStore";
 import mockReferrals from "@/mockData/referral";
 
 const MotionGrid = motion.create(Grid);
@@ -71,31 +72,29 @@ export default function page() {
   });
   const tourActive = useTourActive();
 
-React.useEffect(() => {
-  if (!window) return;
-  if (!user) return;
-  setReferralLink(`${window.location.origin}/?ref=${user._id}&signup`);
+  React.useEffect(() => {
+    if (!window) return;
+    if (!user) return;
+    setReferralLink(`${window.location.origin}/?ref=${user._id}&signup`);
 
-  let cancelled = false;
+    let cancelled = false;
 
-  if (tourActive) {
-    setReferrals(mockReferrals.data);
-    return;
-  }
+    if (tourActive) {
+      setReferrals(mockReferrals.data);
+      return;
+    }
 
-  api
-    .post(`/api/v1/user`, { referredBy: user._id })
-    .then((resp) => {
-      if (cancelled) return;   // <- ye check zaroori hai
+    api.post(`/api/v1/user`, { referredBy: user._id }).then((resp) => {
+      if (cancelled) return; // <- ye check zaroori hai
       if ("data" in resp) {
         setReferrals(resp.data);
       }
     });
 
-  return () => {
-    cancelled = true;  // <- jab effect dobara chale (tourActive badle), purana call cancel maana jaega
-  };
-}, [user, tourActive]);
+    return () => {
+      cancelled = true; // <- jab effect dobara chale (tourActive badle), purana call cancel maana jaega
+    };
+  }, [user, tourActive]);
 
   const handleCopy = async () => {
     try {
@@ -131,7 +130,18 @@ React.useEffect(() => {
   const columns = [
     { id: "name", label: "Name", data: "fullName" },
     { id: "email", label: "E-mail", data: "mail" },
-    { id: "status", label: "Status", render: (info) => info.isVerified.email },
+    {
+      id: "status",
+      label: "Status",
+      render: (info) => (
+        <Chip
+          size="small"
+          color={info.isVerified.email == "verified" ? "success" : "error"}
+          label={info.isVerified.email}
+          sx={{ textTransform: "capitalize" }}
+        />
+      ),
+    },
     {
       id: "date",
       label: "Date of Joining",
@@ -321,7 +331,11 @@ React.useEffect(() => {
 
         <InvitedEmails sentInvites={sentInvites} />
       </MotionGrid>
-      <MotionGrid variants={fadeUp} size={12} data-tour="referrals-history-table">
+      <MotionGrid
+        variants={fadeUp}
+        size={12}
+        data-tour="referrals-history-table"
+      >
         <Datatable
           isLoading={false}
           pagination={[10, 20, 50, 100]}

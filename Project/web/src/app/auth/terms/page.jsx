@@ -194,6 +194,8 @@ export function Terms({
           py: 2,
           px: 2,
           width: width,
+          maxHeight: "calc(100vh - 190px)",
+          overflow: "auto",
         }}
       >
         <Page.Box fontSize={15} py={2}>
