@@ -111,22 +111,35 @@ export default function () {
             width: "150px",
             feature: ["filterable"],
           },
-          {
+    {
             id: "options",
             label: "Options",
             width: "150px",
             render: (info) =>
               ["radio", "checkbox", "select", "multiselect"].includes(
                 info?.type,
-              ) && (
-                <Page.Box
-                  component={"a"}
+              ) ? (
+                <Page.Text
+                  component="a"
                   href={`/admin/options?id=${info._id}`}
-                  target={`tab-${info._id}`}
+                  target="_blank"
                   sx={{ color: "secondary.main", fontWeight: 500, p: 0 }}
                 >
                   View Options
-                </Page.Box>
+                </Page.Text>
+              ) : Boolean(info.type === "text") ? (
+                <>
+                  <Page.Text
+                    component="a"
+                    href={`/admin/validations?que=${info._id}`}
+                    target="_blank"
+                    sx={{ color: "secondary.main", fontWeight: 500, p: 0 }}
+                  >
+                    Validations
+                  </Page.Text>
+                </>
+              ) : (
+                <>N/A</>
               ),
           },
           {
