@@ -38,6 +38,7 @@ export default function Home() {
   const [openLogin, setOpenLogin] = React.useState(false);
   const [openSignUp, setOpenSignUp] = React.useState(false);
   const [userType, setUserType] = React.useState(null);
+   const [emailUnverified, setEmailUnverified] = React.useState(null);
 
   React.useEffect(() => {
     if (!query) return;
@@ -88,7 +89,7 @@ export default function Home() {
           overflowY: "auto",
         }}
       >
-        <Header sections={sections} open={openLogin} setOpen={setOpenLogin} />
+        <Header sections={sections} open={openLogin} setOpen={setOpenLogin} setOpenSignUp={setOpenSignUp} setEmailUnverified={setEmailUnverified} />
 
         <div ref={homeRef} className="scroll-target">
           <HeroSection
@@ -161,6 +162,7 @@ export default function Home() {
           onClose={() => {
             setOpenSignUp(false);
           }}
+          emailUnverified={emailUnverified}
         />
         <Login
           open={openLogin}
