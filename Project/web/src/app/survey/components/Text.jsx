@@ -24,7 +24,7 @@ import {
   useTheme,
 } from "@mui/material";
 
-export default function TextElement({ question, form, disabled }) {
+export default function TextElement({ question, form, disabled, pattern }) {
   const [hide, setHide] = React.useState(false);
   let isQuestionDisabled = disabled;
   let value = !question
@@ -38,7 +38,7 @@ export default function TextElement({ question, form, disabled }) {
       ? false
       : !("isEditable" in question ? question.isEditable : false);
   const errors = form?.formState?.errors;
-
+if (Boolean(pattern))
   return (
     <Grid
       size={{ xs: 12, md: Number(question?.size) }}
@@ -61,13 +61,15 @@ export default function TextElement({ question, form, disabled }) {
         control={form.control}
         watch={form.watch}
         disabled={isQuestionDisabled}
-        parent={question.parent}
+        //parent={question.parent}
         api={question.name}
         validations={{
           required:
             question.required && !("parent" in question)
               ? "This field is required"
               : false,
+              pattern,
+              
         }}
         onHide={(e) => {
           setHide(e);
@@ -85,4 +87,5 @@ export default function TextElement({ question, form, disabled }) {
       />
     </Grid>
   );
+  return null;
 }

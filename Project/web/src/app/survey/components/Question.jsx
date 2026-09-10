@@ -43,20 +43,30 @@ function Que({ question, form, disabled, pageFields }) {
   if (!question || !question.name) return <></>;
   const parentValue = question.parent ? form.watch(question.parent) : null;
   const { data: options, isLoading } = useQuery({
-    queryKey: ["options", question?.name, parentValue, question?.parent],
-    queryFn: async ({ queryKey }) => {
-      if (!hasOption(question.type)) return [];
-      if (question.parent) {
-        if ([null, undefined, "", []].includes(parentValue)) return [];
-        let resp = await api.post(`/api/v1/option/${question.name}`, {
-          parentValue,
-        });
-        return resp.data;
-      }
-      let resp = await api.get(`/api/v1/option/${question.name}`);
-      return resp.data;
-    },
-    enabled: !Boolean(question.parent) || Boolean(parentValue),
+     queryKey: [
+      hasOption(question.type) ? "option" : "validation",
+      question?.name,
+      parentValue,
+      question?.parent,
+    ],
+      queryFn: async ({ queryKey }) => {
+  const [endpoint, name, parentValue, parent] = queryKey;
+
+  if (parent) {                                    
+    if ([null, undefined, "", []].includes(parentValue)) return [];
+    let resp = await api.post(`/api/v1/${endpoint}/${name}`, {
+        
+      parentValue,
+    });
+    //console.log(`[${endpoint}] response for ${name}:`, resp?.data);
+    return resp?.data ?? [];
+  }
+
+  let resp = await api.get(`/api/v1/${endpoint}/${name}`);   
+  //console.log(`[${endpoint}] response for ${name}:`, resp?.data);     
+  return resp?.data ?? [];
+},
+enabled: !Boolean(question.parent) || Boolean(parentValue),
   });
   if (isLoading) return <></>;
 
@@ -73,8 +83,12 @@ function Que({ question, form, disabled, pageFields }) {
       );
 
     case "text":
+      let pattern = Boolean(options?.pattern)
+      ? new RegExp(options?.pattern)
+      : null;
+       console.log("question:", question.name, "| raw options:", options, "| pattern:", pattern);
       return (
-        <TextElement disabled={disabled} form={form} question={question} />
+        <TextElement disabled={disabled} form={form} question={question} pattern={pattern} />
       );
 
     case "phone":
