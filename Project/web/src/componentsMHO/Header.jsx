@@ -28,7 +28,7 @@ import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useMember, useQuery } from "@/Context";
 
-export default function Header({ sections = [], open, setOpen }) {
+export default function Header({ sections = [], open, setOpen,setOpenSignUp,setEmailUnverified }) {
   const router = useRouter();
   const pathname = usePathname();
   const query = useQuery();
@@ -51,6 +51,16 @@ export default function Header({ sections = [], open, setOpen }) {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+    React.useEffect(() => {
+    if (!query) return;
+    if (![null, undefined].includes(query.verifyemail)) {
+     
+      setOpenSignUp(true);
+      setEmailUnverified(query.verifyemail);
+     
+    }
+  }, [query]);
 
   useEffect(() => {
     if (!query) return;
