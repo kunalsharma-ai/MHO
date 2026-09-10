@@ -86,7 +86,7 @@ enabled: !Boolean(question.parent) || Boolean(parentValue),
       let pattern = Boolean(options?.pattern)
       ? new RegExp(options?.pattern)
       : null;
-       console.log("question:", question.name, "| raw options:", options, "| pattern:", pattern);
+       
       return (
         <TextElement disabled={disabled} form={form} question={question} pattern={pattern} />
       );
