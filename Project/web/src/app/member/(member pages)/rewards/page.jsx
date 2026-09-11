@@ -22,7 +22,7 @@ export default function page() {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    if (!user) return;
+    if (!user || !dateRange || dateRange.length !==2) return;
     setIsLoading(true);
     let cancelled = false;
 
