@@ -26,13 +26,13 @@ export default function page() {
     setIsLoading(true);
     let cancelled = false;
 
-    if (tourActive) {
-      setData(mockRewards.data);
-      setIsLoading(false);
-      return()=>{
-        cancelled = true;
-      };
-    }
+    // if (tourActive) {
+    //   setData(mockRewards.data);
+    //   setIsLoading(false);
+    //   return()=>{
+    //     cancelled = true;
+    //   };
+    // }
 
     let filters = {
       status: {
@@ -135,7 +135,7 @@ export default function page() {
           pagination={[10, 20, 50, 100]}
           pageSize={20}
           noDataMsg="No Record Found."
-          data={data}
+          data={tourActive ? mockRewards.data : data}
           hideColumnSelector
           extra={
             <Box px={{ xs: 0, md: 2 }} my={{ xs: 1, md: 0 }}>

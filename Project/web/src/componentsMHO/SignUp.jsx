@@ -267,6 +267,7 @@ export default function SignUp({
         telemetry.ip().then((resp) => {
             if (resp.country) {
                 form.setValue("address.0.country", resp.country.toLowerCase());
+                form.setValue("country", resp.country.toLowerCase());
                 setCountry(resp.country.toLowerCase());
             }
         });
