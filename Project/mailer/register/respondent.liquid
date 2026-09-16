@@ -152,7 +152,7 @@
     line-height:25px;
     color:#4b5865;
   ">
-                        To complete your registration and activate your account, please verify  
+                        To complete your registration and activate your account, please verify   
 your email address using the button below.
                       </p>
 
@@ -173,7 +173,7 @@ your email address using the button below.
     line-height:28px;
     color:#4b5865;
   ">
-                  Once your email is verified, you'll be able to set your password and  
+                  Once your email is verified, you'll be able to set your password and   
 access available healthcare market research opportunities.
                 </p>
 
@@ -188,31 +188,50 @@ access available healthcare market research opportunities.
                   href="http://{{user.origin}}/auth/password?user={{user._id}}&code={{otp.code}}"
                   target="_blank"
                   style="
-    display:inline-block;
-    background:#FF7A00;
-    background-color:#FF7A00;
-    color:#ffffff;
-    text-decoration:none;
-    padding:16px 48px;
-    border-radius:8px;
-    font-size:17px;
-    font-weight:bold;
-    letter-spacing:.2px;
-  ">
+        display:inline-block;
+        background:#FF7A00;
+        background-color:#FF7A00;
+        color:#ffffff;
+        text-decoration:none;
+        padding:16px 48px;
+        border-radius:8px;
+        font-size:17px;
+        font-weight:bold;
+        letter-spacing:.2px;
+      ">
                   VERIFY EMAIL ADDRESS
                 </a>
 
                 <p style="
-    margin:15px 0 0;
-    font-size:13px;
-    line-height:20px;
-    color:#7b8794;
-  ">
+      margin:15px 0 0;
+      font-size:13px;
+      line-height:20px;
+      color:#7b8794;
+    ">
                   Click the button above to verify your email and continue.
                 </p>
 
+                <p style="
+      margin:18px 0 0;
+      font-size:13px;
+      line-height:20px;
+      color:#7b8794;
+    ">
+                  Or copy and paste the URL below into your browser to continue:
+                </p>
+
+                <p style="
+      margin:8px 0 0;
+      font-size:13px;
+      line-height:20px;
+      word-break:break-all;
+      color:#0D5CC7;
+    ">
+                  http://{{ user.origin }}/auth/password?user={{ user._id }}&code={{ otp.code }}</p>
+
               </td>
             </tr>
+
 
             <!-- SECURITY NOTICE -->
             <tr>
@@ -281,7 +300,7 @@ access available healthcare market research opportunities.
     line-height:23px;
     color:#5f6975;
   ">
-                        If you did not register for the My Health Opinions Panel, you can  
+                        If you did not register for the My Health Opinions Panel, you can   
 safely ignore this email.
                       </p>
 

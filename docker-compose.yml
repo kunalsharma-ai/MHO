@@ -37,9 +37,11 @@ services:
     networks:
       - mho
   db:
-    image: mongo
+    image: registry.sampledge.com/db/mongo
     container_name: ${PROJECT}-mongodb
     restart: always
+    ports:
+      - 20017:27017
     volumes:
       - ./db/storage:/data/db
       - ./db/dump:/backup

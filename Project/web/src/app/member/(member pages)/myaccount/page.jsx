@@ -41,7 +41,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useForm } from "react-hook-form";
 
-import { Form,Datatable } from "@/components";
+import { Form, Datatable } from "@/components";
 import PopUp from "@/componentsMHO/PopUp";
 import { api, loadData, Page } from "@/util";
 import DataList from "@/componentsMHO/DataList";
@@ -49,9 +49,8 @@ import { useMember } from "@/Context";
 import LoadingOverlay from "@/componentsMHO/LoadingOverlay";
 import { useToast } from "@/hooks";
 import MyAccountPoints from "../../components/MyAccountPoints";
-import {useTourActive} from "@/Context/tourStore";
+import { useTourActive } from "@/Context/tourStore";
 import mockRewardsProcessed from "@/mockData/rewardProcessed";
-
 
 const paymentMethods = {
   paypal: "/images/payment/paypal.png",
@@ -345,6 +344,13 @@ function UserInfo({ user }) {
     });
   }, [user]);
 
+  const rating =
+    user?.qualityScoreTotal > 0
+      ? Math.round(
+          ((user?.qualityScore ?? 0) / user.qualityScoreTotal) * 5 * 2,
+        ) / 2
+      : 0;
+
   const userData = [
     {
       icon: <CakeIcon sx={{ fontSize: 18 }} />,
@@ -562,14 +568,12 @@ linear-gradient(
 
           <Rating
             name="account-rating"
-            value={4}
+            value={rating}
+            precision={0.5}
             readOnly
             size="large"
             emptyIcon={
-              <StarIcon
-                style={{ opacity: 0.28, color: "primary.main" }}
-                fontSize="inherit"
-              />
+              <StarIcon style={{ opacity: 0.28 }} fontSize="inherit" />
             }
             sx={{
               pb: 2,
@@ -668,7 +672,7 @@ linear-gradient(
 
       {/* Payment Section */}
       <Box
-      data-tour="myaccount-payment"
+        data-tour="myaccount-payment"
         sx={{
           width: "100%",
 
@@ -686,7 +690,7 @@ linear-gradient(
 
       {/* Social Section */}
       <Box
-       data-tour="myaccount-social"
+        data-tour="myaccount-social"
         sx={{
           width: "100%",
 
@@ -867,11 +871,17 @@ function Payment() {
       >
         {payment?.method ? (
           <Grid container size={12} alignItems="center" py={{ xs: 0, md: 1 }}>
-            <Typography
-              width={{ xs: "100%", lg: "40%" }}
-              fontWeight={payment.method === "Wire Transfer" ? 600 : 500}
-            >
-              {payment.method}:
+            <Typography>
+              {payment.method === "wire-transfer"
+                ? "Wire Transfer"
+                : payment.method === "upi"
+                  ? "UPI"
+                  : payment.method === "amazon-gift-card"
+                    ? "Amazon Gift Card"
+                    : payment.method === "paypal"
+                      ? "PayPal"
+                      : payment.method}{" "}
+              Details:
             </Typography>
 
             <Grid size={12} mt={1.5}>
@@ -901,7 +911,6 @@ function Payment() {
                     <Typography
                       component="span"
                       sx={{
-                        color: "#fff",
                         fontWeight: 600,
                         wordBreak: "break-word",
                         flex: 1,
@@ -915,7 +924,7 @@ function Payment() {
                     <IconButton
                       size="small"
                       onClick={() => toggleField(index)}
-                      sx={{ color: "#fff", ml: 1 }}
+                      sx={{ ml: 1 }}
                     >
                       {visibleFields[index] ? (
                         <VisibilityOffIcon fontSize="small" />
@@ -1253,7 +1262,7 @@ function SocialAccounts({ user }) {
       ),
     );
   }, [user]);
-  
+
   const handleChange = (key) => (e) => {
     setContact((prev) => ({
       ...prev,
@@ -1391,7 +1400,11 @@ function SocialAccounts({ user }) {
 
       <PopUp
         maxWidth="md"
-        title="Add Contact"
+        title={
+          Object.values(contact).some((value) => value?.trim())
+            ? "Edit Social Contacts"
+            : "Add Social Contacts"
+        }
         open={openContact}
         onClose={() => setOpenContact(false)}
       >
@@ -1535,62 +1548,62 @@ function Summary() {
     //   ),
     // },
     {
-  label: "Rewards Processed Summary",
-  render: tourActive ? (
-    <Grid size={12} data-tour="myaccount-rewards-processed">
-      <Datatable
-        isLoading={false}
-        pagination={[10, 20, 50]}
-        pageSize={20}
-        hideColumnSelector
-        hideDownload
-        noDataMsg="No Record Found."
-        data={mockRewardsProcessed.data}
-        columns={[
-          {
-            id: "survey",
-            label: "Survey Name",
-            render: (info) => info.survey?.name,
-          },
-          {
-            id: "processedAt",
-            label: "Processed On",
-            render: (info) => new Date(info.processedAt).toLocaleString(),
-          },
-          {
-            id: "points",
-            label: "Points",
-            render: (info) => `${info.points} pts`,
-          },
-          {
-            id: "method",
-            label: "Payment Method",
-            render: (info) => info.method,
-          },
-          {
-            id: "status",
-            label: "Status",
-            render: (info) => (
-              <span style={{ textTransform: "capitalize" }}>
-                {info.status}
-              </span>
-            ),
-          },
-        ]}
-      />
-    </Grid>
-  ) : (
-    <Grid
-      size={12}
-      container
-      justifyContent="center"
-      py={7}
-      data-tour="myaccount-rewards-processed"
-    >
-      No Reward Processed yet.
-    </Grid>
-  ),
-},
+      label: "Rewards Processed Summary",
+      render: tourActive ? (
+        <Grid size={12} data-tour="myaccount-rewards-processed">
+          <Datatable
+            isLoading={false}
+            pagination={[10, 20, 50]}
+            pageSize={20}
+            hideColumnSelector
+            hideDownload
+            noDataMsg="No Record Found."
+            data={mockRewardsProcessed.data}
+            columns={[
+              {
+                id: "survey",
+                label: "Survey Name",
+                render: (info) => info.survey?.name,
+              },
+              {
+                id: "processedAt",
+                label: "Processed On",
+                render: (info) => new Date(info.processedAt).toLocaleString(),
+              },
+              {
+                id: "points",
+                label: "Points",
+                render: (info) => `${info.points} pts`,
+              },
+              {
+                id: "method",
+                label: "Payment Method",
+                render: (info) => info.method,
+              },
+              {
+                id: "status",
+                label: "Status",
+                render: (info) => (
+                  <span style={{ textTransform: "capitalize" }}>
+                    {info.status}
+                  </span>
+                ),
+              },
+            ]}
+          />
+        </Grid>
+      ) : (
+        <Grid
+          size={12}
+          container
+          justifyContent="center"
+          py={7}
+          data-tour="myaccount-rewards-processed"
+        >
+          No Reward Processed yet.
+        </Grid>
+      ),
+    },
     {
       label: "Rejected Responses",
       render: (

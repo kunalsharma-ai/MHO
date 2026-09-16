@@ -6,7 +6,13 @@ import TextElement from "./Text";
 
 import { Grid } from "@mui/material";
 
-export default function SelectElement({ question, form, options, disabled, pageFields }) {
+export default function SelectElement({
+  question,
+  form,
+  options,
+  disabled,
+  pageFields,
+}) {
   const [showSpecify, setShowSpecify] = React.useState(false);
   const [describe, setDescribe] = React.useState("");
   const isQuestionDisabled = disabled || !(question.isEditable ?? true);
@@ -21,7 +27,6 @@ export default function SelectElement({ question, form, options, disabled, pageF
       form.setValue(child, null);
     });
 
-    
     if (pageFields) {
       const index = pageFields.indexOf(question.name);
       if (index !== -1) {
@@ -31,9 +36,7 @@ export default function SelectElement({ question, form, options, disabled, pageF
       }
     }
   }
-  
 
-  
   if (!options || options?.length === 0) return <></>;
   let formattedOptions = options;
   if (question.isMoney) {
