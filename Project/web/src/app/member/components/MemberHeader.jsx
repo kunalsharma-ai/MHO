@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import MemberNotification from "./MemberNotification";
 import { useMember } from "@/Context";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import { api } from "@/util";
 
 export default function MemberHeader() {
   const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
@@ -29,6 +30,7 @@ export default function MemberHeader() {
     }
   };
 
+  console.log(user);
   return (
     <div>
       <AppBar
@@ -113,7 +115,10 @@ export default function MemberHeader() {
             gap={{ xs: 1, md: 2 }}
             pb={1}
           >
-            <QualityScore value={user?.qualityScore ?? 0} total={200} />
+            <QualityScore
+              value={user?.qualityScore ?? 0}
+              total={user?.qualityScoreTotal ?? 0}
+            />
             <Box
               sx={{
                 width: 48,

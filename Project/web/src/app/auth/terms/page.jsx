@@ -14,6 +14,7 @@ import { api, Page } from "@/util";
 import LoadingOverlay from "@/componentsMHO/LoadingOverlay";
 import { useToast } from "@/hooks";
 import ParentDetailsForm from "../password/ParentDetailsForm";
+import MinorConsentPending from "./MinorConsentPending";
 
 export default function page() {
   return (
@@ -48,6 +49,7 @@ export default function page() {
           sx={{
             height: "67.44px",
             width: "240px",
+            mb: 1,
           }}
         >
           <img
@@ -94,7 +96,11 @@ export function Terms({
   React.useEffect(() => {
     if (!user) return;
     setIsLoading(true);
-    if (pathName === "/auth/terms" && user?.terms?.length > 0)
+    if (
+      pathName === "/auth/terms" &&
+      user?.terms?.length > 0 &&
+      (!user?.isMinor || user?.parent?.consentStatus === "approved")
+    )
       router.push("/survey?name=welcome");
     setAcceptedTerms(user.terms);
     setInitialTerms(user.terms || []);
@@ -176,6 +182,14 @@ export function Terms({
       </form>
     );
   }
+  if (
+    user?.isMinor &&
+    !user?.parent?.consentStatus ||
+    user?.parent?.consentStatus === "pending"
+  ) {
+    return <MinorConsentPending />;
+  }
+
   return (
     <>
       {/* <Page.Text

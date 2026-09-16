@@ -106,7 +106,7 @@ function Login({ open, onClose, setOpenSignUp }) {
           overflow: "hidden",
           width: {
             xs: "96vw",
-            sm: cardType === "login" ? 1200 : 500,
+            sm: cardType === "login" ? 1200 : 600,
           },
           maxWidth: "96vw",
           maxHeight: "95vh",
@@ -738,7 +738,7 @@ function LoginCard({ onClose, setCardType, setOpenSignUp, socials }) {
                   }}
                 />
               </Grid>
-              <Box  
+              <Box
                 sx={{
                   mt: 2,
                   px: 1.5,
@@ -781,25 +781,25 @@ function LoginCard({ onClose, setCardType, setOpenSignUp, socials }) {
                 </Page.MuiButton>
               </Box>
             </Box>
-            <Collapse in={!!btnDisabled} sx={{ width: "100%" }}>
-              <Box
-                sx={{
-                  px: 3,
-                  py: 2,
-                  border: "1px solid",
-                  borderColor: "divider",
-                  bgcolor: "#fff",
-                  borderRadius: 3,
-                  boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
+
+            <Box
+              sx={{
+                px: 3,
+                py: 2,
+                border: "1px solid",
+                borderColor: "divider",
+                bgcolor: "#fff",
+                borderRadius: 3,
+                boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
+              }}
+            >
+              <Captcha
+                onVerified={() => {
+                  setBtnDisabled(false);
                 }}
-              >
-                <Captcha
-                  onVerified={() => {
-                    setBtnDisabled(false);
-                  }}
-                />
-              </Box>
-            </Collapse>
+              />
+            </Box>
+
             {errorMessage && <Page.Error message={errorMessage} />}
           </Box>
           <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
@@ -1092,7 +1092,7 @@ function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
   const [stage, setStage] = React.useState("user"); //user,otp,password
   const [user, setUser] = React.useState("");
   const [timeout, updateTimeout] = React.useState(30);
-  const [limitError,setLimitError]=React.useState(null);
+  const [limitError, setLimitError] = React.useState(null);
 
   // const router = useRouter();
   React.useEffect(() => {
@@ -1105,9 +1105,11 @@ function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
   const form = useForm({});
 
   async function sendOTP(e) {
-    if(!canSendResetRequest()){
-      setLimitError("Maximum request reached for today. Please try again after 24 hours.");
-      return ;
+    if (!canSendResetRequest()) {
+      setLimitError(
+        "Maximum request reached for today. Please try again after 24 hours.",
+      );
+      return;
     }
     setLimitError(null);
     const resp = await api.post(`/api/v1/forgot-password`, { user });
@@ -1149,54 +1151,56 @@ function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
         <CloseIcon />
       </IconButton>
 
-      <Box
-        sx={{
-          px: 4,
-          py: 6,
-          background: "linear-gradient(135deg,#012362 0%,#0b4bb3 100%)",
-          color: "#fff",
-          textAlign: "center",
-        }}
-      >
+      {stage === "user" && (
         <Box
           sx={{
-            width: 72,
-            height: 72,
-            borderRadius: "50%",
-            bgcolor: "rgba(255,255,255,.14)",
-            border: "1px solid rgba(255,255,255,.18)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            mx: "auto",
-            mb: 2,
-            backdropFilter: "blur(12px)",
+            px: 4,
+            py: 6,
+            background: "linear-gradient(135deg,#012362 0%,#0b4bb3 100%)",
+            color: "#fff",
+            textAlign: "center",
           }}
         >
-          <SendIcon sx={{ fontSize: 34 }} />
+          <Box
+            sx={{
+              width: 72,
+              height: 72,
+              borderRadius: "50%",
+              bgcolor: "rgba(255,255,255,.14)",
+              border: "1px solid rgba(255,255,255,.18)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              mx: "auto",
+              mb: 2,
+              backdropFilter: "blur(12px)",
+            }}
+          >
+            <SendIcon sx={{ fontSize: 34 }} />
+          </Box>
+
+          <Typography
+            sx={{
+              fontSize: 30,
+              fontWeight: 700,
+            }}
+          >
+            Reset Password
+          </Typography>
+
+          <Typography
+            sx={{
+              mt: 1,
+              opacity: 0.9,
+              lineHeight: 1.7,
+              fontSize: 15,
+            }}
+          >
+            Enter your registered email address and we'll send you a secure
+            password reset link.
+          </Typography>
         </Box>
-
-        <Typography
-          sx={{
-            fontSize: 30,
-            fontWeight: 700,
-          }}
-        >
-          Reset Password
-        </Typography>
-
-        <Typography
-          sx={{
-            mt: 1,
-            opacity: 0.9,
-            lineHeight: 1.7,
-            fontSize: 15,
-          }}
-        >
-          Enter your registered email address and we'll send you a secure
-          password reset link.
-        </Typography>
-      </Box>
+      )}
       <Page.Box
         component="form"
         action="/api/v1/forgot-password"
@@ -1214,95 +1218,120 @@ function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
         }}
       >
         <Grid container flexDirection="column" gap={2} size={12}>
-        {stage === "user" && (
-  <>
-    <Box>
-      <Typography sx={{ mb: 1, fontWeight: 600, color: "text.primary" }}>
-        Registered Email Address
-      </Typography>
-      <Page.Input
-        name="user"
-        onChange={(e) => setUser(e.target.value)}
-        control={form.control}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            height: 54,
-            borderRadius: 3,
-            background: "#fff",
-            transition: ".25s",
-            "&:hover": { boxShadow: "0 3px 12px rgba(0,0,0,.04)" },
-            "&.Mui-focused": { boxShadow: "0 8px 24px rgba(1,35,98,.08)" },
-          },
-        }}
-      />
-    </Box>
+          {stage === "user" && (
+            <>
+              <Box>
+                <Typography
+                  sx={{ mb: 1, fontWeight: 600, color: "text.primary" }}
+                >
+                  Registered Email Address
+                </Typography>
+                <Page.Input
+                  name="user"
+                  onChange={(e) => setUser(e.target.value)}
+                  control={form.control}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      height: 54,
+                      borderRadius: 3,
+                      background: "#fff",
+                      transition: ".25s",
+                      "&:hover": { boxShadow: "0 3px 12px rgba(0,0,0,.04)" },
+                      "&.Mui-focused": {
+                        boxShadow: "0 8px 24px rgba(1,35,98,.08)",
+                      },
+                    },
+                  }}
+                />
+              </Box>
 
-    {limitError && (
-      <Typography sx={{ color: "error.main", fontSize: 13, fontWeight: 600 }}>
-        {limitError}
-      </Typography>
-    )}
+              {limitError && (
+                <Typography
+                  sx={{ color: "error.main", fontSize: 13, fontWeight: 600 }}
+                >
+                  {limitError}
+                </Typography>
+              )}
 
-    <Page.MuiButton
-      variant="contained"
-      color="primary"
-      disabled={!user}
-      onClick={sendOTP}
-      endIcon={<SendIcon />}
-      sx={{
-        mt: 1,
-        height: 54,
-        borderRadius: 3,
-        fontWeight: 700,
-        textTransform: "none",
-        color: "#fff",
-        background: "linear-gradient(135deg,#012362 0%,#0b4bb3 100%)",
-        boxShadow: "0 12px 30px rgba(1,35,98,.22)",
-        "&:hover": {
-          background: "linear-gradient(135deg,#001b55 0%,#063686 100%)",
-          transform: "translateY(-2px)",
-          boxShadow: "0 18px 40px rgba(1,35,98,.30)",
-        },
-        "&.Mui-disabled": { background: "#cbd5e1", color: "#fff" },
-      }}
-    >
-      Send Reset Link
-    </Page.MuiButton>
+              <Page.MuiButton
+                variant="contained"
+                color="primary"
+                disabled={!user}
+                onClick={sendOTP}
+                endIcon={<SendIcon />}
+                sx={{
+                  mt: 1,
+                  height: 54,
+                  borderRadius: 3,
+                  fontWeight: 700,
+                  textTransform: "none",
+                  color: "#fff",
+                  background: "linear-gradient(135deg,#012362 0%,#0b4bb3 100%)",
+                  boxShadow: "0 12px 30px rgba(1,35,98,.22)",
+                  "&:hover": {
+                    background:
+                      "linear-gradient(135deg,#001b55 0%,#063686 100%)",
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 18px 40px rgba(1,35,98,.30)",
+                  },
+                  "&.Mui-disabled": { background: "#cbd5e1", color: "#fff" },
+                }}
+              >
+                Send Reset Link
+              </Page.MuiButton>
 
-   
-    <Box
-      sx={{
-        p: 2.5,
-        borderRadius: 3,
-        bgcolor: "#f8fafc",
-        border: "1px solid #e8edf5",
-      }}
-    >
-      <Typography sx={{ fontWeight: 700, mb: 1, color: "primary.main" }}>
-        What happens next?
-      </Typography>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
-        {[
-          "We'll verify your email address.",
-          "A secure reset link will be sent.",
-          "Create your new password.",
-          "Sign back into your account.",
-        ].map((item) => (
-          <Box key={item} sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
-            <Box sx={{ width: 7, height: 7, borderRadius: "50%", bgcolor: "secondary.main", flexShrink: 0 }} />
-            <Typography sx={{ fontSize: 14, color: "text.secondary" }}>{item}</Typography>
-          </Box>
-        ))}
-      </Box>
-    </Box>
-  </>
-)}
-               
+              <Box
+                sx={{
+                  p: 2.5,
+                  borderRadius: 3,
+                  bgcolor: "#f8fafc",
+                  border: "1px solid #e8edf5",
+                }}
+              >
+                <Typography
+                  sx={{ fontWeight: 700, mb: 1, color: "primary.main" }}
+                >
+                  What happens next?
+                </Typography>
+                <Box
+                  sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}
+                >
+                  {[
+                    "We'll verify your email address.",
+                    "A secure reset link will be sent.",
+                    "Create your new password.",
+                    "Sign back into your account.",
+                  ].map((item) => (
+                    <Box
+                      key={item}
+                      sx={{ display: "flex", alignItems: "center", gap: 1.25 }}
+                    >
+                      <Box
+                        sx={{
+                          width: 7,
+                          height: 7,
+                          borderRadius: "50%",
+                          bgcolor: "secondary.main",
+                          flexShrink: 0,
+                        }}
+                      />
+                      <Typography
+                        sx={{ fontSize: 14, color: "text.secondary" }}
+                      >
+                        {item}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            </>
+          )}
 
           {stage === "otp" && (
             <Box
               sx={{
                 textAlign: "center",
+                mt: { xs: 6, lg: 8 },
                 p: 4,
                 borderRadius: 4,
                 border: "1px solid #e8edf5",
@@ -1413,7 +1442,7 @@ function ForgotCard({ onClose, setCardType, setOpenSignUp }) {
               </Typography>
 
               <Page.MuiButton
-                variant="text"
+                variant="outlined"
                 color="secondary"
                 disabled={timeout > 0}
                 onClick={async () => {

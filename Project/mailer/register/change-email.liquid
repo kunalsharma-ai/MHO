@@ -221,13 +221,14 @@
     line-height:28px;
     color:#4b5865;
   ">
-                  To complete the process and confirm the request, please click the button  
+                  To complete the process and confirm the request, please click the button   
 below. Your verification link will remain valid for
                   <strong style="color:#25313d;">24 hours</strong>.
                 </p>
 
               </td>
             </tr>
+
 
             <!-- CTA -->
             <tr>
@@ -237,31 +238,49 @@ below. Your verification link will remain valid for
                   href="https://{{user.origin}}/auth/change-email?confcode={{token}}"
                   target="_blank"
                   style="
-    display:inline-block;
-    background:#FF7A00;
-    background-color:#FF7A00;
-    color:#ffffff;
-    text-decoration:none;
-    padding:16px 42px;
-    border-radius:8px;
-    font-size:17px;
-    font-weight:bold;
-    letter-spacing:.2px;
-  ">
+        display:inline-block;
+        background:#FF7A00;
+        background-color:#FF7A00;
+        color:#ffffff;
+        text-decoration:none; 
+        padding:16px 42px;
+        border-radius:8px;
+        font-size:17px;
+        font-weight:bold;
+        letter-spacing:.2px;
+      ">
                   VERIFY EMAIL ADDRESS
                 </a>
 
+
                 <p style="
-    margin:15px 0 0;
-    font-size:13px;
-    line-height:20px;
-    color:#7b8794;
-  ">
-                  This link will expire after 24 hours.
+      margin:18px 0 0;
+      font-size:13px;
+      line-height:20px;
+      color:#7b8794;
+    ">
+                  Or copy and paste the URL below into your browser to continue:
                 </p>
 
+                <p style="
+      margin:8px 0 0;
+      font-size:13px;
+      line-height:20px;
+      word-break:break-all;
+      color:#0D5CC7;
+    ">
+                  https://{{ user.origin }}/auth/change-email?confcode={{ token }}</p>
+                <p style="
+      margin:15px 0 0;
+      font-size:13px;
+      line-height:20px;
+      color:#7b8794;
+    ">
+                  This link will expire after 24 hours.
+                </p>
               </td>
             </tr>
+
 
             <!-- SECURITY NOTICE -->
             <tr>
@@ -330,7 +349,7 @@ below. Your verification link will remain valid for
     line-height:23px;
     color:#5f6975;
   ">
-                        Please let us know if you did not request this email address change  
+                        Please let us know if you did not request this email address change   
 or are unaware of this activity. You can contact our support team at
                         <a href="mailto:support@myhealthopinions.com" style="
     color:#0D5CC7;

@@ -152,6 +152,7 @@ function CreateOrEditCategory({ categoryID = null, onClose, categories }) {
         underfall: "",
         overfall: "",
       },
+      qualityScoreScale: "",
       thresholdPoints: "",
       terms: [],
       showOnRegistration: false,
@@ -261,13 +262,20 @@ function CreateOrEditCategory({ categoryID = null, onClose, categories }) {
               }))}
           />
         </Grid>
-
         <Grid size={6}>
           <Form.Input
             control={control}
             {...form.register("thresholdPoints")}
             type="number"
             label="Threshold to Redeem"
+          />
+        </Grid>{" "}
+        <Grid size={6}>
+          <Form.Input
+            control={control}
+            {...form.register("qualityScoreScale")}
+            type="number"
+            label="Max Quality Score"
           />
         </Grid>
         <Grid size={6}>
@@ -284,7 +292,6 @@ function CreateOrEditCategory({ categoryID = null, onClose, categories }) {
           editorId={id}
           dialogScoped
         />
-
         {fields.map((field, index) => (
           <Grid
             size={12}
@@ -341,7 +348,6 @@ function CreateOrEditCategory({ categoryID = null, onClose, categories }) {
             </Grid>
           </Grid>
         ))}
-
         <Page.MuiButton
           variant="outlined"
           size="small"

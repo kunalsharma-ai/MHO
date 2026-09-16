@@ -111,7 +111,7 @@ export default function () {
             width: "150px",
             feature: ["filterable"],
           },
-    {
+          {
             id: "options",
             label: "Options",
             width: "150px",
@@ -242,11 +242,16 @@ function CreateOrEditQuestion({ questionID = null, close }) {
     formState: { errors },
   } = form;
 
+  const questionType = form.watch("type");
+  const isMultiselect = questionType === "multiselect";
   React.useEffect(() => {
     if (!questionID) return;
     api.get(`${endpoint}/${questionID}`).then((resp) => {
       if (resp.status === "success") {
-        form.reset(resp.data);
+        form.reset({
+          ...resp.data,
+          maxSelections: resp.data.maxSelections ?? 0,
+        });
       }
     });
   }, [questionID]);
@@ -260,13 +265,6 @@ function CreateOrEditQuestion({ questionID = null, close }) {
     close();
   };
 
-  const questionType = form.watch("type");
-  const isMultiselect = questionType === "multiselect";
-  React.useEffect(() => {
-    if (questionType === "multiselect") {
-      form.setValue("maxSelections", 0);
-    }
-  }, [questionType]);
   return (
     <Grid
       component="form"
@@ -389,7 +387,7 @@ function CreateOrEditQuestion({ questionID = null, close }) {
             <Form.Input
               control={control}
               {...form.register("maxSelections")}
-              label="Max selections (0 = unlimited)"
+              label="Max selections (0 = All)"
               type="number"
             />
           </Grid>
