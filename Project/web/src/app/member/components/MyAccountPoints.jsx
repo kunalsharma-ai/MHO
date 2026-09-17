@@ -328,7 +328,19 @@ export default function MyAccountPoints() {
                 >
                   {percentage.toFixed(0)}%
                 </Typography>
-              </Box>
+              </Box> 
+             <Typography
+  sx={{
+    mt: 1,
+    color: "#6B7280",
+    fontSize: { xs: 11.5, md: 12.5 },
+    fontWeight: 600,
+    textAlign: "center",
+    whiteSpace: "nowrap",
+  }}
+>
+  Users can claim rewards once they reach {threshold.toLocaleString()} pts
+</Typography>
             </Box>
 
             {points >= threshold && (

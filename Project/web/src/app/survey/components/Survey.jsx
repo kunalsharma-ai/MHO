@@ -21,6 +21,7 @@ import { useToast } from "@/hooks";
 export default function Survey({
   survey,
   user,
+  country,
   onError,
   onComplete,
   start = null,
@@ -44,6 +45,9 @@ export default function Survey({
   if (questions?.includes("alternate-phone"))
     questions.push("alternate-phone-whatsapp");
   questions = questions?.unique();
+  React.useEffect(() => {
+    if(country) form.setValue("country", country);
+  },[country])
   const { data: me } = useQuery({
     queryKey: ["answers", pages?.[currentPage]?.[0], currentPage],
     queryFn: async ({ queryKey }) => {

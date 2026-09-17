@@ -186,15 +186,16 @@ export default function Upload({
   // ============================
   // DELETE (for multiple)
   // ============================
-  function removeImage(index) {
+function removeImage(index) {
+  if (multiple) {
     const arr = form.getValues(name) || [];
-
     arr.splice(index, 1);
-
-    form.setValue(name, [...arr]);
-
-    setSelectedFileNames((prev) => prev.filter((_, i) => i !== index));
+    form.setValue(name, [...arr], { shouldValidate: true, shouldDirty: true });
+  } else {
+    form.setValue(name, null, { shouldValidate: true, shouldDirty: true });
   }
+  setSelectedFileNames((prev) => prev.filter((_, i) => i !== index));
+}
 
   // ============================
   // UI
@@ -504,7 +505,7 @@ export default function Upload({
                     </Page.Text>
                   </Page.Box>
 
-                  {multiple && (
+                  
                     <Button
                       size="small"
                       onClick={() => removeImage(index)}
@@ -527,7 +528,7 @@ export default function Upload({
                         style={{ fontSize: 13 }}
                       />
                     </Button>
-                  )}
+                  
                 </Page.Box>
               ))}
             </Page.Box>
