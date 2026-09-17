@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useQuery as useQueryParameters, useMember } from "@/Context";
+import { useQuery as useQueryParameters, useMember,useTelemetry } from "@/Context";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -38,6 +38,8 @@ export default function page() {
       router.push("/");
     },
   });
+  const [country, setCountry] = React.useState("");
+  const telemetry=useTelemetry();
   React.useEffect(() => {
     if (!user) return;
     if (
@@ -64,7 +66,15 @@ export default function page() {
     retry: false,
   });
   const isLoading = surveyLoading || (!survey && !surveyError);
-  console.log({ survey, surveyError });
+  React.useEffect(() => {
+          if (!telemetry) return;
+       
+          telemetry.ip().then((resp) => {
+              if (resp.country) {
+                  setCountry(resp.country.toUpperCase());
+              }
+          });
+      }, [telemetry]);
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
       <Grid
@@ -210,6 +220,7 @@ export default function page() {
                 <Survey
                   survey={survey}
                   user={user}
+                  country={country}
                   onError={(err) => {
                     setErrorPopup({ ...err });
                   }}

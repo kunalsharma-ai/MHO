@@ -51,6 +51,15 @@ import { useToast } from "@/hooks";
 import MyAccountPoints from "../../components/MyAccountPoints";
 import { useTourActive } from "@/Context/tourStore";
 import mockRewardsProcessed from "@/mockData/rewardProcessed";
+import RedeemICon from "@mui/icons-material/Redeem";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
+import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
+import VerifiedIcon from "@mui/icons-material/VerifiedUser";
+import DoDisturbOnIcon from "@mui/icons-material/DoNotDisturb";
+import { DateRangeSelector } from "@/components/Form";
 
 const paymentMethods = {
   paypal: "/images/payment/paypal.png",
@@ -147,56 +156,64 @@ function Stats() {
       title: "Claimed Rewards",
       value: `0 pts`,
       subtitle: "Rewards already redeemed",
-      icon: "/images/myaccount/claimedreward.png",
+      //icon: "/images/myaccount/claimedreward.png",
+      icon: <RedeemICon sx={{ fontSize: 32 , color: "#4CAF50" }} />,
       bg: "rgba(76, 175, 80, 0.12)",
     },
     {
       title: "Total Rewards Earned",
       value: `${statistics?.totalRewards ?? 0} pts`,
       subtitle: "Lifetime reward earnings",
-      icon: "/images/myaccount/totalreward.png",
+      //icon: "/images/myaccount/totalreward.png",
+      icon: <MonetizationOnIcon sx={{ fontSize: 32, color: "#FFC107" }} />,
       bg: "rgba(255, 193, 7, 0.12)",
     },
     {
       title: "Total Surveys Taken",
       value: (statistics?.total ?? 0).toLocaleString("en-US"),
       subtitle: "All survey attempts",
-      icon: "/images/myaccount/totalsurveytaken.png",
+      //icon: "/images/myaccount/totalsurveytaken.png",
+      icon: <MedicalServicesIcon sx={{ fontSize: 32, color: "#2196F3" }} />,
       bg: "rgba(33, 150, 243, 0.12)",
     },
     {
       title: "Completed Surveys",
       value: (statistics?.complete ?? 0).toLocaleString("en-US"),
       subtitle: "Successfully completed",
-      icon: "/images/myaccount/completedsurvey.png",
+      //icon: "/images/myaccount/completedsurvey.png",
+      icon: <TaskAltIcon sx={{ fontSize: 32, color: "#4CAF50" }} />,
       bg: "rgba(76, 175, 80, 0.12)",
     },
     {
       title: "Disqualified Surveys",
       value: (statistics?.disqualified ?? 0).toLocaleString("en-US"),
       subtitle: "Screened out surveys",
-      icon: "/images/myaccount/disqualifiedsurvey.png",
+      //icon: "/images/myaccount/disqualifiedsurvey.png",
+      icon: <PersonOffIcon sx={{ fontSize: 32, color: "#F44336" }} />,
       bg: "rgba(244, 67, 54, 0.12)",
     },
     {
       title: "Abandoned Surveys",
       value: (statistics?.abdoned ?? 0).toLocaleString("en-US"),
       subtitle: "Surveys not completed",
-      icon: "/images/myaccount/abandonedsurvey.png",
+      //icon: "/images/myaccount/abandonedsurvey.png",
+       icon: <AssignmentLateIcon sx={{ fontSize: 32, color: "#9E9E9E" }} />,
       bg: "rgba(158, 158, 158, 0.12)",
     },
     {
       title: "Approved Surveys",
       value: (statistics?.approved ?? 0).toLocaleString("en-US"),
       subtitle: "Approved responses",
-      icon: "/images/myaccount/disqualifiedsurvey.png",
+      //icon: "/images/myaccount/disqualifiedsurvey.png",
+      icon: <VerifiedIcon sx={{ fontSize: 32, color: "#009688" }} />,
       bg: "rgba(0, 150, 136, 0.12)",
     },
     {
       title: "Rejected Surveys",
       value: (statistics?.rejected ?? 0).toLocaleString("en-US"),
       subtitle: "Rejected responses",
-      icon: "/images/myaccount/abandonedsurvey.png",
+      //icon: "/images/myaccount/abandonedsurvey.png",
+      icon: <DoDisturbOnIcon sx={{ fontSize: 32, color: "#E91E63" }} />,
       bg: "rgba(233, 30, 99, 0.12)",
     },
   ];
@@ -249,7 +266,7 @@ function Stats() {
                     bgcolor: item.bg,
                   }}
                 >
-                  <Box
+               {/*    <Box
                     component="img"
                     src={item.icon}
                     alt={item.title}
@@ -258,7 +275,8 @@ function Stats() {
                       height: 32,
                       objectFit: "contain",
                     }}
-                  />
+                  /> */}
+                  {item.icon}
                 </Avatar>
                 <Box
                   flex={1}
@@ -862,7 +880,7 @@ function Payment() {
         size={12}
         direction="column"
         spacing={0}
-        px={1.5}
+        px={{xs:1,md:1.5}}
         py={1}
         sx={{
           background: "rgba(255, 255, 255, 0.1)",
@@ -1034,6 +1052,7 @@ function Payment() {
           </Grid>
 
           {/* Dynamic input form */}
+         
           <Grid size={12} container py={2}>
             {/* PayPal */}
             <Collapse
@@ -1048,35 +1067,44 @@ function Payment() {
                 justifyContent="center"
                 spacing={0}
               >
-                <Typography
-                  mb={1}
-                  fontSize={16}
-                  fontWeight={600}
-                  color="secondary"
+                <Grid
+                  size={{ xs: 12, sm: 6 }}
+                  container
+                  justifyContent="center"
+                  sx={{ mx: "auto" }}
                 >
-                  Enter your PayPal Email
-                </Typography>
-                <Page.Input
-                  value={payment.paypalAccount}
-                  onChange={(e) =>
-                    setPayment({
-                      ...payment,
-                      paypalAccount: e.target.value,
-                    })
-                  }
-                />
-                <Button
-                  onClick={() => handleSave("PayPal", payment.value)}
-                  variant="contained"
-                  color="secondary"
-                  sx={{ my: 2, fontWeight: 600, color: "white", px: 2 }}
-                >
-                  Save
-                </Button>
+                  <Typography
+                    mb={1}
+                    fontSize={16}
+                    fontWeight={600}
+                    color="secondary"
+                  >
+                    Enter your PayPal Email
+                  </Typography>
+                  <Page.Input
+                    value={payment.paypalAccount}
+                    onChange={(e) =>
+                      setPayment({
+                        ...payment,
+                        paypalAccount: e.target.value,
+                      })
+                    }
+                  />
+                </Grid>
+                <Grid size={12} container justifyContent="center">
+                  <Button
+                    onClick={() => handleSave("PayPal", payment.value)}
+                    variant="contained"
+                    color="secondary"
+                    sx={{ my: 2, fontWeight: 600, color: "white", px: 2 }}
+                  >
+                    Save
+                  </Button>
+                </Grid>
               </Grid>
             </Collapse>
 
-            {/* Wire Transfer */}
+             {/* Wire Transfer */}
             <Collapse
               in={payment.method === "wire-transfer"}
               unmountOnExit
@@ -1088,6 +1116,7 @@ function Payment() {
                 px={2}
                 justifyContent="center"
                 spacing={2}
+                sx={{ maxWidth: 480, mx: "auto" }}
               >
                 <Grid size={6} container spacing={0}>
                   <Typography fontSize={16} fontWeight={600} color="secondary">
@@ -1124,7 +1153,7 @@ function Payment() {
                     }
                   />
                 </Grid>
-                <Grid size={12} container spacing={0}>
+                <Grid size={{ xs: 12, sm: 8 }} container spacing={0} sx={{ mx: "auto" }}>
                   <Typography fontSize={16} fontWeight={600} color="secondary">
                     Enter your Account Number
                   </Typography>
@@ -1142,18 +1171,20 @@ function Payment() {
                     }
                   />
                 </Grid>
-                <Button
-                  onClick={() => handleSave("Wire Transfer", payment.value)}
-                  variant="contained"
-                  color="secondary"
-                  sx={{ my: 2, color: "white", px: 2, fontWeight: 600 }}
-                >
-                  Save
-                </Button>
+                <Grid size={12} container justifyContent="center">
+                  <Button
+                    onClick={() => handleSave("Wire Transfer", payment.value)}
+                    variant="contained"
+                    color="secondary"
+                    sx={{ my: 2, color: "white", px: 2, fontWeight: 600 }}
+                  >
+                    Save
+                  </Button>
+                </Grid>
               </Grid>
             </Collapse>
 
-            {/* Amazon */}
+           {/* Amazon */}
             <Collapse
               in={payment.method === "amazon-gift-card"}
               unmountOnExit
@@ -1166,35 +1197,43 @@ function Payment() {
                 justifyContent="center"
                 spacing={0}
               >
-                <Typography
-                  mb={1}
-                  fontSize={16}
-                  fontWeight={600}
-                  color="secondary"
+                <Grid
+                  size={{ xs: 12, sm: 6 }}
+                  container
+                  justifyContent="center"
+                  sx={{ mx: "auto" }}
                 >
-                  Enter your Amazon Giftcard ID
-                </Typography>
-                <Page.Input
-                  value={payment.amazonAccount}
-                  onChange={(e) =>
-                    setPayment({
-                      ...payment,
-                      amazonAccount: e.target.value,
-                    })
-                  }
-                />
-                <Button
-                  onClick={() => handleSave("Amazon", payment.value)}
-                  variant="contained"
-                  color="secondary"
-                  sx={{ my: 2, fontWeight: 600, color: "white", px: 2 }}
-                >
-                  Save
-                </Button>
+                  <Typography
+                    mb={1}
+                    fontSize={16}
+                    fontWeight={600}
+                    color="secondary"
+                  >
+                    Enter your Amazon Giftcard ID
+                  </Typography>
+                  <Page.Input
+                    value={payment.amazonAccount}
+                    onChange={(e) =>
+                      setPayment({
+                        ...payment,
+                        amazonAccount: e.target.value,
+                      })
+                    }
+                  />
+                </Grid>
+                <Grid size={12} container justifyContent="center">
+                  <Button
+                    onClick={() => handleSave("Amazon", payment.value)}
+                    variant="contained"
+                    color="secondary"
+                    sx={{ my: 2, fontWeight: 600, color: "white", px: 2 }}
+                  >
+                    Save
+                  </Button>
+                </Grid>
               </Grid>
             </Collapse>
-
-            {/* UPI */}
+{/* UPI */}
             <Collapse
               in={payment.method === "upi"}
               unmountOnExit
@@ -1207,31 +1246,40 @@ function Payment() {
                 justifyContent="center"
                 spacing={0}
               >
-                <Typography
-                  mb={1}
-                  fontSize={16}
-                  fontWeight={600}
-                  color="secondary"
+                <Grid
+                  size={{ xs: 12, sm: 6 }}
+                  container
+                  justifyContent="center"
+                  sx={{ mx: "auto" }}
                 >
-                  Enter your UPI ID
-                </Typography>
-                <Page.Input
-                  value={payment.upiAccount}
-                  onChange={(e) =>
-                    setPayment({
-                      ...payment,
-                      upiAccount: e.target.value,
-                    })
-                  }
-                />
-                <Button
-                  onClick={() => handleSave()}
-                  variant="contained"
-                  color="secondary"
-                  sx={{ my: 2, fontWeight: 600, color: "white", px: 2 }}
-                >
-                  Save
-                </Button>
+                  <Typography
+                    mb={1}
+                    fontSize={16}
+                    fontWeight={600}
+                    color="secondary"
+                  >
+                    Enter your UPI ID
+                  </Typography>
+                  <Page.Input
+                    value={payment.upiAccount}
+                    onChange={(e) =>
+                      setPayment({
+                        ...payment,
+                        upiAccount: e.target.value,
+                      })
+                    }
+                  />
+                </Grid>
+                <Grid size={12} container justifyContent="center">
+                  <Button
+                    onClick={() => handleSave()}
+                    variant="contained"
+                    color="secondary"
+                    sx={{ my: 2, fontWeight: 600, color: "white", px: 2 }}
+                  >
+                    Save
+                  </Button>
+                </Grid>
               </Grid>
             </Collapse>
           </Grid>
@@ -1538,7 +1586,9 @@ function Summary() {
     },
   ];
   const [activeTab, setActiveTab] = React.useState(0);
-  const tabs = [
+  const [rewardsDateRange, setRewardsDateRange] = React.useState([]);
+  const [rejectedDateRange, setRejectedDateRange] = React.useState([]);
+ const tabs = [
     // {
     //   label: "Rewards Summary",
     //   render: (
@@ -1549,7 +1599,7 @@ function Summary() {
     // },
     {
       label: "Rewards Processed Summary",
-      render: tourActive ? (
+      render: (
         <Grid size={12} data-tour="myaccount-rewards-processed">
           <Datatable
             isLoading={false}
@@ -1558,7 +1608,84 @@ function Summary() {
             hideColumnSelector
             hideDownload
             noDataMsg="No Record Found."
-            data={mockRewardsProcessed.data}
+            data={tourActive ? mockRewardsProcessed.data : []}
+            extra={
+            <Box px={{ xs: 0, md: 2 }} my={{ xs: 1, md: 0 }}>
+              <DateRangeSelector
+                onUpdate={(e) => {
+                  setRewardsDateRange(
+                    e.map((d) => new Date(d.toDate()).toISOString().split("T")[0]),
+                  );
+                }}
+              />
+            </Box>
+          }
+            columns={[
+              {
+                id: "claimedPoints",
+                label: "Claimed Points",
+                render: (info) => `${info.claimedPoints} pts`,
+              },
+              {
+                id: "claimedAmount",
+                label: "Claimed Amount",
+                render: (info) => `₹${info.claimedAmount}`,
+              },
+              {
+                id: "dateTime",
+                label: "Date - Time",
+                render: (info) => new Date(info.dateTime).toLocaleString(),
+              },
+              {
+                id: "transactionId",
+                label: "Transaction ID",
+                render: (info) => info.transactionId,
+              },
+              {
+                id: "paymentMethod",
+                label: "Payment Method",
+                render: (info) => info.paymentMethod,
+              },
+              {
+                id: "paymentProcessedDate",
+                label: "Payment Processed Date",
+                render: (info) =>
+                  info.paymentProcessedDate
+                    ? new Date(info.paymentProcessedDate).toLocaleDateString()
+                    : "-",
+              },
+              {
+                id: "status",
+                label: "Status",
+                render: (info) => (
+                  <span style={{ textTransform: "capitalize" }}>{info.status}</span>
+                ),
+              },
+            ]}
+          />
+        </Grid>
+      ),
+    },
+    {
+      label: "Rejected Responses",
+      
+      render: (
+        <Grid size={12} container justifyContent="center" >
+          <Datatable
+          hideColumnSelector
+          hideDownload
+            data={[]}
+            extra={
+            <Box px={{ xs: 0, md: 2 }} my={{ xs: 1, md: 0 }}>
+              <DateRangeSelector
+                onUpdate={(e) => {
+                  setRewardsDateRange(
+                    e.map((d) => new Date(d.toDate()).toISOString().split("T")[0]),
+                  );
+                }}
+              />
+            </Box>
+          }
             columns={[
               {
                 id: "survey",
@@ -1566,9 +1693,9 @@ function Summary() {
                 render: (info) => info.survey?.name,
               },
               {
-                id: "processedAt",
-                label: "Processed On",
-                render: (info) => new Date(info.processedAt).toLocaleString(),
+                id: "createdAt",
+                label: "created At",
+                render: (info) => new Date(info.createdAt).toLocaleString(),
               },
               {
                 id: "points",
@@ -1576,39 +1703,18 @@ function Summary() {
                 render: (info) => `${info.points} pts`,
               },
               {
-                id: "method",
-                label: "Payment Method",
-                render: (info) => info.method,
+                id: "reason",
+                label: "Reason",
+                render: (info) => info.reason,
               },
               {
                 id: "status",
                 label: "Status",
-                render: (info) => (
-                  <span style={{ textTransform: "capitalize" }}>
-                    {info.status}
-                  </span>
-                ),
+                render: (info) => info.status,
               },
             ]}
+            isLoading={false}
           />
-        </Grid>
-      ) : (
-        <Grid
-          size={12}
-          container
-          justifyContent="center"
-          py={7}
-          data-tour="myaccount-rewards-processed"
-        >
-          No Reward Processed yet.
-        </Grid>
-      ),
-    },
-    {
-      label: "Rejected Responses",
-      render: (
-        <Grid size={12} container justifyContent="center" py={7}>
-          No Rejected Responses.
         </Grid>
       ),
     },
