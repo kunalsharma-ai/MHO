@@ -111,6 +111,63 @@ export default function page() {
               alignItems="space-between"
               sx={{ minHeight: "calc(90vh - 125px)" }}
             >
+              <Grid
+                container
+                size={12}
+                alignItems="center"
+                justifyContent={{ xs: "center", md: "space-between" }}
+                mb={2}
+                spacing={{ xs: 1, md: 2 }}
+                direction={{ xs: "column", md: "row" }}
+                sx={{ borderBottom: "1px solid #f4f4f4" }}
+              >
+                <Page.Box
+                  sx={{
+                    height: "72px",
+                    width: "227.69px",
+                    pb: 1,
+                  }}
+                >
+                  <img
+                    src="/images/logo/My-Health-Opinions.png"
+                    alt="logo"
+                    height="100%"
+                    width="100%"
+                  />
+                </Page.Box>
+
+                <Page.Text
+                  sx={{
+                    flex: 1,
+                    textAlign: "right",
+                    // ml: {
+                    //   xs: 0,
+                    //   md: survey?.slug === "welcome" ? 0 : "-240px",
+                    // },
+                    fontSize: { xs: "18px", lg: "24px" },
+                    fontWeight: 600,
+                    color: "primary.main",
+                  }}
+                >
+                  {survey?.slug === "welcome" ? (
+                    <>
+                      Welcome{" "}
+                      <Page.Text
+                        component="span"
+                        sx={{
+                          fontSize: { xs: "18px", lg: "24px" },
+                          fontWeight: 600,
+                          color: "secondary.main",
+                        }}
+                      >
+                        {user?.name.first.Capitalize()}
+                      </Page.Text>
+                    </>
+                  ) : (
+                    survey?.name
+                  )}
+                </Page.Text>
+              </Grid>
               <Page.Box
                 component="div"
                 sx={{
