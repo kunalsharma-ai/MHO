@@ -6,6 +6,22 @@ import { parsePhoneNumber } from "libphonenumber-js";
 import "react-phone-input-2/lib/material.css";
 import { Page } from "@/util";
 
+// Library boundary par hi sanitize karo — yahan se aage kuch bhi non-string nahi jaana chahiye
+function safeString(val, fallback = "") {
+  return typeof val === "string" ? val : fallback;
+}
+
+function safeCountryCode(val, fallback = "us") {
+  const cleaned = safeString(val).trim().toLowerCase();
+  return /^[a-z]{2}$/.test(cleaned) ? cleaned : fallback;
+}
+
+function safeCountryList(list) {
+  if (!Array.isArray(list)) return undefined;
+  const filtered = list.filter((c) => typeof c === "string" && c.trim().length > 0);
+  return filtered.length > 0 ? filtered : undefined;
+}
+
 export default function Phone({
   control,
   errors,
@@ -20,14 +36,22 @@ export default function Phone({
   selectedCountry,
   sx = {},
 }) {
-  const [defaultCountry, setDefaultCountry] = React.useState();
+  const [defaultCountry, setDefaultCountry] = React.useState("us");
+
+  const safeOnlyCountries = safeCountryList(onlyCountries);
+
   React.useEffect(() => {
-    if (onlyCountries && onlyCountries.length > 0)
-      setDefaultCountry(onlyCountries[0]);
-  }, [onlyCountries]);
+    if (safeOnlyCountries && safeOnlyCountries.length > 0) {
+      setDefaultCountry(safeCountryCode(safeOnlyCountries[0]));
+    }
+  }, [safeOnlyCountries]);
+
   React.useEffect(() => {
-    if (selectedCountry) setDefaultCountry(selectedCountry);
+    if (selectedCountry) {
+      setDefaultCountry(safeCountryCode(selectedCountry));
+    }
   }, [selectedCountry]);
+
   return (
     <>
       {labelText && (
@@ -45,9 +69,8 @@ export default function Phone({
             : {
                 ...validations,
                 validate: (val) => {
-                  if (!val || val.trim() === "") return ; // allow blank
-                  if (val.length < 4)  
-                    return ;
+                  if (!val || String(val).trim() === "") return;
+                  if (String(val).length < 4) return;
                   try {
                     const parsedPhone = parsePhoneNumber("+" + val);
                     return parsedPhone.isValid() || "Invalid phone number";
@@ -59,12 +82,12 @@ export default function Phone({
         }
         render={({ field }) => (
           <PhoneInput
-            country={defaultCountry}
-            onlyCountries={onlyCountries}
+            country={safeCountryCode(defaultCountry)}
+            onlyCountries={safeOnlyCountries}
             disableDropdown={disabled || disableDropdown}
             disabled={disabled}
-            value={field.value}
-            onChange={(value) => field.onChange(value)}
+            value={safeString(field.value)}
+            onChange={(value) => field.onChange(safeString(value))}
             countryCodeEditable={!Boolean(selectedCountry)}
             inputProps={{
               name: name,
@@ -92,53 +115,3 @@ export default function Phone({
     </>
   );
 }
-/*
-"use client";
-import React from "react";
-import { Controller } from "react-hook-form";
-import PhoneInput from "react-phone-input-2";
-import { parsePhoneNumber, isValidPhoneNumber } from "libphonenumber-js"
-import "react-phone-input-2/lib/material.css";
-
-export default function Phone({ control, errors, name, label, validations }) {
-  const [defaultCountry, setDefaultCountry] = React.useState("in");
-
-  return (
-    <>
-      <Controller
-        name={ name }
-        control={ control }
-        rules={ {
-          ...validations, validate: (val) => {
-            if (!val || val.trim() === '') return;
-            const parsedPhone = parsePhoneNumber("+"+val);
-            return parsedPhone.isValid ?? "Invalid Phone number"
-          }
-        } }
-        render={ ({ field }) => (
-          <><PhoneInput
-            country={ defaultCountry }
-            value={ field.value }
-            specialLabel={ label }
-            onChange={ (value) => field.onChange(value) }
-            inputProps={ {
-              name: { name },
-              height: "34px",
-              autoFocus: false,
-            } }
-            inputStyle={ {
-              width: "100%",
-              height: "34px",
-              color: "grey",
-              fontSize: "14px",
-            } }
-            inputClass="custom-phone-font"
-          />
-          
-          </>
-        ) }
-      />
-    </>
-  );
-}
-//*/

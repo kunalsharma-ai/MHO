@@ -24,11 +24,21 @@ import {
   useTheme,
 } from "@mui/material";
 
+
+
+function sanitizeCountry(raw) {
+  if (typeof raw !== "string") return null;
+  const cleaned = raw.trim().toLowerCase();
+  return /^[a-z]{2}$/.test(cleaned) ? cleaned : null;
+}
+
 export default function PhoneElement({ question, form, disabled }) {
   const isQuestionDisabled = disabled || !(question.isEditable ?? true);
   const errors = form?.formState?.errors;
-  const value = form.watch(question.name);
-
+  const rawValue = form.watch(question.name);
+  const rawCountry = form.watch("country");
+ 
+/*
   const { data: { country, ip } = {} } = useQuery({
     queryKey: ["country"],
     queryFn: async () => {
@@ -38,13 +48,20 @@ export default function PhoneElement({ question, form, disabled }) {
     },
     enabled: [undefined, null].includes(value),
   });
+  //*/
+  const value = typeof rawValue === "string" ? rawValue : "";
+
+  // country hamesha valid 2-letter code, nahi toh fallback "us"
+  const country = sanitizeCountry(rawCountry) || "us";
   let validations = {};
   if (question.required) validations["required"] = "This field is required";
   let lockCountry = {
     disableDropdown: !Boolean(value),
   };
+ if (!country || country.length !== 2) return <></>;
+
   if (!value) {
-    lockCountry.selectedCountry = country;
+    lockCountry.selectedCountry = country.toLowerCase().trim();
     lockCountry.disableDropdown = Boolean(country);
   }
   return (
@@ -67,7 +84,8 @@ export default function PhoneElement({ question, form, disabled }) {
         control={form.control}
         disabled={isQuestionDisabled && Boolean(value)}
         validations={validations}
-        {...lockCountry}
+        // {...lockCountry}
+        selectedCountry={country}
         errors={errors?.[question.name]}
       />
       {/* {

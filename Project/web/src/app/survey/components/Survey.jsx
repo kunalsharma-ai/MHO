@@ -41,9 +41,8 @@ export default function Survey({
     // defaultValues: {...user,age:""}
   });
   let questions = pages[currentPage];
-  if (questions?.includes("phone")) questions.push("phone-whatsapp");
-  if (questions?.includes("alternate-phone"))
-    questions.push("alternate-phone-whatsapp");
+  // if (questions?.includes("phone")) questions.push("phone-whatsapp");
+  // if (questions?.includes("alternate-phone"))    questions.push("alternate-phone-whatsapp");
   questions = questions?.unique();
   React.useEffect(() => {
     if(country) form.setValue("country", country);

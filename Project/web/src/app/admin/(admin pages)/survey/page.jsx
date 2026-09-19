@@ -409,6 +409,7 @@ function CreateOrEditSurvey({ surveyID = null, close }) {
       description: "",
       link: "",
       pages: [],
+      qualityScore:"",
     },
   });
 
@@ -553,6 +554,18 @@ function CreateOrEditSurvey({ surveyID = null, close }) {
           {...form.register("points")}
           label="Points"
         />{" "}
+
+        <Form.Input
+  control={control}
+  {...form.register("points")}
+  label="Points"
+/>{" "}
+<Form.Input control={control} {...form.register("loi")} label="LOI" />
+<Form.Input
+  control={control}
+  {...form.register("qualityScore")}
+  label="Quality Score"
+/>
         <Form.Input control={control} {...form.register("loi")} label="LOI" />
         <Form.TextEditor
           control={control}

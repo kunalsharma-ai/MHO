@@ -15,6 +15,9 @@ import { api, Page } from "@/util";
 import SecurityCheck from "./components/SecurityCheck";
 import SurveyAlreadyTaken from "./components/SurveyAlreadyTaken";
 import Survey from "./components/Survey";
+import { Rating } from "@mui/material";
+import StarIcon from "@mui/icons-material/Star";
+import { useToast } from "@/hooks";
 
 export default function page() {
   const [user, router, query, pathName] = [
@@ -24,6 +27,8 @@ export default function page() {
     usePathname(),
   ];
   const [surveyCompleted, setSurveyCompleted] = React.useState(false);
+  const [feedbackValue, setFeedbackValue] = React.useState(null);
+  const [feedbackSaved, setFeedbackSaved] = React.useState(false); 
   const [errorPopup, setErrorPopup] = React.useState({
     title: "Security Check",
     message: null,
@@ -134,6 +139,61 @@ export default function page() {
                 }}
                 dangerouslySetInnerHTML={{ __html: survey.thankyou }}
               />
+              {/* Survey Feedback */}
+<Grid
+  size={12}
+  container
+  direction="column"
+  alignItems="center"
+  justifyContent="center"
+  spacing={1}
+  py={2}
+>
+  <Page.Text
+    sx={{
+      fontSize: 15,
+      fontWeight: 600,
+      color: "primary.main",
+      textAlign: "center",
+    }}
+  >
+    Your feedback helps us improve future surveys. Please rate your
+    experience.
+  </Page.Text>
+
+  <Rating
+    name="survey-experience-feedback"
+    value={feedbackValue}
+    precision={0.5}
+    size="large"
+    onChange={async (e, newValue) => {
+      if (!newValue) return;
+
+      setFeedbackValue(newValue);
+
+      const resp = await api.put(`/api/v1/survey/response`, {
+        sid: survey?.respID,
+        rating: newValue,
+      });
+
+      useToast(resp);
+      setFeedbackSaved(true);
+    }}
+    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+  />
+
+  {feedbackSaved && (
+    <Page.Text
+      sx={{
+        fontSize: 13,
+        color: "text.secondary",
+        mt: 0.5,
+      }}
+    >
+      Thanks for your feedback!
+    </Page.Text>
+  )}
+</Grid>
               <Grid size={12} container justifyContent="center" mt={2}>
                 <Page.MuiButton
                   variant="contained"

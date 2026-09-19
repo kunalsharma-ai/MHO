@@ -1,180 +1,134 @@
-import { CrudController,Mutate } from "../../utils/index.js";
+import { CrudController } from "../utils/index.js";
 import { Profile as profileModel } from "../model/index.js";
+import mongoose from "mongoose";
 
 class ProfileController extends CrudController {
   async status() {
-    const userID = this?.request?.user?._id?.toString();
-    let temp = await profileModel.aggregate([
+    const userId = this?.request?.user?._id?.toString();
+    const origin = this?.request?.origin;
 
-      {
-        $match: {
-          isActive: true,
-          isDeleted: false
-        }
-      },
+    
+    const filter = { isActive: true, isDeleted: false };
+    if (origin) filter.origin = origin;
 
-      {
-        $addFields: {
-          questionNames: {
-            $reduce: {
-              input: "$pages",
-              initialValue: [],
-              in: { $concatArrays: ["$$value", "$$this"] }
-            }
-          }
-        }
-      },
+    const profiles = await profileModel.find(filter).lean();
+    if (!profiles.length) return {};
 
-      {
-        $lookup: {
-          from: "Question",
-          localField: "questionNames",
-          foreignField: "name",
-          as: "questions"
-        }
-      },
+    const questionNamesByProfile = {};
+    const allQuestionNames = new Set();
 
-      { $unwind: "$questions" },
+    profiles.forEach((profile) => {
+      const names = (profile.pages || []).reduce(
+        (acc, page) => acc.concat(page.slice(1)),
+        []
+      );
+      questionNamesByProfile[profile.slug] = [...new Set(names)];
+      names.forEach((n) => allQuestionNames.add(n));
+    });
 
-      {
-        $lookup: {
-          from: "Answer",
-          let: { qName: "$questions.name" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$question", "$$qName"] },
-                    { $eq: ["$user", userID] }
-                  ]
-                }
-              }
-            }
-          ],
-          as: "answerDoc"
-        }
-      },
+    const allNamesArr = [...allQuestionNames];
 
-      {
-        $graphLookup: {
-          from: "Question",
-          startWith: "$questions.parent",
-          connectFromField: "parent",
-          connectToField: "name",
-          as: "parentChain"
-        }
-      },
+    const QuestionModel = mongoose.model("Question");
+    const OptionModel = mongoose.model("Option");
+    const ValidationModel = mongoose.model("Validation");
+    const AnswerModel = mongoose.model("Answer");
 
-      {
-        $addFields: {
-          parentNames: "$parentChain.name"
-        }
-      },
+    const [questionDefs, optionDocs, validationDocs, userAnswers] = await Promise.all([
+      QuestionModel.find({ name: { $in: allNamesArr } }).select("_id name parent").lean(),
+      OptionModel.find({ question: { $in: allNamesArr } }).select("question parentValue").lean(),
+      ValidationModel.find({ question: { $in: allNamesArr } }).select("question parentValue").lean(),
+      AnswerModel.find({ user: userId, question: { $in: allNamesArr } }).select("question answer").lean(),
+    ]);
 
-      {
-        $lookup: {
-          from: "Answer",
-          pipeline: [
-            { $match: { user: userID } },
-            { $project: { _id: 0, question: 1 } }
-          ],
-          as: "allUserAnswers"
-        }
-      },
-      {
-        $addFields: {
-          answeredNames: "$allUserAnswers.question"
-        }
-      },
+    
+    const triggersByQName = {};
+    const addTriggers = (docs) => {
+      docs.forEach((doc) => {
+        const values = Array.isArray(doc.parentValue) ? doc.parentValue : [doc.parentValue];
+        if (!triggersByQName[doc.question]) triggersByQName[doc.question] = new Set();
+        values.forEach((v) => {
+          if (v && v !== "-") triggersByQName[doc.question].add(v);
+        });
+      });
+    };
+    addTriggers(optionDocs);
+    addTriggers(validationDocs);
 
-      {
-        $addFields: {
-          isApplicable: {
-            $cond: [
-              { $eq: ["$questions.parent", null] },
-              true,
-              {
-                $setIsSubset: [
-                  "$parentNames",
-                  "$answeredNames"
-                ]
-              }
-            ]
-          }
-        }
-      },
-      {
-        $addFields: {
-          isFilled: {
-            $and: [
-              "$isApplicable",
-              { $gt: [{ $size: "$answerDoc" }, 0] }
-            ]
-          }
-        }
-      },
-      {
-        $group: {
-          _id: "$slug",
-          totalApplicable: {
-            $sum: { $cond: ["$isApplicable", 1, 0] }
-          },
-          totalFilled: {
-            $sum: { $cond: ["$isFilled", 1, 0] }
-          }
-        }
-      },
+    const qByName = {};
+    questionDefs.forEach((q) => {
+      qByName[q.name] = q;
+    });
 
-      {
-        $addFields: {
-          completion: {
-            $cond: [
-              { $eq: ["$totalApplicable", 0] },
-              0,
-              {
-                $round: [
-                  {
-                    $multiply: [
-                      { $divide: ["$totalFilled", "$totalApplicable"] },
-                      100
-                    ]
-                  },
-                  0
-                ]
-              }
-            ]
-          }
-        }
-      },
+    const answerByName = {};
+    userAnswers.forEach((a) => {
+      answerByName[a.question] = Array.isArray(a.answer) ? a.answer[0] : a.answer;
+    });
 
-      {
-        $project: {
-          _id: 0,
-          slug: "$_id",
-          completion: 1
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          data: {
-            $push: {
-              k: "$slug",
-              v: "$completion"
-            }
-          }
-        }
-      },
-      {
-        $replaceRoot: {
-          newRoot: { $arrayToObject: "$data" }
-        }
+    // fullname/mail live on the User account rather than in the Answer
+    // collection, so they're backfilled here before applicability runs.
+    const currentUser = this.request.user;
+    if (currentUser?.fullname || currentUser?.name) {
+      answerByName.fullname = currentUser.fullname || currentUser.name;
+    }
+    if (currentUser?.email || currentUser?.mail) {
+      answerByName.mail = currentUser.email || currentUser.mail;
+    }
+
+    const applicableCache = {};
+
+    function isApplicable(name, visiting) {
+      if (name in applicableCache) return applicableCache[name];
+
+      const question = qByName[name];
+      if (!question) return (applicableCache[name] = false);
+      if (!question.parent) return (applicableCache[name] = true);
+      if (visiting.has(name)) return (applicableCache[name] = false);
+
+      visiting.add(name);
+
+      if (!isApplicable(question.parent, visiting)) {
+        return (applicableCache[name] = false);
       }
-    ])
-    // console.log({temp,user:this.request.user});
-    if(temp instanceof Array && temp.length ===1)return temp[0];
-    return temp;
+
+      const parentAnswer = answerByName[question.parent];
+      if (parentAnswer === undefined) {
+        return (applicableCache[name] = false);
+      }
+
+      const triggers = triggersByQName[name] ? [...triggersByQName[name]] : [];
+      const result =
+        triggers.length === 0
+          ? true
+          : triggers.some(
+              (t) => String(t).toLowerCase() === String(parentAnswer).toLowerCase()
+            );
+
+      return (applicableCache[name] = result);
+    }
+
+    const result = {};
+
+    profiles.forEach((profile) => {
+      const names = questionNamesByProfile[profile.slug];
+      let totalApplicable = 0;
+      let totalFilled = 0;
+
+      names.forEach((name) => {
+        if (!qByName[name]) return;
+        if (!isApplicable(name, new Set())) return;
+
+        totalApplicable += 1;
+        const value = answerByName[name];
+        if (value !== undefined && value !== null && value !== "") {
+          totalFilled += 1;
+        }
+      });
+
+      result[profile.slug] =
+        totalApplicable === 0 ? 0 : Math.round((totalFilled / totalApplicable) * 100);
+    });
+
+    return result;
   }
 }
 

@@ -25,13 +25,14 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import RemoveIcon from "@mui/icons-material/Remove";
 
-import { api, Page } from "@/util";
+import { api, Page, loadData } from "@/util";
 import { Datatable } from "@/components";
 import { useMember } from "@/Context";
 import { useToast } from "@/hooks";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTourActive } from "@/Context/tourStore";
 import mockReferrals from "@/mockData/referral";
+import PopUp from "@/componentsMHO/PopUp";
 
 const MotionGrid = motion.create(Grid);
 
@@ -72,29 +73,64 @@ export default function page() {
   });
   const tourActive = useTourActive();
 
+  // Merges "who was invited" with "who actually registered" into one table,
+  // same as the reference implementation - replaces the old separate
+  // InvitedEmails table.
+  const loadReferralHistory = React.useCallback(() => {
+    if (!user) return;
+
+    Promise.all([
+      api.get(`/api/v1/me/invite`),
+      api.post(`/api/v1/user`, {
+        referredBy: user._id,
+      }),
+    ]).then(([inviteResp, referralResp]) => {
+      const invites = inviteResp?.data || [];
+      const registeredUsers = referralResp?.data || [];
+
+      const mergedData = invites.map((invite) => {
+        const registeredUser = registeredUsers.find(
+          (referral) =>
+            referral.mail?.toLowerCase() === invite.email?.toLowerCase(),
+        );
+
+        return {
+          email: invite.email,
+          registered: registeredUser ? "Registered" : "Not Registered",
+          sentAt: invite.createdAt,
+          name: registeredUser?.fullName || "",
+          status: registeredUser?.isVerified?.email || "",
+          dateOfJoining: registeredUser?.createdAt || "",
+        };
+      });
+
+      setReferrals(mergedData);
+    });
+  }, [user]);
+
   React.useEffect(() => {
     if (!window) return;
     if (!user) return;
     setReferralLink(`${window.location.origin}/?ref=${user._id}&signup`);
 
-    let cancelled = false;
-
+    // Tour mode still shows canned data, untouched.
     if (tourActive) {
       setReferrals(mockReferrals.data);
       return;
     }
 
-    api.post(`/api/v1/user`, { referredBy: user._id }).then((resp) => {
-      if (cancelled) return; // <- ye check zaroori hai
-      if ("data" in resp) {
-        setReferrals(resp.data);
-      }
-    });
+    let cancelled = false;
+    loadReferralHistory();
+
+    const interval = setInterval(() => {
+      if (!cancelled) loadReferralHistory();
+    }, 3000);
 
     return () => {
-      cancelled = true; // <- jab effect dobara chale (tourActive badle), purana call cancel maana jaega
+      cancelled = true;
+      clearInterval(interval);
     };
-  }, [user, tourActive]);
+  }, [user, tourActive, loadReferralHistory]);
 
   const handleCopy = async () => {
     try {
@@ -127,25 +163,37 @@ export default function page() {
     const newEmails = emails.filter((_, i) => i !== index);
     setEmails(newEmails);
   };
+
   const columns = [
-    { id: "name", label: "Name", data: "fullName" },
-    { id: "email", label: "E-mail", data: "mail" },
+    { id: "email", label: "Email", data: "email" },
+    { id: "registered", label: "Registered", data: "registered" },
+    {
+      id: "sentAt",
+      label: "Sent At",
+      render: (info) =>
+        info.sentAt ? new Date(info.sentAt).toLocaleString() : "",
+    },
+    { id: "name", label: "Name", data: "name" },
     {
       id: "status",
       label: "Status",
-      render: (info) => (
-        <Chip
-          size="small"
-          color={info.isVerified.email == "verified" ? "success" : "error"}
-          label={info.isVerified.email}
-          sx={{ textTransform: "capitalize" }}
-        />
-      ),
+      render: (info) =>
+        info.status ? (
+          <Chip
+            size="small"
+            color={info.status === "verified" ? "success" : "error"}
+            label={info.status}
+            sx={{ textTransform: "capitalize" }}
+          />
+        ) : (
+          ""
+        ),
     },
     {
       id: "date",
       label: "Date of Joining",
-      render: (info) => new Date(info.createdAt).showDate(),
+      render: (info) =>
+        info.dateOfJoining ? new Date(info.dateOfJoining).showDate() : "",
     },
   ];
 
@@ -282,7 +330,10 @@ export default function page() {
                     ),
                   }}
                 />
-                <IconButton color="secondary" onClick={() => handleAddEmail()}>
+                <IconButton
+                  color="secondary"
+                  onClick={() => handleAddEmail()}
+                >
                   <AddIcon />
                 </IconButton>
                 {emails.length !== 1 && (
@@ -302,6 +353,7 @@ export default function page() {
                 });
                 if (resp.status === "success") {
                   setSentInvites(resp.data);
+                  loadReferralHistory();
                 } else {
                   useToast(resp);
                 }
@@ -328,46 +380,45 @@ export default function page() {
             </Button>
           </Box>
         </Grid>
+      </MotionGrid>
 
-        <InvitedEmails sentInvites={sentInvites} />
-      </MotionGrid>
-      <MotionGrid
-        variants={fadeUp}
-        size={12}
-        data-tour="referrals-history-table"
-      >
-        <Datatable
-          isLoading={false}
-          pagination={[10, 20, 50, 100]}
-          pageSize={20}
-          hideColumnSelector
-          hideDownload
-          noDataMsg="No Record Found."
-          // extra={
-          //   <Box px={2}>
-          //     <DateRangeSelector onUpdate={() => {}} />
-          //   </Box>
-          // }
-          title={
-            <Typography
-              sx={{
-                fontSize: "18px",
-                display: "inline-block",
-                fontWeight: "600",
-                color: "primary.main",
-                borderBottom: (theme) =>
-                  `2px solid ${theme.palette.secondary.dark}`,
-                pb: 0.5,
-                my: 1,
-              }}
-            >
-              Referral History
-            </Typography>
-          }
-          columns={columns}
-          data={referrals}
-        />
-      </MotionGrid>
+      {referrals?.length > 0 && (
+        <MotionGrid
+          variants={fadeUp}
+          size={12}
+          data-tour="referrals-history-table"
+        >
+          <Datatable
+            isLoading={false}
+            pagination={[10, 20, 50, 100]}
+            pageSize={20}
+            hideColumnSelector
+            hideDownload
+            noDataMsg="No Record Found."
+            title={
+              <Typography
+                sx={{
+                  fontSize: "18px",
+                  display: "inline-block",
+                  fontWeight: "600",
+                  color: "primary.main",
+                  borderBottom: (theme) =>
+                    `2px solid ${theme.palette.secondary.dark}`,
+                  pb: 0.5,
+                  my: 1,
+                }}
+              >
+                Referral History
+              </Typography>
+            }
+            columns={columns}
+            data={referrals}
+          />
+        </MotionGrid>
+      )}
+
+      <FollowUs />
+
       <Snackbar
         open={toastOpen}
         autoHideDuration={3000}
@@ -385,104 +436,473 @@ export default function page() {
     </Grid>
   );
 }
-function InvitedEmails({ sentInvites }) {
-  const [users, setUsers] = React.useState([]);
-  React.useEffect(() => {
-    api.get(`/api/v1/me/invite`).then((resp) => {
-      if ("data" in resp) setUsers(resp.data);
-    });
-  }, [sentInvites]);
-  if (!users || users.length === 0) return null;
-  return (
-    <Grid
-      size={{ xs: 12, md: 6 }}
-      container
-      mt={2}
-      alignSelf="flex-start"
-      spacing={2}
-    >
-      <Box width={"100%"}>
-        <Typography
-          color="secondary"
-          sx={{
-            fontSize: "16px",
-            fontWeight: "700",
-          }}
-        >
-          Invite History:
-        </Typography>
-      </Box>
 
-      <TableContainer
+// function InvitedEmails({ sentInvites }) {
+//   const [users, setUsers] = React.useState([]);
+//   React.useEffect(() => {
+//     api.get(`/api/v1/me/invite`).then((resp) => {
+//       if ("data" in resp) setUsers(resp.data);
+//     });
+//   }, [sentInvites]);
+//   if (!users || users.length === 0) return null;
+//   return (
+//     <Grid
+//       size={{ xs: 12, md: 6 }}
+//       container
+//       mt={2}
+//       alignSelf="flex-start"
+//       spacing={2}
+//     >
+//       <Box width={"100%"}>
+//         <Typography
+//           color="secondary"
+//           sx={{
+//             fontSize: "16px",
+//             fontWeight: "700",
+//           }}
+//         >
+//           Invite History:
+//         </Typography>
+//       </Box>
+
+//       <TableContainer
+//         sx={{
+//           bgcolor: "primary.light",
+//           border: (theme) => `1px solid ${theme.palette.secondary.light}`,
+//           borderRadius: 2,
+//           maxHeight: { xs: "400px", lg: "132px" },
+//           minWidth: "500px",
+//           overflow: "auto",
+//         }}
+//       >
+//         <Table
+//           size="small"
+//           sx={{
+//             overflow: "scroll",
+//             tableLayout: "fixed",
+//             "& tbody td": {
+//               height: "32px",
+//               fontWeight: 500,
+//               border: "1px solid rgba(0, 0, 0, 0.12)",
+//               overflow: "hidden",
+//               textOverflow: "ellipsis",
+//               whiteSpace: "nowrap",
+//               fontSize: 13,
+//             },
+//             "& tbody tr": {
+//               height: "32px",
+//             },
+//             "& thead th": {
+//               fontSize: 13.5,
+//               fontWeight: 600,
+//               border: "1px solid rgba(0, 0, 0, 0.12)",
+//             },
+//           }}
+//         >
+//           <TableHead>
+//             <TableRow>
+//               <TableCell align="center">Email</TableCell>
+//               <TableCell align="center">Registered</TableCell>
+//               <TableCell align="center">Sent At</TableCell>
+//             </TableRow>
+//           </TableHead>
+
+//           <TableBody>
+//             {users.map((user) => (
+//               <TableRow
+//                 key={user.id}
+//                 sx={{
+//                   "&:hover": {
+//                     bgcolor: "#f4f4f4",
+//                   },
+//                 }}
+//               >
+//                 <TableCell align="center">
+//                   <Tooltip title={user.email} placement="left">
+//                     {user.email}
+//                   </Tooltip>
+//                 </TableCell>
+
+//                 <TableCell align="center">
+//                   {user.isActive ? "Not Registered" : "Registered"}
+//                 </TableCell>
+
+//                 <TableCell align="center">
+//                   {new Date(user.createdAt).toLocaleString()}
+//                 </TableCell>
+//               </TableRow>
+//             ))}
+//           </TableBody>
+//         </Table>
+//       </TableContainer>
+//     </Grid>
+//   );
+// }
+
+const platformConfig = {
+  instagram: {
+    title: "Verify Instagram Follow",
+    message:
+      "Follow our Instagram page and submit your Instagram username for verification.",
+    inputLabel: "Instagram Username or Handle",
+    inputPlaceholder: "Enter your Instagram username or handle",
+  },
+  youtube: {
+    title: "Verify YouTube Subscription",
+    message:
+      "Subscribe to our YouTube channel and submit your YouTube channel name or handle for verification.",
+    inputLabel: "YouTube Channel Name or Handle",
+    inputPlaceholder: "Enter your YouTube channel name or handle",
+  },
+  facebook: {
+    title: "Verify Facebook Like",
+    message:
+      "Like our Facebook page and submit your Facebook profile name for verification.",
+    inputLabel: "Facebook Profile Name",
+    inputPlaceholder: "Enter your Facebook profile name",
+  },
+  twitter: {
+    title: "Verify Twitter Follow",
+    message:
+      "Follow our Twitter profile and submit your Twitter username or handle for verification.",
+    inputLabel: "Twitter Username or Handle",
+    inputPlaceholder: "Enter your Twitter username or handle",
+  },
+  linkedin: {
+    title: "Verify LinkedIn Follow",
+    message:
+      "Follow our LinkedIn page and submit your LinkedIn profile name or URL for verification.",
+    inputLabel: "LinkedIn Profile Name or URL",
+    inputPlaceholder: "Enter your LinkedIn profile name or URL",
+  },
+};
+
+function FollowUs() {
+  const [verifyOpen, setVerifyOpen] = React.useState(false);
+  const [selectedSocial, setSelectedSocial] = React.useState(null);
+  const [screenshot, setScreenshot] = React.useState(null);
+  const [socialId, setSocialId] = React.useState("");
+
+  const [socials, setSocials] = React.useState([]);
+  React.useEffect(() => {
+    loadData(
+      api.get(`/api/v1/socials`),
+      (resp) => {
+        setSocials(resp.data);
+      },
+      () => {
+        // isLoading = false
+      },
+    );
+  }, []);
+
+  const handleSubmitVerification = async () => {
+    if (!selectedSocial || !screenshot || !socialId.trim()) return;
+
+    const formData = new FormData();
+    formData.append("platform", selectedSocial.platform);
+    formData.append("socialId", socialId);
+    formData.append("screenshot", screenshot);
+
+    const resp = await api.post("/api/v1/follow-social/verify", formData);
+    useToast(resp);
+    setSocials((prev) =>
+      prev.map((item) =>
+        item.platform === selectedSocial.platform
+          ? { ...item, status: "pending" }
+          : item,
+      ),
+    );
+
+    setVerifyOpen(false);
+    setSelectedSocial(null);
+    setScreenshot(null);
+    setSocialId("");
+  };
+
+  const closeVerifyPopup = () => {
+    setVerifyOpen(false);
+    setSelectedSocial(null);
+    setScreenshot(null);
+    setSocialId("");
+  };
+
+  if (!socials?.length) {
+    return null;
+  }
+
+  const currentPlatform = platformConfig[
+    selectedSocial?.platform?.toLowerCase()
+  ] || {
+    title: `Verify ${selectedSocial?.platform || ""}`,
+    message: `Connect with our ${selectedSocial?.platform || "social media"} page and submit your profile information for verification.`,
+  };
+
+  return (
+    <>
+      <Grid
+        size={12}
         sx={{
-          bgcolor: "primary.light",
-          border: (theme) => `1px solid ${theme.palette.secondary.light}`,
-          borderRadius: 2,
-          maxHeight: { xs: "400px", lg: "132px" },
-          minWidth: "500px",
-          overflow: "auto",
+          mt: 2,
+          borderBottom: `1px solid #e0e0e0`,
         }}
       >
-        <Table
-          size="small"
+        <Typography
           sx={{
-            overflow: "scroll",
-            tableLayout: "fixed",
-            "& tbody td": {
-              height: "32px",
-              fontWeight: 500,
-              border: "1px solid rgba(0, 0, 0, 0.12)",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              fontSize: 13,
-            },
-            "& tbody tr": {
-              height: "32px",
-            },
-            "& thead th": {
-              fontSize: 13.5,
-              fontWeight: 600,
-              border: "1px solid rgba(0, 0, 0, 0.12)",
-            },
+            fontSize: "18px",
+            display: "inline-block",
+            fontWeight: "600",
+            color: "primary.main",
+            borderBottom: (theme) =>
+              `2px solid ${theme.palette.secondary.dark}`,
+            pb: 0.5,
+            my: 2,
           }}
         >
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Email</TableCell>
-              <TableCell align="center">Registered</TableCell>
-              <TableCell align="center">Sent At</TableCell>
-            </TableRow>
-          </TableHead>
+          Get Rewarded for Staying Connected
+        </Typography>
+      </Grid>
 
-          <TableBody>
-            {users.map((user) => (
-              <TableRow
-                key={user.id}
+      <Grid size={12}>
+        <Typography
+          sx={{
+            fontSize: 15,
+            lineHeight: 1.6,
+            mb: 1.5,
+          }}
+        >
+          Follow us on social media to earn bonus reward points and stay
+          updated with the latest opportunities, surveys, and community
+          updates.
+        </Typography>
+
+        <Typography
+          sx={{
+            fontSize: { xs: 15, sm: 16 },
+            fontWeight: 600,
+            mb: 0.5,
+          }}
+        >
+          How it works
+        </Typography>
+
+        <Typography
+          sx={{
+            fontSize: 14,
+            lineHeight: 1.6,
+            color: "text.secondary",
+            mb: 3,
+            textAlign: "justify",
+          }}
+        >
+          Click the button for the social platform you want to connect with
+          and complete the required action (Like, Follow, or Subscribe).
+          Then click Verify and submit your social media username/handle
+          along with a screenshot showing that you have completed the
+          action. Once your submission is verified, you will receive the
+          displayed bonus points.
+        </Typography>
+
+        <Grid container spacing={2}>
+          {socials.map((social, i) => (
+            <Grid key={i}>
+              <Box
                 sx={{
-                  "&:hover": {
-                    bgcolor: "#f4f4f4",
-                  },
+                  width: 220,
+                  p: 2,
+                  border: "1px solid",
+                  borderColor:
+                    social.status === "rewarded"
+                      ? "success.main"
+                      : social.status === "pending"
+                        ? "warning.main"
+                        : "divider",
+                  borderRadius: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 1.5,
                 }}
               >
-                <TableCell align="center">
-                  <Tooltip title={user.email} placement="left">
-                    {user.email}
-                  </Tooltip>
-                </TableCell>
+                <i
+                  className={`fa-brands ${social.icon}`}
+                  style={{ color: "blue", fontSize: 40, ...social.iconspecs }}
+                />
 
-                <TableCell align="center">
-                  {user.isActive ? "Not Registered" : "Registered"}
-                </TableCell>
+                <Typography fontWeight={600}>{social.platform}</Typography>
 
-                <TableCell align="center">
-                  {new Date(user.createdAt).toLocaleString()}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Grid>
+                <Typography
+                  fontSize={16}
+                  fontWeight={600}
+                  color={
+                    social.status === "rewarded"
+                      ? "success.main"
+                      : social.status === "pending"
+                        ? "warning.main"
+                        : "secondary"
+                  }
+                >
+                  {social.status === "rewarded"
+                    ? `${social.points} Points Awarded`
+                    : social.status === "pending"
+                      ? "Verification Pending"
+                      : `+${social.points} Points`}
+                </Typography>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1,
+                    width: "100%",
+                  }}
+                >
+                  <Button
+                    component="a"
+                    href={social.url}
+                    target="_blank"
+                    variant="outlined"
+                    size="small"
+                    sx={{ fontWeight: 600 }}
+                    onClick={() => {
+                      if (social.status === "not_started") {
+                        setSocials((prev) =>
+                          prev.map((item) =>
+                            item.platform === social.platform
+                              ? { ...item, status: "followed" }
+                              : item,
+                          ),
+                        );
+                      }
+                    }}
+                  >
+                    {social.platform?.toLowerCase() === "facebook"
+                      ? "Like on Facebook"
+                      : social.platform?.toLowerCase() === "youtube"
+                        ? "Subscribe on YouTube"
+                        : social.platform?.toLowerCase() === "instagram"
+                          ? "Follow on Instagram"
+                          : social.platform?.toLowerCase() === "linkedin"
+                            ? "Follow on LinkedIn"
+                            : social.platform?.toLowerCase() === "twitter"
+                              ? "Follow on Twitter"
+                              : `Follow on ${social.platform}`}
+                  </Button>
+
+                  {social.status === "rewarded" ? (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      size="small"
+                      startIcon={<CheckIcon />}
+                      disabled
+                    >
+                      Reward Claimed
+                    </Button>
+                  ) : social.status === "pending" ? (
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      size="small"
+                      disabled
+                    >
+                      Pending Review
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      size="small"
+                      disabled={social.status === "not_started"}
+                      onClick={() => {
+                        setSelectedSocial(social);
+                        setVerifyOpen(true);
+                      }}
+                    >
+                      Verify{" "}
+                      {social.platform?.toLowerCase() === "facebook"
+                        ? "Like"
+                        : social.platform?.toLowerCase() === "youtube"
+                          ? "Subscription"
+                          : "Follow"}
+                    </Button>
+                  )}
+                </Box>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Grid>
+
+      <PopUp
+        open={verifyOpen}
+        onClose={closeVerifyPopup}
+        title={currentPlatform.title}
+        maxWidth="sm"
+      >
+        <Box p={3}>
+          <Typography mb={2}>{currentPlatform.message}</Typography>
+
+          <Page.Input
+            fullWidth
+            label={currentPlatform.inputLabel}
+            placeholder={currentPlatform.inputPlaceholder}
+            value={socialId}
+            onChange={(e) => setSocialId(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+
+          <Button
+            component="label"
+            variant="outlined"
+            fullWidth
+            sx={{ height: 48, fontWeight: 700, fontSize: 16 }}
+          >
+            {screenshot ? "Change Screenshot" : "Upload Screenshot"}
+
+            <input
+              hidden
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                if (e.target.files?.[0]) {
+                  setScreenshot(e.target.files[0]);
+                }
+              }}
+            />
+          </Button>
+
+          {/* <Typography mt={2} fontSize={12} color="error.main">
+            Maximum 2MB file size allowed
+          </Typography> */}
+
+          <Typography mt={1} fontSize={12} color="text.secondary">
+            Upload a screenshot showing that you have followed, subscribed
+            to, or liked our page.
+          </Typography>
+
+          {screenshot && (
+            <Typography mt={2} fontSize={14} color="success.main">
+              Selected: {screenshot.name}
+            </Typography>
+          )}
+
+          <Box mt={3} display="flex" justifyContent="flex-end" gap={1}>
+            <Button variant="outlined" onClick={closeVerifyPopup}>
+              Cancel
+            </Button>
+
+            <Button
+              variant="contained"
+              color="secondary"
+              disabled={!socialId.trim() || !screenshot}
+              onClick={handleSubmitVerification}
+            >
+              Submit Verification
+            </Button>
+          </Box>
+        </Box>
+      </PopUp>
+    </>
   );
 }
