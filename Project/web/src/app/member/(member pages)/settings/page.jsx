@@ -12,7 +12,11 @@ import {
   List,
   ListItem,
   Collapse,
+  CircularProgress,
 } from "@mui/material";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { Terms } from "@/app/auth/terms/page";
 import { useMember } from "@/Context";
 import { useDebounce, useToast } from "@/hooks";
@@ -101,23 +105,63 @@ function ChangePassword() {
     newPassword: "",
     cnfPassword: "",
   });
+  const [loading, setLoading] = React.useState(false);
+  const [feedback, setFeedback] = React.useState(null); // { type: "success" | "error", message: string }
+
+  // Helper: pulls the most useful error message out of whatever shape the
+  // API returns, so a wrong "current password" (or any other backend error)
+  // always shows something clear instead of "undefined" / a blank toast.
+  const extractErrorMessage = (resp) => {
+    return (
+      resp?.message ||
+      resp?.data?.message ||
+      resp?.error ||
+      (Array.isArray(resp?.errors) && resp.errors[0]) ||
+      "Something went wrong. Please check your current password and try again."
+    );
+  };
+
   return (
     <Grid
-    data-tour="settings-password"
+      data-tour="settings-password"
       size={12}
       container
       spacing={2}
       component="form"
       onSubmit={async (e) => {
         e.preventDefault();
-        let resp = await api.patch(`/api/v1/me`, inputs);
-        useToast(resp);
-        if (resp.status === "success")
-          setInputs({
-            oldPassword: "",
-            newPassword: "",
-            cnfPassword: "",
+        if (loading) return;
+
+        setLoading(true);
+        setFeedback(null);
+
+        try {
+          let resp = await api.patch(`/api/v1/me`, inputs);
+
+          if (resp?.status === "success") {
+            setFeedback({
+              type: "success",
+              message: resp?.message || "Password changed successfully!",
+            });
+            setInputs({
+              oldPassword: "",
+              newPassword: "",
+              cnfPassword: "",
+            });
+          } else {
+            const message = extractErrorMessage(resp);
+            setFeedback({ type: "error", message });
+          }
+        } catch (err) {
+          setFeedback({
+            type: "error",
+            message:
+              err?.message ||
+              "Couldn't change your password right now. Please try again.",
           });
+        } finally {
+          setLoading(false);
+        }
       }}
     >
       <Box
@@ -160,8 +204,11 @@ function ChangePassword() {
           label="Current Password"
           type="password"
           name="password"
+          value={inputs.oldPassword}
+          error={feedback?.type === "error"}
           onChange={(e) => {
             setInputs({ ...inputs, oldPassword: e?.target?.value ?? "" });
+            if (feedback?.type === "error") setFeedback(null);
           }}
           sx={{ bgcolor: "white" }}
         />
@@ -170,8 +217,10 @@ function ChangePassword() {
           type="password"
           name="newPassword"
           strengthMeter={true}
+          value={inputs.newPassword}
           onChange={(e) => {
             setInputs({ ...inputs, newPassword: e?.target?.value ?? "" });
+            if (feedback?.type === "error") setFeedback(null);
           }}
           sx={{ bgcolor: "white" }}
         />
@@ -180,11 +229,71 @@ function ChangePassword() {
           type="password"
           name="cnfPassword"
           match="newPassword"
+          value={inputs.cnfPassword}
           sx={{ bgcolor: "white" }}
           onChange={(e) => {
             setInputs({ ...inputs, cnfPassword: e?.target?.value ?? "" });
+            if (feedback?.type === "error") setFeedback(null);
           }}
         />
+
+        <Collapse in={Boolean(feedback)} unmountOnExit>
+          {feedback && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 1,
+                px: 1.75,
+                py: 1.25,
+                borderRadius: 2,
+                bgcolor: (theme) =>
+                  feedback.type === "success"
+                    ? "#EDF7EE"
+                    : theme.palette.primary.light,
+                border: (theme) =>
+                  `1px solid ${
+                    feedback.type === "success"
+                      ? "#A9D6AE"
+                      : theme.palette.secondary.main
+                  }`,
+              }}
+            >
+              {feedback.type === "success" ? (
+                <CheckCircleRoundedIcon
+                  fontSize="small"
+                  sx={{ color: "#2E7D32", mt: "1px" }}
+                />
+              ) : (
+                <ErrorRoundedIcon
+                  fontSize="small"
+                  sx={{ color: "secondary.main", mt: "1px" }}
+                />
+              )}
+              <Typography
+                variant="body2"
+                sx={{
+                  flex: 1,
+                  color: feedback.type === "success" ? "#1B5E20" : "primary.main",
+                  fontWeight: 500,
+                }}
+              >
+                {feedback.message}
+              </Typography>
+              <IconButton
+                size="small"
+                onClick={() => setFeedback(null)}
+                sx={{
+                  p: 0.25,
+                  color:
+                    feedback.type === "success" ? "#2E7D32" : "secondary.main",
+                }}
+              >
+                <CloseRoundedIcon fontSize="inherit" />
+              </IconButton>
+            </Box>
+          )}
+        </Collapse>
       </Grid>
 
       <Button
@@ -192,9 +301,15 @@ function ChangePassword() {
         variant="contained"
         color="secondary"
         disabled={
+          loading ||
           inputs.cnfPassword !== inputs.newPassword ||
           inputs.newPassword === "" ||
           inputs.oldPassword === ""
+        }
+        startIcon={
+          loading ? (
+            <CircularProgress size={16} color="inherit" />
+          ) : undefined
         }
         sx={{
           ml: 1,
@@ -203,7 +318,7 @@ function ChangePassword() {
           fontWeight: 600,
         }}
       >
-        Change Password
+        {loading ? "Changing..." : "Change Password"}
       </Button>
     </Grid>
   );
