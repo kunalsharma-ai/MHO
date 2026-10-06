@@ -5,10 +5,10 @@
 
 "use client";
 import React from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, useWatch, Controller } from "react-hook-form";
 import { Datatable, Form, Icon, SectionTitle } from "@/components";
 import { Page, api } from "@/util";
-import { Grid, IconButton, Chip, Tooltip } from "@mui/material";
+import { Grid, IconButton, Chip, Tooltip, Autocomplete, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
@@ -391,6 +391,102 @@ function SurveyInvite({ surveyID = null, close }) {
   );
 }
 
+function FilterRow({ index, control, form, setValue, onRemove }) {
+  const qKey = useWatch({ control, name: `filterRows.${index}.key` });
+  const [opts, setOpts] = React.useState([]);
+  const prevKey = React.useRef(undefined);
+
+  React.useEffect(() => {
+   // debugging ke baad hata dena
+
+    if (prevKey.current !== undefined && prevKey.current !== qKey) {
+      setValue(`filterRows.${index}.values`, []);
+    }
+    prevKey.current = qKey;
+
+    if (!qKey) {
+      setOpts([]);
+      return;
+    }
+    let active = true;
+    api
+      .get(`/api/v1/option/${encodeURIComponent(qKey)}`)
+      .then((resp) => {
+        console.log("options for", qKey, resp); // debugging ke baad hata dena
+        if (active) setOpts(Array.isArray(resp?.data) ? resp.data : []);
+      })
+      .catch((err) => {
+        console.error("option fetch failed", qKey, err);
+        if (active) setOpts([]);
+      });
+    return () => {
+      active = false;
+    };
+  }, [qKey]);
+
+  const labelOf = (v) => opts.find((o) => o.value === v)?.label ?? v;
+
+  return (
+    <Grid container spacing={1} alignItems="center">
+      <Grid size={{ xs: 12, md: 5 }}>
+        <Form.Select
+          control={control}
+          {...form.register(`filterRows.${index}.key`)}
+          label="Question"
+          api="question"
+        />
+      </Grid>
+      <Grid size={{ xs: 10, md: 6 }}>
+        <Form.Select
+          control={control}
+          {...form.register(`filterRows.${index}.values`)}
+          label="Question"
+          options={opts}
+          multiple
+        />
+        {/*        <Controller
+          control={control}
+          name={`filterRows.${index}.values`}
+          render={({ field }) => (
+            <Autocomplete
+              multiple
+              freeSolo
+              openOnFocus
+              size="small"
+              options={opts.map((o) => o.value)}
+              getOptionLabel={(v) => String(labelOf(v))}
+              value={Array.isArray(field.value) ? field.value : []}
+              onChange={(e, v) => field.onChange(v)}
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: "zIndex",
+                      enabled: true,
+                      phase: "write",
+                      fn: ({ state }) => {
+                        state.styles.popper.zIndex = 15000;
+                      },
+                    },
+                  ],
+                },
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Selected option" />
+              )}
+            />
+          )}
+        />*/}
+      </Grid>
+      <Grid size={{ xs: 2, md: 1 }}>
+        <IconButton color="error" onClick={onRemove}>
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </Grid>
+    </Grid>
+  );
+}
+
 function CreateOrEditSurvey({ surveyID = null, close }) {
   const id = React.useId();
   const id2 = React.useId();
@@ -409,7 +505,8 @@ function CreateOrEditSurvey({ surveyID = null, close }) {
       description: "",
       link: "",
       pages: [],
-      qualityScore:"",
+      qualityScore: "",
+      filterRows: [],
     },
   });
 
@@ -421,15 +518,42 @@ function CreateOrEditSurvey({ surveyID = null, close }) {
     formState: { errors },
   } = form;
 
+  const {
+    fields: filterFields,
+    append: appendFilter,
+    remove: removeFilter,
+  } = useFieldArray({ control, name: "filterRows" });
+
   React.useEffect(() => {
     if (!surveyID) return;
     api.get(`${endpoint}/${surveyID}`).then((resp) => {
       if (resp.status === "success") {
-        form.reset(resp.data);
+        form.reset({
+          ...resp.data,
+          filterRows: Object.entries(resp.data?.filters || {}).map(
+            ([key, v]) => ({
+              key,
+              values: [].concat(v).map(String),
+            }),
+          ),
+        });
       }
     });
   }, [surveyID]);
-  const onSubmit = async (data) => {
+
+  const onSubmit = async (formData) => {
+    const { filterRows = [], ...data } = formData;
+
+    const filters = {};
+    filterRows.forEach(({ key, values }) => {
+      const k = (key || "").trim();
+      const vals = [].concat(values || [])
+        .map((x) => String(x).trim())
+        .filter(Boolean);
+      if (k && vals.length) filters[k] = vals;
+    });
+    data.filters = filters;
+
     if (data._id) {
       let resp = await api.put(`${endpoint}/${data._id}`, data);
       useToast(resp);
@@ -553,20 +677,13 @@ function CreateOrEditSurvey({ surveyID = null, close }) {
           control={control}
           {...form.register("points")}
           label="Points"
-        />{" "}
-
-        <Form.Input
-  control={control}
-  {...form.register("points")}
-  label="Points"
-/>{" "}
-<Form.Input control={control} {...form.register("loi")} label="LOI" />
-<Form.Input
-  control={control}
-  {...form.register("qualityScore")}
-  label="Quality Score"
-/>
+        />
         <Form.Input control={control} {...form.register("loi")} label="LOI" />
+        <Form.Input
+          control={control}
+          {...form.register("qualityScore")}
+          label="Quality Score"
+        />
         <Form.TextEditor
           control={control}
           name="thankyou"
@@ -581,6 +698,47 @@ function CreateOrEditSurvey({ surveyID = null, close }) {
           editorId={id3}
           dialogScoped
         />
+
+        {/* Eligibility Filters */}
+        <Grid
+          size={12}
+          container
+          direction="column"
+          spacing={1}
+          sx={{ p: 1.5, border: "1px solid #e0e0e0", borderRadius: 2 }}
+        >
+          <Page.Text sx={{ fontWeight: 600, color: "primary.main" }}>
+            Eligibility Filters (optional)
+          </Page.Text>
+          <Page.Text sx={{ fontSize: 12, color: "text.secondary" }}>
+            Only users whose saved answers match will see this survey. Leave
+            empty to show it to everyone.
+          </Page.Text>
+
+          {filterFields.map((f, i) => (
+            <FilterRow
+              key={f.id}
+              index={i}
+              control={control}
+              form={form}
+              setValue={setValue}
+              onRemove={() => removeFilter(i)}
+            />
+          ))}
+
+          <Grid>
+            <Page.MuiButton
+              variant="outlined"
+              size="small"
+              color="secondary"
+              sx={{ borderWidth: 2, fontWeight: 600 }}
+              onClick={() => appendFilter({ key: "", values: [] })}
+            >
+              Add Filter
+            </Page.MuiButton>
+          </Grid>
+        </Grid>
+
         <Form.Input control={control} {...form.register("link")} label="Link" />
         {/* todo:confirmation from management about icon upload
         <Grid container direction="column" sx={{ px: 1, py: 1 }}>
