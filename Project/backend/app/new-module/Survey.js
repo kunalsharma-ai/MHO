@@ -71,6 +71,32 @@ class Survey extends CrudController {
         );
     }
 
+        async create(data) {
+        let item = await super.list(data);
+        if (item.length !== 0) throw new Error(`Survey ${data.name} already exists`);
+        this.fixUserIssue();
+        return await super.create(data)
+    }
+    async update(id, data) {
+        this.fixUserIssue();
+        return await super.update(id, data);
+    }
+    async read(id) {
+        return await super.read(id)
+    }
+    async delete(id) {
+        this.fixUserIssue();
+        return await super.delete(id);
+    }
+    async getQuestions(slug) {
+        let survey = await this.openBySlug(slug)
+        let questions = survey.pages.map(page => {
+            page.shift();
+            return page;
+        })
+        return questions.flat();
+    }
+
     async openBySlug(slug) {
         const user = this.request.user;
         const category = user.category;
@@ -84,6 +110,7 @@ class Survey extends CrudController {
         return temp[0];
     }
     async bulkInvite(id, filters) {
+        
         const survey = await super.read(id);
         if (!survey) throw new Error("Survey not found");
 
