@@ -64,8 +64,7 @@ class ProfileController extends CrudController {
       answerByName[a.question] = Array.isArray(a.answer) ? a.answer[0] : a.answer;
     });
 
-    // fullname/mail live on the User account rather than in the Answer
-    // collection, so they're backfilled here before applicability runs.
+    
     const currentUser = this.request.user;
     if (currentUser?.fullname || currentUser?.name) {
       answerByName.fullname = currentUser.fullname || currentUser.name;

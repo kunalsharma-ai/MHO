@@ -7990,3 +7990,1906 @@
     "origin": "mho.sampledge.duckdns.org",
     "method": "GET"
 }
+
+[17 Sept 2026, 17:41:40 IST]: Server started at port 3000
+
+[17 Sept 2026, 17:42:59 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "192.168.0.113, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "x-forwarded-scheme": "https",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "sec-ch-ua": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+    "content-type": "application/json",
+    "sec-ch-ua-mobile": "?0",
+    "accept": "*/*",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-dest": "empty",
+    "referer": "https://mho.sampledge.duckdns.org/admin/panelists",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "en-US,en;q=0.9",
+    "priority": "u=1, i",
+    "cookie": "_ga=GA1.1.1030229640.1787645266; authorization=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTAyMGVkM2ZkMTM1ZWFjMzI0NWMwZWEiLCJjYXRlZ29yeSI6ImNhcmUgZ2l2ZXIiLCJlbWFpbCI6Im9wdGl3YXJpLmluZGlhK21ob0BnbWFpbC5jb20iLCJwaG9uZSI6IjkxODEzMDIwMjg3OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoiSm9obiIsIm1pZGRsZSI6IiIsImxhc3QiOiJEb2UifSwib3JpZ2luIjoibWhvLnNhbXBsZWRnZS5kdWNrZG5zLm9yZyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4OTY0NzE2OCwiZXhwIjoxNzkwMjUxOTY4fQ.8je-DjntfLM2Ob0gBk03lSbKrSpRIGbg-Mxr7VZNWiw; _ga_CJZZ33W5MP=GS2.1.s1789646056$o17$g1$t1789647174$j41$l0$h0",
+    "endpoint": "/api/v1/options/country",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "GET"
+}
+
+[17 Sept 2026, 17:43:00 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "192.168.0.113, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "x-forwarded-scheme": "https",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "sec-ch-ua": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+    "content-type": "application/json",
+    "sec-ch-ua-mobile": "?0",
+    "accept": "*/*",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-dest": "empty",
+    "referer": "https://mho.sampledge.duckdns.org/admin/panelists",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "en-US,en;q=0.9",
+    "if-none-match": "W/\"63-pwryt1xt8/+5m6R6qWA/8DYKqHI\"",
+    "priority": "u=1, i",
+    "cookie": "_ga=GA1.1.1030229640.1787645266; authorization=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTAyMGVkM2ZkMTM1ZWFjMzI0NWMwZWEiLCJjYXRlZ29yeSI6ImNhcmUgZ2l2ZXIiLCJlbWFpbCI6Im9wdGl3YXJpLmluZGlhK21ob0BnbWFpbC5jb20iLCJwaG9uZSI6IjkxODEzMDIwMjg3OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoiSm9obiIsIm1pZGRsZSI6IiIsImxhc3QiOiJEb2UifSwib3JpZ2luIjoibWhvLnNhbXBsZWRnZS5kdWNrZG5zLm9yZyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4OTY0NzE2OCwiZXhwIjoxNzkwMjUxOTY4fQ.8je-DjntfLM2Ob0gBk03lSbKrSpRIGbg-Mxr7VZNWiw; _ga_CJZZ33W5MP=GS2.1.s1789646056$o17$g1$t1789647174$j41$l0$h0",
+    "endpoint": "/api/v1/options/country",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "GET"
+}
+
+[17 Sept 2026, 17:43:50 IST]: Error: [CrudController Error]: [CrudController Error]: Request 'origin' is missing and is required for this operation.
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "192.168.0.113, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "20",
+    "x-forwarded-scheme": "https",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "sec-ch-ua": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+    "content-type": "application/json",
+    "sec-ch-ua-mobile": "?0",
+    "accept": "*/*",
+    "origin": "mho.sampledge.duckdns.org",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-dest": "empty",
+    "referer": "https://mho.sampledge.duckdns.org/survey?name=welcome",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "en-US,en;q=0.9",
+    "priority": "u=1, i",
+    "cookie": "_ga=GA1.1.1030229640.1787645266; authorization=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YWFiZDdjOTczODYxYzE5NjM4OTYxZDIiLCJjYXRlZ29yeSI6ImhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIiwiZW1haWwiOiJzaWRkaGFudC50cmlwYXRoaSsxOTlAZnJlcXVlbnRyZXNlYXJjaC5jb20iLCJwaG9uZSI6IiIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoiYWVyZ3JlIiwibGFzdCI6ImdyZWciLCJtaWRkbGUiOiIifSwib3JpZ2luIjoibWhvLnNhbXBsZWRnZS5kdWNrZG5zLm9yZyIsInJvbGUiOiJyZXNwb25kZW50IiwiaWF0IjoxNzg5NjQ3MjAxLCJleHAiOjE3OTAyNTIwMDF9.-l0gr-iGzwk5U_BEqObyfgFa7-WNZ6icbB8HsJPqqXs; _ga_CJZZ33W5MP=GS2.1.s1789646056$o17$g1$t1789647224$j55$l0$h0"
+}
+
+[17 Sept 2026, 17:48:30 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "192.168.0.113, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "x-forwarded-scheme": "https",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "sec-ch-ua": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+    "content-type": "application/json",
+    "sec-ch-ua-mobile": "?0",
+    "accept": "*/*",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-dest": "empty",
+    "referer": "https://mho.sampledge.duckdns.org/admin/panelists",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "en-US,en;q=0.9",
+    "if-none-match": "W/\"63-pwryt1xt8/+5m6R6qWA/8DYKqHI\"",
+    "priority": "u=1, i",
+    "cookie": "_ga=GA1.1.1030229640.1787645266; authorization=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTAyMGVkM2ZkMTM1ZWFjMzI0NWMwZWEiLCJjYXRlZ29yeSI6ImNhcmUgZ2l2ZXIiLCJlbWFpbCI6Im9wdGl3YXJpLmluZGlhK21ob0BnbWFpbC5jb20iLCJwaG9uZSI6IjkxODEzMDIwMjg3OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoiSm9obiIsIm1pZGRsZSI6IiIsImxhc3QiOiJEb2UifSwib3JpZ2luIjoibWhvLnNhbXBsZWRnZS5kdWNrZG5zLm9yZyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4OTY0NzUwNiwiZXhwIjoxNzkwMjUyMzA2fQ.0hO0DG2pfbAxArZrdhWsESM1IVXS6kE97TbbdqAz2_I; _ga_CJZZ33W5MP=GS2.1.s1789646056$o17$g1$t1789647508$j33$l0$h0",
+    "endpoint": "/api/v1/options/country",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "GET"
+}
+
+[17 Sept 2026, 17:48:30 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "192.168.0.113, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "x-forwarded-scheme": "https",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "sec-ch-ua": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+    "content-type": "application/json",
+    "sec-ch-ua-mobile": "?0",
+    "accept": "*/*",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-dest": "empty",
+    "referer": "https://mho.sampledge.duckdns.org/admin/panelists",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "en-US,en;q=0.9",
+    "if-none-match": "W/\"63-pwryt1xt8/+5m6R6qWA/8DYKqHI\"",
+    "priority": "u=1, i",
+    "cookie": "_ga=GA1.1.1030229640.1787645266; authorization=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTAyMGVkM2ZkMTM1ZWFjMzI0NWMwZWEiLCJjYXRlZ29yeSI6ImNhcmUgZ2l2ZXIiLCJlbWFpbCI6Im9wdGl3YXJpLmluZGlhK21ob0BnbWFpbC5jb20iLCJwaG9uZSI6IjkxODEzMDIwMjg3OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoiSm9obiIsIm1pZGRsZSI6IiIsImxhc3QiOiJEb2UifSwib3JpZ2luIjoibWhvLnNhbXBsZWRnZS5kdWNrZG5zLm9yZyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4OTY0NzUwNiwiZXhwIjoxNzkwMjUyMzA2fQ.0hO0DG2pfbAxArZrdhWsESM1IVXS6kE97TbbdqAz2_I; _ga_CJZZ33W5MP=GS2.1.s1789646056$o17$g1$t1789647508$j33$l0$h0",
+    "endpoint": "/api/v1/options/country",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "GET"
+}
+
+[17 Sept 2026, 18:24:07 IST]: Server started at port 3000
+
+[17 Sept 2026, 18:28:58 IST]: Server started at port 3000
+
+[17 Sept 2026, 18:35:25 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "192.168.0.113, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "x-forwarded-scheme": "https",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "sec-ch-ua": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+    "content-type": "application/json",
+    "sec-ch-ua-mobile": "?0",
+    "accept": "*/*",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-dest": "empty",
+    "referer": "https://mho.sampledge.duckdns.org/admin/panelists",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "en-US,en;q=0.9",
+    "if-none-match": "W/\"63-pwryt1xt8/+5m6R6qWA/8DYKqHI\"",
+    "priority": "u=1, i",
+    "cookie": "_ga=GA1.1.1030229640.1787645266; authorization=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTAyMGVkM2ZkMTM1ZWFjMzI0NWMwZWEiLCJjYXRlZ29yeSI6ImNhcmUgZ2l2ZXIiLCJlbWFpbCI6Im9wdGl3YXJpLmluZGlhK21ob0BnbWFpbC5jb20iLCJwaG9uZSI6IjkxODEzMDIwMjg3OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoiSm9obiIsIm1pZGRsZSI6IiIsImxhc3QiOiJEb2UifSwib3JpZ2luIjoibWhvLnNhbXBsZWRnZS5kdWNrZG5zLm9yZyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4OTY1MDMxMiwiZXhwIjoxNzkwMjU1MTEyfQ.I9wJXf2pNiBsAE-L3FosZayp60YcIE-YsncfyAUA2SU; _ga_CJZZ33W5MP=GS2.1.s1789646056$o17$g1$t1789650319$j10$l0$h0",
+    "endpoint": "/api/v1/options/country",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "GET"
+}
+
+[17 Sept 2026, 18:35:26 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "192.168.0.113, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "x-forwarded-scheme": "https",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "sec-ch-ua": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+    "content-type": "application/json",
+    "sec-ch-ua-mobile": "?0",
+    "accept": "*/*",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-dest": "empty",
+    "referer": "https://mho.sampledge.duckdns.org/admin/panelists",
+    "accept-encoding": "gzip, deflate, br, zstd",
+    "accept-language": "en-US,en;q=0.9",
+    "if-none-match": "W/\"63-pwryt1xt8/+5m6R6qWA/8DYKqHI\"",
+    "priority": "u=1, i",
+    "cookie": "_ga=GA1.1.1030229640.1787645266; authorization=Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTAyMGVkM2ZkMTM1ZWFjMzI0NWMwZWEiLCJjYXRlZ29yeSI6ImNhcmUgZ2l2ZXIiLCJlbWFpbCI6Im9wdGl3YXJpLmluZGlhK21ob0BnbWFpbC5jb20iLCJwaG9uZSI6IjkxODEzMDIwMjg3OSIsIm5hbWUiOnsic2FsdXRhdGlvbiI6Ik1yLiIsImZpcnN0IjoiSm9obiIsIm1pZGRsZSI6IiIsImxhc3QiOiJEb2UifSwib3JpZ2luIjoibWhvLnNhbXBsZWRnZS5kdWNrZG5zLm9yZyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4OTY1MDMxMiwiZXhwIjoxNzkwMjU1MTEyfQ.I9wJXf2pNiBsAE-L3FosZayp60YcIE-YsncfyAUA2SU; _ga_CJZZ33W5MP=GS2.1.s1789646056$o17$g1$t1789650319$j10$l0$h0",
+    "endpoint": "/api/v1/options/country",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "GET"
+}
+
+[17 Sept 2026, 20:48:12 IST]: Server started at port 3000
+
+[18 Sept 2026, 10:19:29 IST]: Server started at port 3000
+
+[18 Sept 2026, 17:25:00 IST]: Server started at port 3000
+
+[19 Sept 2026, 10:20:04 IST]: Server started at port 3000
+
+[21 Sept 2026, 10:11:15 IST]: Server started at port 3000
+
+[22 Sept 2026, 14:35:44 IST]: Server started at port 3000
+
+[23 Sept 2026, 10:31:47 IST]: Server started at port 3000
+
+[24 Sept 2026, 10:11:50 IST]: Server started at port 3000
+
+[25 Sept 2026, 10:17:15 IST]: Server started at port 3000
+
+[25 Sept 2026, 13:19:56 IST]: Server started at port 3000
+
+[26 Sept 2026, 10:14:09 IST]: Server started at port 3000
+
+[27 Sept 2026, 12:09:02 IST]: Server started at port 3000
+
+[27 Sept 2026, 17:33:59 IST]: Server started at port 3000
+
+[28 Sept 2026, 07:14:07 IST]: Server started at port 3000
+
+[28 Sept 2026, 10:13:05 IST]: Server started at port 3000
+
+[28 Sept 2026, 14:00:21 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "204",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[28 Sept 2026, 14:00:22 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "206",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[28 Sept 2026, 14:00:22 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "206",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[28 Sept 2026, 14:00:23 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "206",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[28 Sept 2026, 14:00:23 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "206",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[28 Sept 2026, 14:00:23 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "206",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[28 Sept 2026, 14:00:23 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "206",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[28 Sept 2026, 14:00:23 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "206",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[28 Sept 2026, 17:32:40 IST]: Server started at port 3000
+
+[29 Sept 2026, 10:44:07 IST]: Server started at port 3000
+
+[30 Sept 2026, 10:16:25 IST]: Server started at port 3000
+
+[30 Sept 2026, 14:41:20 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "98",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:41:21 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:41:23 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:41:24 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:41:24 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:41:24 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:41:24 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:41:24 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:41:24 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:41:24 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:42:43 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "98",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:42:50 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:43:03 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:43:05 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:43:05 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:43:05 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:43:05 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:43:05 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:44:01 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "98",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:44:01 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:44:26 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:44:32 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:44:36 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:44:37 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:44:37 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:44:37 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:46:45 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "98",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:46:52 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:46:54 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:46:56 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:46:56 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:46:57 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:46:57 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:46:57 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:47:17 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "98",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:47:18 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:47:19 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:47:20 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:47:21 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:47:21 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:47:21 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:47:21 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:26 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "98",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:28 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:32 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:33 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:33 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:34 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:34 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:34 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:34 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "98",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:34 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:34 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:34 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:34 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:34 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:34 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:34 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:43 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "98",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:44 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:44 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:44 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:46 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:46 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:47 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:51:47 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:53:49 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "98",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:53:50 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:53:52 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:53:52 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:53:52 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:53:52 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:53:52 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:53:52 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:55:18 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:57:04 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "98",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:57:05 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:57:06 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:57:07 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:57:07 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:57:07 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:57:07 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[30 Sept 2026, 14:57:07 IST]: Fallback route
+{
+    "connection": "close",
+    "host": "mho.sampledge.duckdns.org",
+    "x-real-ip": "10.10.0.2",
+    "x-forwarded-for": "10.10.0.1, 10.10.0.2",
+    "x-forwarded-proto": "http",
+    "x-forwarded-host": "mho.sampledge.duckdns.org",
+    "x-forwarded-port": "80",
+    "content-length": "100",
+    "x-forwarded-scheme": "https",
+    "content-type": "application/json",
+    "accept": "application/json, text/html, text/plain",
+    "endpoint": "/api/v1/cpi",
+    "origin": "mho.sampledge.duckdns.org",
+    "method": "POST"
+}
+
+[1 Oct 2026, 09:05:42 IST]: Server started at port 3000
+
+[1 Oct 2026, 14:40:41 IST]: Server started at port 3000
+
+[1 Oct 2026, 15:39:43 IST]: Server started at port 3000
+
+[2 Oct 2026, 19:51:34 IST]: Server started at port 3000
+
+[3 Oct 2026, 10:10:57 IST]: Server started at port 3000
+
+[5 Oct 2026, 10:28:01 IST]: Server started at port 3000
+
+[6 Oct 2026, 10:23:57 IST]: Server started at port 3000
+
+[7 Oct 2026, 10:17:59 IST]: Server started at port 3000
