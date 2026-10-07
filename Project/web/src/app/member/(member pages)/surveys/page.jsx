@@ -35,6 +35,19 @@ import mockSurveys from "@/mockData/surveys";
 
 const permittedStatus = ["invited", "dropout"];
 
+const norm = (v) => String(v ?? "").trim().toLowerCase();
+const toList = (v) => {
+  if (v === null || v === undefined) return [];
+  if (Array.isArray(v)) return v.flatMap(toList);
+  if (typeof v === "object") return toList(v.answer ?? v.Answer ?? v.value);
+  return [norm(v)];
+};
+const isEligible = (survey, answers) =>
+  Object.entries(survey.filters || {}).every(([key, allowed]) => {
+    const list = [].concat(allowed).map(norm);
+    return toList(answers?.[key]).some((a) => list.includes(a));
+  });
+
 const MotionBox = motion.create(Box);
 const MotionGrid = motion.create(Grid);
 const MotionCard = motion.create(Card);
@@ -86,20 +99,41 @@ export default function SurveyDashboard() {
   const [isLoading, setIsLoading] = React.useState(true);
   const tourActive = useTourActive();
   React.useEffect(() => {
-    setIsLoading(true);
-    if(tourActive){
-      
-      setIsLoading(false);
-      return;
-    }
-    loadData(
-      api.post(`/api/v1/me/survey`, { source: query.source, status: "active" }),
-      (resp) => {
-        setSurveys(resp.data);
-      },
-      () => setIsLoading(false),
-    );
-  }, [query,tourActive]);
+  setIsLoading(true);
+  if (tourActive) {
+    setIsLoading(false);
+    return;
+  }
+  loadData(
+    (async () => {
+      const resp = await api.post(`/api/v1/me/survey`, {
+        source: query.source,
+        status: "active",
+      });
+      const list = resp?.data || [];
+      const keys = [...new Set(list.flatMap((s) => Object.keys(s.filters || {})))];
+      console.log("1) surveys:", list.length, "| filter keys:", keys);
+      if (!keys.length) return resp;
+
+      let answers = {};
+      try {
+        const me = await api.post(`/api/v1/me`, { questions: keys });
+        answers = me?.data || {};
+        console.log("2) answers:", answers);
+      } catch (e) {
+        console.log("2) me call failed:", e);
+      }
+
+      const filtered = list.filter((s) =>
+        Object.keys(s.filters || {}).length === 0 ? true : isEligible(s, answers)
+      );
+      console.log("3) after filter:", filtered.length);
+      return { ...resp, data: filtered };
+    })(),
+    (resp) => setSurveys(resp.data),
+    () => setIsLoading(false),
+  );
+}, [query, tourActive]);
 
   // const dummySurveys = [
   //   {
@@ -182,6 +216,9 @@ export default function SurveyDashboard() {
   // const availableSurveys = dummySurveys?.filter((s) =>
   //   permittedStatus.includes(s.participationStatus),
   // );
+
+
+
 
   const stats = [
     {
