@@ -432,7 +432,7 @@ function FilterRow({ index, control, form, setValue, onRemove }) {
         <Form.Select
           control={control}
           {...form.register(`filterRows.${index}.key`)}
-          label="Question"
+          label="Questions"
           api="question"
         />
       </Grid>
@@ -440,7 +440,7 @@ function FilterRow({ index, control, form, setValue, onRemove }) {
         <Form.Select
           control={control}
           {...form.register(`filterRows.${index}.values`)}
-          label="Question"
+          label="Selected Options"
           options={opts}
           multiple
         />
