@@ -12,81 +12,192 @@ import mockRewards from "@/mockData/rewards";
 import { api, Page, loadData } from "@/util";
 import PopUp from "@/componentsMHO/PopUp";
 
+// ---------- Points (baad me badalne ho to sirf yahin) ----------
+const SOCIAL_POINTS = 50;
+const REFERRAL_POINTS = 100;
+// Admin verify karne par socials ka status inme se kuch ban jata hai
+const SOCIAL_APPROVED_STATUS = ["approved","rewarded"];
+
+// ---------- Helpers ----------
+const asTime = (v) => {
+  if (!v) return null;
+  const t = new Date(v).getTime();
+  return Number.isNaN(t) ? null : t;
+};
+
+// dateRange: ["YYYY-MM-DD", "YYYY-MM-DD"]. Date na ho to row chhupate nahi.
+const inRange = (date, dateRange) => {
+  if (!Array.isArray(dateRange) || dateRange.length !== 2) return true;
+  const t = asTime(date);
+  if (t === null) return true;
+  const from = new Date(`${dateRange[0]}T00:00:00`).getTime();
+  const to = new Date(`${dateRange[1]}T23:59:59.999`).getTime();
+  return t >= from && t <= to;
+};
+
+const socialAction = (platform = "") =>
+  ({ facebook: "like", youtube: "subscription" })[
+    String(platform).toLowerCase()
+  ] ?? "follow";
+
+// Survey + Social + Referral ko ek jaisi rows me badalta hai
+function buildRewardRows({ responses = [], socials = [], referred = [], dateRange = [] }) {
+  const rows = [];
+
+  // 1) Survey (logic pehle jaisa)
+  responses.forEach((r, i) => {
+    const start = asTime(r?.timeline?.start);
+    const end = asTime(r?.updatedAt);
+    rows.push({
+      id: `survey-${r?._id ?? i}`,
+      type: "Survey",
+      source: r?.source,
+      slug: r?.survey?.slug,
+      activity: r?.survey?.name ?? "Survey",
+      date: r?.timeline?.start ?? r?.createdAt ?? null,
+      loiMs: start !== null && end !== null && end >= start ? end - start : null,
+      status: r?.status,
+      points: r?.status === "complete" ? Number(r?.points) || 0 : 0,
+    });
+  });
+
+  // 2) Social: admin verify karne ke baad hi points
+  socials.forEach((s, i) => {
+    if (!SOCIAL_APPROVED_STATUS.includes(String(s?.status).toLowerCase())) return;
+    const date = s?.rewardedAt ?? s?.verifiedAt ?? s?.updatedAt ?? s?.createdAt ?? null;
+    if (!inRange(date, dateRange)) return;
+    const platform = s?.platform ?? s?.name ?? "social";
+    rows.push({
+      id: `social-${s?._id ?? platform ?? i}`,
+      type: "Social",
+      activity: `${platform} ${socialAction(platform)} (verified by admin)`,
+      date,
+      loiMs: null,
+      status: "approved",
+      points: SOCIAL_POINTS,
+    });
+  });
+
+  // 3) Referral: dost ka email verify hone par
+  referred.forEach((u, i) => {
+    if (u?.isVerified?.email !== "verified") return;
+    if (!inRange(u?.createdAt, dateRange)) return;
+    rows.push({
+      id: `referral-${u?._id ?? i}`,
+      type: "Referral",
+      activity: `${u?.fullName || u?.mail || "Friend"} joined via your referral`,
+      date: u?.createdAt ?? null,
+      loiMs: null,
+      status: "approved",
+      points: REFERRAL_POINTS,
+    });
+  });
+
+  return rows.sort((a, b) => (asTime(b.date) ?? 0) - (asTime(a.date) ?? 0));
+}
+
+// ---------- Page ----------
 export default function page() {
   const [user] = [useMember()];
   const [data, setData] = React.useState([]);
   const [dateRange, setDateRange] = React.useState([]);
- 
+
   const tourActive = useTourActive();
 
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    if (!user || !dateRange || dateRange.length !==2) return;
+  if (tourActive) {
+    setIsLoading(false);
+    return;
+  }
+    if (!user || !dateRange || dateRange.length !== 2) return;
     setIsLoading(true);
     let cancelled = false;
 
-    // if (tourActive) {
-    //   setData(mockRewards.data);
-    //   setIsLoading(false);
-    //   return()=>{
-    //     cancelled = true;
-    //   };
-    // }
-
-    let filters = {
-      status: {
-        $nin: ["invited"],
-      },
+    const filters = {
+      status: { $nin: ["invited"] },
+      dateRange,
     };
 
-    if (Array.isArray(dateRange) && dateRange.length === 2) {
-      filters.dateRange = dateRange;
-    }
+    // Teeno call alag-alag: ek fail ho to baaki rows phir bhi dikhengi
+    Promise.allSettled([
+  api.post(`/api/v1/response`, filters),
+  api.get(`/api/v1/follow-social/verify`),
+  api.post(`/api/v1/user`, { referredBy: user._id ?? user.id }),
+])
+  .then((results) => {
+    if (cancelled) return;
+    const list = (i) =>
+      results[i].status === "fulfilled" &&
+      Array.isArray(results[i].value?.data)
+        ? results[i].value.data
+        : [];
 
-    loadData(
-      api.post(`/api/v1/response`, filters),
-      (resp) => {
-        setData(resp.data);
-      },
-      () => {
-        if (cancelled) return;
-        setIsLoading(false);
-      }
+    const myId = String(user._id ?? user.id);
+    const socials = list(1).filter(
+      (s) => String(s?.created?.By?._id ?? s?.created?.By) === myId,
     );
+
+    setData(
+      buildRewardRows({
+        responses: list(0),
+        socials,
+        referred: list(2),
+        dateRange,
+      }),
+    );
+  })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [user, dateRange, tourActive]);
 
-  // return <pre>{JSON.stringify(data, null, 2)}</pre>;
+  // Tour ka mock data bhi naye shape me
+  const rows = React.useMemo(
+    () => (tourActive ? buildRewardRows({ responses: mockRewards.data }) : data),
+    [tourActive, data],
+  );
 
   const columns = [
     {
-      id: "surveyname",
-      label: "Survey Name",
-      render: (info) => info?.survey?.name,
+      id: "type",
+      label: "Type",
+      width: 110,
+      render: (info) => info.type,
+      feature: ["filterable", "sortable", "lockable"],
+    },
+    {
+      id: "activity",
+      label: "Activity",
+      render: (info) => info.activity,
       feature: ["searchable", "sortable", "lockable"],
     },
     {
       id: "start time",
-      label: "Start time",
-      render: (info) => new Date(info.timeline.start).toLocaleString(),
+      label: "Date",
+      render: (info) => (info.date ? new Date(info.date).toLocaleString() : "-"),
       feature: ["sortable", "lockable"],
     },
     {
       id: "loi",
       label: "Length of Interview",
       width: 220,
-      render: (info) =>
-        (new Date(info.updatedAt) - new Date(info.timeline.start))?.toTime(),
+      render: (info) => (info.loiMs != null ? info.loiMs.toTime() : "-"),
       feature: ["sortable", "lockable"],
     },
     {
       id: "status",
       label: "Status",
       render: (info) =>
-        info.source === "internal" && info.status === "dropout" ? (
-          <Page.Link href={`/survey?name=${info.survey.slug}`}>
-            Continue
-          </Page.Link>
+        info.type === "Survey" &&
+        info.source === "internal" &&
+        info.status === "dropout" ? (
+          <Page.Link href={`/survey?name=${info.slug}`}>Continue</Page.Link>
         ) : (
           <Page.Text
             sx={{
@@ -103,11 +214,7 @@ export default function page() {
     {
       id: "rewards",
       label: "Rewards",
-      render: (info) => (
-        <span>
-          {info.status === "complete" ? info.points : 0} Points
-        </span>
-      ),
+      render: (info) => <span>{info.points} Points</span>,
     },
   ];
 
@@ -123,19 +230,16 @@ export default function page() {
 
       <motion.div
         data-tour="rewards-history-table"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.5,
-          ease: [0.22, 1, 0.36, 1],
-        }}
+        initial={{ opacity: 0}}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
       >
         <Datatable
           isLoading={isLoading}
           pagination={[10, 20, 50, 100]}
           pageSize={20}
           noDataMsg="No Record Found."
-          data={tourActive ? mockRewards.data : data}
+          data={rows}
           hideColumnSelector
           extra={
             <Box px={{ xs: 0, md: 2 }} my={{ xs: 1, md: 0 }}>
@@ -143,9 +247,8 @@ export default function page() {
                 onUpdate={(e) => {
                   setDateRange(
                     e.map(
-                      (d) =>
-                        new Date(d.toDate()).toISOString().split("T")[0]
-                    )
+                      (d) => new Date(d.toDate()).toISOString().split("T")[0],
+                    ),
                   );
                 }}
               />
@@ -173,6 +276,8 @@ export default function page() {
     </Grid>
   );
 }
+
+
 
 function RewardStatus() {
   const [loading, setLoading] = React.useState(true);
@@ -278,10 +383,7 @@ function RewardStatus() {
         <Grid size={12} mt={1}>
           <LinearProgress
             variant="determinate"
-            value={Math.min(
-              Math.round((points / threshold) * 100),
-              100
-            )}
+            value={Math.min(Math.round((points / threshold) * 100), 100)}
             sx={{
               height: 20,
               borderRadius: 5,

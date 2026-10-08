@@ -4,6 +4,7 @@ import {
   Avatar,
   Box,
   Button,
+  Snackbar,
   FormControlLabel,
   Grid,
   IconButton,
@@ -21,6 +22,7 @@ import {
   Card,
   CardContent,
   TextField,
+  Alert,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import MaleIcon from "@mui/icons-material/Male";
@@ -59,6 +61,14 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import RedeemIcon from "@mui/icons-material/Redeem";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import CancelIcon from "@mui/icons-material/Cancel";
 const paymentMethods = {
   paypal: "/images/payment/paypal.png",
   "wire-transfer": "/images/payment/wire-transfer.png",
@@ -156,61 +166,69 @@ function Stats() {
     //   bg: "rgba(255, 152, 0, 0.12)",
     // },
     {
-      title: "Claimed Rewards",
-      value: `0 pts`,
-      subtitle: "Rewards already redeemed",
-      icon: "/images/myaccount/claimedreward.png",
-      bg: "rgba(76, 175, 80, 0.12)",
-    },
-    {
-      title: "Total Rewards Earned",
-      value: `${statistics?.totalRewards ?? 0} pts`,
-      subtitle: "Lifetime reward earnings",
-      icon: "/images/myaccount/totalreward.png",
-      bg: "rgba(255, 193, 7, 0.12)",
-    },
-    {
-      title: "Total Surveys Taken",
-      value: (statistics?.total ?? 0).toLocaleString("en-US"),
-      subtitle: "All survey attempts",
-      icon: "/images/myaccount/totalsurveytaken.png",
-      bg: "rgba(33, 150, 243, 0.12)",
-    },
-    {
-      title: "Completed Surveys",
-      value: (statistics?.complete ?? 0).toLocaleString("en-US"),
-      subtitle: "Successfully completed",
-      icon: "/images/myaccount/completedsurvey.png",
-      bg: "rgba(76, 175, 80, 0.12)",
-    },
-    {
-      title: "Disqualified Surveys",
-      value: (statistics?.disqualified ?? 0).toLocaleString("en-US"),
-      subtitle: "Screened out surveys",
-      icon: "/images/myaccount/disqualifiedsurvey.png",
-      bg: "rgba(244, 67, 54, 0.12)",
-    },
-    {
-      title: "Abandoned Surveys",
-      value: (statistics?.abdoned ?? 0).toLocaleString("en-US"),
-      subtitle: "Surveys not completed",
-      icon: "/images/myaccount/abandonedsurvey.png",
-      bg: "rgba(158, 158, 158, 0.12)",
-    },
-    {
-      title: "Approved Surveys",
-      value: (statistics?.approved ?? 0).toLocaleString("en-US"),
-      subtitle: "Approved responses",
-      icon: "/images/myaccount/approvedsurvey.png",
-      bg: "rgba(0, 150, 136, 0.12)",
-    },
-    {
-      title: "Rejected Surveys",
-      value: (statistics?.rejected ?? 0).toLocaleString("en-US"),
-      subtitle: "Rejected responses",
-      icon: "/images/myaccount/rejectedsurvey.png",
-      bg: "rgba(233, 30, 99, 0.12)",
-    },
+    title: "Claimed Rewards",
+    value: `0 pts`,
+    subtitle: "Rewards already redeemed",
+    Icon: RedeemIcon,
+    color: "#4CAF50",
+    bg: "rgba(76, 175, 80, 0.12)",
+  },
+  {
+    title: "Total Rewards Earned",
+    value: `${statistics?.totalRewards ?? 0} pts`,
+    subtitle: "Lifetime reward earnings",
+    Icon: EmojiEventsIcon,
+    color: "#FFA000",
+    bg: "rgba(255, 193, 7, 0.12)",
+  },
+  {
+    title: "Total Surveys Taken",
+    value: (statistics?.total ?? 0).toLocaleString("en-US"),
+    subtitle: "All survey attempts",
+    Icon: AssignmentIcon,
+    color: "#2196F3",
+    bg: "rgba(33, 150, 243, 0.12)",
+  },
+  {
+    title: "Completed Surveys",
+    value: (statistics?.complete ?? 0).toLocaleString("en-US"),
+    subtitle: "Successfully completed",
+    Icon: AssignmentTurnedInIcon,
+    color: "#4CAF50",
+    bg: "rgba(76, 175, 80, 0.12)",
+  },
+  {
+    title: "Disqualified Surveys",
+    value: (statistics?.disqualified ?? 0).toLocaleString("en-US"),
+    subtitle: "Screened out surveys",
+    Icon: PersonOffIcon,
+    color: "#F44336",
+    bg: "rgba(244, 67, 54, 0.12)",
+  },
+  {
+    title: "Abandoned Surveys",
+    value: (statistics?.abdoned ?? 0).toLocaleString("en-US"),
+    subtitle: "Surveys not completed",
+    Icon: ExitToAppIcon,
+    color: "#757575",
+    bg: "rgba(158, 158, 158, 0.12)",
+  },
+  {
+    title: "Approved Surveys",
+    value: (statistics?.approved ?? 0).toLocaleString("en-US"),
+    subtitle: "Approved responses",
+    Icon: VerifiedIcon,
+    color: "#009688",
+    bg: "rgba(0, 150, 136, 0.12)",
+  },
+  {
+    title: "Rejected Surveys",
+    value: (statistics?.rejected ?? 0).toLocaleString("en-US"),
+    subtitle: "Rejected responses",
+    Icon: CancelIcon,
+    color: "#E91E63",
+    bg: "rgba(233, 30, 99, 0.12)",
+  },
   ];
 
   return (
@@ -241,24 +259,15 @@ function Stats() {
             <CardContent sx={{ p: 2.5 }}>
               <Stack direction="row" spacing={2} alignItems="flex-start">
                 <Avatar
-                  variant="rounded"
                   sx={{
                     width: 70,
                     height: 70,
+                    flexShrink: 0,
                     borderRadius: "50%",
                     bgcolor: item.bg,
                   }}
                 >
-                  <Box
-                    component="img"
-                    src={item.icon}
-                    alt={item.title}
-                    sx={{
-                      width: 32,
-                      height: 32,
-                      objectFit: "contain",
-                    }}
-                  />
+                  <item.Icon sx={{ fontSize: 34, color: item.color }} />
                 </Avatar>
 
                 <Box flex={1} minWidth={0}>
@@ -934,6 +943,29 @@ const methodFieldsConfig = {
   ],
 };
 
+const memberKeyMap = {
+  bankName: "payment-method-bank-name",
+  ifsc: "payment-method-bank-ifsc",
+  bankAccount: "payment-method-bank-account",
+  upiAccount: "payment-method-upi",
+  paypalAccount: "payment-method-paypal",
+  amazonAccount: "payment-method-amazon",
+  healthcareReportAccount: "payment-method-healthcare-report",
+};
+
+// saved data (member) ke basis par, draft ke basis par nahi
+const isMethodComplete = (member, methodValue) => {
+  const fields = methodFieldsConfig[methodValue] || [];
+  return (
+    fields.length > 0 &&
+    fields.every((f) => member?.[memberKeyMap[f.key]]?.toString().trim())
+  );
+};
+const hasSavedData = (member, methodValue) =>
+  (methodFieldsConfig[methodValue] || []).some((f) =>
+    member?.[memberKeyMap[f.key]]?.toString().trim(),
+  );
+
 function Payment() {
   const [paymentOptions, setPaymentOptions] = React.useState([]);
 
@@ -942,7 +974,13 @@ function Payment() {
   const [editingMethod, setEditingMethod] = React.useState(null);
   const [editBackup, setEditBackup] = React.useState({});
   const [primaryMethod, setPrimaryMethod] = React.useState(null);
-
+  const autoSavedRef = React.useRef(false);
+  const [primaryAlert, setPrimaryAlert] = React.useState({
+  open: false,
+  message: "",
+});
+const [primaryHint, setPrimaryHint] = React.useState(null);
+const hintTimerRef = React.useRef(null);
   const member = useMember();
   React.useEffect(() => {
     loadData(
@@ -953,22 +991,58 @@ function Payment() {
       () => {},
     );
   }, []);
-  React.useEffect(() => {
-    if (!member) return;
 
-    setPayment({
-      method: member["payment-method"],
-      ifsc: member["payment-method-bank-ifsc"],
-      bankAccount: member["payment-method-bank-account"],
-      bankName: member["payment-method-bank-name"],
-      amazonAccount: member["payment-method-amazon"],
-      paypalAccount: member["payment-method-paypal"],
-      upiAccount: member["payment-method-upi"],
-      healthcareReportAccount: member["payment-method-healthcare-report"],
-    });
-    setPrimaryMethod(member["payment-method-primary"] || null);
-  }, [member]);
+ React.useEffect(() => {
+  if (!member) return;
 
+  setPayment({
+    method: member["payment-method"],
+    ifsc: member["payment-method-bank-ifsc"],
+    bankAccount: member["payment-method-bank-account"],
+    bankName: member["payment-method-bank-name"],
+    amazonAccount: member["payment-method-amazon"],
+    paypalAccount: member["payment-method-paypal"],
+    upiAccount: member["payment-method-upi"],
+    healthcareReportAccount: member["payment-method-healthcare-report"],
+  });
+
+  const savedPrimary = member["payment-method-primary"];
+  const selected = member["payment-method"];
+  const completeMethods = Object.keys(methodFieldsConfig).filter((m) =>
+    isMethodComplete(member, m),
+  );
+
+  let primary = null;
+  if (savedPrimary && isMethodComplete(member, savedPrimary)) {
+    primary = savedPrimary;
+  } else if (selected && isMethodComplete(member, selected)) {
+    primary = selected;
+  } else if (completeMethods.length === 1) {
+    primary = completeMethods[0];
+  }
+
+  setPrimaryMethod(primary);
+
+  // backend ko bhi sync karo (sirf ek baar), warna payout me primary missing rahega
+  if (primary !== (savedPrimary || null) && !autoSavedRef.current) {
+    autoSavedRef.current = true;
+    api
+      .patch(`/api/v1/me/answer`, { "payment-method-primary": primary || "" })
+      .catch((err) => console.error("Failed to sync primary method", err));
+  }
+}, [member]);
+  React.useEffect(() => () => clearTimeout(hintTimerRef.current), []);  
+
+  const sortedOptions = React.useMemo(() => {
+  const rank = (m) =>
+    m.value === primaryMethod ? 0 : hasSavedData(member, m.value) ? 1 : 2;
+
+  return [...paymentOptions].sort(
+    (a, b) =>
+      rank(a) - rank(b) ||
+      String(a.label).localeCompare(String(b.label)),
+  );
+}, [paymentOptions, primaryMethod, member]);
   const hasData = (methodValue) => {
     const fields = methodFieldsConfig[methodValue] || [];
     return fields.some((f) => payment[f.key]?.toString().trim());
@@ -1015,6 +1089,16 @@ function Payment() {
       });
       useToast(resp);
       await member.Reload();
+
+     if (primaryMethod === methodValue) {
+  const stillFilled = (methodFieldsConfig[methodValue] || []).every((f) =>
+    payment[f.key]?.toString().trim(),
+  );
+  if (!stillFilled) {
+    setPrimaryMethod(null);
+    await api.patch(`/api/v1/me/answer`, { "payment-method-primary": "" });
+  }
+} 
     } catch (error) {
       console.error(`Failed to update payment method ${methodValue}:`, error);
     } finally {
@@ -1022,17 +1106,29 @@ function Payment() {
     }
   };
 
-  const handleSetPrimary = async (methodValue) => {
-    setPrimaryMethod(methodValue);
-    try {
-      const resp = await api.patch(`/api/v1/me/answer`, {
-        "payment-method-primary": methodValue,
-      });
-      useToast(resp);
-    } catch (error) {
-      console.error(`Failed to set primary payment method:`, error);
-    }
-  };
+const handleSetPrimary = async (methodValue) => {
+  if (methodValue === primaryMethod) return;
+
+if (!isMethodComplete(member, methodValue)) {
+  setPrimaryHint(methodValue);
+  clearTimeout(hintTimerRef.current);
+  hintTimerRef.current = setTimeout(() => setPrimaryHint(null), 4000);
+  return;
+}
+
+  const previous = primaryMethod;
+  setPrimaryMethod(methodValue);
+  try {
+    const resp = await api.patch(`/api/v1/me/answer`, {
+      "payment-method-primary": methodValue,
+    });
+    useToast(resp);
+    if (resp?.status === "error") setPrimaryMethod(previous);
+  } catch (error) {
+    setPrimaryMethod(previous); // rollback
+    console.error(`Failed to set primary payment method:`, error);
+  }
+};
 
   return (
     <Grid size={12} container spacing={2} justifyContent="center">
@@ -1060,7 +1156,7 @@ function Payment() {
       </Box>
 
       <Grid size={12} container spacing={1}>
-        {paymentOptions.map((method, index) => {
+        {sortedOptions.map((method, index) => {
           const methodValue = method.value;
           const isEditing = editingMethod === methodValue;
           const filled = hasData(methodValue);
@@ -1068,7 +1164,7 @@ function Payment() {
           const fields = methodFieldsConfig[methodValue] || [];
 
           return (
-            <Grid size={12} key={index}>
+            <Grid size={12} key={method.value}>
               <Accordion
                 expanded={expandedMethod === methodValue}
                 onChange={handleAccordionChange(methodValue)}
@@ -1103,9 +1199,25 @@ function Payment() {
                       />
                     )}
 
-                    <Typography sx={{ flex: 1, fontWeight: 600, color: "#24324B" }}>
-                      {method.label}
-                    </Typography>
+                 <Box sx={{ flex: 1, minWidth: 0 }}>
+  <Typography sx={{ fontWeight: 600, color: "#24324B" }}>
+    {method.label}
+  </Typography>
+
+  {primaryHint === methodValue && (
+    <Typography
+      sx={{
+        color: "error.main",
+        fontSize: 12,
+        fontWeight: 500,
+        mt: 0.3,
+        lineHeight: 1.3,
+      }}
+    >
+      Save your details first to set as primary
+    </Typography>
+  )}
+</Box>
 
                     <IconButton
                       component="span"
@@ -1223,6 +1335,7 @@ function Payment() {
                             )}
                           </Box>
                         </Box>
+                        
                       </Grid>
                     ))}
                   </Grid>
@@ -1232,6 +1345,7 @@ function Payment() {
           );
         })}
       </Grid>
+      
     </Grid>
   );
 }

@@ -793,7 +793,7 @@ export function SurveyHistory() {
             },
           }}
         >
-          Continue
+          Dropout
         </Page.Link>
       );
     }

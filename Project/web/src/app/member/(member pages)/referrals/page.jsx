@@ -212,6 +212,7 @@ export default function page() {
     >
       <Grid
         size={12}
+       
         sx={{
           borderBottom: `1px solid #e0e0e0`,
         }}
@@ -640,8 +641,10 @@ function FollowUs() {
 
   return (
     <>
+    <Grid size={12} container data-tour="referrals-follow-us">
       <Grid
         size={12}
+         
         sx={{
           mt: 2,
           borderBottom: `1px solid #e0e0e0`,
@@ -832,6 +835,7 @@ function FollowUs() {
             </Grid>
           ))}
         </Grid>
+      </Grid>
       </Grid>
 
       <PopUp
