@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+
+# build output (regenerate with npm run build / npm run build:preview-html)
+dist/
+dist-ssr/
+preview/
+
+# local environment files (keep the committed templates)
+.env
+.env.*
+!.env.example
+!.env.singlefile
+
+# logs & OS files
+*.log
+npm-debug.log*
+.DS_Store
+.vite/

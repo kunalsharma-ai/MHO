@@ -1,0 +1,12 @@
+node_modules
+dist
+dist-ssr
+preview
+.vite
+.git
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+*:Zone.Identifier
