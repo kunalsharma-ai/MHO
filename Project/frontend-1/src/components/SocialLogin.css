@@ -1,0 +1,14 @@
+/* Social sign-in: small round icon buttons (see SocialLogin.jsx) */
+.soc { margin: 18px 0 4px; }
+.soc-or { display: flex; align-items: center; gap: 12px; margin: 0 0 12px; color: var(--muted, #6b7280); font-size: 13px; }
+.soc-or::before, .soc-or::after { content: ''; flex: 1; height: 1px; background: var(--line, #e3e6ee); }
+.soc-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+.soc-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px; border: 1px solid var(--line, #d9dde8); border-radius: 50%;
+  background: #fff; color: var(--ink, #14245d); text-decoration: none;
+  transition: box-shadow .15s, border-color .15s, transform .15s;
+}
+.soc-btn:hover { border-color: #b9c2d9; box-shadow: 0 4px 14px rgba(20, 36, 93, .14); transform: translateY(-1px); }
+.soc-btn:focus-visible { outline: 3px solid rgba(254, 126, 0, .45); outline-offset: 2px; }
+.soc-btn svg { width: 24px; height: 24px; flex: none; }

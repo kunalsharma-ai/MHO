@@ -1,0 +1,35 @@
+/* ═════════════ Branded cursor (fine pointers only; enabled by CustomCursor.jsx) ═════════════ */
+.cursor-layer { display: none; }
+html.has-cursor .cursor-layer { display: block; }
+/* Hide the system arrow only while the custom cursor is active — text fields keep the normal I-beam. */
+html.has-cursor, html.has-cursor body, html.has-cursor a, html.has-cursor button, html.has-cursor [role="button"], html.has-cursor label, html.has-cursor select, html.has-cursor summary { cursor: none; }
+html.has-cursor input, html.has-cursor textarea, html.has-cursor [contenteditable="true"] { cursor: text; }
+
+.cursor-dot, .cursor-ring, .cursor-trail, .cursor-ripple { position: fixed; left: 0; top: 0; z-index: 2147483646; pointer-events: none; will-change: transform; }
+.cursor-dot { width: 0; height: 0; z-index: 2147483647; }
+.cursor-dot::before { content: ''; position: absolute; left: -5px; top: -5px; width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(135deg, #FFC233, #FF8A00 45%, #FF3B8D); box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px rgba(6, 15, 51, .55), 0 0 14px 2px rgba(255, 138, 0, .8); transition: transform .18s cubic-bezier(.3, 1.6, .5, 1); }
+.cursor-ring { width: 0; height: 0; }
+.cursor-ring i { position: absolute; left: -19px; top: -19px; width: 38px; height: 38px; border-radius: 50%; padding: 2.5px; box-sizing: border-box; background: conic-gradient(from 0deg, #FF8A00, #FF3B8D, #8B5CF6, #2F6BFF, #14C9B5, #FF8A00); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); animation: cursorSpin 2.4s linear infinite; transition: width .25s cubic-bezier(.3, 1.4, .5, 1), height .25s cubic-bezier(.3, 1.4, .5, 1), left .25s cubic-bezier(.3, 1.4, .5, 1), top .25s cubic-bezier(.3, 1.4, .5, 1), scale .15s, opacity .2s; }
+.cursor-ring { filter: drop-shadow(0 0 1px rgba(255, 255, 255, .9)) drop-shadow(0 0 6px rgba(255, 94, 126, .55)); }
+/* soft magnet fill (does not spin) */
+.cursor-ring::before { content: ''; position: absolute; left: -30px; top: -30px; width: 60px; height: 60px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 138, 0, .26), rgba(255, 59, 141, .12) 60%, transparent 72%); scale: 0; transition: scale .25s cubic-bezier(.3, 1.4, .5, 1); }
+html.cursor-hot .cursor-ring::before { scale: 1; }
+@keyframes cursorSpin { to { transform: rotate(360deg); } }
+.cursor-trail { width: 0; height: 0; }
+.cursor-trail::before { content: ''; position: absolute; border-radius: 50%; width: calc(9px - var(--i) * 1.3px); height: calc(9px - var(--i) * 1.3px); left: calc((9px - var(--i) * 1.3px) / -2); top: calc((9px - var(--i) * 1.3px) / -2); opacity: calc(.7 - var(--i) * .12); background: hsl(calc(30 + var(--i) * 60), 95%, 60%); box-shadow: 0 0 8px hsl(calc(30 + var(--i) * 60), 95%, 60%); }
+
+/* Over links & buttons: ring blooms into a soft magnet, dot shrinks */
+html.cursor-hot .cursor-ring i { left: -30px; top: -30px; width: 60px; height: 60px; animation-duration: 1.2s; }
+html.cursor-hot .cursor-dot::before { transform: scale(.6); }
+/* Pressed */
+html.cursor-down .cursor-ring i { scale: .75; }
+html.cursor-down .cursor-dot::before { transform: scale(1.5); }
+/* Text fields: system I-beam takes over */
+html.cursor-text .cursor-ring, html.cursor-text .cursor-dot::before, html.cursor-text .cursor-trail { opacity: 0; }
+/* Pointer left the window */
+html.cursor-out .cursor-layer { opacity: 0; }
+.cursor-layer { transition: opacity .2s; }
+/* Click ripple */
+.cursor-ripple { width: 0; height: 0; }
+.cursor-ripple::before { content: ''; position: absolute; left: -24px; top: -24px; width: 48px; height: 48px; border-radius: 50%; border: 2px solid #FF8A00; box-shadow: 0 0 16px rgba(255, 138, 0, .6); animation: cursorRipple .6s ease-out forwards; }
+@keyframes cursorRipple { from { transform: scale(.3); opacity: 1; } to { transform: scale(1.8); opacity: 0; } }

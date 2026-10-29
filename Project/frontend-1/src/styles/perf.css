@@ -1,0 +1,85 @@
+/* ───────────── Performance layer (loaded last) ─────────────
+   GPU-friendly replacements for effects that forced the browser to repaint on every frame.
+   Visual result is the same or very close; scrolling and animations stay smooth on mid-range phones. */
+
+/* Sections far off-screen pause their animations (attribute set by useReveal). */
+[data-off], [data-off] *, [data-off] *::before, [data-off] *::after { animation-play-state: paused !important; }
+
+/* Sticky header: live background blur was re-computed on every scroll frame → solid glass instead. */
+.site-header { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(255, 255, 255, .96); }
+
+/* No backdrop blur on moving/rotating elements. */
+.orb-in, .art-bubbles span, .btn-glass, .ph-active { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.orb-in { background: linear-gradient(140deg, rgba(60, 90, 190, .75), rgba(20, 35, 95, .8)); }
+.btn-glass { --bg: rgba(255, 255, 255, .14); }
+.ph-active { background: rgba(10, 20, 60, .55); }
+
+/* Star field drifts with transform (composited) instead of background-position (repaint). */
+.globe-stars { inset: -300px 0 0 -300px; will-change: transform; }
+@keyframes starDrift { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(300px, 300px, 0); } }
+
+/* ID-scanner laser moves with transform instead of `top`. */
+.id-laser { top: 0; bottom: 0; height: auto; background: none; box-shadow: none; pointer-events: none; }
+.id-laser::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--blue); box-shadow: 0 0 18px 4px rgba(47, 107, 255, .6); }
+@keyframes laser { from { transform: translateY(0); } to { transform: translateY(calc(100% - 3px)); } }
+
+/* Live-chat ring: rotate a clipped conic layer instead of repainting an animated gradient angle + blur. */
+.dock-ring { background: none; filter: none; overflow: hidden; animation: none; }
+.dock-ring::before { content: ''; position: absolute; left: 50%; top: 50%; width: 280px; height: 280px; margin: -140px 0 0 -140px; background: conic-gradient(var(--orange), var(--amber), var(--teal), var(--blue), var(--orange)); animation: spin 3s linear infinite; }
+
+/* Live dot pulse: scale + fade a halo instead of animating box-shadow. */
+.live-dot { position: relative; animation: none; box-shadow: none; }
+.live-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--green); animation: liveHalo 1.8s ease-out infinite; }
+@keyframes liveHalo { from { transform: scale(1); opacity: .6; } to { transform: scale(2.6); opacity: 0; } }
+
+/* Hero motto shimmer: a few passes on arrival, then rest (it repaints text every frame while running). */
+.motto-text { animation-iteration-count: 3; }
+
+/* Writing-pen bars: scaleX instead of width. */
+.art-pen span { width: calc(60% + var(--i) * 6%); transform-origin: left center; }
+@keyframes penWrite { 0% { transform: scaleX(0); } 40%, 80% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+
+/* Grid blink: fade an overlay instead of animating background + shadow. */
+.art-grid span { position: relative; animation: none; }
+.art-grid span::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: var(--amber); opacity: 0; animation: gridGlow 3.6s infinite; animation-delay: calc(var(--i) * .15s); }
+@keyframes gridGlow { 0%, 70%, 100% { opacity: 0; } 35% { opacity: 1; } }
+
+/* Invitation progress bar: scaleX instead of width. */
+.inv-channels .inv-bar { transform-origin: left center; }
+.inv-channels button.on .inv-bar { width: 100%; transform: scaleX(0); animation: invBar 2.8s linear; }
+@keyframes invBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* Skeleton shown for the split second a page chunk takes to download on navigation. */
+.page-loading { min-height: 70vh; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.page-loading span { width: 12px; height: 12px; border-radius: 50%; background: var(--orange); animation: plBounce 1s ease-in-out infinite; }
+.page-loading span:nth-child(2) { animation-delay: .15s; background: var(--blue); }
+.page-loading span:nth-child(3) { animation-delay: .3s; background: var(--teal); }
+@keyframes plBounce { 0%, 100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(-12px); opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .live-dot::after, .dock-ring::before, .page-loading span, .art-grid span::after { animation: none; }
+}
+
+/* Soft colour blobs: radial gradients instead of huge blur() filters (same glow, a fraction of the GPU cost). */
+.hero-aurora, .sx-orb, .sp-glow { filter: none; }
+.hero-aurora.a1 { background: radial-gradient(closest-side, rgba(255, 138, 0, .9), rgba(255, 138, 0, .35) 45%, transparent); }
+.hero-aurora.a2 { background: radial-gradient(closest-side, rgba(47, 107, 255, .9), rgba(47, 107, 255, .35) 45%, transparent); }
+.hero-aurora.a3 { background: radial-gradient(closest-side, rgba(139, 92, 246, .9), rgba(139, 92, 246, .35) 45%, transparent); }
+.sp-glow { background: radial-gradient(closest-side, rgba(255, 255, 255, .35), transparent); }
+.hero-aurora, .sx-orb, .sp-glow { will-change: transform; }
+/* Hero headline entrance without a blur filter (blur on large text delayed the first paint). */
+@keyframes lineUp { from { opacity: 0; transform: translateY(40px); } }
+.sx-orb.o1 { background: radial-gradient(closest-side, rgba(255, 138, 0, .9), rgba(255, 138, 0, .35) 45%, transparent); }
+.sx-orb.o2 { background: radial-gradient(closest-side, rgba(47, 107, 255, .9), rgba(47, 107, 255, .35) 45%, transparent); }
+.sx-orb.o3 { background: radial-gradient(closest-side, rgba(139, 92, 246, .9), rgba(139, 92, 246, .35) 45%, transparent); }
+
+/* Hero orbit: a flat (2D) scene is far cheaper to composite than a whole 3D-sorted tree that tilts every frame.
+   Rings still spin, icons still orbit, the coin still flips (its own perspective), cards still float. */
+.orbit-scene, .ring { transform-style: flat; }
+.orbit-scene { animation: none; }
+@keyframes coinSpin { 0%, 18% { transform: perspective(900px) rotateY(0); } 50%, 68% { transform: perspective(900px) rotateY(180deg); } 100% { transform: perspective(900px) rotateY(360deg); } }
+
+/* Globe glow painted once by CSS instead of on every canvas frame. */
+.globe-wrap { position: relative; }
+.globe-wrap::before { content: ''; position: absolute; inset: 0; background: radial-gradient(56% 56% at 37% 37%, rgba(47, 107, 255, .35), rgba(6, 15, 51, 0) 80%); -webkit-clip-path: circle(44% at 50% 50%); clip-path: circle(44% at 50% 50%); pointer-events: none; }
+.globe-canvas { position: relative; }

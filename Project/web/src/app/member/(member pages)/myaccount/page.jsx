@@ -166,69 +166,69 @@ function Stats() {
     //   bg: "rgba(255, 152, 0, 0.12)",
     // },
     {
-    title: "Claimed Rewards",
-    value: `0 pts`,
-    subtitle: "Rewards already redeemed",
-    Icon: RedeemIcon,
-    color: "#4CAF50",
-    bg: "rgba(76, 175, 80, 0.12)",
-  },
-  {
-    title: "Total Rewards Earned",
-    value: `${statistics?.totalRewards ?? 0} pts`,
-    subtitle: "Lifetime reward earnings",
-    Icon: EmojiEventsIcon,
-    color: "#FFA000",
-    bg: "rgba(255, 193, 7, 0.12)",
-  },
-  {
-    title: "Total Surveys Taken",
-    value: (statistics?.total ?? 0).toLocaleString("en-US"),
-    subtitle: "All survey attempts",
-    Icon: AssignmentIcon,
-    color: "#2196F3",
-    bg: "rgba(33, 150, 243, 0.12)",
-  },
-  {
-    title: "Completed Surveys",
-    value: (statistics?.complete ?? 0).toLocaleString("en-US"),
-    subtitle: "Successfully completed",
-    Icon: AssignmentTurnedInIcon,
-    color: "#4CAF50",
-    bg: "rgba(76, 175, 80, 0.12)",
-  },
-  {
-    title: "Disqualified Surveys",
-    value: (statistics?.disqualified ?? 0).toLocaleString("en-US"),
-    subtitle: "Screened out surveys",
-    Icon: PersonOffIcon,
-    color: "#F44336",
-    bg: "rgba(244, 67, 54, 0.12)",
-  },
-  {
-    title: "Abandoned Surveys",
-    value: (statistics?.abdoned ?? 0).toLocaleString("en-US"),
-    subtitle: "Surveys not completed",
-    Icon: ExitToAppIcon,
-    color: "#757575",
-    bg: "rgba(158, 158, 158, 0.12)",
-  },
-  {
-    title: "Approved Surveys",
-    value: (statistics?.approved ?? 0).toLocaleString("en-US"),
-    subtitle: "Approved responses",
-    Icon: VerifiedIcon,
-    color: "#009688",
-    bg: "rgba(0, 150, 136, 0.12)",
-  },
-  {
-    title: "Rejected Surveys",
-    value: (statistics?.rejected ?? 0).toLocaleString("en-US"),
-    subtitle: "Rejected responses",
-    Icon: CancelIcon,
-    color: "#E91E63",
-    bg: "rgba(233, 30, 99, 0.12)",
-  },
+      title: "Claimed Rewards",
+      value: `0 pts`,
+      subtitle: "Rewards already redeemed",
+      Icon: RedeemIcon,
+      color: "#4CAF50",
+      bg: "rgba(76, 175, 80, 0.12)",
+    },
+    {
+      title: "Total Rewards Earned",
+      value: `${statistics?.totalRewards ?? 0} pts`,
+      subtitle: "Lifetime reward earnings",
+      Icon: EmojiEventsIcon,
+      color: "#FFA000",
+      bg: "rgba(255, 193, 7, 0.12)",
+    },
+    {
+      title: "Total Surveys Taken",
+      value: (statistics?.total ?? 0).toLocaleString("en-US"),
+      subtitle: "All survey attempts",
+      Icon: AssignmentIcon,
+      color: "#2196F3",
+      bg: "rgba(33, 150, 243, 0.12)",
+    },
+    {
+      title: "Completed Surveys",
+      value: (statistics?.complete ?? 0).toLocaleString("en-US"),
+      subtitle: "Successfully completed",
+      Icon: AssignmentTurnedInIcon,
+      color: "#4CAF50",
+      bg: "rgba(76, 175, 80, 0.12)",
+    },
+    {
+      title: "Disqualified Surveys",
+      value: (statistics?.disqualified ?? 0).toLocaleString("en-US"),
+      subtitle: "Screened out surveys",
+      Icon: PersonOffIcon,
+      color: "#F44336",
+      bg: "rgba(244, 67, 54, 0.12)",
+    },
+    {
+      title: "Abandoned Surveys",
+      value: (statistics?.abdoned ?? 0).toLocaleString("en-US"),
+      subtitle: "Surveys not completed",
+      Icon: ExitToAppIcon,
+      color: "#757575",
+      bg: "rgba(158, 158, 158, 0.12)",
+    },
+    {
+      title: "Approved Surveys",
+      value: (statistics?.approved ?? 0).toLocaleString("en-US"),
+      subtitle: "Approved responses",
+      Icon: VerifiedIcon,
+      color: "#009688",
+      bg: "rgba(0, 150, 136, 0.12)",
+    },
+    {
+      title: "Rejected Surveys",
+      value: (statistics?.rejected ?? 0).toLocaleString("en-US"),
+      subtitle: "Rejected responses",
+      Icon: CancelIcon,
+      color: "#E91E63",
+      bg: "rgba(233, 30, 99, 0.12)",
+    },
   ];
 
   return (
@@ -309,7 +309,10 @@ function UserInfo({ user }) {
 
   const [visibleFields, setVisibleFields] = React.useState({});
   const [editingField, setEditingField] = React.useState(null);
-  const [alternateContact, setAlternateContact] = React.useState({ email: "", phone: "" });
+  const [alternateContact, setAlternateContact] = React.useState({
+    email: "",
+    phone: "",
+  });
   const toggleField = (index) => {
     setVisibleFields((prev) => ({
       ...prev,
@@ -329,7 +332,8 @@ function UserInfo({ user }) {
   const handleAlternateCancel = (field) => {
     setAlternateContact((prev) => ({
       ...prev,
-      [field]: user?.[field === "email" ? "alternate-email" : "alternate-phone"] || "",
+      [field]:
+        user?.[field === "email" ? "alternate-email" : "alternate-phone"] || "",
     }));
     setEditingField(null);
   };
@@ -358,15 +362,14 @@ function UserInfo({ user }) {
       profilePicture: user.profilePicture ?? "/images/logo/user.png",
     });
     const alternateEmail =
-  user?.["alternate-email"] &&
-  user["alternate-email"] !== user?.mail
-    ? user["alternate-email"]
-    : "";
+      user?.["alternate-email"] && user["alternate-email"] !== user?.mail
+        ? user["alternate-email"]
+        : "";
 
-setAlternateContact({
-  email: alternateEmail,
-  phone: user?.["alternate-phone"] || "",
-});
+    setAlternateContact({
+      email: alternateEmail,
+      phone: user?.["alternate-phone"] || "",
+    });
   }, [user]);
 
   const rating =
@@ -644,8 +647,10 @@ linear-gradient(
           {userData.map((item, index) => {
             const isEdit = item.type === "edit";
             const isEditing = isEdit && editingField === item.field;
-            const isEmailField = item.field === "email" || item.label === "Email";
-            const isPhoneField = item.field === "phone" || item.label === "Mobile";
+            const isEmailField =
+              item.field === "email" || item.label === "Email";
+            const isPhoneField =
+              item.field === "phone" || item.label === "Mobile";
             return (
               <Grid
                 key={index}
@@ -707,7 +712,9 @@ linear-gradient(
                         minWidth: 0,
                       }}
                     >
-                      {isEmailField && (item.truncate || isEdit) && visibleFields[index] ? (
+                      {isEmailField &&
+                      (item.truncate || isEdit) &&
+                      visibleFields[index] ? (
                         <Tooltip title={item.value || ""} placement="top">
                           <Typography
                             component="span"
@@ -769,8 +776,8 @@ linear-gradient(
                               ? item.value || "Not added"
                               : "xxxxxx"
                             : visibleFields[index]
-                            ? item.value
-                            : maskValue(item.value)}
+                              ? item.value
+                              : maskValue(item.value)}
                         </Typography>
                       )}
 
@@ -922,24 +929,41 @@ linear-gradient(
   );
 }
 
-
 const methodFieldsConfig = {
   "wire-transfer": [
     { key: "bankName", label: "Bank", placeholder: "Enter bank name" },
-    { key: "ifsc", label: "IFSC/IBAN/SWIFT", placeholder: "Enter IFSC/IBAN/SWIFT code" },
-    { key: "bankAccount", label: "Account Number", placeholder: "Enter account number" },
+    {
+      key: "ifsc",
+      label: "IFSC/IBAN/SWIFT",
+      placeholder: "Enter IFSC/IBAN/SWIFT code",
+    },
+    {
+      key: "bankAccount",
+      label: "Account Number",
+      placeholder: "Enter account number",
+    },
   ],
-  upi: [
-    { key: "upiAccount", label: "VPA", placeholder: "Enter UPI ID" },
-  ],
+  upi: [{ key: "upiAccount", label: "VPA", placeholder: "Enter UPI ID" }],
   paypal: [
-    { key: "paypalAccount", label: "PayPal Email", placeholder: "Enter PayPal email" },
+    {
+      key: "paypalAccount",
+      label: "PayPal Email",
+      placeholder: "Enter PayPal email",
+    },
   ],
   "amazon-gift-card": [
-    { key: "amazonAccount", label: "Amazon ID", placeholder: "Enter Amazon Giftcard ID" },
+    {
+      key: "amazonAccount",
+      label: "Amazon ID",
+      placeholder: "Enter Amazon Giftcard ID",
+    },
   ],
   "healthcare-report": [
-    { key: "healthcareReportAccount", label: "Healthcare Report ID", placeholder: "Enter Healthcare Report ID" },
+    {
+      key: "healthcareReportAccount",
+      label: "Healthcare Report ID",
+      placeholder: "Enter Healthcare Report ID",
+    },
   ],
 };
 
@@ -976,11 +1000,11 @@ function Payment() {
   const [primaryMethod, setPrimaryMethod] = React.useState(null);
   const autoSavedRef = React.useRef(false);
   const [primaryAlert, setPrimaryAlert] = React.useState({
-  open: false,
-  message: "",
-});
-const [primaryHint, setPrimaryHint] = React.useState(null);
-const hintTimerRef = React.useRef(null);
+    open: false,
+    message: "",
+  });
+  const [primaryHint, setPrimaryHint] = React.useState(null);
+  const hintTimerRef = React.useRef(null);
   const member = useMember();
   React.useEffect(() => {
     loadData(
@@ -992,57 +1016,56 @@ const hintTimerRef = React.useRef(null);
     );
   }, []);
 
- React.useEffect(() => {
-  if (!member) return;
+  React.useEffect(() => {
+    if (!member) return;
 
-  setPayment({
-    method: member["payment-method"],
-    ifsc: member["payment-method-bank-ifsc"],
-    bankAccount: member["payment-method-bank-account"],
-    bankName: member["payment-method-bank-name"],
-    amazonAccount: member["payment-method-amazon"],
-    paypalAccount: member["payment-method-paypal"],
-    upiAccount: member["payment-method-upi"],
-    healthcareReportAccount: member["payment-method-healthcare-report"],
-  });
+    setPayment({
+      method: member["payment-method"],
+      ifsc: member["payment-method-bank-ifsc"],
+      bankAccount: member["payment-method-bank-account"],
+      bankName: member["payment-method-bank-name"],
+      amazonAccount: member["payment-method-amazon"],
+      paypalAccount: member["payment-method-paypal"],
+      upiAccount: member["payment-method-upi"],
+      healthcareReportAccount: member["payment-method-healthcare-report"],
+    });
 
-  const savedPrimary = member["payment-method-primary"];
-  const selected = member["payment-method"];
-  const completeMethods = Object.keys(methodFieldsConfig).filter((m) =>
-    isMethodComplete(member, m),
-  );
+    const savedPrimary = member["payment-method-primary"];
+    const selected = member["payment-method"];
+    const completeMethods = Object.keys(methodFieldsConfig).filter((m) =>
+      isMethodComplete(member, m),
+    );
 
-  let primary = null;
-  if (savedPrimary && isMethodComplete(member, savedPrimary)) {
-    primary = savedPrimary;
-  } else if (selected && isMethodComplete(member, selected)) {
-    primary = selected;
-  } else if (completeMethods.length === 1) {
-    primary = completeMethods[0];
-  }
+    let primary = null;
+    if (savedPrimary && isMethodComplete(member, savedPrimary)) {
+      primary = savedPrimary;
+    } else if (selected && isMethodComplete(member, selected)) {
+      primary = selected;
+    } else if (completeMethods.length === 1) {
+      primary = completeMethods[0];
+    }
 
-  setPrimaryMethod(primary);
+    setPrimaryMethod(primary);
 
-  // backend ko bhi sync karo (sirf ek baar), warna payout me primary missing rahega
-  if (primary !== (savedPrimary || null) && !autoSavedRef.current) {
-    autoSavedRef.current = true;
-    api
-      .patch(`/api/v1/me/answer`, { "payment-method-primary": primary || "" })
-      .catch((err) => console.error("Failed to sync primary method", err));
-  }
-}, [member]);
-  React.useEffect(() => () => clearTimeout(hintTimerRef.current), []);  
+    // backend ko bhi sync karo (sirf ek baar), warna payout me primary missing rahega
+    if (primary !== (savedPrimary || null) && !autoSavedRef.current) {
+      autoSavedRef.current = true;
+      api
+        .patch(`/api/v1/me/answer`, { "payment-method-primary": primary || "" })
+        .catch((err) => console.error("Failed to sync primary method", err));
+    }
+  }, [member]);
+  React.useEffect(() => () => clearTimeout(hintTimerRef.current), []);
 
   const sortedOptions = React.useMemo(() => {
-  const rank = (m) =>
-    m.value === primaryMethod ? 0 : hasSavedData(member, m.value) ? 1 : 2;
+    const rank = (m) =>
+      m.value === primaryMethod ? 0 : hasSavedData(member, m.value) ? 1 : 2;
 
-  return [...paymentOptions].sort(
-    (a, b) =>
-      rank(a) - rank(b) ||
-      String(a.label).localeCompare(String(b.label)),
-  );
-}, [paymentOptions, primaryMethod, member]);
+    return [...paymentOptions].sort(
+      (a, b) =>
+        rank(a) - rank(b) || String(a.label).localeCompare(String(b.label)),
+    );
+  }, [paymentOptions, primaryMethod, member]);
   const hasData = (methodValue) => {
     const fields = methodFieldsConfig[methodValue] || [];
     return fields.some((f) => payment[f.key]?.toString().trim());
@@ -1090,15 +1113,17 @@ const hintTimerRef = React.useRef(null);
       useToast(resp);
       await member.Reload();
 
-     if (primaryMethod === methodValue) {
-  const stillFilled = (methodFieldsConfig[methodValue] || []).every((f) =>
-    payment[f.key]?.toString().trim(),
-  );
-  if (!stillFilled) {
-    setPrimaryMethod(null);
-    await api.patch(`/api/v1/me/answer`, { "payment-method-primary": "" });
-  }
-} 
+      if (primaryMethod === methodValue) {
+        const stillFilled = (methodFieldsConfig[methodValue] || []).every((f) =>
+          payment[f.key]?.toString().trim(),
+        );
+        if (!stillFilled) {
+          setPrimaryMethod(null);
+          await api.patch(`/api/v1/me/answer`, {
+            "payment-method-primary": "",
+          });
+        }
+      }
     } catch (error) {
       console.error(`Failed to update payment method ${methodValue}:`, error);
     } finally {
@@ -1106,29 +1131,29 @@ const hintTimerRef = React.useRef(null);
     }
   };
 
-const handleSetPrimary = async (methodValue) => {
-  if (methodValue === primaryMethod) return;
+  const handleSetPrimary = async (methodValue) => {
+    if (methodValue === primaryMethod) return;
 
-if (!isMethodComplete(member, methodValue)) {
-  setPrimaryHint(methodValue);
-  clearTimeout(hintTimerRef.current);
-  hintTimerRef.current = setTimeout(() => setPrimaryHint(null), 4000);
-  return;
-}
+    if (!isMethodComplete(member, methodValue)) {
+      setPrimaryHint(methodValue);
+      clearTimeout(hintTimerRef.current);
+      hintTimerRef.current = setTimeout(() => setPrimaryHint(null), 4000);
+      return;
+    }
 
-  const previous = primaryMethod;
-  setPrimaryMethod(methodValue);
-  try {
-    const resp = await api.patch(`/api/v1/me/answer`, {
-      "payment-method-primary": methodValue,
-    });
-    useToast(resp);
-    if (resp?.status === "error") setPrimaryMethod(previous);
-  } catch (error) {
-    setPrimaryMethod(previous); // rollback
-    console.error(`Failed to set primary payment method:`, error);
-  }
-};
+    const previous = primaryMethod;
+    setPrimaryMethod(methodValue);
+    try {
+      const resp = await api.patch(`/api/v1/me/answer`, {
+        "payment-method-primary": methodValue,
+      });
+      useToast(resp);
+      if (resp?.status === "error") setPrimaryMethod(previous);
+    } catch (error) {
+      setPrimaryMethod(previous); // rollback
+      console.error(`Failed to set primary payment method:`, error);
+    }
+  };
 
   return (
     <Grid size={12} container spacing={2} justifyContent="center">
@@ -1199,25 +1224,25 @@ if (!isMethodComplete(member, methodValue)) {
                       />
                     )}
 
-                 <Box sx={{ flex: 1, minWidth: 0 }}>
-  <Typography sx={{ fontWeight: 600, color: "#24324B" }}>
-    {method.label}
-  </Typography>
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                      <Typography sx={{ fontWeight: 600, color: "#24324B" }}>
+                        {method.label}
+                      </Typography>
 
-  {primaryHint === methodValue && (
-    <Typography
-      sx={{
-        color: "error.main",
-        fontSize: 12,
-        fontWeight: 500,
-        mt: 0.3,
-        lineHeight: 1.3,
-      }}
-    >
-      Save your details first to set as primary
-    </Typography>
-  )}
-</Box>
+                      {primaryHint === methodValue && (
+                        <Typography
+                          sx={{
+                            color: "error.main",
+                            fontSize: 12,
+                            fontWeight: 500,
+                            mt: 0.3,
+                            lineHeight: 1.3,
+                          }}
+                        >
+                          Save your details first to set as primary
+                        </Typography>
+                      )}
+                    </Box>
 
                     <IconButton
                       component="span"
@@ -1335,7 +1360,6 @@ if (!isMethodComplete(member, methodValue)) {
                             )}
                           </Box>
                         </Box>
-                        
                       </Grid>
                     ))}
                   </Grid>
@@ -1345,7 +1369,6 @@ if (!isMethodComplete(member, methodValue)) {
           );
         })}
       </Grid>
-      
     </Grid>
   );
 }
@@ -1622,7 +1645,7 @@ function Summary() {
     api
       .get(`/api/v1/me/points`)
       .then((resp) => {
-        if (resp.status === "error") router.replace("/survey?name=welcome");
+        // if (resp.status === "error") router.replace("/survey?name=welcome");
         // if (!resp.data) return useToast(resp);
         let data = resp.data;
         setPoints(data.totalPoints);
@@ -1649,7 +1672,7 @@ function Summary() {
   const [activeTab, setActiveTab] = React.useState(0);
   const [rewardsDateRange, setRewardsDateRange] = React.useState([]);
   const [rejectedDateRange, setRejectedDateRange] = React.useState([]);
- const tabs = [
+  const tabs = [
     // {
     //   label: "Rewards Summary",
     //   render: (
@@ -1671,16 +1694,18 @@ function Summary() {
             noDataMsg="No Record Found."
             data={tourActive ? mockRewardsProcessed.data : []}
             extra={
-            <Box px={{ xs: 0, md: 2 }} my={{ xs: 1, md: 0 }}>
-              <DateRangeSelector
-                onUpdate={(e) => {
-                  setRewardsDateRange(
-                    e.map((d) => new Date(d.toDate()).toISOString().split("T")[0]),
-                  );
-                }}
-              />
-            </Box>
-          }
+              <Box px={{ xs: 0, md: 2 }} my={{ xs: 1, md: 0 }}>
+                <DateRangeSelector
+                  onUpdate={(e) => {
+                    setRewardsDateRange(
+                      e.map(
+                        (d) => new Date(d.toDate()).toISOString().split("T")[0],
+                      ),
+                    );
+                  }}
+                />
+              </Box>
+            }
             columns={[
               {
                 id: "claimedPoints",
@@ -1719,7 +1744,9 @@ function Summary() {
                 id: "status",
                 label: "Status",
                 render: (info) => (
-                  <span style={{ textTransform: "capitalize" }}>{info.status}</span>
+                  <span style={{ textTransform: "capitalize" }}>
+                    {info.status}
+                  </span>
                 ),
               },
             ]}
@@ -1729,24 +1756,26 @@ function Summary() {
     },
     {
       label: "Rejected Responses",
-      
+
       render: (
-        <Grid size={12} container justifyContent="center" >
+        <Grid size={12} container justifyContent="center">
           <Datatable
-          hideColumnSelector
-          hideDownload
+            hideColumnSelector
+            hideDownload
             data={[]}
             extra={
-            <Box px={{ xs: 0, md: 2 }} my={{ xs: 1, md: 0 }}>
-              <DateRangeSelector
-                onUpdate={(e) => {
-                  setRewardsDateRange(
-                    e.map((d) => new Date(d.toDate()).toISOString().split("T")[0]),
-                  );
-                }}
-              />
-            </Box>
-          }
+              <Box px={{ xs: 0, md: 2 }} my={{ xs: 1, md: 0 }}>
+                <DateRangeSelector
+                  onUpdate={(e) => {
+                    setRewardsDateRange(
+                      e.map(
+                        (d) => new Date(d.toDate()).toISOString().split("T")[0],
+                      ),
+                    );
+                  }}
+                />
+              </Box>
+            }
             columns={[
               {
                 id: "survey",

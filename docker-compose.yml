@@ -13,8 +13,15 @@ networks:
     external: true
 
 services:
+  frontend-1:
+    image: registry.sampledge.com/myhealthopinions/frontend:prod-2.0.0
+    build:
+      context: Project/frontend-1
+      target: production
+    restart: unless-stopped
+    networks:
+      - mho
   backend:
-    # image: optiwariindia/express:api-module-1.0.1
     image: registry.sampledge.com/turn2opinion/backend:1.0.1
     restart: unless-stopped
     networks:
@@ -24,10 +31,6 @@ services:
       - ./environment/${PROJECT}.env
     container_name: ${PROJECT}-api-auth
     volumes:
-      # - ./Project/backend/app:/src/app
-      # - ./Project/backend/package.json:/src/package.json
-      # - ./Project/utils:/src/utils
-      # - ./defaultData:/data
       - ./logs:/app/app/logs
   email-template:
     image: registry.sampledge.com/microservice/email-template
@@ -41,7 +44,7 @@ services:
     container_name: ${PROJECT}-mongodb
     restart: always
     ports:
-      - 20017:27017
+      - 27017:27017
     volumes:
       - ./db/storage:/data/db
       - ./db/dump:/backup
