@@ -1,0 +1,8 @@
+/* Self-hosted variable fonts (npm: @fontsource-variable/*, SIL Open Font License).
+   Pairing: Manrope 600–700 for headings and numbers/statistics · Inter 400–500 for body text ·
+   Inter 500–600 for buttons and navigation.
+   Bundled with the site instead of Google Fonts: no third-party request, no render-blocking stylesheet,
+   and it keeps working where fonts.googleapis.com is blocked (mainland China).
+   Each file declares unicode-range subsets, so browsers download only the scripts a page uses. */
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/manrope/wght.css';

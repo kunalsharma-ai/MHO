@@ -17,3 +17,6 @@ preview/
 npm-debug.log*
 .DS_Store
 .vite/
+
+# reference API server data (server-examples/api-server.mjs) — contains personal data, never commit
+server-data/

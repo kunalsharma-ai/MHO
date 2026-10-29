@@ -57,7 +57,7 @@ export default function Login() {
       await Promise.race([syncPendingAnswers({ email: email.trim().toLowerCase() }), new Promise((r) => setTimeout(r, 6000))]);
       // replace(), not assign(): the log-in page must not stay in the browser history, otherwise the Back arrow of a logged-in person
       // (or of the next person using this computer) leads straight back to the log-in form.
-      window.location.replace('/member/dashboard');
+      window.location.replace('/member/profiles');
     }
   };
 

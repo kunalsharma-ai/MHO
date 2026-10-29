@@ -1,0 +1,6817 @@
+{
+ "profiles": [
+  {
+   "slug": "basic",
+   "name": "Basic Profile",
+   "questions": [
+    "fullname",
+    "mail",
+    "gender",
+    "dob",
+    "country",
+    "ethnicity",
+    "state",
+    "city",
+    "zipcode",
+    "rural",
+    "personal-income",
+    "household-income",
+    "relationship-status",
+    "children",
+    "website"
+   ]
+  },
+  {
+   "slug": "professional-category",
+   "name": "Professional Profile",
+   "questions": [
+    "doc-employment-status",
+    "sector",
+    "facility-type",
+    "facility-size",
+    "practice-location",
+    "teaching-hospital"
+   ]
+  },
+  {
+   "slug": "professional",
+   "name": "Speciality And Area of Practice",
+   "questions": [
+    "doc-expertise",
+    "doc-specialization",
+    "doc-joblevel",
+    "healthcare-management-job-role"
+   ]
+  },
+  {
+   "slug": "educational",
+   "name": "Educational Profile",
+   "questions": [
+    "doc-education",
+    "doc-education-diploma",
+    "doc-education-diploma-certified",
+    "doc-education-bachelors",
+    "doc-education-bachelors-registered",
+    "doc-education-masters",
+    "doc-education-master-recognition",
+    "doc-education-doctorate",
+    "doc-education-doctorate-registered",
+    "doc-education-others",
+    "doc-education-others-registered"
+   ]
+  },
+  {
+   "slug": "experience",
+   "name": "Experience",
+   "questions": [
+    "experience",
+    "patients-per-week",
+    "clinical-trials",
+    "doc-clinical-trials-count",
+    "survey-participation-frequency",
+    "doc-decision-making-purchase",
+    "doc-drug-formulary-procurement",
+    "doc-equipments-purchase",
+    "doc-healthpolicy-guidelines"
+   ]
+  },
+  {
+   "slug": "professional-address",
+   "name": "Professional Address",
+   "questions": [
+    "country",
+    "phone",
+    "state",
+    "practice-city",
+    "practice-locality",
+    "zip_code_of_practice",
+    "employer-address",
+    "name-of-employer",
+    "email-id",
+    "linkedin"
+   ]
+  },
+  {
+   "slug": "technical",
+   "name": "Technology and Digital Health",
+   "questions": [
+    "electronic-health-record-usage",
+    "telemedicine",
+    "health-initiatives",
+    "online-surveys",
+    "participating-research",
+    "research-participation",
+    "survey-participation-timeslot",
+    "recontact-consent",
+    "focus-groups"
+   ]
+  },
+  {
+   "slug": "survey-participation",
+   "name": "Survey Participation and Reward Preferences",
+   "questions": [
+    "survey-participation-history",
+    "survey-participation-frequency",
+    "survey-participation-category",
+    "other-survey-panel",
+    "survey-mode",
+    "survey-participation-time-duration",
+    "willingness-survey-participation",
+    "survey-type-interested-in",
+    "share-consent",
+    "survey-participation-motivation",
+    "video-survey-participation-consent",
+    "video-platforms",
+    "video-based-research"
+   ]
+  },
+  {
+   "slug": "documents",
+   "name": "Documents Required",
+   "questions": [
+    "clinician",
+    "medical-certification-no",
+    "issueing-authority",
+    "year-of-issueing",
+    "certification-no"
+   ]
+  },
+  {
+   "slug": "social-media",
+   "name": "Social Media and Reward Reclaim",
+   "questions": [
+    "social-media-x",
+    "social-media-youtube",
+    "social-media-linkedin",
+    "social-media-instagram",
+    "social-media-facebook",
+    "payment-method",
+    "payment-method-bank-name",
+    "payment-method-bank-ifsc",
+    "payment-method-bank-account",
+    "payment-method-upi",
+    "payment-method-paypal",
+    "payment-method-amazon"
+   ]
+  },
+  {
+   "slug": "additional-details",
+   "name": "Additional Details",
+   "questions": [
+    "add-languages-spoken",
+    "add-registration-country",
+    "add-graduation-year",
+    "add-years-current-role",
+    "add-hours-per-week",
+    "add-patient-care-share",
+    "add-consult-duration",
+    "add-patient-age-groups",
+    "add-therapy-areas",
+    "add-conditions-treated",
+    "add-prescriber",
+    "add-prescriptions-week",
+    "add-hospital-affiliations",
+    "add-rep-interactions",
+    "add-kol-roles",
+    "add-publications",
+    "add-conferences-year",
+    "add-cme-hours",
+    "add-society-memberships",
+    "add-info-sources",
+    "add-ai-usage",
+    "add-devices",
+    "add-best-days",
+    "add-clinical-focus"
+   ]
+  }
+ ],
+ "questions": {
+  "fullname": {
+   "label": "Full Name",
+   "type": "text",
+   "rule": "name",
+   "min": 2,
+   "max": 80,
+   "autocomplete": "name"
+  },
+  "mail": {
+   "label": "E-Mail",
+   "type": "email",
+   "rule": "email",
+   "autocomplete": "email"
+  },
+  "gender": {
+   "label": "Gender",
+   "options": [
+    {
+     "l": "Male",
+     "v": "Male"
+    },
+    {
+     "l": "Female",
+     "v": "Female"
+    },
+    {
+     "l": "Other",
+     "v": "Other",
+     "other": true
+    }
+   ],
+   "type": "single"
+  },
+  "dob": {
+   "label": "Date of Birth",
+   "type": "date",
+   "rule": "dob",
+   "minAge": 18,
+   "maxAge": 100,
+   "autocomplete": "bday"
+  },
+  "country": {
+   "label": "Country",
+   "type": "country",
+   "options": [
+    {
+     "l": "Algeria",
+     "v": "DZ"
+    },
+    {
+     "l": "Angola",
+     "v": "AO"
+    },
+    {
+     "l": "Cameroon",
+     "v": "CM"
+    },
+    {
+     "l": "Kenya",
+     "v": "KE"
+    },
+    {
+     "l": "Ethiopia",
+     "v": "ET"
+    },
+    {
+     "l": "Ghana",
+     "v": "GH"
+    },
+    {
+     "l": "Libya",
+     "v": "LY"
+    },
+    {
+     "l": "Mauritius",
+     "v": "MU"
+    },
+    {
+     "l": "Morocco",
+     "v": "MA"
+    },
+    {
+     "l": "Nigeria",
+     "v": "NG"
+    },
+    {
+     "l": "South Africa",
+     "v": "ZA"
+    },
+    {
+     "l": "Uganda",
+     "v": "UG"
+    },
+    {
+     "l": "Zimbabwe",
+     "v": "ZW"
+    },
+    {
+     "l": "Afghanistan",
+     "v": "AF"
+    },
+    {
+     "l": "Pakistan",
+     "v": "PK"
+    },
+    {
+     "l": "Bangladesh",
+     "v": "BD"
+    },
+    {
+     "l": "Cambodia",
+     "v": "KH"
+    },
+    {
+     "l": "China",
+     "v": "CN"
+    },
+    {
+     "l": "Hong Kong",
+     "v": "HK"
+    },
+    {
+     "l": "India",
+     "v": "IN"
+    },
+    {
+     "l": "Indonesia",
+     "v": "ID"
+    },
+    {
+     "l": "Japan",
+     "v": "JP"
+    },
+    {
+     "l": "Malaysia",
+     "v": "MY"
+    },
+    {
+     "l": "Nepal",
+     "v": "NP"
+    },
+    {
+     "l": "Philippines",
+     "v": "PH"
+    },
+    {
+     "l": "Singapore",
+     "v": "SG"
+    },
+    {
+     "l": "South Korea",
+     "v": "KR"
+    },
+    {
+     "l": "Sri Lanka",
+     "v": "LK"
+    },
+    {
+     "l": "Taiwan",
+     "v": "TW"
+    },
+    {
+     "l": "Thailand",
+     "v": "TH"
+    },
+    {
+     "l": "Vietnam",
+     "v": "VN"
+    },
+    {
+     "l": "Albania",
+     "v": "AL"
+    },
+    {
+     "l": "Austria",
+     "v": "AT"
+    },
+    {
+     "l": "Belgium",
+     "v": "BE"
+    },
+    {
+     "l": "Bosnia and Herzegovina",
+     "v": "BA"
+    },
+    {
+     "l": "Bulgaria",
+     "v": "BG"
+    },
+    {
+     "l": "Croatia",
+     "v": "HR"
+    },
+    {
+     "l": "Czechia/Czech Republic",
+     "v": "CZ"
+    },
+    {
+     "l": "Denmark",
+     "v": "DK"
+    },
+    {
+     "l": "Estonia",
+     "v": "EE"
+    },
+    {
+     "l": "Finland",
+     "v": "FI"
+    },
+    {
+     "l": "France",
+     "v": "FR"
+    },
+    {
+     "l": "Germany",
+     "v": "DE"
+    },
+    {
+     "l": "Greece",
+     "v": "GR"
+    },
+    {
+     "l": "Hungary",
+     "v": "HU"
+    },
+    {
+     "l": "Iceland",
+     "v": "IS"
+    },
+    {
+     "l": "Ireland",
+     "v": "IE"
+    },
+    {
+     "l": "Italy",
+     "v": "IT"
+    },
+    {
+     "l": "Luxembourg",
+     "v": "LU"
+    },
+    {
+     "l": "Netherlands",
+     "v": "NL"
+    },
+    {
+     "l": "Norway",
+     "v": "NO"
+    },
+    {
+     "l": "Poland",
+     "v": "PL"
+    },
+    {
+     "l": "Portugal",
+     "v": "PT"
+    },
+    {
+     "l": "Romania",
+     "v": "RO"
+    },
+    {
+     "l": "Russia",
+     "v": "RU"
+    },
+    {
+     "l": "Slovakia",
+     "v": "SK"
+    },
+    {
+     "l": "Spain",
+     "v": "ES"
+    },
+    {
+     "l": "Sweden",
+     "v": "SE"
+    },
+    {
+     "l": "Switzerland",
+     "v": "CH"
+    },
+    {
+     "l": "Turkey",
+     "v": "TR"
+    },
+    {
+     "l": "Ukraine",
+     "v": "UA"
+    },
+    {
+     "l": "United Kingdom",
+     "v": "GB"
+    },
+    {
+     "l": "Canada",
+     "v": "CA"
+    },
+    {
+     "l": "Costa Rica",
+     "v": "CR"
+    },
+    {
+     "l": "Dominican Republic",
+     "v": "DO"
+    },
+    {
+     "l": "Mexico",
+     "v": "MX"
+    },
+    {
+     "l": "United States of America",
+     "v": "US"
+    },
+    {
+     "l": "Argentina",
+     "v": "AR"
+    },
+    {
+     "l": "Brazil",
+     "v": "BR"
+    },
+    {
+     "l": "Chile",
+     "v": "CL"
+    },
+    {
+     "l": "Colombia",
+     "v": "CO"
+    },
+    {
+     "l": "Peru",
+     "v": "PE"
+    },
+    {
+     "l": "Australia",
+     "v": "AU"
+    },
+    {
+     "l": "New Zealand",
+     "v": "NZ"
+    },
+    {
+     "l": "Bahrain",
+     "v": "BH"
+    },
+    {
+     "l": "Cyprus",
+     "v": "CY"
+    },
+    {
+     "l": "Egypt",
+     "v": "EG"
+    },
+    {
+     "l": "Iran",
+     "v": "IR"
+    },
+    {
+     "l": "Iraq",
+     "v": "IQ"
+    },
+    {
+     "l": "Israel",
+     "v": "IL"
+    },
+    {
+     "l": "Jordan",
+     "v": "JO"
+    },
+    {
+     "l": "Kuwait",
+     "v": "KW"
+    },
+    {
+     "l": "Oman",
+     "v": "OM"
+    },
+    {
+     "l": "Qatar",
+     "v": "QA"
+    },
+    {
+     "l": "Saudi Arabia",
+     "v": "SA"
+    },
+    {
+     "l": "United Arab Emirates (UAE)",
+     "v": "AE"
+    }
+   ]
+  },
+  "ethnicity": {
+   "label": "Ethnicity",
+   "parent": "country",
+   "type": "combo",
+   "source": "ethnicity"
+  },
+  "state": {
+   "label": "State",
+   "parent": "country",
+   "type": "combo",
+   "source": "states"
+  },
+  "city": {
+   "label": "City",
+   "parent": "state",
+   "type": "combo",
+   "source": "cities"
+  },
+  "zipcode": {
+   "label": "Zipcode",
+   "parent": "country",
+   "type": "text",
+   "rule": "zip",
+   "countryFrom": "country",
+   "autocomplete": "postal-code",
+   "when": {
+    "q": "country",
+    "answered": true
+   }
+  },
+  "rural": {
+   "label": "What type of area do you currently live in",
+   "parent": "country",
+   "options": [
+    {
+     "l": "Urban",
+     "v": "AE-Urban",
+     "p": [
+      "AE"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "AE-Rural",
+     "p": [
+      "AE"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "AF-Urban",
+     "p": [
+      "AF"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "AF-Rural",
+     "p": [
+      "AF"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "AO-Urban",
+     "p": [
+      "AO"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "AO-Rural",
+     "p": [
+      "AO"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "AR-Urban",
+     "p": [
+      "AR"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "AR-Rural",
+     "p": [
+      "AR"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "AT-Urban",
+     "p": [
+      "AT"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "AT-Rural",
+     "p": [
+      "AT"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "AU-Urban",
+     "p": [
+      "AU"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "AU-Rural",
+     "p": [
+      "AU"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BB-Urban",
+     "p": [
+      "BB"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BB-Rural",
+     "p": [
+      "BB"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BD-Urban",
+     "p": [
+      "BD"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BD-Rural",
+     "p": [
+      "BD"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BE-Urban",
+     "p": [
+      "BE"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BE-Rural",
+     "p": [
+      "BE"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BF-Urban",
+     "p": [
+      "BF"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BF-Rural",
+     "p": [
+      "BF"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BG-Urban",
+     "p": [
+      "BG"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BG-Rural",
+     "p": [
+      "BG"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BH-Urban",
+     "p": [
+      "BH"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BH-Rural",
+     "p": [
+      "BH"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BI-Urban",
+     "p": [
+      "BI"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BI-Rural",
+     "p": [
+      "BI"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BJ-Urban",
+     "p": [
+      "BJ"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BJ-Rural",
+     "p": [
+      "BJ"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BN-Urban",
+     "p": [
+      "BN"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BN-Rural",
+     "p": [
+      "BN"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BO-Urban",
+     "p": [
+      "BO"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BO-Rural",
+     "p": [
+      "BO"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BR-Urban",
+     "p": [
+      "BR"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BR-Rural",
+     "p": [
+      "BR"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BS-Urban",
+     "p": [
+      "BS"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BS-Rural",
+     "p": [
+      "BS"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BT-Urban",
+     "p": [
+      "BT"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BT-Rural",
+     "p": [
+      "BT"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BW-Urban",
+     "p": [
+      "BW"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BW-Rural",
+     "p": [
+      "BW"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "BZ-Urban",
+     "p": [
+      "BZ"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "BZ-Rural",
+     "p": [
+      "BZ"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CA-Urban",
+     "p": [
+      "CA"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CA-Rural",
+     "p": [
+      "CA"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CD-Urban",
+     "p": [
+      "CD"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CD-Rural",
+     "p": [
+      "CD"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CF-Urban",
+     "p": [
+      "CF"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CF-Rural",
+     "p": [
+      "CF"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CG-Urban",
+     "p": [
+      "CG"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CG-Rural",
+     "p": [
+      "CG"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CH-Urban",
+     "p": [
+      "CH"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CH-Rural",
+     "p": [
+      "CH"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CI-Urban",
+     "p": [
+      "CI"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CI-Rural",
+     "p": [
+      "CI"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CL-Urban",
+     "p": [
+      "CL"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CL-Rural",
+     "p": [
+      "CL"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CM-Urban",
+     "p": [
+      "CM"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CM-Rural",
+     "p": [
+      "CM"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CN-Urban",
+     "p": [
+      "CN"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CN-Rural",
+     "p": [
+      "CN"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CO-Urban",
+     "p": [
+      "CO"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CO-Rural",
+     "p": [
+      "CO"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CR-Urban",
+     "p": [
+      "CR"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CR-Rural",
+     "p": [
+      "CR"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CU-Urban",
+     "p": [
+      "CU"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CU-Rural",
+     "p": [
+      "CU"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CV-Urban",
+     "p": [
+      "CV"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CV-Rural",
+     "p": [
+      "CV"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CY-Urban",
+     "p": [
+      "CY"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CY-Rural",
+     "p": [
+      "CY"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "CZ-Urban",
+     "p": [
+      "CZ"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "CZ-Rural",
+     "p": [
+      "CZ"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "DE-Urban",
+     "p": [
+      "DE"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "DE-Rural",
+     "p": [
+      "DE"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "DJ-Urban",
+     "p": [
+      "DJ"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "DJ-Rural",
+     "p": [
+      "DJ"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "DK-Urban",
+     "p": [
+      "DK"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "DK-Rural",
+     "p": [
+      "DK"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "DO-Urban",
+     "p": [
+      "DO"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "DO-Rural",
+     "p": [
+      "DO"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "DZ-Urban",
+     "p": [
+      "DZ"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "DZ-Rural",
+     "p": [
+      "DZ"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "EC-Urban",
+     "p": [
+      "EC"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "EC-Rural",
+     "p": [
+      "EC"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "EG-Urban",
+     "p": [
+      "EG"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "EG-Rural",
+     "p": [
+      "EG"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "ER-Urban",
+     "p": [
+      "ER"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "ER-Rural",
+     "p": [
+      "ER"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "ES-Urban",
+     "p": [
+      "ES"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "ES-Rural",
+     "p": [
+      "ES"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "ET-Urban",
+     "p": [
+      "ET"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "ET-Rural",
+     "p": [
+      "ET"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "FI-Urban",
+     "p": [
+      "FI"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "FI-Rural",
+     "p": [
+      "FI"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "FJ-Urban",
+     "p": [
+      "FJ"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "FJ-Rural",
+     "p": [
+      "FJ"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "FM-Urban",
+     "p": [
+      "FM"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "FM-Rural",
+     "p": [
+      "FM"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "FR-Urban",
+     "p": [
+      "FR"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "FR-Rural",
+     "p": [
+      "FR"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "GA-Urban",
+     "p": [
+      "GA"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "GA-Rural",
+     "p": [
+      "GA"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "GB-Urban",
+     "p": [
+      "GB"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "GB-Rural",
+     "p": [
+      "GB"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "GH-Urban",
+     "p": [
+      "GH"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "GH-Rural",
+     "p": [
+      "GH"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "GM-Urban",
+     "p": [
+      "GM"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "GM-Rural",
+     "p": [
+      "GM"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "GN-Urban",
+     "p": [
+      "GN"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "GN-Rural",
+     "p": [
+      "GN"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "GQ-Urban",
+     "p": [
+      "GQ"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "GQ-Rural",
+     "p": [
+      "GQ"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "GR-Urban",
+     "p": [
+      "GR"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "GR-Rural",
+     "p": [
+      "GR"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "GT-Urban",
+     "p": [
+      "GT"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "GT-Rural",
+     "p": [
+      "GT"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "GW-Urban",
+     "p": [
+      "GW"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "GW-Rural",
+     "p": [
+      "GW"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "HK-Urban",
+     "p": [
+      "HK"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "HK-Rural",
+     "p": [
+      "HK"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "HN-Urban",
+     "p": [
+      "HN"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "HN-Rural",
+     "p": [
+      "HN"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "HR-Urban",
+     "p": [
+      "HR"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "HR-Rural",
+     "p": [
+      "HR"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "HT-Urban",
+     "p": [
+      "HT"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "HT-Rural",
+     "p": [
+      "HT"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "HU-Urban",
+     "p": [
+      "HU"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "HU-Rural",
+     "p": [
+      "HU"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "ID-Urban",
+     "p": [
+      "ID"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "ID-Rural",
+     "p": [
+      "ID"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "IE-Urban",
+     "p": [
+      "IE"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "IE-Rural",
+     "p": [
+      "IE"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "IL-Urban",
+     "p": [
+      "IL"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "IL-Rural",
+     "p": [
+      "IL"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "IN-Urban",
+     "p": [
+      "IN"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "IN-Rural",
+     "p": [
+      "IN"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "IQ-Urban",
+     "p": [
+      "IQ"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "IQ-Rural",
+     "p": [
+      "IQ"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "IR-Urban",
+     "p": [
+      "IR"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "IR-Rural",
+     "p": [
+      "IR"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "IS-Urban",
+     "p": [
+      "IS"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "IS-Rural",
+     "p": [
+      "IS"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "IT-Urban",
+     "p": [
+      "IT"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "IT-Rural",
+     "p": [
+      "IT"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "JM-Urban",
+     "p": [
+      "JM"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "JM-Rural",
+     "p": [
+      "JM"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "JO-Urban",
+     "p": [
+      "JO"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "JO-Rural",
+     "p": [
+      "JO"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "JP-Urban",
+     "p": [
+      "JP"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "JP-Rural",
+     "p": [
+      "JP"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "KE-Urban",
+     "p": [
+      "KE"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "KE-Rural",
+     "p": [
+      "KE"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "KH-Urban",
+     "p": [
+      "KH"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "KH-Rural",
+     "p": [
+      "KH"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "KI-Urban",
+     "p": [
+      "KI"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "KI-Rural",
+     "p": [
+      "KI"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "KM-Urban",
+     "p": [
+      "KM"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "KM-Rural",
+     "p": [
+      "KM"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "KP-Urban",
+     "p": [
+      "KP"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "KP-Rural",
+     "p": [
+      "KP"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "KR-Urban",
+     "p": [
+      "KR"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "KR-Rural",
+     "p": [
+      "KR"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "KW-Urban",
+     "p": [
+      "KW"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "KW-Rural",
+     "p": [
+      "KW"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "LA-Urban",
+     "p": [
+      "LA"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "LA-Rural",
+     "p": [
+      "LA"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "LB-Urban",
+     "p": [
+      "LB"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "LB-Rural",
+     "p": [
+      "LB"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "LK-Urban",
+     "p": [
+      "LK"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "LK-Rural",
+     "p": [
+      "LK"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "LR-Urban",
+     "p": [
+      "LR"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "LR-Rural",
+     "p": [
+      "LR"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "LS-Urban",
+     "p": [
+      "LS"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "LS-Rural",
+     "p": [
+      "LS"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "LU-Urban",
+     "p": [
+      "LU"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "LU-Rural",
+     "p": [
+      "LU"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "LY-Urban",
+     "p": [
+      "LY"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "LY-Rural",
+     "p": [
+      "LY"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "MA-Urban",
+     "p": [
+      "MA"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "MA-Rural",
+     "p": [
+      "MA"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "MG-Urban",
+     "p": [
+      "MG"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "MG-Rural",
+     "p": [
+      "MG"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "ML-Urban",
+     "p": [
+      "ML"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "ML-Rural",
+     "p": [
+      "ML"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "MM-Urban",
+     "p": [
+      "MM"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "MM-Rural",
+     "p": [
+      "MM"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "MN-Urban",
+     "p": [
+      "MN"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "MN-Rural",
+     "p": [
+      "MN"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "MO-Urban",
+     "p": [
+      "MO"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "MO-Rural",
+     "p": [
+      "MO"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "MR-Urban",
+     "p": [
+      "MR"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "MR-Rural",
+     "p": [
+      "MR"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "MT-Urban",
+     "p": [
+      "MT"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "MT-Rural",
+     "p": [
+      "MT"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "MU-Urban",
+     "p": [
+      "MU"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "MU-Rural",
+     "p": [
+      "MU"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "MV-Urban",
+     "p": [
+      "MV"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "MV-Rural",
+     "p": [
+      "MV"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "MW-Urban",
+     "p": [
+      "MW"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "MW-Rural",
+     "p": [
+      "MW"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "MX-Urban",
+     "p": [
+      "MX"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "MX-Rural",
+     "p": [
+      "MX"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "MY-Urban",
+     "p": [
+      "MY"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "MY-Rural",
+     "p": [
+      "MY"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "MZ-Urban",
+     "p": [
+      "MZ"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "MZ-Rural",
+     "p": [
+      "MZ"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "NA-Urban",
+     "p": [
+      "NA"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "NA-Rural",
+     "p": [
+      "NA"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "NE-Urban",
+     "p": [
+      "NE"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "NE-Rural",
+     "p": [
+      "NE"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "NG-Urban",
+     "p": [
+      "NG"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "NG-Rural",
+     "p": [
+      "NG"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "NI-Urban",
+     "p": [
+      "NI"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "NI-Rural",
+     "p": [
+      "NI"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "NL-Urban",
+     "p": [
+      "NL"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "NL-Rural",
+     "p": [
+      "NL"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "NO-Urban",
+     "p": [
+      "NO"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "NO-Rural",
+     "p": [
+      "NO"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "NP-Urban",
+     "p": [
+      "NP"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "NP-Rural",
+     "p": [
+      "NP"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "NZ-Urban",
+     "p": [
+      "NZ"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "NZ-Rural",
+     "p": [
+      "NZ"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "OM-Urban",
+     "p": [
+      "OM"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "OM-Rural",
+     "p": [
+      "OM"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "PA-Urban",
+     "p": [
+      "PA"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "PA-Rural",
+     "p": [
+      "PA"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "PE-Urban",
+     "p": [
+      "PE"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "PE-Rural",
+     "p": [
+      "PE"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "PG-Urban",
+     "p": [
+      "PG"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "PG-Rural",
+     "p": [
+      "PG"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "PH-Urban",
+     "p": [
+      "PH"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "PH-Rural",
+     "p": [
+      "PH"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "PK-Urban",
+     "p": [
+      "PK"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "PK-Rural",
+     "p": [
+      "PK"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "PL-Urban",
+     "p": [
+      "PL"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "PL-Rural",
+     "p": [
+      "PL"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "PR-Urban",
+     "p": [
+      "PR"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "PR-Rural",
+     "p": [
+      "PR"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "PS-Urban",
+     "p": [
+      "PS"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "PS-Rural",
+     "p": [
+      "PS"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "PT-Urban",
+     "p": [
+      "PT"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "PT-Rural",
+     "p": [
+      "PT"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "PW-Urban",
+     "p": [
+      "PW"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "PW-Rural",
+     "p": [
+      "PW"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "PY-Urban",
+     "p": [
+      "PY"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "PY-Rural",
+     "p": [
+      "PY"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "QA-Urban",
+     "p": [
+      "QA"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "QA-Rural",
+     "p": [
+      "QA"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "RO-Urban",
+     "p": [
+      "RO"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "RO-Rural",
+     "p": [
+      "RO"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "RS-Urban",
+     "p": [
+      "RS"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "RS-Rural",
+     "p": [
+      "RS"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "RW-Urban",
+     "p": [
+      "RW"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "RW-Rural",
+     "p": [
+      "RW"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SA-Urban",
+     "p": [
+      "SA"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SA-Rural",
+     "p": [
+      "SA"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SB-Urban",
+     "p": [
+      "SB"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SB-Rural",
+     "p": [
+      "SB"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SC-Urban",
+     "p": [
+      "SC"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SC-Rural",
+     "p": [
+      "SC"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SD-Urban",
+     "p": [
+      "SD"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SD-Rural",
+     "p": [
+      "SD"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SE-Urban",
+     "p": [
+      "SE"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SE-Rural",
+     "p": [
+      "SE"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SG-Urban",
+     "p": [
+      "SG"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SG-Rural",
+     "p": [
+      "SG"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SK-Urban",
+     "p": [
+      "SK"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SK-Rural",
+     "p": [
+      "SK"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SL-Urban",
+     "p": [
+      "SL"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SL-Rural",
+     "p": [
+      "SL"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SN-Urban",
+     "p": [
+      "SN"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SN-Rural",
+     "p": [
+      "SN"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SO-Urban",
+     "p": [
+      "SO"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SO-Rural",
+     "p": [
+      "SO"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SS-Urban",
+     "p": [
+      "SS"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SS-Rural",
+     "p": [
+      "SS"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "ST-Urban",
+     "p": [
+      "ST"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "ST-Rural",
+     "p": [
+      "ST"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SV-Urban",
+     "p": [
+      "SV"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SV-Rural",
+     "p": [
+      "SV"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SY-Urban",
+     "p": [
+      "SY"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SY-Rural",
+     "p": [
+      "SY"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "SZ-Urban",
+     "p": [
+      "SZ"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "SZ-Rural",
+     "p": [
+      "SZ"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "TD-Urban",
+     "p": [
+      "TD"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "TD-Rural",
+     "p": [
+      "TD"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "TG-Urban",
+     "p": [
+      "TG"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "TG-Rural",
+     "p": [
+      "TG"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "TH-Urban",
+     "p": [
+      "TH"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "TH-Rural",
+     "p": [
+      "TH"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "TL-Urban",
+     "p": [
+      "TL"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "TL-Rural",
+     "p": [
+      "TL"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "TN-Urban",
+     "p": [
+      "TN"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "TN-Rural",
+     "p": [
+      "TN"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "TO-Urban",
+     "p": [
+      "TO"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "TO-Rural",
+     "p": [
+      "TO"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "TR-Urban",
+     "p": [
+      "TR"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "TR-Rural",
+     "p": [
+      "TR"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "TT-Urban",
+     "p": [
+      "TT"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "TT-Rural",
+     "p": [
+      "TT"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "TW-Urban",
+     "p": [
+      "TW"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "TW-Rural",
+     "p": [
+      "TW"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "TZ-Urban",
+     "p": [
+      "TZ"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "TZ-Rural",
+     "p": [
+      "TZ"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "UA-Urban",
+     "p": [
+      "UA"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "UA-Rural",
+     "p": [
+      "UA"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "UG-Urban",
+     "p": [
+      "UG"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "UG-Rural",
+     "p": [
+      "UG"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "US-Urban",
+     "p": [
+      "US"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "US-Rural",
+     "p": [
+      "US"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "UY-Urban",
+     "p": [
+      "UY"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "UY-Rural",
+     "p": [
+      "UY"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "VE-Urban",
+     "p": [
+      "VE"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "VE-Rural",
+     "p": [
+      "VE"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "VN-Urban",
+     "p": [
+      "VN"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "VN-Rural",
+     "p": [
+      "VN"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "VU-Urban",
+     "p": [
+      "VU"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "VU-Rural",
+     "p": [
+      "VU"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "WS-Urban",
+     "p": [
+      "WS"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "WS-Rural",
+     "p": [
+      "WS"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "YE-Urban",
+     "p": [
+      "YE"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "YE-Rural",
+     "p": [
+      "YE"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "ZA-Urban",
+     "p": [
+      "ZA"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "ZA-Rural",
+     "p": [
+      "ZA"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "ZM-Urban",
+     "p": [
+      "ZM"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "ZM-Rural",
+     "p": [
+      "ZM"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "ZW-Urban",
+     "p": [
+      "ZW"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "ZW-Rural",
+     "p": [
+      "ZW"
+     ]
+    },
+    {
+     "l": "Rural",
+     "v": "RU-Rural",
+     "p": [
+      "RU"
+     ]
+    },
+    {
+     "l": "Urban",
+     "v": "RU-Urban",
+     "p": [
+      "RU"
+     ]
+    }
+   ],
+   "type": "single"
+  },
+  "personal-income": {
+   "label": "Approximate Annual Personal Income (before tax)",
+   "parent": "rural",
+   "type": "combo",
+   "source": "income.personal"
+  },
+  "household-income": {
+   "label": "Approximate Total Family Income (before tax)",
+   "parent": "rural",
+   "type": "combo",
+   "source": "income.household"
+  },
+  "relationship-status": {
+   "label": "Marital Status",
+   "options": [
+    {
+     "l": "Single, never married",
+     "v": "single"
+    },
+    {
+     "l": "Married",
+     "v": "married"
+    },
+    {
+     "l": "Separated, divorced or widowed",
+     "v": "separated"
+    },
+    {
+     "l": "Domestic partnership/living with someone",
+     "v": "living in"
+    },
+    {
+     "l": "Prefer not to answer",
+     "v": "skip"
+    }
+   ],
+   "type": "single"
+  },
+  "children": {
+   "label": "Number of children below 18 in household",
+   "parent": "relationship-status",
+   "options": [
+    {
+     "l": "0",
+     "v": "0",
+     "p": [
+      "married",
+      "separated",
+      "living in",
+      "skip"
+     ]
+    },
+    {
+     "l": "1-3",
+     "v": "1-3",
+     "p": [
+      "married",
+      "separated",
+      "living in",
+      "skip"
+     ]
+    },
+    {
+     "l": "4-6",
+     "v": "4-6",
+     "p": [
+      "married",
+      "separated",
+      "living in",
+      "skip"
+     ]
+    },
+    {
+     "l": "7-9",
+     "v": "7-9",
+     "p": [
+      "married",
+      "separated",
+      "living in",
+      "skip"
+     ]
+    },
+    {
+     "l": "10+",
+     "v": "10+",
+     "p": [
+      "married",
+      "separated",
+      "living in",
+      "skip"
+     ]
+    }
+   ],
+   "type": "single"
+  },
+  "website": {
+   "label": "Your Website",
+   "type": "url",
+   "rule": "url",
+   "optional": true,
+   "autocomplete": "url"
+  },
+  "doc-employment-status": {
+   "label": "What is your employment status?",
+   "options": [
+    {
+     "l": "Full-Time Healthcare Professional / Employee",
+     "v": "Full-Time Healthcare Professional Employee"
+    },
+    {
+     "l": "Private Practice / Self-Employed Healthcare Professional",
+     "v": "Private Practice Self-Employed Healthcare Professional"
+    },
+    {
+     "l": "Government / Public-Sector Healthcare Professional",
+     "v": "Government Public-Sector Healthcare Professional"
+    },
+    {
+     "l": "Contract / Temporary Healthcare Professional",
+     "v": "Contract Temporary Healthcare Professional"
+    },
+    {
+     "l": "Healthcare Consultant / Independent Practitioner",
+     "v": "Healthcare Consultant Independent Practitioner"
+    },
+    {
+     "l": "Healthcare Academic / Teaching Professional",
+     "v": "Healthcare Academic Teaching Professional"
+    },
+    {
+     "l": "Healthcare Research / Clinical Research Professional",
+     "v": "Healthcare Research Clinical Research Professional"
+    },
+    {
+     "l": "Healthcare Administrator / Management Professional",
+     "v": "Healthcare Administrator Management Professional"
+    },
+    {
+     "l": "Healthcare Professional in NGO / Public Health Organisation",
+     "v": "Healthcare Professional in NGO Public Health Organisation"
+    },
+    {
+     "l": "Healthcare Professional in Pharma / MedTech / HealthTech",
+     "v": "Healthcare Professional in Pharma MedTech HealthTech"
+    },
+    {
+     "l": "Healthcare Professional in Training / Residency / Internship",
+     "v": "Healthcare Professional in Training Residency Internship"
+    }
+   ],
+   "type": "single"
+  },
+  "sector": {
+   "label": "Do you work in the public or private sector?",
+   "parent": "doc-employment-status",
+   "options": [
+    {
+     "l": "Public",
+     "v": "Public",
+     "p": [
+      "Contract Temporary Healthcare Professional",
+      "Full-Time Healthcare Professional Employee",
+      "Government Public-Sector Healthcare Professional",
+      "Healthcare Academic Teaching Professional",
+      "Healthcare Administrator Management Professional",
+      "Healthcare Consultant Independent Practitioner",
+      "Healthcare Professional in NGO Public Health Organisation",
+      "Healthcare Professional in Pharma MedTech HealthTech",
+      "Healthcare Professional in Training Residency Internship",
+      "Healthcare Research Clinical Research Professional",
+      "Private Practice Self-Employed Healthcare Professional"
+     ]
+    },
+    {
+     "l": "Private",
+     "v": "Private",
+     "p": [
+      "Contract Temporary Healthcare Professional",
+      "Full-Time Healthcare Professional Employee",
+      "Government Public-Sector Healthcare Professional",
+      "Healthcare Academic Teaching Professional",
+      "Healthcare Administrator Management Professional",
+      "Healthcare Consultant Independent Practitioner",
+      "Healthcare Professional in NGO Public Health Organisation",
+      "Healthcare Professional in Pharma MedTech HealthTech",
+      "Healthcare Professional in Training Residency Internship",
+      "Healthcare Research Clinical Research Professional",
+      "Private Practice Self-Employed Healthcare Professional"
+     ]
+    },
+    {
+     "l": "Both",
+     "v": "Both",
+     "p": [
+      "Contract Temporary Healthcare Professional",
+      "Full-Time Healthcare Professional Employee",
+      "Government Public-Sector Healthcare Professional",
+      "Healthcare Academic Teaching Professional",
+      "Healthcare Administrator Management Professional",
+      "Healthcare Consultant Independent Practitioner",
+      "Healthcare Professional in NGO Public Health Organisation",
+      "Healthcare Professional in Pharma MedTech HealthTech",
+      "Healthcare Professional in Training Residency Internship",
+      "Healthcare Research Clinical Research Professional",
+      "Private Practice Self-Employed Healthcare Professional"
+     ]
+    }
+   ],
+   "type": "single"
+  },
+  "facility-type": {
+   "label": "In what type of facility do you primarily work?",
+   "options": [
+    {
+     "l": "Hospital",
+     "v": "Hospital"
+    },
+    {
+     "l": "Private Clinic",
+     "v": "Private Clinic"
+    },
+    {
+     "l": "Nursing Home",
+     "v": "Nursing Home"
+    },
+    {
+     "l": "Pharmacy",
+     "v": "Pharmacy"
+    },
+    {
+     "l": "Laboratory",
+     "v": "Laboratory"
+    },
+    {
+     "l": "Community Health Center",
+     "v": "Community Health Center"
+    }
+   ],
+   "type": "single"
+  },
+  "facility-size": {
+   "label": "What is the size of your facility (number of beds)?",
+   "options": [
+    {
+     "l": "1–20",
+     "v": "1–20"
+    },
+    {
+     "l": "21–50",
+     "v": "21–50"
+    },
+    {
+     "l": "51–100",
+     "v": "51–100"
+    },
+    {
+     "l": "101–500",
+     "v": "101–500"
+    },
+    {
+     "l": "500+",
+     "v": "500+"
+    }
+   ],
+   "type": "single"
+  },
+  "practice-location": {
+   "label": "Is your practice in an urban, semi-urban, or rural setting?",
+   "options": [
+    {
+     "l": "Rural",
+     "v": "Rural"
+    },
+    {
+     "l": "Urban",
+     "v": "Urban"
+    },
+    {
+     "l": "Semi-Urban",
+     "v": "Semi-Urban"
+    }
+   ],
+   "type": "single"
+  },
+  "teaching-hospital": {
+   "label": "Do you work in a teaching/academic hospital?",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "doc-expertise": {
+   "label": "What is your primary role of expertise",
+   "options": [
+    {
+     "l": "Healthcare Management",
+     "v": "Healthcare Management"
+    },
+    {
+     "l": "Medical Doctors & Physicians",
+     "v": "Medical Doctors & Physicians"
+    },
+    {
+     "l": "Surgeons",
+     "v": "Surgeons"
+    },
+    {
+     "l": "Dental Professionals",
+     "v": "Dental Professionals"
+    },
+    {
+     "l": "Nursing & Midwifery",
+     "v": "Nursing & Midwifery"
+    },
+    {
+     "l": "Pharmacy Professionals",
+     "v": "Pharmacy Professionals"
+    },
+    {
+     "l": "Laboratory & Diagnostic Professionals",
+     "v": "Laboratory & Diagnostic Professionals"
+    },
+    {
+     "l": "Allied Health Professionals",
+     "v": "Allied Health Professionals"
+    },
+    {
+     "l": "Health IT & Admin Professionals",
+     "v": "Health IT & Admin Professionals"
+    },
+    {
+     "l": "Support Staff (Ancillary)",
+     "v": "Support Staff (Ancillary)"
+    }
+   ],
+   "type": "single"
+  },
+  "doc-specialization": {
+   "label": "Please Select Your Specialization",
+   "parent": "doc-expertise",
+   "options": [
+    {
+     "l": "General Practitioner (GP) / Family Physician",
+     "v": "General Practitioner (GP) / Family Physician",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Internal Medicine Specialist",
+     "v": "Internal Medicine Specialist",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Paediatrics & Neonatology",
+     "v": "Paediatrics & Neonatology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Cardiology",
+     "v": "Cardiology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Pulmonology",
+     "v": "Pulmonology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Neurology",
+     "v": "Neurology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Endocrinology",
+     "v": "Endocrinology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Gastroenterology",
+     "v": "Gastroenterology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Oncology",
+     "v": "Oncology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Nephrology",
+     "v": "Nephrology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Orthopaedic",
+     "v": "Orthopaedic",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Rheumatology",
+     "v": "Rheumatology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Psychology & Mental Health",
+     "v": "Psychology & Mental Health",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Dermatology",
+     "v": "Dermatology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Ophthalmology",
+     "v": "Ophthalmology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "ENT Specialist",
+     "v": "ENT Specialist",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Radiology",
+     "v": "Radiology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Anaesthesiology",
+     "v": "Anaesthesiology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Emergency Medicine",
+     "v": "Emergency Medicine",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Pathology",
+     "v": "Pathology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Geriatrician",
+     "v": "Geriatrician",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Infectious Diseases",
+     "v": "Infectious Diseases",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Sports Medicine",
+     "v": "Sports Medicine",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Palliative Care",
+     "v": "Palliative Care",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Occupational Health",
+     "v": "Occupational Health",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Histopathology",
+     "v": "Histopathology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Haematology",
+     "v": "Haematology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Cytopathology",
+     "v": "Cytopathology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Molecular Diagnostics",
+     "v": "Molecular Diagnostics",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Microbiology",
+     "v": "Microbiology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Clinical Chemistry",
+     "v": "Clinical Chemistry",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Forensic Pathology",
+     "v": "Forensic Pathology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "Immunopathology",
+     "v": "Immunopathology",
+     "p": [
+      "Medical Doctors & Physicians"
+     ]
+    },
+    {
+     "l": "General Practitioner (GP) / Family Nurse",
+     "v": "General Practitioner (GP) / Family Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Internal Medicine Nurse",
+     "v": "Internal Medicine Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Paediatrics & Neonatology Nurse",
+     "v": "Paediatrics & Neonatology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Surgical Nurse",
+     "v": "Surgical Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Cardiology Nurse",
+     "v": "Cardiology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Pulmonology Nurse",
+     "v": "Pulmonology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Neurology Nurse",
+     "v": "Neurology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Endocrinology Nurse",
+     "v": "Endocrinology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Gastroenterology Nurse",
+     "v": "Gastroenterology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Oncology Nurse",
+     "v": "Oncology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Nephrology Nurse",
+     "v": "Nephrology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Orthopaedic Nursing",
+     "v": "Orthopaedic Nursing",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Rheumatology Nurse",
+     "v": "Rheumatology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Psychology & Mental Health Nurse",
+     "v": "Psychology & Mental Health Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Dermatology Nurse",
+     "v": "Dermatology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Ophthalmology Nurse",
+     "v": "Ophthalmology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "ENT Specialist Nurse",
+     "v": "ENT Specialist Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Radiology Nurse",
+     "v": "Radiology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Anaesthesiology Nurse",
+     "v": "Anaesthesiology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Emergency Medicine Nurse",
+     "v": "Emergency Medicine Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Pathology Nurse",
+     "v": "Pathology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Geriatrician Nurse",
+     "v": "Geriatrician Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Infectious Diseases Nurse",
+     "v": "Infectious Diseases Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Sports Medicine Nurse",
+     "v": "Sports Medicine Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Palliative Care Nurse",
+     "v": "Palliative Care Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Occupational Health Nurse",
+     "v": "Occupational Health Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Histopathology Nurse",
+     "v": "Histopathology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Cytopathology Nurse",
+     "v": "Cytopathology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Molecular Diagnostics Nurse",
+     "v": "Molecular Diagnostics Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Microbiology Nurse",
+     "v": "Microbiology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Clinical Chemistry Nurse",
+     "v": "Clinical Chemistry Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Forensic Pathology Nurse",
+     "v": "Forensic Pathology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Immunopathology Nurse",
+     "v": "Immunopathology Nurse",
+     "p": [
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Haematology Nurse",
+     "v": "Haematology Nurse",
+     "p": [
+      "Haematology Nurse",
+      "Nursing & Midwifery"
+     ]
+    },
+    {
+     "l": "Coagulation Nurse Specialist",
+     "v": "Coagulation Nurse Specialist",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Leukaemia Nurse Specialist",
+     "v": "Leukaemia Nurse Specialist",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Haematology Day Care Nurse",
+     "v": "Haematology Day Care Nurse",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Haematology Nurse Practitioner (NP)",
+     "v": "Haematology Nurse Practitioner (NP)",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Clinical Nurse Specialist (CNS) – Haematology",
+     "v": "Clinical Nurse Specialist (CNS) – Haematology",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Haematology Nurse Educator",
+     "v": "Haematology Nurse Educator",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Haematology Staff Nurse",
+     "v": "Haematology Staff Nurse",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Registered Nurse – Haematology Unit",
+     "v": "Registered Nurse – Haematology Unit",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Haematology Clinic Nurse",
+     "v": "Haematology Clinic Nurse",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Inpatient Haematology Nurse",
+     "v": "Inpatient Haematology Nurse",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Outpatient Haematology Nurse",
+     "v": "Outpatient Haematology Nurse",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Haematology Nurse Specialist",
+     "v": "Haematology Nurse Specialist",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Clinical Nurse Specialist – Haematology",
+     "v": "Clinical Nurse Specialist – Haematology",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Advanced Nurse Practitioner – Haematology",
+     "v": "Advanced Nurse Practitioner – Haematology",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Nurse Consultant – Haematology",
+     "v": "Nurse Consultant – Haematology",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Nurse Educator – Haematology",
+     "v": "Nurse Educator – Haematology",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Bone Marrow Transplant Nurse",
+     "v": "Bone Marrow Transplant Nurse",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Sickle Cell Nurse Specialist",
+     "v": "Sickle Cell Nurse Specialist",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Haemophilia Nurse Specialist",
+     "v": "Haemophilia Nurse Specialist",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Apheresis Nurse",
+     "v": "Apheresis Nurse",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Stem Cell Transplant Coordinator Nurse",
+     "v": "Stem Cell Transplant Coordinator Nurse",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Research Nurse – Haematology/Oncology",
+     "v": "Research Nurse – Haematology/Oncology",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Clinical Trials Nurse – Haematology",
+     "v": "Clinical Trials Nurse – Haematology",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Palliative Care Nurse – Haematology Patients",
+     "v": "Palliative Care Nurse – Haematology Patients",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Blood Disorder Case Manager Nurse",
+     "v": "Blood Disorder Case Manager Nurse",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Oncology Haematology Nurse",
+     "v": "Oncology Haematology Nurse",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Medical Oncology and Haematology Nurse",
+     "v": "Medical Oncology and Haematology Nurse",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Paediatric Haematology Nurse",
+     "v": "Paediatric Haematology Nurse",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Infusion Nurse – Haematology",
+     "v": "Infusion Nurse – Haematology",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Transfusion Nurse",
+     "v": "Transfusion Nurse",
+     "p": [
+      "Haematology Nurse"
+     ]
+    },
+    {
+     "l": "Clinical & Patient-Centred Specializations",
+     "v": "Clinical & Patient-Centred Specializations",
+     "p": [
+      "Pharmacy Professionals"
+     ]
+    },
+    {
+     "l": "Laboratory & Diagnostic Specializations",
+     "v": "Laboratory & Diagnostic Specializations",
+     "p": [
+      "Pharmacy Professionals"
+     ]
+    },
+    {
+     "l": "Hospital & Institutional Pharmacy Specialties",
+     "v": "Hospital & Institutional Pharmacy Specialties",
+     "p": [
+      "Pharmacy Professionals"
+     ]
+    },
+    {
+     "l": "Research, Industry, and Development",
+     "v": "Research, Industry, and Development",
+     "p": [
+      "Pharmacy Professionals"
+     ]
+    },
+    {
+     "l": "Retail & Community Pharmacy Specializations",
+     "v": "Retail & Community Pharmacy Specializations",
+     "p": [
+      "Pharmacy Professionals"
+     ]
+    },
+    {
+     "l": "Administrative, Educational & Legal Fields",
+     "v": "Administrative, Educational & Legal Fields",
+     "p": [
+      "Pharmacy Professionals"
+     ]
+    },
+    {
+     "l": "Global health and niche services",
+     "v": "Global health and niche services",
+     "p": [
+      "Pharmacy Professionals"
+     ]
+    },
+    {
+     "l": "Leadership & Administration",
+     "v": "Leadership & Administration",
+     "p": [
+      "Pharmacy Professionals"
+     ]
+    },
+    {
+     "l": "Diagnostic & Laboratory Specialties",
+     "v": "Diagnostic & Laboratory Specialties",
+     "p": [
+      "Laboratory & Diagnostic Professionals"
+     ]
+    },
+    {
+     "l": "Therapeutic & Clinical Specialties",
+     "v": "Therapeutic & Clinical Specialties",
+     "p": [
+      "Laboratory & Diagnostic Professionals"
+     ]
+    },
+    {
+     "l": "Pharmaceutical & Nutrition Specialties",
+     "v": "Pharmaceutical & Nutrition Specialties",
+     "p": [
+      "Laboratory & Diagnostic Professionals"
+     ]
+    },
+    {
+     "l": "Emergency & Prehospital Care",
+     "v": "Emergency & Prehospital Care",
+     "p": [
+      "Laboratory & Diagnostic Professionals"
+     ]
+    },
+    {
+     "l": "Behavioural & Mental Health Specialties",
+     "v": "Behavioural & Mental Health Specialties",
+     "p": [
+      "Laboratory & Diagnostic Professionals"
+     ]
+    },
+    {
+     "l": "Supportive & Direct Care Roles",
+     "v": "Supportive & Direct Care Roles",
+     "p": [
+      "Laboratory & Diagnostic Professionals"
+     ]
+    },
+    {
+     "l": "Specialized & Emerging Roles",
+     "v": "Specialized & Emerging Roles",
+     "p": [
+      "Laboratory & Diagnostic Professionals"
+     ]
+    },
+    {
+     "l": "Health Information Technology",
+     "v": "Health Information Technology",
+     "p": [
+      "Health IT & Admin Professionals"
+     ]
+    },
+    {
+     "l": "Healthcare Administration",
+     "v": "Healthcare Administration",
+     "p": [
+      "Health IT & Admin Professionals"
+     ]
+    },
+    {
+     "l": "Clerical & Front Office",
+     "v": "Clerical & Front Office",
+     "p": [
+      "Support Staff (Ancillary)"
+     ]
+    },
+    {
+     "l": "Medical Records & Information",
+     "v": "Medical Records & Information",
+     "p": [
+      "Support Staff (Ancillary)"
+     ]
+    },
+    {
+     "l": "Billing & Finance",
+     "v": "Billing & Finance",
+     "p": [
+      "Support Staff (Ancillary)"
+     ]
+    },
+    {
+     "l": "Logistics & Facility",
+     "v": "Logistics & Facility",
+     "p": [
+      "Support Staff (Ancillary)"
+     ]
+    },
+    {
+     "l": "Patient Services",
+     "v": "Patient Services",
+     "p": [
+      "Support Staff (Ancillary)"
+     ]
+    },
+    {
+     "l": "General Ancillary Support",
+     "v": "General Ancillary Support",
+     "p": [
+      "Support Staff (Ancillary)"
+     ]
+    },
+    {
+     "l": "Ambulance Support Services",
+     "v": "Ambulance Support Services",
+     "p": [
+      "Support Staff (Ancillary)"
+     ]
+    },
+    {
+     "l": "Diagnostic Laboratory Specialties",
+     "v": "Diagnostic & Laboratory Specialties",
+     "p": [
+      "Allied Health Professionals"
+     ]
+    },
+    {
+     "l": "Therapeutic Clinical Specialties",
+     "v": "Therapeutic & Clinical Specialties",
+     "p": [
+      "Allied Health Professionals"
+     ]
+    },
+    {
+     "l": "Pharmaceutical Nutrition Specialties",
+     "v": "Pharmaceutical & Nutrition Specialties",
+     "p": [
+      "Allied Health Professionals"
+     ]
+    },
+    {
+     "l": "Emergency Prehospital Care",
+     "v": "Emergency & Prehospital Care",
+     "p": [
+      "Allied Health Professionals"
+     ]
+    },
+    {
+     "l": "Behavioural Mental Health Specialties",
+     "v": "Behavioural & Mental Health Specialties",
+     "p": [
+      "Allied Health Professionals"
+     ]
+    },
+    {
+     "l": "Supportive Direct Care Roles",
+     "v": "Supportive & Direct Care Roles",
+     "p": [
+      "Allied Health Professionals"
+     ]
+    },
+    {
+     "l": "Specialized Emerging Roles",
+     "v": "Specialized & Emerging Roles",
+     "p": [
+      "Allied Health Professionals"
+     ]
+    },
+    {
+     "l": "General Surgery",
+     "v": "General Surgery",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Orthopaedic Surgery",
+     "v": "Orthopaedic Surgery",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Neurosurgery",
+     "v": "Neurosurgery",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Cardiothoracic Surgery",
+     "v": "Cardiothoracic Surgery",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Vascular Surgery",
+     "v": "Vascular Surgery",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Plastic & Reconstructive Surgery",
+     "v": "Plastic & Reconstructive Surgery",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Paediatric Surgery",
+     "v": "Paediatric Surgery",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Urology",
+     "v": "Urology (Surgical)",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "ENT / Otorhinolaryngology",
+     "v": "ENT / Otorhinolaryngology",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Ophthalmic Surgery",
+     "v": "Ophthalmic Surgery",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Obstetrics & Gynaecology",
+     "v": "Obstetrics & Gynaecology (Surgical)",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Surgical Oncology",
+     "v": "Surgical Oncology",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Gastrointestinal & Colorectal Surgery",
+     "v": "Gastrointestinal & Colorectal Surgery",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Hepatobiliary & Transplant Surgery",
+     "v": "Hepatobiliary & Transplant Surgery",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Bariatric Surgery",
+     "v": "Bariatric Surgery",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Trauma & Emergency Surgery",
+     "v": "Trauma & Emergency Surgery",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Endocrine & Breast Surgery",
+     "v": "Endocrine & Breast Surgery",
+     "p": [
+      "Surgeons"
+     ]
+    },
+    {
+     "l": "Other surgical speciality",
+     "v": "Other surgical speciality",
+     "p": [
+      "Surgeons"
+     ],
+     "other": true
+    },
+    {
+     "l": "General Dentist (BDS/DDS/DMD)",
+     "v": "General Dentist (BDS/DDS/DMD)",
+     "p": [
+      "Dental Professionals"
+     ]
+    },
+    {
+     "l": "Orthodontist",
+     "v": "Orthodontist",
+     "p": [
+      "Dental Professionals"
+     ]
+    },
+    {
+     "l": "Periodontist",
+     "v": "Periodontist",
+     "p": [
+      "Dental Professionals"
+     ]
+    },
+    {
+     "l": "Endodontist",
+     "v": "Endodontist",
+     "p": [
+      "Dental Professionals"
+     ]
+    },
+    {
+     "l": "Prosthodontist",
+     "v": "Prosthodontist",
+     "p": [
+      "Dental Professionals"
+     ]
+    },
+    {
+     "l": "Oral & Maxillofacial Surgeon",
+     "v": "Oral & Maxillofacial Surgeon",
+     "p": [
+      "Dental Professionals"
+     ]
+    },
+    {
+     "l": "Paediatric Dentist / Pedodontist",
+     "v": "Paediatric Dentist Pedodontist",
+     "p": [
+      "Dental Professionals"
+     ]
+    },
+    {
+     "l": "Oral Medicine Specialist",
+     "v": "Oral Medicine Specialist",
+     "p": [
+      "Dental Professionals"
+     ]
+    },
+    {
+     "l": "Oral Radiologist",
+     "v": "Oral Radiologist",
+     "p": [
+      "Dental Professionals"
+     ]
+    },
+    {
+     "l": "Public Health Dentist / Community Dentist",
+     "v": "Public Health Dentist / Community Dentist",
+     "p": [
+      "Dental Professionals"
+     ]
+    },
+    {
+     "l": "Forensic Odontologist",
+     "v": "Forensic Odontologist",
+     "p": [
+      "Dental Professionals"
+     ]
+    },
+    {
+     "l": "Implantologist",
+     "v": "Implantologist",
+     "p": [
+      "Dental Professionals"
+     ]
+    },
+    {
+     "l": "Other dental speciality",
+     "v": "Other dental speciality",
+     "p": [
+      "Dental Professionals"
+     ],
+     "other": true
+    }
+   ],
+   "type": "select"
+  },
+  "doc-joblevel": {
+   "label": "Please Select Your Job Level",
+   "parent": "doc-specialization",
+   "type": "combo",
+   "source": "joblevel"
+  },
+  "healthcare-management-job-role": {
+   "label": "Please Select your job level",
+   "parent": "doc-expertise",
+   "options": [
+    {
+     "l": "Chief Compliance Officer (CCO)",
+     "v": "Chief Compliance Officer (CCO)",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Chief Financial Officer (CFO)",
+     "v": "Chief Financial Officer (CFO)",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Chief Human Resources Officer (CHRO)",
+     "v": "Chief Human Resources Officer (CHRO)",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Chief Information Officer (CIO)",
+     "v": "Chief Information Officer (CIO)",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Chief Nursing Officer (CNO)",
+     "v": "Chief Nursing Officer (CNO)",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Chief Patient Experience Officer",
+     "v": "Chief Patient Experience Officer",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Chief Quality Officer (CQO)",
+     "v": "Chief Quality Officer (CQO)",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Chief Technology Officer (CTO)",
+     "v": "Chief Technology Officer (CTO)",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Chief Medical Officer (CMO)",
+     "v": "Chief Medical Officer (CMO)",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Chief Information Officer (CIO) in health organizations",
+     "v": "Chief Information Officer (CIO) in health organizations",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Chief Medical Informatics Officer (CMIO)",
+     "v": "Chief Medical Informatics Officer (CMIO)",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Chief Executive Officer (CEO) – Hospital",
+     "v": "Chief Executive Officer (CEO) – Hospital",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Chief Operating Officer (COO)",
+     "v": "Chief Operating Officer (COO)",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Chief Privacy Officer",
+     "v": "Chief Privacy Officer",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Vice President – Clinical Services",
+     "v": "Vice President – Clinical Services",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Vice President – Healthcare Operations",
+     "v": "Vice President – Healthcare Operations",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Vice President – Patient Services",
+     "v": "Vice President – Patient Services",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Dean of Healthcare Administration",
+     "v": "Dean of Healthcare Administration",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Department Manager (Radiology, Pathology, etc.)",
+     "v": "Department Manager (Radiology, Pathology, etc.)",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Director of Clinical Operations",
+     "v": "Director of Clinical Operations",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Director of Community Health Programs",
+     "v": "Director of Community Health Programs",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Director of Facility Management",
+     "v": "Director of Facility Management",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Director of Finance – Healthcare",
+     "v": "Director of Finance – Healthcare",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Director of Health Information Management (HIM)",
+     "v": "Director of Health Information Management (HIM)",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Director of Hospital Administration",
+     "v": "Director of Hospital Administration",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Director of Patient Care Services",
+     "v": "Director of Patient Care Services",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Director of Quality & Compliance",
+     "v": "Director of Quality & Compliance",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Director of Risk Management",
+     "v": "Director of Risk Management",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Director of Support Services",
+     "v": "Director of Support Services",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "Medical Director – Insurance",
+     "v": "Medical Director – Insurance",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "District Health Officer (DHO)",
+     "v": "District Health Officer (DHO)",
+     "p": [
+      "Healthcare Management"
+     ]
+    },
+    {
+     "l": "State Health Mission Director",
+     "v": "State Health Mission Director",
+     "p": [
+      "Healthcare Management"
+     ]
+    }
+   ],
+   "type": "select"
+  },
+  "doc-education": {
+   "label": "What is your highest level of education?",
+   "options": [
+    {
+     "l": "Diploma",
+     "v": "Diploma"
+    },
+    {
+     "l": "Bachelor’s",
+     "v": "Bachelor’s"
+    },
+    {
+     "l": "Master’s",
+     "v": "Master’s"
+    },
+    {
+     "l": "Doctorate",
+     "v": "Doctorate"
+    },
+    {
+     "l": "Others",
+     "v": "Others",
+     "other": true
+    }
+   ],
+   "type": "single"
+  },
+  "doc-education-diploma": {
+   "label": "What type of diploma have you completed?",
+   "parent": "doc-education",
+   "options": [
+    {
+     "l": "Nursing diploma (GNM/ANM)",
+     "v": "Nursing diploma (GNM/ANM)",
+     "p": [
+      "Diploma"
+     ]
+    },
+    {
+     "l": "Paramedical diploma (Lab technician, Radiology, Physiotherapy, etc.)",
+     "v": "Paramedical diploma (Lab technician, Radiology, Physiotherapy, etc.)",
+     "p": [
+      "Diploma"
+     ]
+    },
+    {
+     "l": "Pharmacy diploma (D.Pharm)",
+     "v": "Pharmacy diploma (D.Pharm)",
+     "p": [
+      "Diploma"
+     ]
+    },
+    {
+     "l": "Other healthcare-related diploma",
+     "v": "Other healthcare-related diploma",
+     "p": [
+      "Diploma"
+     ],
+     "other": true
+    }
+   ],
+   "type": "single"
+  },
+  "doc-education-diploma-certified": {
+   "label": "Are you certified/licensed to practice in your field?",
+   "parent": "doc-education",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "yes",
+     "p": [
+      "Diploma"
+     ]
+    },
+    {
+     "l": "No",
+     "v": "no",
+     "p": [
+      "Diploma"
+     ]
+    },
+    {
+     "l": "Currently under process",
+     "v": "under process",
+     "p": [
+      "Diploma"
+     ]
+    }
+   ],
+   "type": "single"
+  },
+  "doc-education-bachelors": {
+   "label": "What is your bachelor's qualification?",
+   "parent": "doc-education",
+   "options": [
+    {
+     "l": "MBBS (Medicine)",
+     "v": "mbbs",
+     "p": [
+      "Bachelor’s"
+     ]
+    },
+    {
+     "l": "BDS (Dentistry)",
+     "v": "bds",
+     "p": [
+      "Bachelor’s"
+     ]
+    },
+    {
+     "l": "B.Sc Nursing",
+     "v": "bsc",
+     "p": [
+      "Bachelor’s"
+     ]
+    },
+    {
+     "l": "B.Pharm (Pharmacy)",
+     "v": "bpharma",
+     "p": [
+      "Bachelor’s"
+     ]
+    },
+    {
+     "l": "BPT (Physiotherapy)",
+     "v": "bpt",
+     "p": [
+      "Bachelor’s"
+     ]
+    },
+    {
+     "l": "Other",
+     "v": "Other",
+     "p": [
+      "Bachelor’s"
+     ],
+     "other": true
+    }
+   ],
+   "type": "single"
+  },
+  "doc-education-bachelors-registered": {
+   "label": "Do you hold a professional registration/licensure?",
+   "parent": "doc-education",
+   "options": [
+    {
+     "l": "Yes, with national medical/dental/nursing/pharmacy council",
+     "v": "union-certified",
+     "p": [
+      "Bachelor’s"
+     ]
+    },
+    {
+     "l": "Yes, with state medical/dental/nursing/pharmacy council",
+     "v": "state-certified",
+     "p": [
+      "Bachelor’s"
+     ]
+    },
+    {
+     "l": "No",
+     "v": "no",
+     "p": [
+      "Bachelor’s"
+     ]
+    },
+    {
+     "l": "Under process",
+     "v": "under process",
+     "p": [
+      "Bachelor’s"
+     ]
+    }
+   ],
+   "type": "single"
+  },
+  "doc-education-masters": {
+   "label": "What is your master's qualification?",
+   "parent": "doc-education",
+   "options": [
+    {
+     "l": "MD/MS (Postgraduate Medicine/Surgery)",
+     "v": "md or ms",
+     "p": [
+      "Master’s"
+     ]
+    },
+    {
+     "l": "MDS (Dentistry)",
+     "v": "mds",
+     "p": [
+      "Master’s"
+     ]
+    },
+    {
+     "l": "M.Sc Nursing",
+     "v": "msc",
+     "p": [
+      "Master’s"
+     ]
+    },
+    {
+     "l": "M.Pharm (Pharmacy)",
+     "v": "mpharma",
+     "p": [
+      "Master’s"
+     ]
+    },
+    {
+     "l": "MPT (Physiotherapy)",
+     "v": "mpt",
+     "p": [
+      "Master’s"
+     ]
+    },
+    {
+     "l": "Other Healthcare Master Degree",
+     "v": "other",
+     "p": [
+      "Master’s"
+     ],
+     "other": true
+    }
+   ],
+   "type": "single"
+  },
+  "doc-education-master-recognition": {
+   "label": "Do you have a specialist certification/board recognition?",
+   "parent": "doc-education",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "yes",
+     "p": [
+      "Master’s"
+     ]
+    },
+    {
+     "l": "No",
+     "v": "no",
+     "p": [
+      "Master’s"
+     ]
+    },
+    {
+     "l": "Currently pursuing",
+     "v": "pursuing",
+     "p": [
+      "Master’s"
+     ]
+    }
+   ],
+   "type": "single"
+  },
+  "doc-education-doctorate": {
+   "label": "What is your doctoral qualification?",
+   "parent": "doc-education",
+   "options": [
+    {
+     "l": "DM/MCh (Super-specialty Medicine/Surgery)",
+     "v": "dm/mch",
+     "p": [
+      "Doctorate"
+     ]
+    },
+    {
+     "l": "PhD (Healthcare/Medical Science)",
+     "v": "phd",
+     "p": [
+      "Doctorate"
+     ]
+    },
+    {
+     "l": "Other",
+     "v": "Other",
+     "p": [
+      "Doctorate"
+     ],
+     "other": true
+    }
+   ],
+   "type": "single"
+  },
+  "doc-education-doctorate-registered": {
+   "label": "Do you have certification/registration with a professional council or board?",
+   "parent": "doc-education",
+   "options": [
+    {
+     "l": "Yes, National Medical Council or equivalent",
+     "v": "union-certified",
+     "p": [
+      "Doctorate"
+     ]
+    },
+    {
+     "l": "Yes, International Medical Board (e.g., USMLE, MRCP, FRCS)",
+     "v": "state-certified",
+     "p": [
+      "Doctorate"
+     ]
+    },
+    {
+     "l": "No",
+     "v": "no",
+     "p": [
+      "Doctorate"
+     ]
+    },
+    {
+     "l": "Under process",
+     "v": "under process",
+     "p": [
+      "Doctorate"
+     ]
+    }
+   ],
+   "type": "single"
+  },
+  "doc-education-others": {
+   "label": "Please specify your qualification.",
+   "parent": "doc-education",
+   "type": "text",
+   "rule": "freetext",
+   "min": 2,
+   "max": 120,
+   "when": {
+    "q": "doc-education",
+    "in": [
+     "Others"
+    ]
+   }
+  },
+  "doc-education-others-registered": {
+   "label": "Are you certified/licensed to practice in your field?",
+   "parent": "doc-education",
+   "options": [
+    {
+     "l": "Yes, National Medical Council or equivalent",
+     "v": "union-certified",
+     "p": [
+      "Others"
+     ]
+    },
+    {
+     "l": "Yes, International Medical Board (e.g., USMLE, MRCP, FRCS)",
+     "v": "state-certified",
+     "p": [
+      "Others"
+     ]
+    },
+    {
+     "l": "No",
+     "v": "no",
+     "p": [
+      "Others"
+     ]
+    },
+    {
+     "l": "Under process",
+     "v": "under process",
+     "p": [
+      "Others"
+     ]
+    }
+   ],
+   "type": "single"
+  },
+  "experience": {
+   "label": "How many years have you been practicing in your profession?",
+   "options": [
+    {
+     "l": "0–2 years",
+     "v": "0–2 years"
+    },
+    {
+     "l": "3–5 years",
+     "v": "3–5 years"
+    },
+    {
+     "l": "6–10 years",
+     "v": "6–10 years"
+    },
+    {
+     "l": "11–20 years",
+     "v": "11–20 years"
+    },
+    {
+     "l": "20+ years",
+     "v": "20+ years"
+    }
+   ],
+   "type": "single"
+  },
+  "patients-per-week": {
+   "label": "Patients Seen Per Week",
+   "options": [
+    {
+     "l": "0–10",
+     "v": "0–10"
+    },
+    {
+     "l": "11–25",
+     "v": "11–25"
+    },
+    {
+     "l": "26–50",
+     "v": "26–50"
+    },
+    {
+     "l": "51–100",
+     "v": "51–100"
+    },
+    {
+     "l": "100+",
+     "v": "100+"
+    }
+   ],
+   "type": "single"
+  },
+  "clinical-trials": {
+   "label": "Do you have experience participating in clinical trials?",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "doc-clinical-trials-count": {
+   "label": "How many clinical trials have you been involved in over the past 2 years?",
+   "parent": "clinical-trials",
+   "options": [
+    {
+     "l": "0 - 49",
+     "v": "0 - 49",
+     "p": [
+      "Yes"
+     ]
+    },
+    {
+     "l": "50 - 99",
+     "v": "50 - 99",
+     "p": [
+      "Yes"
+     ]
+    },
+    {
+     "l": "100 - 149",
+     "v": "100 - 149",
+     "p": [
+      "Yes"
+     ]
+    },
+    {
+     "l": "150 - 200",
+     "v": "150 - 200",
+     "p": [
+      "Yes"
+     ]
+    },
+    {
+     "l": "More than 200",
+     "v": "More than 200",
+     "p": [
+      "Yes"
+     ]
+    }
+   ],
+   "type": "single"
+  },
+  "survey-participation-frequency": {
+   "label": "How often do you participate in surveys",
+   "parent": "survey-participation-history",
+   "options": [
+    {
+     "l": "Weekly",
+     "v": "weekly",
+     "p": [
+      "yes"
+     ]
+    },
+    {
+     "l": "Bi-Weekly",
+     "v": "Bi-Weekly",
+     "p": [
+      "yes"
+     ]
+    },
+    {
+     "l": "Monthly",
+     "v": "Monthly",
+     "p": [
+      "yes"
+     ]
+    },
+    {
+     "l": "As available",
+     "v": "As available",
+     "p": [
+      "yes"
+     ]
+    }
+   ],
+   "type": "single"
+  },
+  "doc-decision-making-purchase": {
+   "label": "Are you a decision-maker for purchases in your practice/facility?",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "doc-drug-formulary-procurement": {
+   "label": "Are you part of a drug formulary or procurement committee?",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "doc-equipments-purchase": {
+   "label": "Do you have influence over medical device/equipment purchasing decisions?",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "doc-healthpolicy-guidelines": {
+   "label": "Are you involved in health policy or guideline development?",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "phone": {
+   "label": "Contact Number",
+   "type": "tel",
+   "rule": "phone",
+   "countryFrom": "country",
+   "autocomplete": "tel"
+  },
+  "practice-city": {
+   "label": "What is your city/region of practice?",
+   "parent": "state",
+   "type": "combo",
+   "source": "cities"
+  },
+  "practice-locality": {
+   "label": "Locality / Street Name",
+   "type": "text",
+   "rule": "address",
+   "min": 3,
+   "max": 150,
+   "autocomplete": "address-line2"
+  },
+  "zip_code_of_practice": {
+   "label": "Zip Code",
+   "parent": "country",
+   "type": "text",
+   "rule": "zip",
+   "countryFrom": "country",
+   "autocomplete": "postal-code",
+   "when": {
+    "q": "country",
+    "answered": true
+   }
+  },
+  "employer-address": {
+   "label": "Employer Address (Building/Flat no.)",
+   "type": "text",
+   "rule": "address",
+   "min": 3,
+   "max": 200,
+   "autocomplete": "address-line1"
+  },
+  "name-of-employer": {
+   "label": "Name of Employer (Hospital or Clinic)",
+   "type": "text",
+   "rule": "org",
+   "min": 2,
+   "max": 150,
+   "autocomplete": "organization"
+  },
+  "email-id": {
+   "label": "Company Email ID",
+   "type": "email",
+   "rule": "email",
+   "autocomplete": "work email"
+  },
+  "linkedin": {
+   "label": "Company Linkedin Profile",
+   "type": "url",
+   "rule": "linkedinCompany",
+   "optional": true,
+   "placeholder": "https://www.linkedin.com/company/your-hospital"
+  },
+  "electronic-health-record-usage": {
+   "label": "Do you use Electronic Health Records (EHR/EMR)?",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "telemedicine": {
+   "label": "Do you use telemedicine?",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "health-initiatives": {
+   "label": "Are you involved in digital health initiatives?",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "online-surveys": {
+   "label": "Are you comfortable participating in online surveys?",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "participating-research": {
+   "label": "Do you prefer participating via online, telephone, or face-to-face research?",
+   "options": [
+    {
+     "l": "Online",
+     "v": "Online"
+    },
+    {
+     "l": "Telephone",
+     "v": "Telephone"
+    },
+    {
+     "l": "face-to-face",
+     "v": "Face-To-Face"
+    }
+   ],
+   "type": "single"
+  },
+  "research-participation": {
+   "label": "How often are you willing to participate in research?",
+   "options": [
+    {
+     "l": "Weekly",
+     "v": "Weekly"
+    },
+    {
+     "l": "Monthly",
+     "v": "Monthly"
+    },
+    {
+     "l": "Quarterly",
+     "v": "Quarterly"
+    },
+    {
+     "l": "Rarely",
+     "v": "Rarely"
+    }
+   ],
+   "type": "single"
+  },
+  "survey-participation-timeslot": {
+   "label": "What is your preferred time of day to participate in Survey",
+   "options": [
+    {
+     "l": "Morning",
+     "v": "Morning"
+    },
+    {
+     "l": "Afternoon",
+     "v": "Afternoon"
+    },
+    {
+     "l": "Evening",
+     "v": "Evening"
+    }
+   ],
+   "type": "single"
+  },
+  "recontact-consent": {
+   "label": "Do you agree to be re-contacted for future studies",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "focus-groups": {
+   "label": "Would you participate in focus groups in addition to surveys",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "survey-participation-history": {
+   "label": "Have you ever participated in a market research survey?",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "yes"
+    },
+    {
+     "l": "No",
+     "v": "no"
+    }
+   ],
+   "type": "single"
+  },
+  "survey-participation-category": {
+   "label": "What type of surveys have you participated in, before?",
+   "parent": "survey-participation-history",
+   "options": [
+    {
+     "l": "Healthcare / Patient-related",
+     "v": "Healthcare / Patient-related",
+     "p": [
+      "yes"
+     ]
+    },
+    {
+     "l": "Consumer / Product feedback",
+     "v": "Consumer / Product feedback",
+     "p": [
+      "yes"
+     ]
+    },
+    {
+     "l": "Online opinion polls",
+     "v": "Online opinion polls",
+     "p": [
+      "yes"
+     ]
+    },
+    {
+     "l": "In-person / Telephone interviews",
+     "v": "In-person / Telephone interviews",
+     "p": [
+      "yes"
+     ]
+    }
+   ],
+   "type": "multi"
+  },
+  "other-survey-panel": {
+   "label": "Are you currently registered with any other online research panels?",
+   "parent": "survey-participation-history",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes",
+     "p": [
+      "yes"
+     ]
+    },
+    {
+     "l": "No",
+     "v": "No",
+     "p": [
+      "yes"
+     ]
+    }
+   ],
+   "type": "single"
+  },
+  "survey-mode": {
+   "label": "How do you prefer to participate in Survey?",
+   "options": [
+    {
+     "l": "Online (via link or email)",
+     "v": "Online (via link or email)"
+    },
+    {
+     "l": "Mobile app",
+     "v": "Mobile app"
+    },
+    {
+     "l": "Telephone / CATI",
+     "v": "Telephone / CATI"
+    },
+    {
+     "l": "In-person interview",
+     "v": "In-person interview"
+    }
+   ],
+   "type": "single"
+  },
+  "survey-participation-time-duration": {
+   "label": "How much time are you comfortable spending on a survey",
+   "options": [
+    {
+     "l": "Less than 5 minutes",
+     "v": "Less than 5 minutes"
+    },
+    {
+     "l": "5–10 minutes",
+     "v": "5–10 minutes"
+    },
+    {
+     "l": "10–20 minutes",
+     "v": "10–20 minutes"
+    },
+    {
+     "l": "20 minutes or more",
+     "v": "20 minutes or more"
+    }
+   ],
+   "type": "single"
+  },
+  "willingness-survey-participation": {
+   "label": "Are you willing to participate in future market research studies",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "survey-type-interested-in": {
+   "label": "What types of study would you be open to join",
+   "options": [
+    {
+     "l": "Online surveys",
+     "v": "Online surveys"
+    },
+    {
+     "l": "Telephonic interviews",
+     "v": "Telephonic interviews"
+    },
+    {
+     "l": "Focus group discussions",
+     "v": "Focus group discussions"
+    },
+    {
+     "l": "Product trials / concept tests",
+     "v": "Product trials / concept tests"
+    },
+    {
+     "l": "Diary or long-term tracking studies",
+     "v": "Diary or long-term tracking studies"
+    }
+   ],
+   "type": "multi"
+  },
+  "share-consent": {
+   "label": "Are you comfortable sharing your health related experiences for research purposes (confidentially)",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "survey-participation-motivation": {
+   "label": "What motivates you to participate in surveys",
+   "options": [
+    {
+     "l": "Sharing my opinion",
+     "v": "Sharing my opinion"
+    },
+    {
+     "l": "Helping improve healthcare / products",
+     "v": "Helping improve healthcare / products"
+    },
+    {
+     "l": "Receiving rewards or incentives",
+     "v": "Receiving rewards or incentives"
+    },
+    {
+     "l": "Learning new information",
+     "v": "Learning new information"
+    }
+   ],
+   "type": "multi"
+  },
+  "video-survey-participation-consent": {
+   "label": "Are you comfortable participating in online video interviews or discussions (via Zoom, Teams etc.)",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "Yes"
+    },
+    {
+     "l": "No",
+     "v": "No"
+    }
+   ],
+   "type": "single"
+  },
+  "video-platforms": {
+   "label": "Which video platforms are you familiar with? (Select all that apply)",
+   "options": [
+    {
+     "l": "Zoom",
+     "v": "Zoom"
+    },
+    {
+     "l": "Microsoft Teams",
+     "v": "Microsoft Teams"
+    },
+    {
+     "l": "Google Meet",
+     "v": "Google Meet"
+    },
+    {
+     "l": "Skype",
+     "v": "Skype"
+    },
+    {
+     "l": "WhatsApp Video",
+     "v": "WhatsApp Video"
+    },
+    {
+     "l": "Other",
+     "v": "Other",
+     "other": true
+    }
+   ],
+   "type": "multi"
+  },
+  "video-based-research": {
+   "label": "Are you open to participating in video-based research that may require",
+   "options": [
+    {
+     "l": "Sharing your opinions on camera (e.g., interviews)",
+     "v": "Sharing your opinions on camera (e.g., interviews)"
+    },
+    {
+     "l": "Demonstrating product use on video",
+     "v": "Demonstrating product use on video"
+    },
+    {
+     "l": "Participating in a group video discussion",
+     "v": "Participating in a group video discussion"
+    }
+   ],
+   "type": "multi"
+  },
+  "clinician": {
+   "label": "Are you a Clinician?",
+   "options": [
+    {
+     "l": "Yes",
+     "v": "yes",
+     "p": [
+      "yes"
+     ]
+    },
+    {
+     "l": "No",
+     "v": "no",
+     "p": [
+      "yes"
+     ]
+    }
+   ],
+   "type": "single",
+   "externalParent": "works_in_healthcare"
+  },
+  "medical-certification-no": {
+   "label": "Please provide your professional certification/license number",
+   "parent": "clinician",
+   "type": "text",
+   "rule": "license",
+   "min": 4,
+   "max": 30,
+   "when": {
+    "q": "clinician",
+    "in": [
+     "yes"
+    ]
+   }
+  },
+  "issueing-authority": {
+   "label": "Issuing Authority / Council",
+   "parent": "clinician",
+   "type": "text",
+   "rule": "org",
+   "min": 3,
+   "max": 120,
+   "when": {
+    "q": "clinician",
+    "in": [
+     "yes"
+    ]
+   }
+  },
+  "year-of-issueing": {
+   "label": "Year of Issuing",
+   "parent": "clinician",
+   "type": "year",
+   "rule": "year",
+   "minYear": 1950,
+   "when": {
+    "q": "clinician",
+    "in": [
+     "yes"
+    ]
+   }
+  },
+  "certification-no": {
+   "label": "Please Upload your Certificate/License",
+   "parent": "clinician",
+   "type": "file",
+   "rule": "file",
+   "accept": ".pdf,.jpg,.jpeg,.png,.webp",
+   "maxMB": 5,
+   "when": {
+    "q": "clinician",
+    "in": [
+     "yes"
+    ]
+   }
+  },
+  "social-media-x": {
+   "label": "X(Twitter) ID",
+   "type": "handle",
+   "rule": "handle",
+   "optional": true,
+   "prefix": "@"
+  },
+  "social-media-youtube": {
+   "label": "Youtube ID",
+   "type": "handle",
+   "rule": "handleOrUrl",
+   "optional": true,
+   "prefix": "@"
+  },
+  "social-media-linkedin": {
+   "label": "Linkedin ID",
+   "type": "url",
+   "rule": "linkedinPerson",
+   "optional": true,
+   "placeholder": "https://www.linkedin.com/in/your-name"
+  },
+  "social-media-instagram": {
+   "label": "Instagram ID",
+   "type": "handle",
+   "rule": "handle",
+   "optional": true,
+   "prefix": "@"
+  },
+  "social-media-facebook": {
+   "label": "Facebook ID",
+   "type": "handle",
+   "rule": "handleOrUrl",
+   "optional": true
+  },
+  "payment-method": {
+   "label": "How do you like to receive payments",
+   "options": [
+    {
+     "l": "Amazon Gift Card",
+     "v": "amazon-gift-card"
+    },
+    {
+     "l": "Paypal",
+     "v": "paypal"
+    },
+    {
+     "l": "Unified Payment Interface (UPI)",
+     "v": "upi"
+    },
+    {
+     "l": "Wire Transfer",
+     "v": "wire-transfer"
+    }
+   ],
+   "type": "single"
+  },
+  "payment-method-bank-name": {
+   "label": "Your Bank Name",
+   "parent": "payment-method",
+   "type": "text",
+   "rule": "org",
+   "min": 3,
+   "max": 80,
+   "when": {
+    "q": "payment-method",
+    "in": [
+     "wire-transfer"
+    ]
+   }
+  },
+  "payment-method-bank-ifsc": {
+   "label": "IFSC Code / Swift Code / IBAN",
+   "parent": "payment-method",
+   "type": "text",
+   "rule": "bankCode",
+   "upper": true,
+   "when": {
+    "q": "payment-method",
+    "in": [
+     "wire-transfer"
+    ]
+   },
+   "sensitive": true
+  },
+  "payment-method-bank-account": {
+   "label": "Your Bank Account Number",
+   "parent": "payment-method",
+   "type": "text",
+   "rule": "bankAccount",
+   "inputmode": "numeric",
+   "when": {
+    "q": "payment-method",
+    "in": [
+     "wire-transfer"
+    ]
+   },
+   "sensitive": true
+  },
+  "payment-method-upi": {
+   "label": "Your Virtual Payment Address (UPI ID)",
+   "parent": "payment-method",
+   "type": "text",
+   "rule": "upi",
+   "when": {
+    "q": "payment-method",
+    "in": [
+     "upi"
+    ]
+   },
+   "sensitive": true
+  },
+  "payment-method-paypal": {
+   "label": "Your Paypal ID",
+   "parent": "payment-method",
+   "type": "email",
+   "rule": "email",
+   "when": {
+    "q": "payment-method",
+    "in": [
+     "paypal"
+    ]
+   }
+  },
+  "payment-method-amazon": {
+   "label": "Your Amazon ID",
+   "parent": "payment-method",
+   "type": "email",
+   "rule": "email",
+   "when": {
+    "q": "payment-method",
+    "in": [
+     "amazon-gift-card"
+    ]
+   }
+  },
+  "add-languages-spoken": {
+   "label": "Which languages do you consult patients in?",
+   "type": "multi",
+   "translateOptions": true,
+   "options": [
+    {
+     "l": "English",
+     "v": "English"
+    },
+    {
+     "l": "Hindi",
+     "v": "Hindi"
+    },
+    {
+     "l": "Mandarin Chinese",
+     "v": "Mandarin"
+    },
+    {
+     "l": "Spanish",
+     "v": "Spanish"
+    },
+    {
+     "l": "French",
+     "v": "French"
+    },
+    {
+     "l": "Arabic",
+     "v": "Arabic"
+    },
+    {
+     "l": "Portuguese",
+     "v": "Portuguese"
+    },
+    {
+     "l": "Russian",
+     "v": "Russian"
+    },
+    {
+     "l": "German",
+     "v": "German"
+    },
+    {
+     "l": "Japanese",
+     "v": "Japanese"
+    },
+    {
+     "l": "Korean",
+     "v": "Korean"
+    },
+    {
+     "l": "Italian",
+     "v": "Italian"
+    },
+    {
+     "l": "Bengali",
+     "v": "Bengali"
+    },
+    {
+     "l": "Tamil",
+     "v": "Tamil"
+    },
+    {
+     "l": "Telugu",
+     "v": "Telugu"
+    },
+    {
+     "l": "Urdu",
+     "v": "Urdu"
+    },
+    {
+     "l": "Other",
+     "v": "Other",
+     "other": true
+    }
+   ]
+  },
+  "add-registration-country": {
+   "label": "In which country are you registered to practise?",
+   "type": "country",
+   "options": [
+    {
+     "l": "Algeria",
+     "v": "DZ"
+    },
+    {
+     "l": "Angola",
+     "v": "AO"
+    },
+    {
+     "l": "Cameroon",
+     "v": "CM"
+    },
+    {
+     "l": "Kenya",
+     "v": "KE"
+    },
+    {
+     "l": "Ethiopia",
+     "v": "ET"
+    },
+    {
+     "l": "Ghana",
+     "v": "GH"
+    },
+    {
+     "l": "Libya",
+     "v": "LY"
+    },
+    {
+     "l": "Mauritius",
+     "v": "MU"
+    },
+    {
+     "l": "Morocco",
+     "v": "MA"
+    },
+    {
+     "l": "Nigeria",
+     "v": "NG"
+    },
+    {
+     "l": "South Africa",
+     "v": "ZA"
+    },
+    {
+     "l": "Uganda",
+     "v": "UG"
+    },
+    {
+     "l": "Zimbabwe",
+     "v": "ZW"
+    },
+    {
+     "l": "Afghanistan",
+     "v": "AF"
+    },
+    {
+     "l": "Pakistan",
+     "v": "PK"
+    },
+    {
+     "l": "Bangladesh",
+     "v": "BD"
+    },
+    {
+     "l": "Cambodia",
+     "v": "KH"
+    },
+    {
+     "l": "China",
+     "v": "CN"
+    },
+    {
+     "l": "Hong Kong",
+     "v": "HK"
+    },
+    {
+     "l": "India",
+     "v": "IN"
+    },
+    {
+     "l": "Indonesia",
+     "v": "ID"
+    },
+    {
+     "l": "Japan",
+     "v": "JP"
+    },
+    {
+     "l": "Malaysia",
+     "v": "MY"
+    },
+    {
+     "l": "Nepal",
+     "v": "NP"
+    },
+    {
+     "l": "Philippines",
+     "v": "PH"
+    },
+    {
+     "l": "Singapore",
+     "v": "SG"
+    },
+    {
+     "l": "South Korea",
+     "v": "KR"
+    },
+    {
+     "l": "Sri Lanka",
+     "v": "LK"
+    },
+    {
+     "l": "Taiwan",
+     "v": "TW"
+    },
+    {
+     "l": "Thailand",
+     "v": "TH"
+    },
+    {
+     "l": "Vietnam",
+     "v": "VN"
+    },
+    {
+     "l": "Albania",
+     "v": "AL"
+    },
+    {
+     "l": "Austria",
+     "v": "AT"
+    },
+    {
+     "l": "Belgium",
+     "v": "BE"
+    },
+    {
+     "l": "Bosnia and Herzegovina",
+     "v": "BA"
+    },
+    {
+     "l": "Bulgaria",
+     "v": "BG"
+    },
+    {
+     "l": "Croatia",
+     "v": "HR"
+    },
+    {
+     "l": "Czechia/Czech Republic",
+     "v": "CZ"
+    },
+    {
+     "l": "Denmark",
+     "v": "DK"
+    },
+    {
+     "l": "Estonia",
+     "v": "EE"
+    },
+    {
+     "l": "Finland",
+     "v": "FI"
+    },
+    {
+     "l": "France",
+     "v": "FR"
+    },
+    {
+     "l": "Germany",
+     "v": "DE"
+    },
+    {
+     "l": "Greece",
+     "v": "GR"
+    },
+    {
+     "l": "Hungary",
+     "v": "HU"
+    },
+    {
+     "l": "Iceland",
+     "v": "IS"
+    },
+    {
+     "l": "Ireland",
+     "v": "IE"
+    },
+    {
+     "l": "Italy",
+     "v": "IT"
+    },
+    {
+     "l": "Luxembourg",
+     "v": "LU"
+    },
+    {
+     "l": "Netherlands",
+     "v": "NL"
+    },
+    {
+     "l": "Norway",
+     "v": "NO"
+    },
+    {
+     "l": "Poland",
+     "v": "PL"
+    },
+    {
+     "l": "Portugal",
+     "v": "PT"
+    },
+    {
+     "l": "Romania",
+     "v": "RO"
+    },
+    {
+     "l": "Russia",
+     "v": "RU"
+    },
+    {
+     "l": "Slovakia",
+     "v": "SK"
+    },
+    {
+     "l": "Spain",
+     "v": "ES"
+    },
+    {
+     "l": "Sweden",
+     "v": "SE"
+    },
+    {
+     "l": "Switzerland",
+     "v": "CH"
+    },
+    {
+     "l": "Turkey",
+     "v": "TR"
+    },
+    {
+     "l": "Ukraine",
+     "v": "UA"
+    },
+    {
+     "l": "United Kingdom",
+     "v": "GB"
+    },
+    {
+     "l": "Canada",
+     "v": "CA"
+    },
+    {
+     "l": "Costa Rica",
+     "v": "CR"
+    },
+    {
+     "l": "Dominican Republic",
+     "v": "DO"
+    },
+    {
+     "l": "Mexico",
+     "v": "MX"
+    },
+    {
+     "l": "United States of America",
+     "v": "US"
+    },
+    {
+     "l": "Argentina",
+     "v": "AR"
+    },
+    {
+     "l": "Brazil",
+     "v": "BR"
+    },
+    {
+     "l": "Chile",
+     "v": "CL"
+    },
+    {
+     "l": "Colombia",
+     "v": "CO"
+    },
+    {
+     "l": "Peru",
+     "v": "PE"
+    },
+    {
+     "l": "Australia",
+     "v": "AU"
+    },
+    {
+     "l": "New Zealand",
+     "v": "NZ"
+    },
+    {
+     "l": "Bahrain",
+     "v": "BH"
+    },
+    {
+     "l": "Cyprus",
+     "v": "CY"
+    },
+    {
+     "l": "Egypt",
+     "v": "EG"
+    },
+    {
+     "l": "Iran",
+     "v": "IR"
+    },
+    {
+     "l": "Iraq",
+     "v": "IQ"
+    },
+    {
+     "l": "Israel",
+     "v": "IL"
+    },
+    {
+     "l": "Jordan",
+     "v": "JO"
+    },
+    {
+     "l": "Kuwait",
+     "v": "KW"
+    },
+    {
+     "l": "Oman",
+     "v": "OM"
+    },
+    {
+     "l": "Qatar",
+     "v": "QA"
+    },
+    {
+     "l": "Saudi Arabia",
+     "v": "SA"
+    },
+    {
+     "l": "United Arab Emirates (UAE)",
+     "v": "AE"
+    }
+   ]
+  },
+  "add-graduation-year": {
+   "label": "In which year did you complete your primary professional qualification?",
+   "type": "year",
+   "rule": "year",
+   "minYear": 1950,
+   "afterDob": 18
+  },
+  "add-years-current-role": {
+   "label": "How long have you been in your current role?",
+   "type": "single",
+   "options": [
+    {
+     "l": "Less than 1 year",
+     "v": "<1"
+    },
+    {
+     "l": "1–3 years",
+     "v": "1-3"
+    },
+    {
+     "l": "4–7 years",
+     "v": "4-7"
+    },
+    {
+     "l": "8–15 years",
+     "v": "8-15"
+    },
+    {
+     "l": "More than 15 years",
+     "v": "15+"
+    }
+   ]
+  },
+  "add-hours-per-week": {
+   "label": "On average, how many hours do you work per week?",
+   "type": "number",
+   "rule": "number",
+   "min": 1,
+   "max": 120,
+   "unit": "hrs"
+  },
+  "add-patient-care-share": {
+   "label": "What percentage of your working time is direct patient care?",
+   "type": "range",
+   "rule": "number",
+   "min": 0,
+   "max": 100,
+   "step": 5,
+   "unit": "%"
+  },
+  "add-consult-duration": {
+   "label": "How long is a typical patient consultation?",
+   "type": "single",
+   "options": [
+    {
+     "l": "Under 5 minutes",
+     "v": "<5"
+    },
+    {
+     "l": "5–10 minutes",
+     "v": "5-10"
+    },
+    {
+     "l": "11–20 minutes",
+     "v": "11-20"
+    },
+    {
+     "l": "21–30 minutes",
+     "v": "21-30"
+    },
+    {
+     "l": "More than 30 minutes",
+     "v": "30+"
+    },
+    {
+     "l": "I don't see patients",
+     "v": "none"
+    }
+   ]
+  },
+  "add-patient-age-groups": {
+   "label": "Which patient age groups do you treat?",
+   "type": "multi",
+   "options": [
+    {
+     "l": "Newborns & infants (0–1)",
+     "v": "infants"
+    },
+    {
+     "l": "Children (2–12)",
+     "v": "children"
+    },
+    {
+     "l": "Adolescents (13–17)",
+     "v": "adolescents"
+    },
+    {
+     "l": "Adults (18–64)",
+     "v": "adults"
+    },
+    {
+     "l": "Older adults (65+)",
+     "v": "elderly"
+    },
+    {
+     "l": "I don't see patients",
+     "v": "none",
+     "exclusive": true
+    }
+   ]
+  },
+  "add-therapy-areas": {
+   "label": "Which therapy areas are most relevant to your work?",
+   "type": "multi",
+   "max": 6,
+   "options": [
+    {
+     "l": "Oncology",
+     "v": "Oncology"
+    },
+    {
+     "l": "Cardiology & Vascular",
+     "v": "Cardiology"
+    },
+    {
+     "l": "Diabetes & Endocrinology",
+     "v": "Diabetes"
+    },
+    {
+     "l": "Respiratory",
+     "v": "Respiratory"
+    },
+    {
+     "l": "Neurology",
+     "v": "Neurology"
+    },
+    {
+     "l": "Mental Health",
+     "v": "Mental Health"
+    },
+    {
+     "l": "Infectious Diseases",
+     "v": "Infectious"
+    },
+    {
+     "l": "Immunology & Rheumatology",
+     "v": "Immunology"
+    },
+    {
+     "l": "Haematology",
+     "v": "Haematology"
+    },
+    {
+     "l": "Nephrology",
+     "v": "Nephrology"
+    },
+    {
+     "l": "Gastroenterology & Hepatology",
+     "v": "Gastro"
+    },
+    {
+     "l": "Dermatology",
+     "v": "Dermatology"
+    },
+    {
+     "l": "Ophthalmology",
+     "v": "Ophthalmology"
+    },
+    {
+     "l": "Women's Health",
+     "v": "Womens Health"
+    },
+    {
+     "l": "Paediatrics",
+     "v": "Paediatrics"
+    },
+    {
+     "l": "Rare Diseases",
+     "v": "Rare"
+    },
+    {
+     "l": "Vaccines",
+     "v": "Vaccines"
+    },
+    {
+     "l": "Pain & Anaesthesia",
+     "v": "Pain"
+    },
+    {
+     "l": "Other",
+     "v": "Other",
+     "other": true
+    }
+   ]
+  },
+  "add-conditions-treated": {
+   "label": "Which 3 conditions do you manage most often?",
+   "type": "textarea",
+   "rule": "freetext",
+   "min": 5,
+   "max": 200,
+   "placeholder": "e.g. Type 2 diabetes, hypertension, asthma"
+  },
+  "add-prescriber": {
+   "label": "Do you prescribe medicines?",
+   "type": "single",
+   "options": [
+    {
+     "l": "Yes, independently",
+     "v": "independent"
+    },
+    {
+     "l": "Yes, under supervision / protocol",
+     "v": "supervised"
+    },
+    {
+     "l": "No",
+     "v": "no"
+    }
+   ]
+  },
+  "add-prescriptions-week": {
+   "label": "Roughly how many prescriptions do you write per week?",
+   "type": "single",
+   "when": {
+    "q": "add-prescriber",
+    "in": [
+     "independent",
+     "supervised"
+    ]
+   },
+   "options": [
+    {
+     "l": "0–25",
+     "v": "0-25"
+    },
+    {
+     "l": "26–50",
+     "v": "26-50"
+    },
+    {
+     "l": "51–100",
+     "v": "51-100"
+    },
+    {
+     "l": "101–250",
+     "v": "101-250"
+    },
+    {
+     "l": "More than 250",
+     "v": "250+"
+    }
+   ]
+  },
+  "add-hospital-affiliations": {
+   "label": "How many hospitals or clinics are you affiliated with?",
+   "type": "number",
+   "rule": "number",
+   "min": 0,
+   "max": 50
+  },
+  "add-rep-interactions": {
+   "label": "How many pharma / medtech representative interactions do you have per month?",
+   "type": "single",
+   "options": [
+    {
+     "l": "None",
+     "v": "0"
+    },
+    {
+     "l": "1–5",
+     "v": "1-5"
+    },
+    {
+     "l": "6–10",
+     "v": "6-10"
+    },
+    {
+     "l": "11–20",
+     "v": "11-20"
+    },
+    {
+     "l": "More than 20",
+     "v": "20+"
+    }
+   ]
+  },
+  "add-kol-roles": {
+   "label": "Which of these roles do you currently hold?",
+   "type": "multi",
+   "options": [
+    {
+     "l": "Conference speaker",
+     "v": "speaker"
+    },
+    {
+     "l": "Advisory board member",
+     "v": "advisory"
+    },
+    {
+     "l": "Clinical trial investigator",
+     "v": "investigator"
+    },
+    {
+     "l": "Guideline author / committee member",
+     "v": "guideline"
+    },
+    {
+     "l": "Medical educator / trainer",
+     "v": "educator"
+    },
+    {
+     "l": "Journal reviewer / editor",
+     "v": "reviewer"
+    },
+    {
+     "l": "None of these",
+     "v": "none",
+     "exclusive": true
+    }
+   ]
+  },
+  "add-publications": {
+   "label": "How many peer-reviewed publications have you authored?",
+   "type": "single",
+   "options": [
+    {
+     "l": "None",
+     "v": "0"
+    },
+    {
+     "l": "1–5",
+     "v": "1-5"
+    },
+    {
+     "l": "6–20",
+     "v": "6-20"
+    },
+    {
+     "l": "21–50",
+     "v": "21-50"
+    },
+    {
+     "l": "More than 50",
+     "v": "50+"
+    }
+   ]
+  },
+  "add-conferences-year": {
+   "label": "How many medical conferences do you attend per year?",
+   "type": "single",
+   "options": [
+    {
+     "l": "None",
+     "v": "0"
+    },
+    {
+     "l": "1–2",
+     "v": "1-2"
+    },
+    {
+     "l": "3–5",
+     "v": "3-5"
+    },
+    {
+     "l": "6 or more",
+     "v": "6+"
+    }
+   ]
+  },
+  "add-cme-hours": {
+   "label": "How many CME / CPD hours did you complete last year?",
+   "type": "number",
+   "rule": "number",
+   "min": 0,
+   "max": 500,
+   "unit": "hrs"
+  },
+  "add-society-memberships": {
+   "label": "Which professional associations or societies are you a member of?",
+   "type": "text",
+   "rule": "freetext",
+   "min": 2,
+   "max": 200,
+   "optional": true,
+   "placeholder": "e.g. IMA, ESC, ADA, RCN"
+  },
+  "add-info-sources": {
+   "label": "Where do you get your clinical information?",
+   "type": "multi",
+   "options": [
+    {
+     "l": "Medical journals",
+     "v": "journals"
+    },
+    {
+     "l": "Medical conferences",
+     "v": "conferences"
+    },
+    {
+     "l": "Clinical guidelines",
+     "v": "guidelines"
+    },
+    {
+     "l": "Online medical portals",
+     "v": "portals"
+    },
+    {
+     "l": "Pharma / medtech representatives",
+     "v": "reps"
+    },
+    {
+     "l": "Peer discussions",
+     "v": "peers"
+    },
+    {
+     "l": "Professional social networks",
+     "v": "social"
+    },
+    {
+     "l": "Webinars & e-learning",
+     "v": "webinars"
+    },
+    {
+     "l": "Other",
+     "v": "Other",
+     "other": true
+    }
+   ]
+  },
+  "add-ai-usage": {
+   "label": "How often do you use AI tools in your clinical work?",
+   "type": "single",
+   "options": [
+    {
+     "l": "Daily",
+     "v": "daily"
+    },
+    {
+     "l": "Weekly",
+     "v": "weekly"
+    },
+    {
+     "l": "Occasionally",
+     "v": "occasionally"
+    },
+    {
+     "l": "Never, but I'm interested",
+     "v": "interested"
+    },
+    {
+     "l": "Never, not interested",
+     "v": "no"
+    }
+   ]
+  },
+  "add-devices": {
+   "label": "Which devices do you use for work?",
+   "type": "multi",
+   "options": [
+    {
+     "l": "Android smartphone",
+     "v": "android"
+    },
+    {
+     "l": "iPhone",
+     "v": "iphone"
+    },
+    {
+     "l": "Tablet",
+     "v": "tablet"
+    },
+    {
+     "l": "Laptop / Desktop",
+     "v": "computer"
+    },
+    {
+     "l": "Smartwatch / Wearable",
+     "v": "wearable"
+    }
+   ]
+  },
+  "add-best-days": {
+   "label": "Which days suit you best for research activities?",
+   "type": "multi",
+   "options": [
+    {
+     "l": "Monday",
+     "v": "mon"
+    },
+    {
+     "l": "Tuesday",
+     "v": "tue"
+    },
+    {
+     "l": "Wednesday",
+     "v": "wed"
+    },
+    {
+     "l": "Thursday",
+     "v": "thu"
+    },
+    {
+     "l": "Friday",
+     "v": "fri"
+    },
+    {
+     "l": "Saturday",
+     "v": "sat"
+    },
+    {
+     "l": "Sunday",
+     "v": "sun"
+    }
+   ]
+  },
+  "add-clinical-focus": {
+   "label": "Briefly describe your clinical focus or areas of special interest",
+   "type": "textarea",
+   "rule": "freetext",
+   "min": 20,
+   "max": 500,
+   "optional": true,
+   "placeholder": "e.g. Interventional cardiology with a focus on structural heart disease"
+  }
+ }
+}

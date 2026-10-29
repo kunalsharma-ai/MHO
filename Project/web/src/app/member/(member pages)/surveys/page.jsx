@@ -27,8 +27,10 @@ import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import DataCards from "@/components/DataCards";
 
 import { loadData, api } from "@/util";
-import { useQuery } from "@/Context";
+import { useQuery, useMember } from "@/Context";
 import { SurveyPoints } from "../../components";
+import ProfileSection from "../../components/ProfileSection";
+import SectionCard from "../../components/SectionCard";
 import { SurveyHistory } from "../dashboard/page";
 import {useTourActive} from "@/Context/tourStore";
 import mockSurveys from "@/mockData/surveys";
@@ -94,6 +96,10 @@ const cardVariants = {
 };
 
 export default function SurveyDashboard() {
+  const member = useMember();
+  const sectionUser = ["patient", "care giver", "healthcare professional"].includes(member?.category?.trim().toLowerCase());
+  const stepHandle = React.useRef(null);
+  const [stepItems, setStepItems] = React.useState([]);
   const [query] = [useQuery()];
   const [surveys, setSurveys] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -210,7 +216,20 @@ export default function SurveyDashboard() {
   //   },
   // ];
  const displayedSurveys = tourActive ? mockSurveys.data: surveys;
-  const availableSurveys = displayedSurveys?.filter((s) =>
+  const stepRows = stepItems.map((item) => ({
+    kind: "profile",
+    slug: `step-${item.id}`,
+    name: item.name,
+    surveyCategory: "health",
+    points: item.points,
+    loi: Math.max(1, Math.round((item.questions * 8) / 60)),
+    participationStatus: item.done ? "complete" : "invited",
+    locked: item.locked,
+    done: item.done,
+    started: item.pct > 0,
+    item,
+  }));
+  const availableSurveys = [...stepRows, ...(displayedSurveys || [])].filter((s) =>
     permittedStatus.includes(s.participationStatus),
   );
   // const availableSurveys = dummySurveys?.filter((s) =>
@@ -306,9 +325,10 @@ export default function SurveyDashboard() {
       <MotionBox variants={fadeUp}>
         <Divider sx={{ my: 2, bgcolor: "#ffe" }} />
       </MotionBox>
+      <ProfileSection view="headless" categories={["patient", "care giver", "healthcare professional"]} handleRef={stepHandle} onItems={setStepItems} />
       <Box 
        data-tour="surveys-list">
-      <SurveyList surveys={displayedSurveys} query={query} isLoading={isLoading} />
+      <SurveyList surveys={[...stepRows, ...displayedSurveys]} query={query} isLoading={isLoading} sectionUser={sectionUser} handle={stepHandle.current} />
       </Box>
       {/* <SurveyList surveys={dummySurveys} query={query} isLoading={isLoading} /> */}
       <Divider sx={{ my: 2, bgcolor: "#ffe" }} />
@@ -413,7 +433,8 @@ function SurveyStat({ stats, isLoading }) {
   );
 }
 
-function SurveyList({ surveys, query, isLoading }) {
+function SurveyList({ surveys, query, isLoading, sectionUser, handle }) {
+  const pageSize = Math.max(4, surveys.filter((row) => row.kind === "profile").length + 4);
   const [activeFilter, setActiveFilter] = React.useState(
     !query.filter || query.filter === "null" || query.filter === "undefined"
       ? "All New Surveys"
@@ -427,11 +448,11 @@ function SurveyList({ surveys, query, isLoading }) {
     },
     {
       label: "High Reward Surveys",
-      filter: (survey) => survey.points > 500,
+      filter: (survey) => (survey.kind === "profile" ? survey.points > 50 : survey.points > 500),
     },
     {
       label: "Short Surveys",
-      filter: (survey) => survey.loi <= 5,
+      filter: (survey) => (survey.kind === "profile" ? survey.points <= 50 : survey.loi <= 5),
     },
     // {
     //   label: "New Surveys",
@@ -443,10 +464,12 @@ function SurveyList({ surveys, query, isLoading }) {
   return (
     <Box sx={{ mt: 2 }}>
       <DataCards
+        key={pageSize}
         data={surveys}
         isLoading={isLoading}
         filter={filters.find((filter) => filter.label === activeFilter)}
-        pageSize={4}
+        pageSize={pageSize}
+        pagination={[...new Set([pageSize, 4, 8, 12, 20])].sort((a, b) => a - b)}
         getSearchText={(row) => row.name}
         emptyMessage="No surveys available."
         renderToolbar={() => (
@@ -510,7 +533,13 @@ function SurveyList({ surveys, query, isLoading }) {
             })}
           </MotionBox>
         )}
-        card={(row) => <SurveyCard survey={row} />}
+        card={(row) =>
+          sectionUser ? (
+            <SurveyCell row={row} n={surveys.indexOf(row) + 1} handle={handle} />
+          ) : (
+            <SurveyCard survey={row} />
+          )
+        }
         cardProps={{
           elevation: 0,
           sx: {
@@ -525,50 +554,90 @@ function SurveyList({ surveys, query, isLoading }) {
   );
 }
 
-function SurveyCard({ survey }) {
-  const getCategoryData = (survey) => {
-    const categories = [
-      { name: "basic", icon: "fa-id-card-clip", color: "#1E40AF" },
-      { name: "professional", icon: "fa-user-tie", color: "#1F2937" },
-      { name: "educational", icon: "fa-graduation-cap", color: "#7C3AED" },
-      {
-        name: "Survey and Rewards",
-        icon: "fa-clipboard-list",
-        color: "#16A34A",
-      },
-      { name: "financial", icon: "fa-circle-dollar-to-slot", color: "#CA8A04" },
-      { name: "parenting", icon: "fa-people-roof", color: "#DB2777" },
-      {
-        name: "Home and Pet Ownership",
-        icon: "fa-house-chimney",
-        color: "#EA580C",
-      },
-      { name: "shopping", icon: "fa-cart-shopping", color: "#E11D48" },
-      { name: "Lifestyle and food", icon: "fa-utensils", color: "#B45309" },
-      { name: "travel", icon: "fa-plane-departure", color: "#0E7490" },
-      { name: "automobile", icon: "fa-car-side", color: "#334155" },
-      { name: "health", icon: "fa-heart-pulse", color: "#DC2626" },
-      { name: "beauty & fashion", icon: "fa-hand-dots", color: "#C026D3" },
-      {
-        name: "media, electronics, mobile & technology",
-        icon: "fa-microchip",
-        color: "#4338CA",
-      },
-      { name: "sports", icon: "fa-basketball", color: "#F59E0B" },
-      { name: "gaming", icon: "fa-gamepad", color: "#7C3AED" },
-    ];
+const getCategoryData = (survey) => {
+  const categories = [
+    { name: "basic", icon: "fa-id-card-clip", color: "#1E40AF" },
+    { name: "professional", icon: "fa-user-tie", color: "#1F2937" },
+    { name: "educational", icon: "fa-graduation-cap", color: "#7C3AED" },
+    {
+      name: "Survey and Rewards",
+      icon: "fa-clipboard-list",
+      color: "#16A34A",
+    },
+    { name: "financial", icon: "fa-circle-dollar-to-slot", color: "#CA8A04" },
+    { name: "parenting", icon: "fa-people-roof", color: "#DB2777" },
+    {
+      name: "Home and Pet Ownership",
+      icon: "fa-house-chimney",
+      color: "#EA580C",
+    },
+    { name: "shopping", icon: "fa-cart-shopping", color: "#E11D48" },
+    { name: "Lifestyle and food", icon: "fa-utensils", color: "#B45309" },
+    { name: "travel", icon: "fa-plane-departure", color: "#0E7490" },
+    { name: "automobile", icon: "fa-car-side", color: "#334155" },
+    { name: "health", icon: "fa-heart-pulse", color: "#DC2626" },
+    { name: "beauty & fashion", icon: "fa-hand-dots", color: "#C026D3" },
+    {
+      name: "media, electronics, mobile & technology",
+      icon: "fa-microchip",
+      color: "#4338CA",
+    },
+    { name: "sports", icon: "fa-basketball", color: "#F59E0B" },
+    { name: "gaming", icon: "fa-gamepad", color: "#7C3AED" },
+  ];
 
-    const surveyCategory = survey.surveyCategory || "";
+  const surveyCategory = survey.surveyCategory || "";
 
-    return (
-      categories.find(
-        (cat) =>
-          surveyCategory.toLowerCase().includes(cat.name.toLowerCase()) ||
-          cat.name.toLowerCase().includes(surveyCategory.toLowerCase()),
-      ) || { icon: "fa-clipboard-list", color: "#64748B" }
-    );
+  return (
+    categories.find(
+      (cat) =>
+        surveyCategory.toLowerCase().includes(cat.name.toLowerCase()) ||
+        cat.name.toLowerCase().includes(surveyCategory.toLowerCase()),
+    ) || { icon: "fa-clipboard-list", color: "#64748B" }
+  );
+};
+
+function externalItem(row, n) {
+  const status = row.participationStatus;
+  const startable = permittedStatus.includes(status);
+  const done = status === "complete";
+  const color = getCategoryData(row).color;
+  return {
+    n,
+    p: {
+      id: `ext-${row.slug}`,
+      icon: "survey.svg",
+      pattern: "dots",
+      emoji: "\u{1F4DD}",
+      palette: [color, `${color}cc`, `${color}22`],
+      flavor: row.surveyCategory || "Survey",
+      title: row.name,
+      blurb: "Share your opinion by completing this survey and earn rewards.",
+      questions: [],
+      external: { minutes: row.loi, points: row.points ?? 0 },
+      badge: status === "invited" ? "New" : undefined,
+      cta: startable ? (status === "dropout" ? "Continue" : undefined) : done ? "Completed" : String(status || ""),
+      disabled: !startable,
+    },
+    st: { status: done ? "done" : "todo", pct: 0, total: 0 },
+    ac: { locked: false },
+    lock: null,
+    onOpen: () => {
+      if (startable) window.location.href = `/survey?name=${row.slug}`;
+    },
   };
+}
 
+function SurveyCell({ row, n, handle }) {
+  const item = React.useMemo(
+    () => (row.kind === "profile" ? { ...row.item, n } : externalItem(row, n)),
+    [row, n],
+  );
+  if (!handle) return <Box sx={{ minHeight: 260 }} />;
+  return <SectionCard handle={handle} item={item} />;
+}
+
+function SurveyCard({ survey }) {
   const category = getCategoryData(survey);
   const darkColor = category.color;
   const lightBg = darkColor + "20";
@@ -793,16 +862,34 @@ function SurveyCard({ survey }) {
         </Box>
       </Stack>
 
-      {permittedStatus.includes(survey.participationStatus) && (
+      {survey.kind === "profile" ? (
         <Button
           className="survey-button"
           fullWidth
           variant="contained"
           color="secondary"
-          href={`/survey?name=${survey.slug}`}
+          onClick={survey.onOpen}
         >
-          Start Survey
+          {survey.locked
+            ? "Locked"
+            : survey.done
+              ? "View Answers"
+              : survey.started
+                ? "Continue"
+                : "Start Survey"}
         </Button>
+      ) : (
+        permittedStatus.includes(survey.participationStatus) && (
+          <Button
+            className="survey-button"
+            fullWidth
+            variant="contained"
+            color="secondary"
+            href={`/survey?name=${survey.slug}`}
+          >
+            Start Survey
+          </Button>
+        )
       )}
     </Box>
   );

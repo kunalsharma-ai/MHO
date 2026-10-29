@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { TESTIMONIALS, AUDIENCES } from '../data/testimonials.js';
 import { useMemberReviews } from '../utils/reviews.js';
-import { Flag, Stars, LiveZone } from './ui.jsx';
+import { Flag, Stars, LiveZone, useInView } from './ui.jsx';
 import Icon from './Icon.jsx';
 
 const ROLE_TO_AUD = { hcp: 'doctors', caregiver: 'caregivers', patient: 'patients' };
@@ -30,11 +30,12 @@ export function HeartbeatVoices() {
   const cur = list[Math.min(i, list.length - 1)] || list[0];
 
   useEffect(() => setI(0), [aud]);
+  const [vref, vIn] = useInView({ threshold: 0 }, false);
   useEffect(() => {
-    if (paused || list.length < 2) return;
-    const t = setInterval(() => setI((x) => (x + 1) % list.length), 6500);
+    if (paused || list.length < 2 || !vIn) return; // only while on screen
+    const t = setInterval(() => !document.hidden && setI((x) => (x + 1) % list.length), 6500);
     return () => clearInterval(t);
-  }, [paused, list.length]);
+  }, [paused, list.length, vIn]);
 
   // ECG geometry: one peak per voice
   const W = 1000, H = 120, base = 78;
@@ -50,7 +51,7 @@ export function HeartbeatVoices() {
 
   return (
     <LiveZone className="hb-voices" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-      <div className="hb-filters" role="tablist" aria-label="Filter testimonials">
+      <div className="hb-filters" ref={vref} role="tablist" aria-label="Filter testimonials">
         <button role="tab" aria-selected={aud === 'all'} className={aud === 'all' ? 'on' : ''} onClick={() => setAud('all')}>All voices</button>
         {AUDIENCES.map((a) => (
           <button key={a.id} role="tab" aria-selected={aud === a.id} className={aud === a.id ? 'on' : ''} style={{ '--c': a.color }} onClick={() => setAud(a.id)}>

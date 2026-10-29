@@ -14,10 +14,11 @@ import Faq from './Faq.jsx';
 import Contact from './Contact.jsx';
 import Join from './Join.jsx';
 import Login from './Login.jsx';
+import CompleteProfile from './CompleteProfile.jsx';
 import Password from './Password.jsx';
 import Legal from './Legal.jsx';
 import Profiling from './Profiling.jsx';
 import Sitemap from './Sitemap.jsx';
 import NotFound from './NotFound.jsx';
 
-export default { Home, About, Earn, Audience, HowItWorks, Rewards, TrustSafety, Blog, BlogPost, Reviews, Faq, Contact, Join, Login, Password, Legal, Profiling, Sitemap, NotFound };
+export default { Home, About, Earn, Audience, HowItWorks, Rewards, TrustSafety, Blog, BlogPost, Reviews, Faq, Contact, Join, Login, CompleteProfile, Password, Legal, Profiling, Sitemap, NotFound };

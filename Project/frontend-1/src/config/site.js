@@ -34,7 +34,7 @@ export const API = {
   // identifies the site by the Host header, so this site and /api/v1 must be served from one domain.
   register: env('REGISTER_URL', '/api/v1/user'), // PUT = create account (+ verification email); PATCH = set password; POST /:id = verify link
   login: env('LOGIN_URL', '/api/v1/user/login'), // POST { mail, password, remember } → { status, token }
-  resend: env('RESEND_URL', '/api/v1/user/resend'), // POST { mail } → re-sends the verification email
+  resend: env('RESEND_URL', '/api/v1/user'), // POST { mail } → re-sends the verification email
   forgot: env('FORGOT_URL', '/api/v1/forgot-password'), // POST { user: <email> } → reset link by email
   category: env('CATEGORY_URL', '/api/v1/category'), // POST { showOnRegistration: true } → categories + age rules
   socials: env('SOCIALS_URL', '/api/v1/auth/socials'), // POST {} → { data: [{ name, authUrl }] } the social log-in providers (Google, LinkedIn, X ...)
@@ -43,7 +43,7 @@ export const API = {
   me: env('ME_URL', '/api/v1/me'), // POST { questions: [...] } → the person's current answers (needs the login token)
   meAnswer: env('ME_ANSWER_URL', '/api/v1/me/answer'), // PATCH { '<question>': value } → saves answers (needs the login token)
   country: env('COUNTRY_URL', '/api/v1/get-country'), // GET → { country: 'IN', ... } the visitor's country from the IP address (same call web-1 makes)
-  reviews: env('REVIEWS_URL', '/api/reviews'),
+  testimonial: env('TESTIMONIAL_URL', '/api/v1/testimonial'), // PUT { rate, message } (logged-in member) · GET approved reviews
   // JSON feed of real, consented, recent reward redemptions (see README → "Reward activity feed").
   rewardFeed: env('REWARD_FEED_URL', ''),
 };
@@ -53,7 +53,7 @@ export const ANALYTICS = {
 };
 
 // Minimum participant age enforced in the sign-up form (server must enforce it too).
-export const MIN_AGE = Number(env('MIN_AGE', 18));
+export const MIN_AGE = Number(env('MIN_AGE', 14));
 
 // true only for `npm run dev` and the single-file review preview: forms simulate a successful
 // submission locally instead of calling the backend. Always false in production builds.

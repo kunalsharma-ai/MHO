@@ -1,3 +1,14 @@
+// Healthcare professional profiling questionnaire — transcribed from
+// "MHO LAtest All Professionals Questions" (project document). Lists are de-duplicated automatically.
+// Structure:
+//   SCREENER  → "Do you work in the healthcare industry?" (No ends the sign-up) + "Are you a clinician?"
+//   DEMO      → gender, age group (derived from date of birth), marital status, children, incomes
+//   EDUCATION → highest level → qualification (Q2) + licence/board question (Q3)
+//   ROLES     → primary role of expertise → specialization / key area → job level (branching)
+//   PRACTICE, EXPERIENCE, INFLUENCE, DIGITAL, AVAILABILITY, CERTIFICATION → common sections
+// Where the source document had no list (Pharmacy › Hospital & Institutional) we added a short list,
+// marked ADDED below, so the branch never dead-ends. Review before launch.
+
 const L = (s) => [...new Set(s.split('\n').map((x) => x.trim()).filter(Boolean))];
 const YN = ['Yes', 'No'];
 

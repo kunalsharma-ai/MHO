@@ -1,0 +1,1074 @@
+[{
+  "name": "works_in_healthcare",
+  "label": "Do you work in Healthcare industry?",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "clinician",
+  "label": "Are you a Clinician?",
+  "parent": "works_in_healthcare",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "fullname",
+  "label": "Full Name",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "gender",
+  "label": "Gender",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "dob",
+  "label": "Date of Birth",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "age",
+  "label": "Age",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "relationship-status",
+  "label": "Marital Status",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "children",
+  "label": "Number of children below 18 in household",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ],
+  "parent": "relationship-status"
+},
+{
+  "name": "country_of_practice",
+  "label": "Country of Practice",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "state_of_practice",
+  "label": "State of Practice",
+  "parent": "country_of_practice",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "city_of_practice",
+  "label": "City of Practice",
+  "parent": "state_of_practice",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "zip_code_of_practice",
+  "label": "Zip Code",
+  "category": [
+    "healthcare professional"
+  ],
+  "parent": "country"
+},
+{
+  "name": "personal-income",
+  "label": "Approximate Annual Personal Income (before tax)",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ],
+  "parent": "rural"
+},
+{
+  "name": "household-income",
+  "label": "Approximate Total Family Income (before tax)",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ],
+  "parent": "rural"
+},
+{
+  "name": "specialty-area",
+  "label": "Specialty / Area of Practice",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "employment-status",
+  "label": "Employment Status",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "sector",
+  "label": "Do you work in the public or private sector?",
+  "category": [
+    "healthcare professional"
+  ],
+  "parent": "doc-employment-status"
+},
+{
+  "name": "facility-type",
+  "label": "In what type of facility do you primarily work?",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "facility-size",
+  "label": "What is the size of your facility (number of beds)?",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "practice-location",
+  "label": "Is your practice in an urban, semi-urban, or rural setting?",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "teaching-hospital",
+  "label": "Do you work in a teaching/academic hospital?",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "experience",
+  "label": "How many years have you been practicing in your profession?",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "patients-per-week",
+  "label": "Patients Seen Per Week",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "clinical-trial-experience",
+  "label": "Have you participated in clinical trials?",
+  "category": [
+    "healthcare professional"
+  ],
+  "parent": "clinician"
+},
+{
+  "name": "decision-maker",
+  "label": "Are you a decision-maker for purchases?",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "electronic-health-record-usage",
+  "label": "Do you use Electronic Health Records (EHR/EMR)?",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "telemedicine",
+  "label": "Do you use telemedicine?",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "survey-participation-history",
+  "label": "Have you ever participated in a market research survey?",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-participation-frequency",
+  "label": "How often do you participate in surveys",
+  "parent": "survey-participation-history",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-participation-category",
+  "label": "What type of surveys have you participated in, before?",
+  "parent": "survey-participation-history",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "other-survey-panel",
+  "label": "Are you currently registered with any other online research panels?",
+  "parent": "survey-participation-history",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-mode",
+  "label": "How do you prefer to participate in Survey?",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-participation-time-duration",
+  "label": "How much time are you comfortable spending on a survey",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "willingness-survey-participation",
+  "label": "Are you willing to participate in future market research studies",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-type-interested-in",
+  "label": "What types of study would you be open to join",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "share-consent",
+  "label": "Are you comfortable sharing your health related experiences for research purposes (confidentially)",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-participation-motivation",
+  "label": "What motivates you to participate in surveys",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "video-survey-participation-consent",
+  "label": "Are you comfortable participating in online video interviews or discussions (via Zoom, Teams etc.)",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "mode-of-payment",
+  "label": "What type of rewards do you prefer",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-participation-timeslot",
+  "label": "What is your preferred time of day to participate in Survey",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "recontact-consent",
+  "label": "Do you agree to be re-contacted for future studies",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "focus-groups",
+  "label": "Would you participate in focus groups in addition to surveys",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "communication-methods",
+  "label": "How do you want to be notified for a new survey",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "mail",
+  "label": "E-Mail",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "phone",
+  "label": "Contact Number",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "country",
+  "label": "Country",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "state",
+  "label": "State",
+  "parent": "country",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "city",
+  "label": "City",
+  "parent": "state",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "zipcode",
+  "label": "Zipcode",
+  "parent": "country",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "ethnicity",
+  "label": "Ethnicity",
+  "parent": "country",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "languages",
+  "label": "Languages",
+  "parent": "country",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "jobrole",
+  "label": "Your current role in the organization",
+  "parent": "employment-status",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "specialization",
+  "label": "Your area of expertise",
+  "parent": "employment-status",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "workenvironment",
+  "label": "What stages of dementia do you primarily work with",
+  "parent": "specialization",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "linkedin",
+  "label": "Company Linkedin Profile",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "website",
+  "label": "Your Website",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "medical-certification-no",
+  "label": "Please provide your professional certification/license number",
+  "parent": "clinician",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "issueing-authority",
+  "label": "Issuing Authority / Council",
+  "parent": "clinician",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "year-of-issueing",
+  "label": "Year of Issuing",
+  "parent": "clinician",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "year-of-expiry",
+  "label": "Year of Expiry",
+  "parent": "clinician",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "certification-no",
+  "label": "Please Upload your Certificate/License",
+  "parent": "clinician",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "welcome-note",
+  "label": "Lorem Ipsum",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "address type test",
+  "label": "Address Type Test",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-education",
+  "label": "What is your highest level of education?",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-education-diploma",
+  "label": "What type of diploma have you completed?",
+  "parent": "doc-education",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-education-diploma-certified",
+  "label": "Are you certified/licensed to practice in your field?",
+  "parent": "doc-education",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-education-bachelors",
+  "label": "What is your bachelor's qualification?",
+  "parent": "doc-education",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-education-bachelors-registered",
+  "label": "Do you hold a professional registration/licensure?",
+  "parent": "doc-education",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-education-masters",
+  "label": "What is your master's qualification?",
+  "parent": "doc-education",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-education-master-recognition",
+  "label": "Do you have a specialist certification/board recognition?",
+  "parent": "doc-education",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-education-doctorate",
+  "label": "What is your doctoral qualification?",
+  "parent": "doc-education",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-education-doctorate-registered",
+  "label": "Do you have certification/registration with a professional council or board?",
+  "parent": "doc-education",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-education-others",
+  "label": "Please specify your qualification.",
+  "parent": "doc-education",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-education-others-registered",
+  "label": "Are you certified/licensed to practice in your field?",
+  "parent": "doc-education",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-healthpolicy-guidelines",
+  "label": "Are you involved in health policy or guideline development?",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-equipments-purchase",
+  "label": "Do you have influence over medical device/equipment purchasing decisions?",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-drug-formulary-procurement",
+  "label": "Are you part of a drug formulary or procurement committee?",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-decision-making-purchase",
+  "label": "Are you a decision-maker for purchases in your practice/facility?",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-clinical-trials-count",
+  "label": "How many clinical trials have you been involved in over the past 2 years?",
+  "parent": "clinical-trials",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-employment-status",
+  "label": "What is your employment status?",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "rural",
+  "label": "What type of area do you currently live in",
+  "parent": "country",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "doc-expertise",
+  "label": "What is your primary role of expertise",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-specialization",
+  "label": "Please Select Your Specialization",
+  "parent": "doc-expertise",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "doc-joblevel",
+  "label": "Please Select Your Job Level",
+  "parent": "doc-specialization",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "address-practice",
+  "label": "Your Practice Address",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "payment-method",
+  "label": "How do you like to receive payments",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "payment-method-upi",
+  "label": "Your Virtual Payment Address (UPI ID)",
+  "parent": "payment-method",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "payment-method-amazon",
+  "label": "Your Amazon ID",
+  "parent": "payment-method",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "payment-method-paypal",
+  "label": "Your Paypal ID",
+  "parent": "payment-method",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "payment-method-bank-name",
+  "label": "Your Bank Name",
+  "parent": "payment-method",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "payment-method-bank-ifsc",
+  "label": "IFSC Code / Swift Code / IBAN",
+  "parent": "payment-method",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "payment-method-bank-account",
+  "label": "Your Bank Account Number",
+  "parent": "payment-method",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "social-media-instagram",
+  "label": "Instagram ID",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "social-media-facebook",
+  "label": "Facebook ID",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "social-media-linkedin",
+  "label": "Linkedin ID",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "social-media-youtube",
+  "label": "Youtube ID",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "social-media-x",
+  "label": "X(Twitter) ID",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "social-media-whatsapp",
+  "label": "Whatsapp",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "practice-locality",
+  "label": "Locality / Street Name",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "practice-state",
+  "label": "Select State",
+  "parent": "country",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "address-city",
+  "label": "Select City",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "address-zip-code",
+  "label": "Enter Zip/Postal Code",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "phone-number",
+  "label": "Enter Phone Number",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "selected-country",
+  "label": "Your Selected Country",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "name-of-employer",
+  "label": "Name of Employer (Hospital or Clinic)",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "employer-address",
+  "label": "Employer Address (Building/Flat no.)",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "practice-country",
+  "label": "What is your country of Practice?",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "practice-city",
+  "label": "What is your city/region of practice?",
+  "parent": "practice-state",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "health-initiatives",
+  "label": "Are you involved in digital health initiatives?",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "video-platforms",
+  "label": "Which video platforms are you familiar with? (Select all that apply)",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver"
+  ]
+},
+{
+  "name": "video-based-research",
+  "label": "Are you open to participating in video-based research that may require",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver"
+  ]
+},
+{
+  "name": "online-surveys",
+  "label": "Are you comfortable participating in online surveys?",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "clinical-trials",
+  "label": "Do you have experience participating in clinical trials?",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "participating-research",
+  "label": "Do you prefer participating via online, telephone, or face-to-face research?",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "research-participation",
+  "label": "How often are you willing to participate in research?",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "video-platform-other",
+  "label": "Please specify your video platform",
+  "parent": "video-platforms",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "healthcare-management-job-role",
+  "label": "Please Select your job  level",
+  "parent": "doc-expertise",
+  "category": [
+    "healthcare professional"
+  ]
+},
+{
+  "name": "email-id",
+  "label": "Company Email ID",
+  "parent": "",
+  "category": [
+    "healthcare professional"
+  ]
+}]

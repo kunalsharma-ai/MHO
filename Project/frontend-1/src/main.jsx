@@ -12,6 +12,7 @@ import { loadPage, pageKeyFor } from './pages/registry.js';
 import { loadPost } from './data/blogs/postStore.js';
 import './styles/index.css';
 
+
 async function start() {
   const path = currentPath();
   const key = pageKeyFor(path);

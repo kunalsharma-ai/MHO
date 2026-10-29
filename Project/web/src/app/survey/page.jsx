@@ -53,8 +53,12 @@ export default function page() {
       user.terms.length === 0
     ) {
       router.replace("/auth/terms");
+      return;
     }
-  }, [user]);
+    // The welcome survey is now asked on the complete-profile page (frontend-1). Every old link / redirect to
+    // /survey?name=welcome (member area, points, rewards, my account) ends up there.
+    if (query?.name === "welcome") window.location.replace("/complete-profile");
+  }, [user, query]);
   const {
     data: survey,
     isLoading: surveyLoading,
@@ -67,7 +71,7 @@ export default function page() {
       if (resp.status === "error") throw new Error(resp.message);
       return resp.data;
     },
-    enabled: Boolean(query?.name && user?.category),
+    enabled: Boolean(query?.name && query.name !== "welcome" && user?.category),
     retry: false,
   });
   const isLoading = surveyLoading || (!survey && !surveyError);

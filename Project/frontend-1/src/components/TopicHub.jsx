@@ -4,15 +4,19 @@ import { useEffect, useState } from 'react';
 import { Link } from '../router.jsx';
 import { TOPICS, TOPIC_GROUPS } from '../seo/keywords.js';
 import Icon from './Icon.jsx';
-import { SectionHead } from './ui.jsx';
+import { SectionHead, useInView } from './ui.jsx';
+import { useI18n } from '../i18n/I18nProvider.jsx';
+import { tr } from '../i18n/engine.js';
 
 function SearchTyper({ items }) {
+  const [ref, inView] = useInView({ threshold: 0 }, false);
+  const { lang } = useI18n();
   const [i, setI] = useState(0);
   const [n, setN] = useState(items[0]?.label.length || 0);
   const [del, setDel] = useState(false);
   useEffect(() => {
-    if (!items.length) return;
-    const full = items[i].label;
+    if (!items.length || !inView) return; // typing pauses while off-screen (no background re-renders)
+    const full = tr(items[i].label);
     const t = setTimeout(() => {
       if (!del && n < full.length) setN(n + 1);
       else if (!del) setDel(true);
@@ -20,12 +24,12 @@ function SearchTyper({ items }) {
       else { setDel(false); setI((i + 1) % items.length); }
     }, !del && n === full.length ? 1600 : del ? 25 : 60);
     return () => clearTimeout(t);
-  }, [i, n, del, items]);
+  }, [i, n, del, items, inView, lang]);
   const cur = items[i];
   return (
-    <div className="th-search" aria-hidden="true">
+    <div className="th-search" aria-hidden="true" ref={ref}>
       <Icon name="search" size={20} />
-      <span className="ths-q">{cur?.label.slice(0, n)}<i className="ths-caret" /></span>
+      <span className="ths-q notranslate" translate="no">{cur ? tr(cur.label).slice(0, n) : ''}<i className="ths-caret" /></span>
       <span className="ths-go">Answered here <Icon name="arrow" size={14} /></span>
     </div>
   );

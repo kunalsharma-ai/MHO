@@ -4,6 +4,7 @@ import { SITE, whatsappLink } from '../config/site.js';
 import { Logo } from './Brand.jsx';
 import Icon from './Icon.jsx';
 import { LiveZone } from './ui.jsx';
+import { LanguageButton } from './Language.jsx';
 import frLogo from '../assets/brand/frequent-research-logo.webp';
 import iso9001 from '../assets/brand/aff-iso-9001.webp';
 import iso27001 from '../assets/brand/aff-iso-27001.webp';
@@ -77,6 +78,59 @@ function SocialOrb({ s, i }) {
   );
 }
 
+/** Giant outlined wordmark (same treatment as the MyFrequentRewards site): construction guide lines, a
+ *  hairline outline on every letter, a colour fill that grows from dark on the left to bright brand colours on
+ *  the right, a light sweep gliding across the letters, a twinkling spark and a spinning ring.
+ *  Pure SVG + CSS (transform/opacity only); paused while off-screen by AnimationGate. */
+const WORDMARK_GRADES = {
+  // MyHealthOpinions: deep navy → logo blue → sky → amber → logo orange → coral
+  mho: [['0', '#0f1640', 0], ['.14', '#16245a', 0.6], ['.36', '#1d4f91', 1], ['.52', '#2f93bf', 1], ['.68', '#f2b632', 1], ['.84', '#f7931e', 1], ['1', '#e8444e', 1]],
+  // Frequent Research: navy → gold → coral → magenta (as on MyFrequentRewards)
+  fr: [['0', '#11143a', 0], ['.16', '#1b1d47', 0.55], ['.42', '#6e5a22', 1], ['.6', '#c99a1c', 1], ['.78', '#d2584a', 1], ['1', '#c0326f', 1]],
+};
+
+export function BrandWordmark({ text, grade = 'mho', id = grade, size = 'lg' }) {
+  const W = 1600;
+  const fontSize = size === 'lg' ? 200 : 120;
+  const H = size === 'lg' ? 230 : 150;
+  const base = size === 'lg' ? 182 : 116;
+  const cap = base - fontSize * 0.6;
+  return (
+    <div className={`fr-wordmark wm-${size} notranslate`} translate="no" aria-hidden="true">
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id={`${id}-fill`} x1="0" y1="0" x2={W} y2="0" gradientUnits="userSpaceOnUse">
+            {WORDMARK_GRADES[grade].map(([o, c, op]) => <stop key={o} offset={o} stopColor={c} stopOpacity={op} />)}
+          </linearGradient>
+          <linearGradient id={`${id}-sweep`} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#fff" stopOpacity="0" />
+            <stop offset=".5" stopColor="#fff" stopOpacity=".9" />
+            <stop offset="1" stopColor="#fff" stopOpacity="0" />
+          </linearGradient>
+          <mask id={`${id}-mask`} maskUnits="userSpaceOnUse" x="0" y="0" width={W} height={H}>
+            <text x={W / 2} y={base} textAnchor="middle" className="frw-glyphs" fontSize={fontSize} fill="#fff" textLength={W - 80} lengthAdjust="spacingAndGlyphs">{text}</text>
+          </mask>
+        </defs>
+        <g className="frw-guides">
+          <line x1="0" x2={W} y1={H * 0.06} y2={H * 0.06} />
+          <line x1="0" x2={W} y1={cap} y2={cap} />
+          <line x1="0" x2={W} y1={base} y2={base} />
+          <line x1="0" x2={W} y1={H * 0.93} y2={H * 0.93} />
+        </g>
+        <text x={W / 2} y={base} textAnchor="middle" className="frw-glyphs frw-fill" fontSize={fontSize} fill={`url(#${id}-fill)`} textLength={W - 80} lengthAdjust="spacingAndGlyphs">{text}</text>
+        <g mask={`url(#${id}-mask)`}>
+          <rect className="frw-sweep" x="-420" y="0" width="420" height={H} fill={`url(#${id}-sweep)`} />
+        </g>
+        <text x={W / 2} y={base} textAnchor="middle" className="frw-glyphs frw-outline" fontSize={fontSize} textLength={W - 80} lengthAdjust="spacingAndGlyphs">{text}</text>
+        <g className="frw-spark" transform={`translate(${W - 28} ${H * 0.22})`}>
+          <path d="M0 -14 L3.5 -3.5 L14 0 L3.5 3.5 L0 14 L-3.5 3.5 L-14 0 L-3.5 -3.5 Z" />
+        </g>
+        <circle className="frw-ring" cx={W - 10} cy={H * 0.65} r={H * 0.18} />
+      </svg>
+    </div>
+  );
+}
+
 export default function Footer({ onCookieSettings }) {
   const year = new Date().getFullYear();
   return (
@@ -100,7 +154,7 @@ export default function Footer({ onCookieSettings }) {
 
         <div className="container footer-main">
           <div className="fm-brand">
-            <Link to="/" aria-label="MyHealthOpinions home" className="fm-logo"><Logo size={44} onDark /></Link>
+            <Link to="/" aria-label="MyHealthOpinions home" className="fm-logo notranslate" translate="no"><Logo size={44} onDark /></Link>
             <p>A healthcare research community where doctors, nurses, caregivers and patients get paid for honest opinions — and help shape better care while they are at it.</p>
             <ul className="fm-social" aria-label="Social media">
               {SITE.socials.map((s, i) => <SocialOrb key={s.id} s={s} i={i} />)}
@@ -115,7 +169,7 @@ export default function Footer({ onCookieSettings }) {
           <div className="fm-col fm-contact">
             <h3>Reach us</h3>
             <ul>
-              <li><Icon name="pin" size={16} /><span>{SITE.address.join(', ')}</span></li>
+              <li><Icon name="pin" size={16} /><span className="notranslate" translate="no">{SITE.address.join(', ')}</span></li>
               <li><Icon name="call" size={16} /><a href={`tel:${SITE.phoneHref}`}>{SITE.phoneDisplay}</a></li>
               <li><Icon name="mail" size={16} /><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
               <li><Icon name="whatsapp" size={16} /><a href={whatsappLink()} target="_blank" rel="noopener noreferrer">WhatsApp {SITE.whatsappDisplay}</a></li>
@@ -134,9 +188,15 @@ export default function Footer({ onCookieSettings }) {
           </div>
         </div>
 
+        <div className="container footer-wordmarks">
+          <BrandWordmark text="MyHealthOpinions" grade="mho" />
+          <BrandWordmark text="Frequent Research" grade="fr" size="sm" />
+        </div>
+
         <div className="container footer-bottom">
-          <p>© {year} {SITE.legalName} (d/b/a MyHealthOpinions). All rights reserved.</p>
+          <p><span className="notranslate" translate="no">© {year} {SITE.legalName} (d/b/a MyHealthOpinions).</span> <span>All rights reserved.</span></p>
           <div>
+            <LanguageButton compact />
             <Link to="/sitemap">Sitemap</Link>
             <button type="button" onClick={onCookieSettings}>Cookie settings</button>
           </div>

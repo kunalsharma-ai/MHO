@@ -1,4 +1,6 @@
-
+// Application shell: router, header/footer, page switching, per-route <head> updates and the
+// site-wide widgets (live help, rate-your-experience, reward toasts, cookie consent, cursor), the language
+// system (picker, page translation, colour grades, sounds) and the off-screen animation gate.
 import { useEffect, useReducer, useRef } from 'react';
 import { Router, useRouter } from './router.jsx';
 import Header from './components/Header.jsx';
@@ -14,6 +16,9 @@ import { postCache } from './data/blogs/postStore.js';
 import { getMeta, applyHead } from './seo/head.js';
 import { track, socialReturnTarget } from './utils/helpers.js';
 import { syncPendingAnswersSoon } from './utils/pendingAnswers.js';
+import AnimationGate from './components/AnimationGate.jsx';
+import { I18nProvider } from './i18n/I18nProvider.jsx';
+import { LanguagePicker, TranslateStatus } from './components/Language.jsx';
 
 // Forms where review prompts and reward pop-ups would distract (no reviews on sign-up / log-in).
 const QUIET_ROUTES = ['/join', '/login'];
@@ -60,6 +65,7 @@ function Shell() {
   return (
     <>
       {mounted && <Cursor />}
+      {mounted && <AnimationGate />}
       <Header />
       <main id="main" tabIndex={-1} className={`page page-${key.toLowerCase()} ${Page ? '' : 'is-loading'}`} key={shownPath}>
         {Show ? <Show path={shownPath} /> : <div className="page-loader" aria-label="Loading" />}
@@ -71,6 +77,8 @@ function Shell() {
           <RateExperience suppressed={quiet} />
           {!quiet && <RewardToasts />}
           <CookieBanner />
+          <LanguagePicker />
+          <TranslateStatus />
         </>
       )}
     </>
@@ -80,7 +88,9 @@ function Shell() {
 export default function App({ initialPath = '/' }) {
   return (
     <Router initialPath={initialPath}>
-      <Shell />
+      <I18nProvider>
+        <Shell />
+      </I18nProvider>
     </Router>
   );
 }

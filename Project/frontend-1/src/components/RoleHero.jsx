@@ -1,4 +1,4 @@
-// Home hero with three audience tabs (Healthcare Professional · Caregiver · Patient). Each tab has its own
+// Home hero (original design, kept in every language) with three audience tabs (Healthcare Professional · Caregiver · Patient). Each tab has its own
 // colour grade, motto, headline, copy and a 3D "money" scene:
 //   Professional → a vital-signs monitor whose heartbeat pops coins onto a growing honorarium tower
 //   Caregiver    → paper-plane vouchers fly into a "care fund" jar that fills with coins and hearts
@@ -10,6 +10,8 @@ import Icon from './Icon.jsx';
 import Persona from './Persona.jsx';
 import { Button, LiveZone } from './ui.jsx';
 import { HeroTitle } from './PageHero.jsx';
+import AuroraCanvas from './AuroraCanvas.jsx';
+import { useI18n } from '../i18n/I18nProvider.jsx';
 
 export const ROLES = [
   {
@@ -220,6 +222,9 @@ function Stage({ role }) {
 }
 
 export default function RoleHero() {
+  // English keeps the original colour grading; other languages show the same hero over their language grade.
+  const { lang } = useI18n();
+  const graded = lang !== 'en';
   const [idx, setIdx] = useState(0);
   const touched = useRef(false);
   const role = ROLES[idx];
@@ -233,7 +238,14 @@ export default function RoleHero() {
   const pick = (i) => { touched.current = true; setIdx(i); };
 
   return (
-    <section className={`role-hero rgrade-${role.id}`}>
+    <section className={`role-hero rgrade-${role.id} ${graded ? 'aurora-hero' : ''}`}>
+      {graded && (
+        <div className="ah-bg" aria-hidden="true">
+          <AuroraCanvas />
+          <span className="ah-grid" />
+          <span className="ah-glow" />
+        </div>
+      )}
       <div className="rh-bg" aria-hidden="true"><i /><i /><i /><span className="rh-ecg"><svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 70 H360 l20-40 26 80 22-96 20 72 14-16 H760 l16-24 18 48 16-24 H1200" pathLength="100" /></svg></span></div>
       <div className="container rh-inner">
         <div className="rh-copy">

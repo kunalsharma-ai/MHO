@@ -270,7 +270,7 @@ export function socialReturnTarget(search) {
   if (verify) return `/join/?verifyemail=${encodeURIComponent(verify)}`;
   if (q.has('signup')) {
     const out = new URLSearchParams();
-    ['name', 'email'].forEach((k) => { const v = (q.get(k) || '').trim(); if (v) out.set(k, v); });
+    ['name', 'email', 'ref'].forEach((k) => { const v = (q.get(k) || '').trim(); if (v) out.set(k, v); });
     const s = out.toString();
     return `/join/${s ? `?${s}` : ''}`;
   }

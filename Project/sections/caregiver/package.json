@@ -1,0 +1,33 @@
+{
+  "name": "mho-caregiver-dashboard-profile",
+  "version": "2.0.1",
+  "private": true,
+  "description": "MyHealthOpinions caregiver dashboard – My Profile section: About You profiles, sequential surveys, Circle of Care rewards (50 pts + 1 Quality Score), interactive date-of-birth calendar, 12 languages.",
+  "type": "module",
+  "scripts": {
+    "data": "node scripts/build-data.mjs",
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/build.mjs",
+    "build:preview": "node scripts/build.mjs --preview",
+    "build:all": "node scripts/build-data.mjs && node scripts/build.mjs && node scripts/build.mjs --preview && node scripts/build-embed.mjs",
+    "serve": "node scripts/serve.mjs dist 4173",
+    "i18n:check": "node scripts/i18n-check.mjs",
+    "test:flows": "node scripts/test-flows.mjs",
+    "test:extra": "node scripts/test-extra.mjs",
+    "test:rewards": "node scripts/test-rewards.mjs",
+    "perf": "node scripts/perf.mjs",
+    "build:embed": "node scripts/build-embed.mjs",
+    "i18n:v2": "node scripts/merge-ui-v2.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0",
+    "playwright": "^1.48.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

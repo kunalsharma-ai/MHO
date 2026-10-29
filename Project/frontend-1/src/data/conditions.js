@@ -1,3 +1,5 @@
+// Therapy areas and the conditions we recruit patients, caregivers and specialists for.
+// Used by the home "disease atlas", the Patients page and the patient / caregiver sign-up profiles.
 const D = (s) => s.split('|');
 
 export const THERAPY_AREAS = [

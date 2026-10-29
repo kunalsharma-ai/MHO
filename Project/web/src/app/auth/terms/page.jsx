@@ -96,12 +96,15 @@ export function Terms({
   React.useEffect(() => {
     if (!user) return;
     setIsLoading(true);
+    // Adults accept the terms and answer the welcome questions on the complete-profile page (frontend-1, new design).
+    // Minors keep this page (parent details, waiting for the parent's approval); once the parent approved and the terms are
+    // accepted they continue there too (same condition as before).
     if (
       pathName === "/auth/terms" &&
-      user?.terms?.length > 0 &&
-      (!user?.isMinor || user?.parent?.consentStatus === "approved")
+      (!user?.isMinor ||
+        (user?.terms?.length > 0 && user?.parent?.consentStatus === "approved"))
     )
-      router.push("/survey?name=welcome");
+      window.location.assign("/complete-profile");
     setAcceptedTerms(user.terms);
     setInitialTerms(user.terms || []);
     api
@@ -155,14 +158,14 @@ export function Terms({
     .every((t) => acceptedTerms?.includes(t.value));
 
   const handleSubmit = async () => {
-    let resp = api.put(`/api/v1/me`, {
+    let resp = await api.put(`/api/v1/me`, { // awaited: the page change below must not cancel the request
       terms: acceptedTerms,
     });
     if (resp.status === "error") {
       useToast(resp);
       return;
     }
-    if (pathName === "/auth/terms") router.push("/survey?name=welcome");
+    if (pathName === "/auth/terms") window.location.assign("/complete-profile"); // was: router.push("/survey?name=welcome")
     if ("Reload" in user) user.Reload();
     else useToast(resp);
   };

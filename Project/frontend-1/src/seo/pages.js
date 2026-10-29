@@ -176,6 +176,18 @@ export const PAGES = {
     robots: 'noindex, nofollow',
     sitemap: false,
   },
+  '/complete-profile': {
+    name: 'Complete your profile',
+    title: 'Complete Your Profile | MyHealthOpinions',
+    description:
+      'Answer a few more questions so MyHealthOpinions can match you with the paid studies that suit you best.',
+    primary: 'complete profile',
+    secondary: [],
+    changefreq: 'yearly',
+    priority: '0.1',
+    robots: 'noindex, nofollow',
+    sitemap: false,
+  },
   '/create-password': {
     name: 'Create password',
     title: 'Create Your Password | MyHealthOpinions',

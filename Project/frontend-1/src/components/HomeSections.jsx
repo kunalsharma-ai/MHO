@@ -78,13 +78,15 @@ export function RewardWheel() {
   const n = role.items.length;
   const item = role.items[sel % n];
   const touched = useRef(false);
+  const [wref, wIn] = useInView({ threshold: 0 }, false);
   useEffect(() => { setSel(0); }, [r]);
   useEffect(() => {
+    if (!wIn) return; // only while on screen
     const t = setInterval(() => { if (!touched.current && !document.hidden) setSel((s) => (s + 1) % n); }, 2600);
     return () => clearInterval(t);
-  }, [n]);
+  }, [n, wIn]);
   return (
-    <div className="rwheel" style={{ '--c': role.color, '--c2': role.accent }}>
+    <div className="rwheel" ref={wref} style={{ '--c': role.color, '--c2': role.accent }}>
       <div className="rw-roles" role="tablist" aria-label="Reward categories for">
         {REWARD_ROLES.map((x, i) => (
           <button key={x.id} role="tab" aria-selected={i === r} className={i === r ? 'on' : ''} style={{ '--c': x.color }} onClick={() => { touched.current = false; setR(i); }}>
@@ -193,16 +195,17 @@ export function VoiceCarousel() {
   const n = Math.max(list.length, 3);
   const [step, setStep] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [cref, cIn] = useInView({ threshold: 0 }, false);
   useEffect(() => setStep(0), [aud]);
   useEffect(() => {
-    if (paused) return;
+    if (paused || !cIn) return; // only while on screen
     const t = setInterval(() => !document.hidden && setStep((s) => s + 1), 4200);
     return () => clearInterval(t);
-  }, [paused]);
+  }, [paused, cIn]);
   const front = ((step % n) + n) % n;
   const cur = list[front] || list[0];
   return (
-    <div className="vcar" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+    <div className="vcar" ref={cref} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
       <div className="hb-filters" role="tablist" aria-label="Filter member voices">
         <button role="tab" aria-selected={aud === 'all'} className={aud === 'all' ? 'on' : ''} onClick={() => setAud('all')}>Everyone</button>
         {AUDIENCES.map((a) => (

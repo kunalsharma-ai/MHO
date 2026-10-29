@@ -3,6 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { Box, Grid, Typography, Button, LinearProgress } from "@mui/material";
 import { useMember } from "@/Context";
+import { useRewardsTick, fetchRewardBalance } from "@/hooks/useRewardsRefresh";
 import { Datatable } from "@/components";
 import { DateRangeSelector } from "@/components/Form";
 import { motion } from "framer-motion";
@@ -284,17 +285,14 @@ function RewardStatus() {
   const [points, setPoints] = React.useState(0);
   const [conversionRate, setConversionRate] = React.useState(1);
   const [threshold, setThreshold] = React.useState(1500);
+  const member = useMember();
+  const rewardsTick = useRewardsTick();
 
   React.useEffect(() => {
-    setLoading(true);
+    if (rewardsTick === 0) setLoading(true);
 
-    api
-      .get(`/api/v1/me/points`)
+    fetchRewardBalance(member)
       .then((resp) => {
-        if (resp.status === "error") {
-          router.replace("/survey?name=welcome");
-        }
-
         let data = resp.data;
 
         setPoints(data.totalPoints);
@@ -305,7 +303,7 @@ function RewardStatus() {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [rewardsTick, member?._id]);
 
   if (loading) return <></>;
 

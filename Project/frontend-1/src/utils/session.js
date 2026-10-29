@@ -1,10 +1,4 @@
-// Who is logged in? Same idea as web-1's Context/member.js, GET /api/v1/me answers with the person (name, profilePicture,
-// navbar links) or an error when the login is missing/expired.
-// Same as web-1: ask the server, always. web-1's MemberProvider calls GET /api/v1/me on every page for everybody and treats an
-// error as "guest". The login itself is the "authorization" cookie ("Bearer <jwt>") — it is not set by any code in web-1 or
-// the back-end zips, so it comes from the server side / proxy, which also decides what to do with it. The browser sends the
-// cookie with every same-origin request; when this script can read the cookie (or a localStorage "token") it also adds it
-// as an Authorization header, which is what the back-end's isAuthenticated reads.
+
 import { useEffect, useState } from 'react';
 import { API, PREVIEW_ACCOUNT } from '../config/site.js';
 import { auth } from './helpers.js';
@@ -68,16 +62,17 @@ export function useSession() {
   return user;
 }
 
-/** Log-in / sign-up / create-password pages: someone who is already logged in goes straight to the dashboard. */
-export function useGuestOnly() {
+/** Log-in / sign-up / create-password pages: someone who is already logged in goes straight to the profiles page. */
+export function useGuestOnly(active = true) {
   useEffect(() => {
+    if (!active) return undefined;
     let live = true;
-    const check = () => getSession().then((u) => { if (live && u) window.location.replace('/member/dashboard'); });
+    const check = () => getSession().then((u) => { if (live && u) window.location.replace('/member/profiles'); });
     check();
     const onShow = (e) => { if (e.persisted) { cache = null; check(); } };
     window.addEventListener('pageshow', onShow);
     return () => { live = false; window.removeEventListener('pageshow', onShow); };
-  }, []);
+  }, [active]);
 }
 
 /** Like web-1's Logout(): tell the API (DELETE /api/v1/me, answer ignored), forget the token and the login cookie, go home. */

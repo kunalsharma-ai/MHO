@@ -3,7 +3,8 @@
 //   vite build                                         → dist/            (browser bundle + dist/index.html)
 //   vite build --ssr src/entry-server.jsx --outDir dist-ssr → dist-ssr/   (Node renderer, temporary)
 //   node scripts/prerender.mjs                         → dist/<route>/index.html for every page and blog post,
-//                                                        dist/404.html, dist/sitemap.xml, dist/robots.txt
+//                                                        dist/404.html, dist/sitemap.xml, dist/robots.txt,
+//                                                        dist/llms.txt, dist/llms-full.txt
 //
 // Each page gets its own <title>, meta description, canonical URL, Open Graph and JSON-LD, plus the real
 // rendered content, so search engines and social previews see every page without running JavaScript.
@@ -11,6 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { writeLlms } from './llms.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.resolve(ROOT, process.env.PRERENDER_DIST || 'dist');
@@ -67,9 +69,12 @@ fs.writeFileSync(
 );
 fs.writeFileSync(path.join(DIST, 'robots.txt'), ['User-agent: *', 'Allow: /', '', `Sitemap: ${SITE_URL}/sitemap.xml`, ''].join('\n'));
 
-// 3. Clean up the temporary server bundle (it is not deployed).
+// 3. llms.txt + llms-full.txt (guides for AI assistants, see scripts/llms.mjs)
+const llmsPosts = writeLlms({ DIST, SITE_URL, server });
+
+// 4. Clean up the temporary server bundle (it is not deployed).
 fs.rmSync(SSR_DIR, { recursive: true, force: true });
 
 const entryJs = (template.match(/<script[^>]+src="([^"]+\.js)"/) || [])[1];
 const kb = entryJs && fs.existsSync(path.join(DIST, entryJs)) ? ` · entry JS ${(fs.statSync(path.join(DIST, entryJs)).size / 1024).toFixed(0)} KB` : '';
-console.log(`✔ Prerendered ${count} pages · sitemap ${urls.length} URLs for ${SITE_URL}${kb}`);
+console.log(`✔ Prerendered ${count} pages · sitemap ${urls.length} URLs for ${SITE_URL} · llms.txt (+${llmsPosts} articles in llms-full.txt)${kb}`);

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { CrudController, Mutate } from "../../utils/index.js";
 import { Response as responseModel, Reward, Survey as surveyModel } from "../model/index.js";
+
 import Rewards from "./Rewards.js";
 class Response extends CrudController {
     async setStatus(responseID, status) {

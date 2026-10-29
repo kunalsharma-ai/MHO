@@ -36,7 +36,7 @@ export function HeartMark({ size = 44, className = '', animated = true }) {
  * MyHealthOpinions logo, redrawn as crisp vector from the supplied artwork (speech-bubble heart with an
  * ECG line, blue swoosh, orange sparkles; "MyHealth" in blue, "Opinions" in orange). Pin-sharp at any size.
  * Motion is transform/opacity only (cheap): the heart beats, the ECG trace runs, a gloss sweeps the heart,
- * sparkles twinkle and the wordmark gradient drifts. `onDark` switches the wordmark to light tones.
+ * sparkles twinkle and the wordmark gradient drifts. `onDark` switches the wordmark to light tones (via --logo-b1/--logo-b2, so themes can override it).
  */
 export function Logo({ size = 40, className = '', onDark = false }) {
   const raw = useId().replace(/[^a-zA-Z0-9]/g, '');
@@ -53,8 +53,8 @@ export function Logo({ size = 40, className = '', onDark = false }) {
             <stop offset="1" stopColor="#ffc93c" />
           </linearGradient>
           <linearGradient id={id('b')} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor={onDark ? '#7cc4ff' : '#1d4f91'} />
-            <stop offset="1" stopColor={onDark ? '#9ef0ff' : '#2f93bf'} />
+            <stop offset="0" style={{ stopColor: 'var(--logo-b1)' }} />
+            <stop offset="1" style={{ stopColor: 'var(--logo-b2)' }} />
           </linearGradient>
           <linearGradient id={id('o')} x1="0" y1="0" x2="1" y2="0">
             <stop offset="0" stopColor="#e3631c" />
@@ -87,7 +87,7 @@ export function Logo({ size = 40, className = '', onDark = false }) {
           <path className="vs vs3" d="M70 17h2v3h3v2h-3v3h-2v-3h-3v-2h3z" />
           <circle className="vs vs4" cx="90" cy="14" r="1.6" />
         </g>
-        <text x="84" y="57" className="vl-word" fontFamily="Manrope, Inter, system-ui, sans-serif" fontWeight="800" fontSize="35" letterSpacing="-1">
+        <text x="84" y="57" className="vl-word" fontFamily="'Manrope Variable', Manrope, 'Inter Variable', system-ui, sans-serif" fontWeight="800" fontSize="35" letterSpacing="-1">
           <tspan fill={`url(#${id('b')})`}>MyHealth</tspan>
           <tspan fill={`url(#${id('o')})`}>Opinions</tspan>
         </text>

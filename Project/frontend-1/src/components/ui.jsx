@@ -66,6 +66,7 @@ export function LiveZone({ as: Tag = 'div', className = '', children, ...rest })
 }
 
 export function Flag({ code, name, size = 24, className = '' }) {
+  if (!code) return null;
   const w = size <= 20 ? 20 : size <= 40 ? 40 : 80;
   return (
     <img

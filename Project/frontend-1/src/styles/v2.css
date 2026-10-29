@@ -201,11 +201,11 @@ p, .prose li, .legal-sec li { text-align: justify; text-justify: inter-word; hyp
 .l2-grid { position: relative; padding: 0; width: calc(100% - 32px); display: grid; grid-template-columns: 1.05fr .95fr; border-radius: 36px; overflow: hidden; background: #fff; box-shadow: 0 50px 100px -40px rgba(11,27,63,.45); max-width: 1080px; }
 .l2-visual { position: relative; padding: 40px; color: #fff; background: radial-gradient(500px 400px at 0 0, #4f46e5, transparent 70%), radial-gradient(500px 400px at 100% 100%, #e8344e, transparent 70%), #1e1b4b; overflow: hidden; display: flex; flex-direction: column; gap: 26px; min-height: 560px; }
 .l2v-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.12); font-size: .78rem; font-weight: 700; }
-.l2v-big { font-family: var(--font-head); font-weight: 800; font-size: clamp(1.8rem, 3vw, 2.4rem); line-height: 1.1; margin: 14px 0 8px; text-align: left; }
+.l2v-big { font-family: var(--font-head); font-weight: 700; font-size: clamp(1.8rem, 3vw, 2.4rem); line-height: 1.1; margin: 14px 0 8px; text-align: left; }
 .l2v-big span { background: linear-gradient(120deg, #fde047, #f7931e); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .l2v-small { opacity: .8; margin: 0; text-align: left; }
 .l2v-wallet { position: relative; height: 210px; perspective: 900px; }
-.l2v-card { position: absolute; left: 50%; top: 50%; width: 210px; height: 128px; margin: -64px 0 0 -105px; border-radius: 18px; padding: 16px; display: flex; align-items: flex-end; gap: 8px; font-weight: 800; background: linear-gradient(135deg, var(--c1), var(--c2)); box-shadow: 0 20px 40px -16px rgba(0,0,0,.6); transform: rotate(calc((var(--i) - 1.5) * 12deg)) translateX(calc((var(--i) - 1.5) * 64px)); animation: fan-cards 6s var(--ease) infinite; animation-delay: calc(var(--i) * .1s); }
+.l2v-card { position: absolute; left: 50%; top: 50%; width: 210px; height: 128px; margin: -64px 0 0 -105px; border-radius: 18px; padding: 16px; display: flex; align-items: flex-end; gap: 8px; font-weight: 700; background: linear-gradient(135deg, var(--c1), var(--c2)); box-shadow: 0 20px 40px -16px rgba(0,0,0,.6); transform: rotate(calc((var(--i) - 1.5) * 12deg)) translateX(calc((var(--i) - 1.5) * 64px)); animation: fan-cards 6s var(--ease) infinite; animation-delay: calc(var(--i) * .1s); }
 .l2v-card i { position: absolute; right: 16px; top: 16px; width: 34px; height: 24px; border-radius: 5px; background: linear-gradient(135deg, #fde68a, #d97706); }
 @keyframes fan-cards { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
 .l2v-heart { position: absolute; left: 50%; bottom: -30px; width: 96px; height: 96px; margin-left: -48px; border-radius: 50%; display: grid; place-items: center; background: #fff; box-shadow: 0 0 0 10px rgba(255,255,255,.12), 0 0 40px rgba(255,61,90,.6); z-index: 2; }
@@ -214,7 +214,7 @@ p, .prose li, .legal-sec li { text-align: justify; text-justify: inter-word; hyp
 .l2v-meter i { display: block; height: 10px; border-radius: 10px; background: rgba(255,255,255,.15); margin-top: 6px; overflow: hidden; }
 .l2v-meter b { display: block; height: 100%; width: 72%; border-radius: inherit; background: linear-gradient(90deg, #22c55e, #fde047); animation: meter 4s var(--ease) infinite; }
 @keyframes meter { 0% { width: 20%; } 60%, 100% { width: 82%; } }
-.l2v-float { position: absolute; font-family: var(--font-head); font-weight: 800; font-size: 1.6rem; color: rgba(253,224,71,.35); left: calc(10% + var(--i) * 18%); bottom: -30px; animation: float-up 10s linear infinite; animation-delay: calc(var(--i) * -2s); }
+.l2v-float { position: absolute; font-family: var(--font-head); font-weight: 700; font-size: 1.6rem; color: rgba(253,224,71,.35); left: calc(10% + var(--i) * 18%); bottom: -30px; animation: float-up 10s linear infinite; animation-delay: calc(var(--i) * -2s); }
 .login2 .login-card { width: 100%; border-radius: 0; box-shadow: none; padding: clamp(26px, 4vw, 46px); align-self: center; }
 @media (max-width: 860px) { .l2-grid { grid-template-columns: 1fr; } .l2-visual { min-height: 0; padding: 28px; } .l2v-wallet { height: 170px; } }
 @media (max-width: 480px) { .l2v-card { width: 170px; height: 104px; margin: -52px 0 0 -85px; } }

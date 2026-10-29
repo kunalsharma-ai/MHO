@@ -322,7 +322,7 @@ export function Captcha({ onChange, invalid, resetKey = 0 }) {
       g.save();
       g.translate(20 + i * 30, 34 + (Math.random() * 8 - 4));
       g.rotate((Math.random() - 0.5) * 0.6);
-      g.font = `800 ${26 + Math.random() * 6}px Manrope, Inter, sans-serif`;
+      g.font = `800 ${26 + Math.random() * 6}px 'Manrope Variable', 'Inter Variable', sans-serif`;
       g.fillStyle = colors[i % colors.length];
       g.fillText(ch, -8, 0);
       g.restore();

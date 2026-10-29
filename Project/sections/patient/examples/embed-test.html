@@ -1,0 +1,21 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embed test – host page with aggressive global CSS</title>
+<style>
+  /* deliberately hostile host styles: the section must not be affected */
+  body { font-family: Georgia, serif; background: #fff; color: #333; margin: 0; }
+  .card { background: red !important; } button { background: #000; color: #ff0; border-radius: 0; padding: 30px; }
+  h1, h2, h3 { color: green; text-transform: uppercase; } .btn { padding: 40px; }
+  @keyframes spin { to { transform: scale(3); } } .header { background: #222; color: #fff; padding: 12px 20px; }
+</style></head>
+<body>
+  <div class="header">Host dashboard header (not part of the section)</div>
+  <div style="display:flex"><nav style="width:200px;background:#eee;min-height:100vh">Host sidebar</nav>
+  <main style="flex:1;min-width:0;padding:16px"><div id="profile-tab"></div></main></div>
+  <script src="../config.js"></script>
+  <script src="../embed/mho-patient-section.js"></script>
+  <script>
+    MHOPatient.mount(document.getElementById('profile-tab'), { user: { firstName: 'Kunal', id: 'embed-test' }, assetBase: '../', view: 'all' });
+    window.addEventListener('mho:rewards', (e) => console.log('rewards', JSON.stringify(e.detail)));
+  </script>
+</body></html>

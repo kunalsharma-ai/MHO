@@ -187,7 +187,7 @@ export const LEGAL = {
       { id: 'analytics', title: 'Analytics (only with your consent)', icon: 'chart', list: [
         '_ga, _ga_<ID> — Google Analytics 4, used to understand page visits in aggregate (IP anonymised). Expire after up to 2 years.',
       ] },
-      { id: 'third', title: 'Third-party content', icon: 'globe', p: ['Fonts are loaded from Google Fonts, which may log technical request data (country flags are hosted on our own server). Links to social networks and WhatsApp open their own sites under their own policies.'] },
+      { id: 'third', title: 'Third-party content', icon: 'globe', p: ['Fonts are hosted with the website itself, so no request is made to a third-party font service (country flags are hosted on our own server too). Links to social networks and WhatsApp open their own sites under their own policies.'] },
       { id: 'manage', title: 'Managing cookies', icon: 'refresh', p: ['Use “Cookie settings” in the footer to change your choice at any time, or clear cookies in your browser settings. Blocking essential storage may stop parts of the site working.'] },
     ],
   },

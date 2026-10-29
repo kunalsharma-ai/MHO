@@ -13,6 +13,8 @@ import {
 import EmojiEventsRoundedIcon from "@mui/icons-material/EmojiEventsRounded";
 import FlagRoundedIcon from "@mui/icons-material/FlagRounded";
 import { api, loadData } from "@/util";
+import { useRewardsTick, fetchRewardBalance } from "@/hooks/useRewardsRefresh";
+import { useMember } from "@/Context";
 import { useRouter } from "next/navigation";
 
 export default function MyAccountPoints() {
@@ -22,12 +24,14 @@ export default function MyAccountPoints() {
   const [threshold, setThreshold] = React.useState(15000);
   const [conversionRate, setConversionRate] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(true);
+  const member = useMember();
+  const rewardsTick = useRewardsTick();
 
   React.useEffect(() => {
-    setIsLoading(true);
+    if (rewardsTick === 0) setIsLoading(true);
 
     loadData(
-      api.get("/api/v1/me/points"),
+      fetchRewardBalance(member),
       (resp) => {
         if (resp.status === "error") {
           return;
@@ -43,7 +47,7 @@ export default function MyAccountPoints() {
         setIsLoading(false);
       },
     );
-  }, []);
+  }, [rewardsTick, member?._id]);
 
   const percentage = Math.min((points / threshold) * 100, 100);
   const rewardAmount = Number(points) * Number(conversionRate);

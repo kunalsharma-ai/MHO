@@ -11,7 +11,7 @@
 .ph-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; }
 .ph-badges { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
 .ph-badges li { font-size: .82rem; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--line); color: var(--ink); box-shadow: var(--shadow-sm); }
-.ph-badges li::before { content: '✓'; color: var(--green); margin-right: 6px; font-weight: 800; }
+.ph-badges li::before { content: '✓'; color: var(--green); margin-right: 6px; font-weight: 700; }
 .ph-art { min-width: 0; display: flex; justify-content: center; }
 @media (max-width: 960px) {
   .ph-inner { grid-template-columns: 1fr; }
@@ -71,7 +71,7 @@
 .ac-done { margin-top: auto; display: flex; align-items: center; gap: 6px; justify-content: center; font-size: clamp(.6rem, 1.3vw, .78rem); font-weight: 700; color: #fff; background: var(--green); padding: 8px; border-radius: 10px; opacity: 0; animation: done-in 6s ease-in-out infinite; }
 @keyframes done-in { 0%, 40% { opacity: 0; transform: translateY(8px); } 48%, 88% { opacity: 1; transform: none; } 100% { opacity: 0; } }
 .ac-coins { position: absolute; inset: 0; pointer-events: none; }
-.ac-coin { position: absolute; left: 40%; top: 50%; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: .72rem; color: #7c4a00; background: radial-gradient(circle at 35% 30%, #fff7c2, #facc15 50%, #d97706); box-shadow: 0 4px 10px rgba(217,119,6,.4); opacity: 0; animation: coin-arc 6s cubic-bezier(.45,0,.55,1) infinite; animation-delay: calc(2.6s + var(--i) * .22s); }
+.ac-coin { position: absolute; left: 40%; top: 50%; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .72rem; color: #7c4a00; background: radial-gradient(circle at 35% 30%, #fff7c2, #facc15 50%, #d97706); box-shadow: 0 4px 10px rgba(217,119,6,.4); opacity: 0; animation: coin-arc 6s cubic-bezier(.45,0,.55,1) infinite; animation-delay: calc(2.6s + var(--i) * .22s); }
 @keyframes coin-arc { 0% { opacity: 0; transform: translate(0, 0) scale(.5); } 8% { opacity: 1; } 30% { transform: translate(90px, -120px) scale(1) rotate(180deg); } 55% { opacity: 1; transform: translate(170px, 30px) scale(.8) rotate(360deg); } 60%, 100% { opacity: 0; transform: translate(170px, 40px) scale(.5); } }
 .ac-jar { position: absolute; right: 8%; bottom: 14%; width: 30%; aspect-ratio: 4 / 5; border-radius: 20px 20px 28px 28px; background: rgba(255,255,255,.6); border: 3px solid rgba(255,255,255,.95); box-shadow: inset 0 0 0 1px rgba(15,23,42,.08), var(--shadow); overflow: hidden; backdrop-filter: blur(6px); }
 .ac-jar::before { content: ''; position: absolute; left: -3px; right: -3px; top: -3px; height: 14px; background: var(--navy); border-radius: 12px 12px 4px 4px; z-index: 2; }
@@ -79,7 +79,7 @@
 @keyframes jar-fill { 0%, 40% { height: 28%; } 65%, 90% { height: 72%; } 100% { height: 28%; } }
 .ac-wave { position: absolute; left: -50%; top: -10px; width: 200%; height: 20px; background: radial-gradient(circle at 10px -4px, transparent 12px, #fde047 13px) 0 0 / 20px 20px repeat-x; animation: wave 2s linear infinite; }
 @keyframes wave { to { transform: translateX(20px); } }
-.ac-jar-label { position: absolute; left: 50%; top: 42%; transform: translateX(-50%); font-weight: 800; font-size: clamp(.6rem, 1.3vw, .8rem); color: var(--ink); z-index: 3; text-transform: uppercase; letter-spacing: .08em; }
+.ac-jar-label { position: absolute; left: 50%; top: 42%; transform: translateX(-50%); font-weight: 700; font-size: clamp(.6rem, 1.3vw, .8rem); color: var(--ink); z-index: 3; text-transform: uppercase; letter-spacing: .08em; }
 .ac-chip { position: absolute; display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; background: #fff; box-shadow: var(--shadow); font-size: clamp(.62rem, 1.3vw, .8rem); font-weight: 700; color: var(--ink); white-space: nowrap; animation: bob 5s ease-in-out infinite; }
 .ac-chip.c1 { right: 6%; top: 8%; color: #003087; }
 .ac-chip.c2 { right: 2%; top: 28%; animation-delay: -1.2s; color: #b45309; }
@@ -91,7 +91,7 @@
 /* Professional: clipboard + bars + voucher + orbiting personas */
 .ap-board { position: absolute; left: 14%; top: 14%; width: 58%; padding: 34px 20px 20px; border-radius: 22px; background: #fff; box-shadow: var(--shadow-lg); transform: rotate(-3deg); animation: bob 7s ease-in-out infinite; }
 .ap-clip { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); width: 40%; height: 26px; border-radius: 10px; background: var(--navy); }
-.ap-title { display: block; font-family: var(--font-head); font-weight: 800; font-size: clamp(.78rem, 1.6vw, 1rem); color: var(--ink); margin-bottom: 10px; }
+.ap-title { display: block; font-family: var(--font-head); font-weight: 700; font-size: clamp(.78rem, 1.6vw, 1rem); color: var(--ink); margin-bottom: 10px; }
 .ap-row { display: flex; align-items: center; gap: 10px; font-size: clamp(.64rem, 1.3vw, .82rem); padding: 6px 0; color: var(--text); border-bottom: 1px dashed var(--line); }
 .ap-box { width: 18px; height: 18px; border-radius: 6px; border: 2px solid #cbd5e1; display: grid; place-items: center; color: #fff; flex: none; animation: tick 6s ease-in-out infinite; animation-delay: calc(var(--i) * .5s); }
 .ap-box svg { opacity: 0; animation: tick-svg 6s ease-in-out infinite; animation-delay: calc(var(--i) * .5s); }
@@ -140,7 +140,7 @@
 .av-dial { position: relative; width: 56%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, #e2e8f0, #94a3b8); display: grid; place-items: center; animation: dial 6s var(--ease) infinite; box-shadow: 0 6px 20px rgba(0,0,0,.4); }
 .av-dial i { position: absolute; left: 50%; top: 0; width: 3px; height: 50%; margin-left: -1.5px; transform-origin: 50% 100%; transform: rotate(calc(var(--i) * 30deg)); }
 .av-dial i::before { content: ''; position: absolute; left: 0; top: 6px; width: 3px; height: 10px; border-radius: 2px; background: #334155; }
-.av-dial b { font-family: var(--font-head); font-weight: 800; color: var(--navy); font-size: clamp(.9rem, 2.4vw, 1.3rem); }
+.av-dial b { font-family: var(--font-head); font-weight: 700; color: var(--navy); font-size: clamp(.9rem, 2.4vw, 1.3rem); }
 @keyframes dial { 0% { transform: rotate(0); } 25% { transform: rotate(140deg); } 45% { transform: rotate(-60deg); } 60%, 100% { transform: rotate(0); } }
 .av-card { position: absolute; left: 50%; top: 50%; display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 14px; color: #fff; font-weight: 700; font-size: clamp(.7rem, 1.6vw, .9rem); background: var(--c); box-shadow: var(--shadow-lg); opacity: 0; animation: fan 6s var(--ease) infinite; animation-delay: calc(var(--i) * .15s); }
 .av-card:nth-of-type(1) { --x: -150%; --y: -210%; } .av-card:nth-of-type(2) { --x: 50%; --y: -200%; } .av-card:nth-of-type(3) { --x: -160%; --y: 120%; } .av-card:nth-of-type(4) { --x: 30%; --y: 130%; }

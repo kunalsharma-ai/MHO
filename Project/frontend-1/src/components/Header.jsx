@@ -5,6 +5,7 @@ import { NAV } from '../seo/pages.js';
 import { Logo } from './Brand.jsx';
 import Icon from './Icon.jsx';
 import { useMounted } from './ui.jsx';
+import { LanguageButton } from './Language.jsx';
 import { useSession, logout } from '../utils/session.js';
 
 const useIsoLayout = typeof window === 'undefined' ? useEffect : useLayoutEffect;
@@ -77,9 +78,10 @@ export default function Header() {
       <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
         <div className="header-progress" ref={progress} aria-hidden="true" />
         <div className="container header-inner">
-          <Link to="/" className="header-logo" aria-label="MyHealthOpinions home">
-            <Logo size={50} />
+          <Link to="/" className="header-logo notranslate" translate="no" aria-label="MyHealthOpinions home">
+            <Logo size={50} onDark />
           </Link>
+          <LanguageButton />
           <nav className="main-nav" aria-label="Main" ref={navRef}>
             <span className="nav-pill" style={{ transform: `translateX(${pill.x}px)`, width: pill.w, opacity: pill.show ? 1 : 0 }} aria-hidden="true" />
             {NAV.map((n) =>
@@ -146,6 +148,7 @@ export default function Header() {
             <div className="mm-panel" role="dialog" aria-modal="true" aria-label="Menu">
               <div className="mm-top">
                 <Logo size={34} onDark />
+                <LanguageButton compact />
                 <button className="mm-close" onClick={() => setOpen(false)} aria-label="Close menu"><Icon name="x" size={22} /></button>
               </div>
               <div className="mm-orbs" aria-hidden="true"><i /><i /><i /></div>

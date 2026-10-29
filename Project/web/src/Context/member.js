@@ -1,7 +1,8 @@
 "use client";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { api } from "@/util";
+import LoadingOverlay from "@/componentsMHO/LoadingOverlay";
 const MemberContext = createContext();
 function notLoggedIn(pathname, router) {
   if (typeof pathname !== "string") return;
@@ -70,21 +71,35 @@ class ValidUser {
   }
   async allowAccess(pathname) {
     if (pathname.startsWith("/admin")) {
-      if (!this.isAdmin()) return this.router.replace("/");
+      if (!this.isAdmin()) {
+        this.router.replace("/");
+        return false;
+      }
     }
     if (pathname.startsWith("/member")) {
-      if (!this.emailVerified())
-        return this.router.replace(`/?verifyemail=${this.userinfo.mail}`);
-      if (!this.termsAccepted()) return this.router.replace("/auth/terms");
-      if (!(await this.hasCompletedWelcomeSurvey()))
-        return this.router.replace("/survey?name=welcome");
+      if (!this.emailVerified()) {
+        this.router.replace(`/?verifyemail=${this.userinfo.mail}`);
+        return false;
+      }
+      if (!this.termsAccepted()) {
+        this.router.replace("/auth/terms");
+        return false;
+      }
+      if (!(await this.hasCompletedWelcomeSurvey())) {
+        this.router.replace("/survey?name=welcome");
+        return false;
+      }
     }
+    return true;
   }
 }
 export function MemberProvider({ children }) {
   const [isLoading, setIsLoading] = React.useState(true);
   const [reload, setReload] = useState(1);
   const [me, setMe] = useState(null);
+  const [ready, setReady] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+  useLayoutEffect(() => setHydrated(true), []);
   const [categories, setCategories] = useState([]);
   const [router, pathname] = [useRouter(), usePathname()];
   function Reload() {
@@ -127,13 +142,15 @@ export function MemberProvider({ children }) {
   useEffect(() => {
     setIsLoading(true);
     loadUserInfo()
-      .then((resp) => {
+      .then(async (resp) => {
         let user = new ValidUser(resp, router);
-        user.allowAccess(pathname);
+        const stay = await user.allowAccess(pathname);
         updateMe(resp);
+        if (stay) setReady(true);
       })
       .catch((err) => {
         setMe(null);
+        setReady(true);
       })
       .finally(() => {
         setIsLoading(false);
@@ -163,8 +180,15 @@ export function MemberProvider({ children }) {
       }
     : null;
 
+  const waiting =
+    hydrated &&
+    !ready &&
+    typeof pathname === "string" &&
+    pathname.startsWith("/member");
   return (
-    <MemberContext.Provider value={member}>{children}</MemberContext.Provider>
+    <MemberContext.Provider value={member}>
+      {waiting ? <LoadingOverlay /> : children}
+    </MemberContext.Provider>
   );
 }
 

@@ -3,10 +3,10 @@
 // spaced several minutes apart, and never again after a review is submitted).
 import { useEffect, useRef, useState } from 'react';
 import Icon from './Icon.jsx';
-import { Field, CountrySelect, PhoneInput } from './FormKit.jsx';
-import { validateEmail, validateName, validatePhone, store, session, pop, track } from '../utils/helpers.js';
-import { submitReview } from '../utils/reviews.js';
-import { countryByCode } from '../data/countries.js';
+import { Field } from './FormKit.jsx';
+import { store, session, pop, track } from '../utils/helpers.js';
+import { submitReview, isKid, roleOf, reviewedKey, countryOf } from '../utils/reviews.js';
+import { getSession } from '../utils/session.js';
 import { Link } from '../router.jsx';
 import { Flag } from './ui.jsx';
 
@@ -15,7 +15,7 @@ const ROLES = [
   { id: 'caregiver', label: 'Caregiver', sub: 'Family & care support', icon: 'hands', ask: 'Fill our heart' },
   { id: 'patient', label: 'Patient', sub: 'Lived experience', icon: 'heart', ask: 'Raise our sun' },
 ];
-const STEPS = ['You', 'Rate', 'About you', 'Review'];
+const STEPS = ['You', 'Rate', 'Review'];
 const MOODS = {
   hcp: ['Pick a reading', 'Critical', 'Needs work', 'Stable', 'Strong', 'Excellent'],
   caregiver: ['Pick a level', 'Running on empty', 'A little low', 'Half full', 'Warm', 'Full of love'],
@@ -84,7 +84,7 @@ function Sunrise({ r }) {
 }
 const INSTRUMENT = { hcp: PulseGauge, caregiver: HeartFill, patient: Sunrise };
 
-const EMPTY = { firstName: '', lastName: '', email: '', phone: '', phoneCc: 'in', company: '', designation: '', country: '', role: '', rating: 0, text: '' };
+const EMPTY = { role: '', rating: 0, text: '' };
 
 export const openRateExperience = () => window.dispatchEvent(new Event('mho-open-rate'));
 
@@ -101,12 +101,25 @@ export default function RateExperience({ suppressed = false }) {
   const [submitErr, setSubmitErr] = useState('');
   const dialog = useRef(null);
   const lastFocus = useRef(null);
+  const [member, setMember] = useState(undefined); // undefined = checking · null = nobody logged in · object = the member
+  useEffect(() => {
+    let alive = true;
+    getSession().then((u) => alive && setMember(u || null));
+    return () => { alive = false; };
+  }, [open]);
+  const adult = Boolean(member) && !isKid(member);
+  const accountRole = roleOf(member);
+  const first = String(member?.name?.first || member?.firstname || '').trim();
+  const last = String(member?.name?.last || member?.lastname || '').trim();
+  const country = countryOf(member);
+  const rvKey = reviewedKey(member);
+  useEffect(() => { if (accountRole) setF((s) => ({ ...s, role: accountRole })); }, [accountRole]);
 
   const set = (k) => (v) => { setF((s) => ({ ...s, [k]: v && v.target ? v.target.value : v })); setErr((e) => (e[k] ? Object.fromEntries(Object.entries(e).filter(([x]) => x !== k)) : e)); };
 
   // Gentle auto-prompt
   useEffect(() => {
-    if (store.get('mho-reviewed')) return;
+    if (!adult || store.get(rvKey)) return undefined;
     const start = Date.now();
     let maxScroll = 0;
     const onScroll = () => {
@@ -119,7 +132,7 @@ export default function RateExperience({ suppressed = false }) {
       const last = session.get('mho-rate-last', 0);
       const elapsed = (Date.now() - start) / 1000;
       const busy = document.documentElement.classList.contains('menu-open') || document.querySelector('.chat-win.is-open') || document.querySelector('.modal.is-open');
-      if (store.get('mho-reviewed') || shown >= 3 || busy || suppressedRef.current) return;
+      if (store.get(rvKey) || shown >= 3 || busy || suppressedRef.current) return;
       const ready = shown === 0 ? (elapsed > 45 && maxScroll > 0.4) || elapsed > 80 : Date.now() - last > 4 * 60 * 1000;
       if (ready) {
         session.set('mho-rate-shown', shown + 1);
@@ -132,7 +145,7 @@ export default function RateExperience({ suppressed = false }) {
       window.removeEventListener('scroll', onScroll);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [adult, rvKey]);
 
   useEffect(() => {
     const onOpen = () => openModal('link');
@@ -173,23 +186,13 @@ export default function RateExperience({ suppressed = false }) {
 
   const validate = (only) => {
     const e = {};
-    if (!f.rating) e.rating = 'Pick a face to rate your experience.';
-    const fn = validateName(f.firstName, 'first name');
-    if (fn) e.firstName = fn;
-    const ln = validateName(f.lastName, 'last name', false);
-    if (ln) e.lastName = ln;
-    const em = validateEmail(f.email);
-    if (em) e.email = em;
-    if (!f.company.trim()) e.company = 'Please enter your company or organisation.';
-    if (!f.designation.trim()) e.designation = 'Please enter your designation.';
-    if (!f.country) e.country = 'Please choose your country.';
     if (!f.role) e.role = 'Tell us which member type you are.';
+    if (!f.rating) e.rating = 'Pick a face to rate your experience.';
     if (f.text.trim().length < 20) e.text = 'Please write at least 20 characters so others can learn from your review.';
-    const ph = validatePhone(f.phone, f.phoneCc, false);
-    if (ph) e.phone = ph;
+    if (/https?:|www\./i.test(f.text)) e.text = 'Please remove links from your review.';
     if (only === 0) return Object.fromEntries(Object.entries(e).filter(([k]) => k === 'role'));
     if (only === 1) return Object.fromEntries(Object.entries(e).filter(([k]) => k === 'rating'));
-    if (only === 2) return Object.fromEntries(Object.entries(e).filter(([k]) => ['firstName', 'lastName', 'email', 'company', 'designation', 'country', 'phone'].includes(k)));
+    if (only === 2) return Object.fromEntries(Object.entries(e).filter(([k]) => k === 'text'));
     return e;
   };
 
@@ -198,33 +201,29 @@ export default function RateExperience({ suppressed = false }) {
     setErr(e);
     if (Object.keys(e).length) return;
     pop(0.06);
-    setStep((x) => Math.min(x + 1, 3));
+    setStep((x) => Math.min(x + 1, 2));
   };
 
   const submit = async (ev) => {
     ev.preventDefault();
-    if (step < 3) return next();
+    if (!adult) return undefined;
+    if (step < 2) return next();
     const e = validate();
     setErr(e);
     if (Object.keys(e).length) {
       if (e.role) setStep(0);
       else if (e.rating) setStep(1);
-      else if (!e.text) setStep(2);
-      return;
+      return undefined;
     }
     setState('sending');
     setSubmitErr('');
-    const res = await submitReview({
-      ...f,
-      phone: f.phone ? `${countryByCode(f.phoneCc)?.dial || ''} ${f.phone}` : '',
-      countryName: countryByCode(f.country)?.name,
-    });
+    const res = await submitReview({ rating: f.rating, message: f.text }, member);
     if (!res.ok) {
       setState('form');
       setSubmitErr(res.message);
-      return;
+      return undefined;
     }
-    store.set('mho-reviewed', true);
+    store.set(rvKey, true);
     track('review_submitted', { rating: f.rating, role: f.role });
     setState('done');
     pop(0.16);
@@ -265,12 +264,12 @@ export default function RateExperience({ suppressed = false }) {
                 <span className="rjs-mood">Your voice, 60 seconds</span>
               </div>
             )}
-            {step >= 2 && state !== 'done' && (
+            {step >= 2 && state !== 'done' && adult && (
               <div className="rjs-preview">
                 <span className="rjp-top">
-                  <span className="rjp-av">{(f.firstName || '?').slice(0, 1).toUpperCase()}</span>
-                  <span className="rjp-who"><b>{f.firstName || 'Your name'} {f.lastName ? f.lastName[0] + '.' : ''}</b><small>{[f.designation, f.company].filter(Boolean).join(', ') || 'Your designation'}</small></span>
-                  {f.country && <Flag code={f.country} size={22} />}
+                  <span className="rjp-av">{(first || '?').slice(0, 1).toUpperCase()}</span>
+                  <span className="rjp-who"><b>{first || 'Your name'} {last ? last[0] + '.' : ''}</b><small>{role?.label || ''}</small></span>
+                  {country && <Flag code={country.code} size={22} />}
                 </span>
                 <span className="rjp-stars">{[1, 2, 3, 4, 5].map((n) => <Icon key={n} name="star" size={13} fill={n <= f.rating ? 'currentColor' : 'none'} />)}</span>
                 <p>{f.text || 'Your review appears here as you type…'}</p>
@@ -280,11 +279,18 @@ export default function RateExperience({ suppressed = false }) {
 
           {/* Right: form */}
           <div className="rj4-main">
-            {state === 'done' ? (
+            {!adult && state !== 'done' ? (
+              <div className="rj-done">
+                <span className="rjd-badge" aria-hidden="true"><Icon name={member === undefined ? 'info' : 'lock'} size={30} stroke={3} /></span>
+                <h2 id="rate-title">{member === undefined ? 'One moment…' : member ? 'Reviews are for members 18 and over' : 'Log in to rate us'}</h2>
+                <p>{member === undefined ? 'Checking your account.' : member ? 'To protect young members, public reviews are written by adults only.' : 'Only MyHealthOpinions members can rate us, which keeps every review genuine. Log in and it takes about a minute.'}</p>
+                {member === null && <Link to="/login" className="btn btn-primary" onClick={close}><span className="btn-label">Log in</span><Icon name="arrow" size={18} /></Link>}
+              </div>
+            ) : state === 'done' ? (
               <div className="rj-done">
                 <div className="rd-burst" aria-hidden="true">{Array.from({ length: 16 }).map((_, i) => <i key={i} style={{ '--i': i }} />)}</div>
                 <span className="rjd-badge" aria-hidden="true"><Icon name="check" size={30} stroke={3} /></span>
-                <h2 id="rate-title">Thank you, {f.firstName || 'friend'}!</h2>
+                <h2 id="rate-title">Thank you, {first || 'friend'}!</h2>
                 <p>Your review shows in the member voices on this device straight away, and for everyone once our team has approved it.</p>
                 <Link to="/reviews" className="btn btn-primary" onClick={close}><span className="btn-label">See member reviews</span><Icon name="arrow" size={18} /></Link>
               </div>
@@ -300,8 +306,8 @@ export default function RateExperience({ suppressed = false }) {
                       </li>
                     ))}
                   </ol>
-                  <h2 id="rate-title">{step === 0 ? 'Rate your experience' : step === 1 ? (role ? role.ask : 'Your rating') : step === 2 ? 'Who should we credit?' : 'Tell other members what it’s like'}</h2>
-                  <p>{step === 0 ? 'First, tell us who you are. Each member type rates us in its own way.' : step === 1 ? 'Tap a level from 1 to 5.' : step === 2 ? 'Your email and phone stay private.' : 'A few honest lines help other members decide.'}</p>
+                  <h2 id="rate-title">{step === 0 ? 'Rate your experience' : step === 1 ? (role ? role.ask : 'Your rating') : 'Tell other members what it’s like'}</h2>
+                  <p>{step === 0 ? 'First, tell us who you are. Each member type rates us in its own way.' : step === 1 ? 'Tap a level from 1 to 5.' : 'A few honest lines help other members decide.'}</p>
                 </header>
 
                 <div className="rj4-body" key={step}>
@@ -310,7 +316,7 @@ export default function RateExperience({ suppressed = false }) {
                       <legend className="sr-only">I am a</legend>
                       {ROLES.map((ro) => (
                         <label key={ro.id} className={`rj-role4 t-${ro.id} ${f.role === ro.id ? 'on' : ''}`}>
-                          <input type="radio" name="rate-role" value={ro.id} checked={f.role === ro.id} onChange={() => set('role')(ro.id)} />
+                          <input type="radio" name="rate-role" value={ro.id} checked={f.role === ro.id} disabled={Boolean(accountRole) && ro.id !== accountRole} onChange={() => set('role')(ro.id)} />
                           <span className="rr-ic"><Icon name={ro.icon} size={22} /></span>
                           <span className="rr-t"><b>{ro.label}</b><small>{ro.sub}</small></span>
                           <span className="rr-tick" aria-hidden="true"><Icon name="check" size={14} stroke={3} /></span>
@@ -348,38 +354,6 @@ export default function RateExperience({ suppressed = false }) {
                   )}
 
                   {step === 2 && (
-                    <div className="rj-fields">
-                      <div className="form-row">
-                        <Field label="First name" required htmlFor="rv-fn" error={err.firstName}>
-                          <input id="rv-fn" value={f.firstName} onChange={set('firstName')} autoComplete="given-name" aria-invalid={!!err.firstName} />
-                        </Field>
-                        <Field label="Last name" htmlFor="rv-ln" error={err.lastName}>
-                          <input id="rv-ln" value={f.lastName} onChange={set('lastName')} autoComplete="family-name" />
-                        </Field>
-                      </div>
-                      <Field label="Email" required htmlFor="rv-em" error={err.email} hint="Never shown publicly." icon="mail">
-                        <input id="rv-em" type="email" value={f.email} onChange={set('email')} autoComplete="email" aria-invalid={!!err.email} />
-                      </Field>
-                      <div className="form-row">
-                        <Field label="Company name" required htmlFor="rv-co" error={err.company} icon="building">
-                          <input id="rv-co" value={f.company} onChange={set('company')} autoComplete="organization" aria-invalid={!!err.company} />
-                        </Field>
-                        <Field label="Designation" required htmlFor="rv-de" error={err.designation} icon="briefcase">
-                          <input id="rv-de" value={f.designation} onChange={set('designation')} autoComplete="organization-title" aria-invalid={!!err.designation} />
-                        </Field>
-                      </div>
-                      <div className="form-row">
-                        <Field label="Country" required htmlFor="rv-ct" error={err.country} icon="globe">
-                          <CountrySelect id="rv-ct" value={f.country} onChange={(c) => { setF((s) => ({ ...s, country: c, phoneCc: s.phone ? s.phoneCc : c })); setErr((e) => ({ ...e, country: undefined })); }} invalid={!!err.country} />
-                        </Field>
-                        <Field label="Phone number" htmlFor="rv-ph" error={err.phone} icon="phone">
-                          <PhoneInput id="rv-ph" country={f.phoneCc} onCountry={set('phoneCc')} value={f.phone} onChange={set('phone')} invalid={!!err.phone} />
-                        </Field>
-                      </div>
-                    </div>
-                  )}
-
-                  {step === 3 && (
                     <Field label="Your review" required htmlFor="rv-tx" error={err.text}>
                       <textarea id="rv-tx" rows={6} value={f.text} onChange={set('text')} maxLength={600} placeholder="What did you enjoy? What could be better?" aria-invalid={!!err.text} />
                       <span className="char-count">{f.text.length}/600</span>
@@ -389,10 +363,10 @@ export default function RateExperience({ suppressed = false }) {
 
                 {submitErr && <p className="form-alert" role="alert">{submitErr}</p>}
                 <footer className="rj-foot">
-                  {step > 0 ? <button type="button" className="btn btn-ghost" onClick={() => { setErr({}); setStep(step - 1); }}><Icon name="arrowLeft" size={18} /><span className="btn-label">Back</span></button> : <span className="rj-privacy"><Icon name="lock" size={12} /> Email and phone stay private</span>}
+                  {step > 0 ? <button type="button" className="btn btn-ghost" onClick={() => { setErr({}); setStep(step - 1); }}><Icon name="arrowLeft" size={18} /><span className="btn-label">Back</span></button> : <span className="rj-privacy"><Icon name="lock" size={12} /> Your name and country come from your account</span>}
                   <button className="btn btn-primary" type="submit" disabled={state === 'sending'}>
-                    <span className="btn-label">{step < 3 ? 'Continue' : state === 'sending' ? 'Publishing…' : 'Publish my review'}</span>
-                    <Icon name={step < 3 ? 'arrow' : 'send'} size={18} />
+                    <span className="btn-label">{step < 2 ? 'Continue' : state === 'sending' ? 'Publishing…' : 'Publish my review'}</span>
+                    <Icon name={step < 2 ? 'arrow' : 'send'} size={18} />
                   </button>
                 </footer>
               </form>

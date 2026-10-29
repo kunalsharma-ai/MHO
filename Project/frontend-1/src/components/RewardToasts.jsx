@@ -20,6 +20,8 @@ import { Flag, useMounted } from './ui.jsx';
 import Icon from './Icon.jsx';
 import { shuffle } from '../utils/helpers.js';
 import { Link } from '../router.jsx';
+import { useI18n } from '../i18n/I18nProvider.jsx';
+import { tr, countryLabel } from '../i18n/engine.js';
 
 const CUR = { INR: '₹', USD: '$', EUR: '€', GBP: '£', AUD: 'A$', CAD: 'C$', SGD: 'S$', AED: 'AED ', BRL: 'R$', ZAR: 'R', JPY: '¥', MXN: 'MX$', NGN: '₦', KES: 'KSh ', PHP: '₱' };
 const METHOD = {
@@ -56,6 +58,7 @@ const PREVIEW_PAYOUTS = [
 const clean = (rows) => rows.filter((r) => r && r.cc && r.method && r.firstName && isMethodAllowed(r.method === 'voucher' ? 'amazon' : r.method, r.cc));
 
 export default function RewardToasts() {
+  useI18n(); // re-render when the language changes
   const mounted = useMounted();
   const [feed, setFeed] = useState(PREVIEW_FORMS ? clean(PREVIEW_PAYOUTS) : null);
   const [current, setCurrent] = useState(null);
@@ -115,7 +118,7 @@ export default function RewardToasts() {
         </span>
       ) : (
         <Link to="/rewards" className="rtt-body rtt-open">
-          <span className="rtt-l1"><Flag code={current.cc} name={current.country} size={14} /> <b>Rewards open in {current.country}</b></span>
+          <span className="rtt-l1"><Flag code={current.cc} name={current.country} size={14} /> <b className="notranslate" translate="no">{tr('Rewards open in {0}').replace('{0}', countryLabel(current.cc, current.country))}</b></span>
           <span className="rtt-l2 rtt-icons">{current.methods.map((id) => <span key={id} className={`rtt-m mchip-${id}`} title={(METHOD[id] || METHOD.paypal).label}><Icon name={(METHOD[id] || METHOD.paypal).icon} size={11} /></span>)}<span className="rtt-more">How payouts work</span></span>
         </Link>
       )}

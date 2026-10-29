@@ -11,7 +11,7 @@ import { Link } from '../router.jsx';
 import { TESTIMONIALS, AUDIENCES } from '../data/testimonials.js';
 import { NOTIFY_CHANNELS } from '../data/rewards.js';
 import { useMemberReviews } from '../utils/reviews.js';
-import { pop } from '../utils/helpers.js';
+import { tr } from '../i18n/engine.js';
 
 /* =====================================================================
    1. Reward slot machine
@@ -62,10 +62,18 @@ export function RewardSlot() {
   const [pulled, setPulled] = useState(false);
   const busy = useRef(false);
   const first = useRef(true);
+  const queued = useRef(false); // a lever pull that arrived while the reels were still turning
+  const spinRef = useRef(null);
 
   const spin = (sound = true) => {
-    if (busy.current) return;
+    if (busy.current) {
+      // never swallow a pull: play it as soon as the current spin lands
+      if (sound) queued.current = true;
+      return;
+    }
     busy.current = true;
+    // money sound on every pull (synth chunk is lazy-loaded; respects the site's Sound on/off switch)
+    if (sound) import('../i18n/sounds.js').then((m) => m.playSlotPull()).catch(() => {});
     setWon(false);
     setPulled(true);
     setTimeout(() => setPulled(false), 450);
@@ -83,9 +91,13 @@ export function RewardSlot() {
       setFrom(next);
       setWon(true);
       busy.current = false;
-      if (sound) pop(0.1);
+      if (queued.current) {
+        queued.current = false;
+        setTimeout(() => spinRef.current?.(true), 350);
+      }
     }, 2600);
   };
+  spinRef.current = spin;
 
   useEffect(() => {
     if (inView && first.current) {
@@ -116,7 +128,7 @@ export function RewardSlot() {
         <button className={`slot-lever ${pulled ? 'is-pulled' : ''}`} onClick={() => spin(true)} aria-label="Spin the reward machine">
           <span className="lv-stick" /><span className="lv-knob" />
         </button>
-        <p className="sr-only" aria-live="polite">{won ? `Showing ${targets.map((t) => REWARD_TYPES[t].t).join(', ')}` : ''}</p>
+        <p className="sr-only notranslate" translate="no" aria-live="polite">{won ? tr('Showing {0}').replace('{0}', targets.map((t) => tr(REWARD_TYPES[t].t)).join(', ')) : ''}</p>
       </LiveZone>
 
       <ul className="reward-grid">

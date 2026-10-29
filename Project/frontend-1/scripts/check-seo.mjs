@@ -1,5 +1,5 @@
 // SEO audit of the production build. Run after `npm run build`:  npm run check:seo
-// Checks every prerendered page for: title/description length, exactly one <h1>, canonical, valid JSON-LD,
+// Checks every prerendered page for: title/description length, exactly one <h1>, heading order (no skipped levels), canonical, valid JSON-LD,
 // primary keyword placement (title + H1/description + body) and that every sitemap URL exists.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -41,6 +41,13 @@ for (const t of targets) {
   if (title.length < 30 || title.length > 65) warn(t.route, `title length ${title.length}`);
   if (desc.length < 120 || desc.length > 165) warn(t.route, `description length ${desc.length}`);
   if (h1s.length !== 1) err(t.route, `${h1s.length} <h1> elements`);
+  // Heading structure: the page must start at <h1> and never skip a level going down (h2 → h4).
+  const levels = [...(html.split('<body')[1] || '').matchAll(/<h([1-6])[\s>]/g)].map((m) => Number(m[1]));
+  if (levels.length && levels[0] !== 1) err(t.route, `first heading is <h${levels[0]}>, expected <h1>`);
+  for (let i = 1; i < levels.length; i++) {
+    if (levels[i] > levels[i - 1] + 1) { err(t.route, `heading level skipped: <h${levels[i - 1]}> → <h${levels[i]}> (heading #${i + 1})`); break; }
+  }
+  for (const m of html.matchAll(/<h([1-6])[^>]*>\s*<\/h\1>/g)) err(t.route, `empty <h${m[1]}>`);
   if (!t.noindex && !html.includes('<link rel="canonical"')) err(t.route, 'missing canonical');
   for (const m of html.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)) {
     try { JSON.parse(m[1]); } catch { err(t.route, 'invalid JSON-LD'); }

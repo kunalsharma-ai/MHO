@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MyHealthOpinions Dashboard – My Profile (integration example)</title>
+  <!-- 1. the section's stylesheet (every rule is scoped to .mho-pp) -->
+  <link rel="stylesheet" href="mho-profile-section.css" />
+  <style>
+    /* ====== this block stands in for YOUR existing dashboard styles ====== */
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 15px/1.5 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; background: #0B1424; color: #E6EEF7; }
+    .dash { display: grid; grid-template-columns: 232px 1fr; min-height: 100vh; }
+    .side { position: sticky; top: 0; height: 100vh; padding: 18px 14px; background: linear-gradient(180deg, #0E1C33, #0A1324); border-right: 1px solid rgba(255,255,255,.06); display: flex; flex-direction: column; gap: 6px; }
+    .side .logo { display: flex; align-items: center; gap: 10px; padding: 6px 8px 18px; font-weight: 700; }
+    .side .logo img { height: 34px; background: #fff; border-radius: 10px; padding: 4px 8px; }
+    .side a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; color: #B8C7D9; text-decoration: none; font-weight: 600; }
+    .side a:hover { background: rgba(255,255,255,.05); color: #fff; }
+    .side a.on { background: linear-gradient(110deg, #7B2D52, #E8457C); color: #fff; }
+    .side .me { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 14px; background: rgba(255,255,255,.05); }
+    .side .me b { display: block; } .side .me small { color: #8FA3B8; }
+    .avatar { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, #F2611B, #E1192F); font-weight: 800; color: #fff; }
+    .main { min-width: 0; }
+    .crumbs { padding: 14px 24px; color: #8FA3B8; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,.06); }
+    @media (max-width: 860px) { .dash { grid-template-columns: 1fr; } .side { position: static; height: auto; flex-direction: row; flex-wrap: wrap; } .side .me { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="dash">
+    <aside class="side" aria-label="Dashboard navigation (example)">
+      <div class="logo"><img src="images/brand/mho-logo@2x.png" alt="MyHealthOpinions" /></div>
+      <a href="#">🏠 Dashboard</a>
+      <a href="#" class="on" data-go="profiles">🫶 My Profile</a>
+      <a href="#" data-go="surveys">📋 Surveys</a>
+      <a href="#" data-go="rewards">💞 Rewards</a>
+      <a href="#">🤝 Refer a friend</a>
+      <a href="#">⚙️ Account</a>
+      <div class="me"><span class="avatar">K</span><span><b>Kunal</b><small>Caregiver member</small></span></div>
+    </aside>
+    <main class="main">
+      <div class="crumbs">Dashboard › My Profile</div>
+      <!-- 2. the mount point -->
+      <div id="mho-profile"></div>
+    </main>
+  </div>
+
+  <!-- 3. the section script + mount -->
+  <script src="mho-profile-section.js"></script>
+  <script>
+    MHOProfileSection.mount('#mho-profile', {
+      assetBase: './',
+      user: { firstName: 'Kunal', respondentId: 'DEMO-CAREGIVER' },
+      config: { apiBase: '' },
+    });
+    // your sidebar can jump to the section's parts
+    document.querySelectorAll('[data-go]').forEach((a) => a.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.side a').forEach((x) => x.classList.toggle('on', x === a));
+      document.getElementById(a.dataset.go)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+  </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+/* MyHealthOpinions · Account Care card. All selectors prefixed .mho-acct. */
+.mho-acct { --teal: #1A6689; --orange: #F08A2C; --red: #E53935; --bg: #FFFFFF; --bg2: #FFF7F0; --fg: #12384A; --fg2: #5A7381; --line: #F1E0D2; --chip: #FFF1E4;
+  position: relative; overflow: hidden; border-radius: 20px; padding: 14px; font-family: inherit; color: var(--fg);
+  background: radial-gradient(120% 80% at 100% 0%, rgba(240, 138, 44, .14), transparent 60%), linear-gradient(180deg, var(--bg), var(--bg2)); border: 1px solid var(--line);
+  box-shadow: 0 12px 30px -20px rgba(229, 57, 53, .45); }
+.mho-acct[data-theme="dark"] { --bg: #0D2430; --bg2: #0A1A24; --fg: #EAF6FA; --fg2: #9FBCC8; --line: rgba(125, 211, 252, .2); --chip: rgba(255, 255, 255, .08); box-shadow: 0 12px 30px -20px rgba(0, 0, 0, .7); }
+.mho-acct *, .mho-acct *::before, .mho-acct *::after { box-sizing: border-box; }
+.mho-acct [hidden] { display: none !important; }
+.mho-acct svg { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.mho-acct__head { display: flex; align-items: center; gap: 10px; }
+.mho-acct__head > div { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.mho-acct .mho-acct__head b { font-size: 13.5px; font-weight: 800; line-height: 1.2; color: var(--fg); }
+.mho-acct__head small { font-size: 11px; color: var(--fg2); }
+.mho-acct__heart { width: 34px; height: 34px; flex: none; animation: mhoAcctBeat 1.4s ease-in-out infinite; }
+@keyframes mhoAcctBeat { 0%, 40%, 100% { transform: scale(1); } 10% { transform: scale(1.12); } 25% { transform: scale(1.05); } }
+.mho-acct__state { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 10.5px; font-weight: 800; background: var(--chip); color: var(--fg); }
+.mho-acct__state::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #10B981; box-shadow: 0 0 0 3px rgba(16, 185, 129, .22); }
+.mho-acct[data-status="hold"] .mho-acct__state::before { background: #0EA5E9; box-shadow: 0 0 0 3px rgba(14, 165, 233, .22); }
+.mho-acct[data-status="deactivated"] .mho-acct__state::before, .mho-acct[data-status="pending"] .mho-acct__state::before { background: #F59E0B; box-shadow: 0 0 0 3px rgba(245, 158, 11, .22); }
+.mho-acct__ecg { display: block; width: 100%; height: 18px; margin: 8px 0 10px; }
+.mho-acct__ecg path { stroke: var(--red); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.mho-acct__ecg .base { opacity: .22; }
+.mho-acct__ecg .run { stroke-dasharray: 60 400; stroke-dashoffset: 460; animation: mhoAcctTrace 2.4s linear infinite; }
+@keyframes mhoAcctTrace { to { stroke-dashoffset: 0; } }
+.mho-acct a.mho-acct__btn, .mho-acct a.mho-acct__btn:visited, .mho-acct a.mho-acct__btn:hover { color: #fff; text-decoration: none; }
+.mho-acct__btn { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px 10px 10px; border-radius: 16px; overflow: hidden;
+  background: linear-gradient(115deg, #E53935 0%, #F97316 60%, #FBBF24 130%); box-shadow: 0 10px 22px -12px #E53935, inset 0 1px 0 rgba(255, 255, 255, .3); transition: transform .2s, box-shadow .2s; }
+.mho-acct__btn + .mho-acct__btn { margin-top: 8px; }
+.mho-acct__btn:hover { transform: translateY(-2px); box-shadow: 0 16px 28px -12px #E53935; }
+.mho-acct__btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+.mho-acct__btn::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, .35) 50%, transparent 70%); transform: translateX(-120%); animation: mhoAcctShine 4s ease-in-out infinite; }
+@keyframes mhoAcctShine { 0%, 60% { transform: translateX(-120%); } 90%, 100% { transform: translateX(120%); } }
+.mho-acct__ic { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border-radius: 50%; background: rgba(255, 255, 255, .2); }
+.mho-acct__ic svg { width: 17px; height: 17px; }
+.mho-acct__txt { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.mho-acct .mho-acct__txt b { font-size: 12.5px; font-weight: 800; line-height: 1.2; color: #fff; }
+.mho-acct__txt small { font-size: 10.5px; color: rgba(255, 255, 255, .88); line-height: 1.25; }
+.mho-acct__go { width: 16px; height: 16px; flex: none; transition: transform .2s; }
+.mho-acct__btn:hover .mho-acct__go { transform: translateX(3px); }
+.mho-acct__btn--react { background: linear-gradient(115deg, #0E7490 0%, #10B981 70%, #A3E635 140%); box-shadow: 0 10px 22px -12px #10B981; }
+.mho-acct__note { margin: 10px 0 0; padding: 8px 10px; border-radius: 12px; font-size: 11px; color: #92400E; background: #FFF7E6; border: 1px solid #FCE2A9; }
+.mho-acct[data-theme="dark"] .mho-acct__note { color: #FDE68A; background: rgba(245, 158, 11, .12); border-color: rgba(245, 158, 11, .35); }
+@media (prefers-reduced-motion: reduce) { .mho-acct *, .mho-acct *::before, .mho-acct *::after { animation: none !important; transition: none !important; } }

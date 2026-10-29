@@ -8,6 +8,7 @@ import { ContextProviders } from "@/Context";
 import { GoogleTagManager } from "@next/third-parties/google";
 import ChatWidget from "@/componentsMHO/ChatWidget";
 import RecentActivityPopup from "@/componentsMHO/RecentActivityPopup";
+import LanguageSync from "@/componentsMHO/LanguageSync";
 
 export default function RootLayout({ children }) {
   return (
@@ -51,6 +52,7 @@ export default function RootLayout({ children }) {
         <Providers>
           <ContextProviders>
             <CssBaseline />
+            <LanguageSync />
             <main role="main">{children}</main>
             {/* <ChatWidget /> */}
             <Toast />

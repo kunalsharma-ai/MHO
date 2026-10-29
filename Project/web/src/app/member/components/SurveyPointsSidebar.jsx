@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import AccountBalanceWalletRoundedIcon from "@mui/icons-material/AccountBalanceWalletRounded";
 import { api, loadData } from "@/util";
+import { useRewardsTick, fetchRewardBalance } from "@/hooks/useRewardsRefresh";
+import { useMember } from "@/Context";
 
 export default function SurveyPoints({ onUpdate }) {
   const router = useRouter();
@@ -18,10 +20,12 @@ export default function SurveyPoints({ onUpdate }) {
   const [isLoading, setIsLoading] = React.useState(true);
   const [conversionRate, setConversionRate] = React.useState(null);
   const [threshold, setThreshold] = React.useState(null);
+  const member = useMember();
+  const rewardsTick = useRewardsTick();
   React.useEffect(() => {
-    setIsLoading(true);
+    if (rewardsTick === 0) setIsLoading(true);
     loadData(
-      api.get(`/api/v1/me/points`),
+      fetchRewardBalance(member),
       (resp) => {
         // if (resp.status === "error") router.replace("/survey?name=welcome");
         let data = resp.data;
@@ -33,7 +37,7 @@ export default function SurveyPoints({ onUpdate }) {
         setIsLoading(false);
       },
     );
-  }, []);
+  }, [rewardsTick, member?._id]);
   React.useEffect(() => {
     onUpdate({
       threshold,

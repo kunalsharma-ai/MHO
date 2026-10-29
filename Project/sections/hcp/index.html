@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>MyHealthOpinions for Healthcare Professionals — Profile, Get Matched, Earn Rewards</title>
+    <meta name="description" content="Join MyHealthOpinions, the healthcare research community for doctors, surgeons, nurses, pharmacists, dentists and allied health professionals. Complete your professional profiles, get matched to studies in your specialty and earn 70 reward points and 5 Quality Score points for every profile." />
+    <meta name="theme-color" content="#0A1030" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="canonical" href="https://www.myhealthopinions.com/healthcare-professionals/" />
+    <link rel="icon" href="./favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" href="./images/icon-192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+
+    <!-- Fonts: self-hosted variable Manrope (headings + numbers) and Inter (text, buttons, navigation) -->
+    <link rel="preload" href="/fonts/manrope-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./images/brand/mho-logo.png" as="image" fetchpriority="high" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MyHealthOpinions" />
+    <meta property="og:title" content="Your clinical insight shapes tomorrow’s medicine — MyHealthOpinions" />
+    <meta property="og:description" content="Profiles for healthcare professionals. Get matched to studies in your specialty and earn rewards." />
+    <meta property="og:image" content="https://www.myhealthopinions.com/healthcare-professionals/images/og-image.png" />
+    <meta property="og:image:alt" content="MyHealthOpinions for Healthcare Professionals — your clinical insight shapes tomorrow’s medicine" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="alternate" hreflang="en" href="https://www.myhealthopinions.com/healthcare-professionals/?lang=en" />
+    <link rel="alternate" hreflang="zh" href="https://www.myhealthopinions.com/healthcare-professionals/?lang=zh" />
+    <link rel="alternate" hreflang="hi" href="https://www.myhealthopinions.com/healthcare-professionals/?lang=hi" />
+    <link rel="alternate" hreflang="es" href="https://www.myhealthopinions.com/healthcare-professionals/?lang=es" />
+    <link rel="alternate" hreflang="fr" href="https://www.myhealthopinions.com/healthcare-professionals/?lang=fr" />
+    <link rel="alternate" hreflang="de" href="https://www.myhealthopinions.com/healthcare-professionals/?lang=de" />
+    <link rel="alternate" hreflang="ja" href="https://www.myhealthopinions.com/healthcare-professionals/?lang=ja" />
+    <link rel="alternate" hreflang="ar" href="https://www.myhealthopinions.com/healthcare-professionals/?lang=ar" />
+    <link rel="alternate" hreflang="pt" href="https://www.myhealthopinions.com/healthcare-professionals/?lang=pt" />
+    <link rel="alternate" hreflang="ru" href="https://www.myhealthopinions.com/healthcare-professionals/?lang=ru" />
+    <link rel="alternate" hreflang="ko" href="https://www.myhealthopinions.com/healthcare-professionals/?lang=ko" />
+    <link rel="alternate" hreflang="it" href="https://www.myhealthopinions.com/healthcare-professionals/?lang=it" />
+    <link rel="alternate" hreflang="x-default" href="https://www.myhealthopinions.com/healthcare-professionals/" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "MyHealthOpinions for Healthcare Professionals",
+        "url": "https://www.myhealthopinions.com/healthcare-professionals/",
+        "description": "Healthcare research community for doctors, nurses, pharmacists, surgeons, dentists and allied health professionals.",
+        "inLanguage": ["en", "zh", "hi", "es", "fr", "de", "ja", "ar", "pt", "ru", "ko", "it"],
+        "publisher": { "@type": "Organization", "name": "Frequent Research Fieldwork Solutions Pvt. Ltd.", "url": "https://www.myhealthopinions.com", "logo": "https://www.myhealthopinions.com/healthcare-professionals/images/mho-logo.png" },
+        "audience": { "@type": "MedicalAudience", "audienceType": "Clinician" }
+      }
+    </script>
+
+    <!-- Critical CSS: paints the themed background + header instantly (no white flash) -->
+    <style>
+      html{background:#CDEBE7}html[data-theme=dark]{background:#050A1E}
+      body{margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif}
+      #boot{min-height:100vh;display:grid;place-items:center}
+    </style>
+    <!-- Runtime options (rewards, profile order, user name, API) — editable after deployment -->
+    <script src="./config.js"></script>
+    <script>
+      // Apply saved theme before first paint (prevents light→dark flash).
+      try{var s=JSON.parse(localStorage.getItem('mho-hcp-v1')||'{}');var t=s.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t;}catch(e){}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div style="padding:24px;font-family:system-ui;text-align:center">
+        <h1>MyHealthOpinions for Healthcare Professionals</h1>
+        <p>Please enable JavaScript to complete your professional profiles.</p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

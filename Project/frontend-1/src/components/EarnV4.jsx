@@ -13,6 +13,8 @@ import { Link } from '../router.jsx';
 import { CONSUMER_GROUPS, BUSINESS } from '../data/profiles.js';
 import { REGIONS, COVERAGE_COUNT } from '../data/countries.js';
 import { FLOORS } from '../data/workforce.js';
+import { useI18n } from '../i18n/I18nProvider.jsx';
+import { tr } from '../i18n/engine.js';
 
 /* ---------------- coin towers ---------------- */
 const LEVELS = [
@@ -152,11 +154,14 @@ export function ScamSwitch() {
 
 /* ---------------- departure board ---------------- */
 const FLAP = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-function FlapText({ text, delay = 0 }) {
+function FlapText({ text: source, delay = 0 }) {
+  const { lang } = useI18n();
+  const local = tr(source); // visitor's language (dictionary / cache), else English
+  const text = /^[A-Za-z ,.'-]+$/.test(local) ? local.toUpperCase() : local;
   const [shown, setShown] = useState(text);
   const [ref, inView] = useInView({ threshold: 0.2 });
   useEffect(() => {
-    if (!inView || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setShown(text); return; }
+    if (!inView || lang !== 'en' && !/^[A-Z ,.'-]+$/.test(text) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setShown(text); return; }
     let n = 0;
     let t2;
     const t = setTimeout(() => {
@@ -169,7 +174,7 @@ function FlapText({ text, delay = 0 }) {
     }, delay);
     return () => { clearTimeout(t); clearInterval(t2); };
   }, [text, inView, delay]);
-  return <span ref={ref} className="flap">{shown}</span>;
+  return <span ref={ref} className="flap notranslate" translate="no">{shown}</span>;
 }
 
 export function DepartureBoard() {
@@ -188,7 +193,7 @@ export function DepartureBoard() {
         <ul className="bd-rows" key={r}>
           {list.map((c, i) => (
             <li key={c.code} style={{ '--c': c.color, '--i': i }}>
-              <span className="bd-dest"><Flag code={c.code} name={c.name} size={22} /><FlapText text={c.name.toUpperCase()} delay={(i % 20) * 40} /></span>
+              <span className="bd-dest"><Flag code={c.code} name={c.name} size={22} /><FlapText text={c.name} delay={(i % 20) * 40} /></span>
               <span className="bd-reg">{c.region}</span>
               <span className="bd-st"><i />Open to join</span>
             </li>
