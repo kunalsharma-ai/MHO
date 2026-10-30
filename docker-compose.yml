@@ -117,18 +117,18 @@ services:
     networks:
       - mho
     restart: unless-stopped
-  frontend-1:
-    # image: mfr-web:dev-1.0.0
-    build:
-      context: Project/frontend-1
-      target: development
-    restart: unless-stopped
+  # frontend-1:
+  #   # image: mfr-web:dev-1.0.0
+  #   build:
+  #     context: Project/frontend-1
+  #     target: development
+  #   restart: unless-stopped
 
-    volumes:
-     - ./Project/frontend-1:/frfs
-     -  frontend-2_node_modules:/frfs/node_modules
-    networks:
-      - mho
+  #   volumes:
+  #    - ./Project/frontend-1:/frfs
+  #    -  frontend-2_node_modules:/frfs/node_modules
+  #   networks:
+  #     - mho
   web-dev:
     image: ${PROJECT}-web-dev
     build:
