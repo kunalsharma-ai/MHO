@@ -14,7 +14,7 @@ networks:
 
 services:
   frontend-1:
-    image: registry.sampledge.com/myhealthopinions/frontend:prod-2.0.0
+    image: registry.sampledge.com/my-health-opinions/frontend:prod-2.0.0
     build:
       context: Project/frontend-1
       target: production
