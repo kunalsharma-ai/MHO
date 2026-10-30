@@ -260,6 +260,7 @@ export default function SignUp({
     icon: providerIcons[provider.name?.toLowerCase()] || <LoginIcon />,
     href: provider.authUrl,
   }));
+  
   React.useEffect(() => {
     if (!telemetry) return;
     telemetry.timezone().then((timezone) => {
@@ -275,23 +276,35 @@ export default function SignUp({
   React.useEffect(() => {
     form.setValue("category", userType);
   }, [userType]);
+
   const genderValue = form.watch("gender");
   const salutation = form.watch("name.salutation");
+
   React.useEffect(() => {
     if (!genderValue) return;
     const validSalutations = GENDER_SALUTATION_MAP[genderValue] || [];
-    if (!salutation) {
+    if (salutation && !validSalutations.includes(salutation)){
+      form.setValue("name.salutation", "", {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
       setFocus("name.salutation");
       return;
     }
-    const selectedSalutation = SALUTATION_OPTIONS.find(
+    if (!salutation) {
+    form.trigger("name.salutation"); 
+    setFocus("name.salutation");
+  }
+   const selectedSalutation = SALUTATION_OPTIONS.find(
       (option) => option.value === salutation,
     );
     if (!selectedSalutation?.genderBased) return;
     if (!validSalutations.includes(salutation)) {
       setFocus("name.salutation");
     }
-  }, [genderValue, salutation, setFocus]);
+  }, [genderValue]);
+
   let minDOB = new Date();
   minDOB.setFullYear(minDOB.getFullYear() - 120);
   let maxDOB = new Date();
@@ -323,6 +336,7 @@ export default function SignUp({
       setIsLoading(false);
     }
   };
+
   const category = form.watch("category");
   React.useEffect(() => {
     if (status === "success") {

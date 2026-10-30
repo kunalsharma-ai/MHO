@@ -1,0 +1,2638 @@
+[{
+  "name": "fullname",
+  "label": "Full Name",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "gender",
+  "label": "Gender",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "dob",
+  "label": "Date of Birth",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "age",
+  "label": "Age",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "relationship-status",
+  "label": "Marital Status",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "children",
+  "label": "Number of children below 18 in household",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ],
+  "parent": "relationship-status"
+},
+{
+  "name": "personal-income",
+  "label": "Approximate Annual Personal Income (before tax)",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ],
+  "parent": "rural"
+},
+{
+  "name": "household-income",
+  "label": "Approximate Total Family Income (before tax)",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ],
+  "parent": "rural"
+},
+{
+  "name": "education",
+  "label": "Highest Level of Education",
+  "category": [
+    "patient",
+    "care giver",
+    "minor patient"
+  ],
+  "parent": ""
+},
+{
+  "name": "employment-status",
+  "label": "Employment Status",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-participation-history",
+  "label": "Have you ever participated in a market research survey?",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-participation-frequency",
+  "label": "How often do you participate in surveys",
+  "parent": "survey-participation-history",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-participation-category",
+  "label": "What type of surveys have you participated in, before?",
+  "parent": "survey-participation-history",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "other-survey-panel",
+  "label": "Are you currently registered with any other online research panels?",
+  "parent": "survey-participation-history",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-mode",
+  "label": "How do you prefer to participate in Survey?",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-participation-time-duration",
+  "label": "How much time are you comfortable spending on a survey",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "willingness-survey-participation",
+  "label": "Are you willing to participate in future market research studies",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-type-interested-in",
+  "label": "What types of study would you be open to join",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "share-consent",
+  "label": "Are you comfortable sharing your health related experiences for research purposes (confidentially)",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-participation-motivation",
+  "label": "What motivates you to participate in surveys",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "video-survey-participation-consent",
+  "label": "Are you comfortable participating in online video interviews or discussions (via Zoom, Teams etc.)",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "mode-of-payment",
+  "label": "What type of rewards do you prefer",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "survey-participation-timeslot",
+  "label": "What is your preferred time of day to participate in Survey",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "recontact-consent",
+  "label": "Do you agree to be re-contacted for future studies",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "communication-methods",
+  "label": "How do you want to be notified for a new survey",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "mail",
+  "label": "E-Mail",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "phone",
+  "label": "Contact Number",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "country",
+  "label": "Country",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "state",
+  "label": "State",
+  "parent": "country",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "city",
+  "label": "City",
+  "parent": "state",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "zipcode",
+  "label": "Zipcode",
+  "parent": "country",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "ethnicity",
+  "label": "Ethnicity",
+  "parent": "country",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "languages",
+  "label": "Languages",
+  "parent": "country",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "jobrole",
+  "label": "Your current role in the organization",
+  "parent": "employment-status",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "linkedin",
+  "label": "Company Linkedin Profile",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "website",
+  "label": "Your Website",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "employment-sector",
+  "label": "In which sector you are working at",
+  "parent": "employment-industry",
+  "category": [
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "employment-industry",
+  "label": "please select your industry",
+  "parent": "empstat-homeuser",
+  "category": [
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "employment-department",
+  "label": "Department?",
+  "parent": "employment-sector",
+  "category": [
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "employment-jobrole",
+  "label": "What is your jobrole or designation in your organization",
+  "parent": "employment-department",
+  "category": [
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "organization-revenue",
+  "label": "What is overall annual revenue of your organization",
+  "parent": "country_of_practice",
+  "category": [
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "education-diploma",
+  "label": "Diploma",
+  "parent": "education",
+  "category": [
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "education-associate-degree",
+  "label": "Associate Degree",
+  "parent": "education",
+  "category": [
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "education-ug",
+  "label": "Under Graduate",
+  "parent": "education",
+  "category": [
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "education-pg",
+  "label": "Post Graduation",
+  "parent": "education",
+  "category": [
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "education-other",
+  "label": "Other",
+  "parent": "education",
+  "category": [
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "education-doctorate",
+  "label": "What is your doctoral qualification",
+  "parent": "education",
+  "category": [
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "rural",
+  "label": "What type of area do you currently live in",
+  "parent": "country",
+  "category": [
+    "healthcare professional",
+    "patient",
+    "care giver",
+    "minor patient"
+  ]
+},
+{
+  "name": "sport-category",
+  "label": "Which type(s) of sports or activities do you play most often?",
+  "parent": "do-sport-participation",
+  "category": [
+    "patient",
+    "minor patient",
+    "care giver"
+  ]
+},
+{
+  "name": "use-fitness-mobile-app",
+  "label": "Do you use any mobile apps or wearable devices to track your health (e.g., Fitbit, Apple Health, MyFitnessPal)?",
+  "category": [
+    "patient",
+    "minor patient",
+    "care giver"
+  ]
+},
+{
+  "name": "use-devices",
+  "label": "Which of the following devices do you currently own and use regularly?",
+  "category": [
+    "patient",
+    "minor patient",
+    "care giver"
+  ]
+},
+{
+  "name": "health-management-app",
+  "label": "Which types of mobile apps to manage your health or condition?",
+  "category": [
+    "patient",
+    "minor patient",
+    "care giver"
+  ],
+  "parent": "use-fitness-mobile-app"
+},
+{
+  "name": "health-service",
+  "label": "Which digital health services would you are using currently",
+  "category": [
+    "patient",
+    "minor patient",
+    "care giver"
+  ]
+},
+{
+  "name": "cg-activities",
+  "label": "Which of the following tasks do you regularly perform? (Select all that apply)",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-agegroup",
+  "label": "What age group do you mostly provide care for?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-agency-partnership",
+  "label": "Are you currently employed through a home-care agency or independently?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-alcohol",
+  "label": "Do you currently consume alcohol?",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-alcohol-category",
+  "label": "which types of alcoholic drinks do you usually consume? (Select all that apply)",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-allergy-details",
+  "label": "If yes, please specify",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-assistance",
+  "label": "What tasks do you assist with? (Select all that apply)",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-cancer-types",
+  "label": "What types of cancer patients do you primarily assist?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-certification",
+  "label": "Have you completed any of the following certifications or training? (Select all that apply)",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-certifications",
+  "label": "Have you completed any of the following certifications or training? (Select all that apply)",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-cold-drink",
+  "label": "Which cold drinks do you regularly consume? (Select all that apply)",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-decision-making",
+  "label": "Are you involved in healthcare decisions for your patients?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-dementia",
+  "label": "What stages of dementia do you primarily work with?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-dialysis-environment",
+  "label": "What type of dialysis environment do you work in?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-dialysis-training",
+  "label": "Have you received dialysis care training or certification?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-diet-plan",
+  "label": "Do you follow any specific diet or eating plan? (Select all that apply)",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-domain",
+  "label": "Which of the following best describes you?",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-education",
+  "label": "What is your highest education related to healthcare or caregiving?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-employment",
+  "label": "What is your current employment status?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-exercise",
+  "label": "Do you currently engage in any physical exercise or fitness routine?",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-exercise-category",
+  "label": "What type of exercise do you usually do? (Select all that apply)",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-experience",
+  "label": "How long have you been working as a professional caregiver?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-facility",
+  "label": "Which type of facility do you currently supervise or coordinate?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-facility-type",
+  "label": "What type of facility do you currently work in?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-firstaid-training",
+  "label": "Have you received First Aid or CPR training?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-food-allergy",
+  "label": "Do you have any food allergies or intolerances?",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-full-time",
+  "label": "Do you provide care full-time or part-time?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-have-insurance",
+  "label": "Do you currently have health insurance coverage?",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-health-checkup",
+  "label": "Have you had a general health checkup in the last 12 months?",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-health-conditions",
+  "label": "What are the most common health conditions of your care recipients? (Select all that apply)",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-health-suppliment",
+  "label": "Do you consume any of the following for health or energy purposes? (Select all that apply)",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-hot-drink",
+  "label": "Which of the following hot drinks do you regularly consume? (Select all that apply)",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-insurance",
+  "label": "If yes, what type of insurance do you have?",
+  "category": [
+    "care giver"
+  ],
+  "parent": "cg-have-insurance"
+},
+{
+  "name": "cg-license",
+  "label": "Are you currently licensed to practice nursing or caregiving in your region?",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-medical-condition",
+  "label": "Which medical conditions do you currently or most frequently assist with? (Select all that apply)",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-medication-admin",
+  "label": "Are you responsible for medication administration or management?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-patient-type",
+  "label": "What type of clients do you primarily work with? (Select all that apply)",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-patient-types",
+  "label": "What types of patients do you primarily care for? (Select all that apply)",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-rehabilitation-support",
+  "label": "Which of the following rehabilitation services or supports do you provide? (Select all that apply)",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-role",
+  "label": "What is your professional title or role?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-setting",
+  "label": "In what setting do you provide care or support?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-sleep-duration",
+  "label": "How many hours of sleep do you get per night?",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-smoke",
+  "label": "Do you currently smoke?",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-specialization",
+  "label": "Which of the following best describes your role as a specialized caregiver? (Select all that apply)",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-sport-category",
+  "label": "Which types of sports or activities do you play most often? (Select all that apply)",
+  "category": [
+    "care giver"
+  ],
+  "parent": "cg-sport-participation"
+},
+{
+  "name": "cg-sport-participation",
+  "label": "Do you regularly participate in any sports or outdoor physical activities?",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-support-category",
+  "label": "What kind of support do you provide? (Select all that apply)",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-symptom-management",
+  "label": "Do you assist with symptom management (e.g., fatigue, nausea, pain)?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-tobacco-type",
+  "label": "What type of tobacco product do you use most often?",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-training",
+  "label": "Have you received formal caregiving training or certification?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-training-cancer",
+  "label": "Are you trained to handle chemotherapy or radiation aftercare?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-vaccine-covid",
+  "label": "Are you up to date with your vaccinations (e.g., flu, COVID-19, etc.)?",
+  "category": [
+    "care giver"
+  ],
+  "parent": "caregiving-situation"
+},
+{
+  "name": "cg-workhours",
+  "label": "What is your average work duration per week?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-workplace",
+  "label": "Where do you primarily provide patient care?",
+  "parent": "cg-domain",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "payment-method",
+  "label": "How do you like to receive payments",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "payment-method-upi",
+  "label": "Your Virtual Payment Address (UPI ID)",
+  "parent": "payment-method",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "payment-method-amazon",
+  "label": "Your Amazon ID",
+  "parent": "payment-method",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "payment-method-paypal",
+  "label": "Your Paypal ID",
+  "parent": "payment-method",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "payment-method-bank-name",
+  "label": "Your Bank Name",
+  "parent": "payment-method",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "payment-method-bank-ifsc",
+  "label": "IFSC Code / Swift Code / IBAN",
+  "parent": "payment-method",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "payment-method-bank-account",
+  "label": "Your Bank Account Number",
+  "parent": "payment-method",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "social-media-instagram",
+  "label": "Instagram ID",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "social-media-facebook",
+  "label": "Facebook ID",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "social-media-linkedin",
+  "label": "Linkedin ID",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "social-media-youtube",
+  "label": "Youtube ID",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "social-media-x",
+  "label": "X(Twitter) ID",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "social-media-whatsapp",
+  "label": "Whatsapp",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver",
+    "patient",
+    "minor patient"
+  ]
+},
+{
+  "name": "video-platforms",
+  "label": "Which video platforms are you familiar with? (Select all that apply)",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver"
+  ]
+},
+{
+  "name": "video-based-research",
+  "label": "Are you open to participating in video-based research that may require",
+  "parent": "",
+  "category": [
+    "healthcare professional",
+    "care giver"
+  ]
+},
+{
+  "name": "caregiver-support",
+  "label": "Are you currently providing care, support, supervision, or regular assistance to another person?",
+  "parent": "",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "caregiving-situation",
+  "label": "Which best describes your caregiving situation?",
+  "parent": "caregiver-support",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "relationship-to-person",
+  "label": "What is your relationship to the person or people you currently care for?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-type",
+  "label": "What type of care do you primarily provide?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "unpaid-care-count",
+  "label": "How many people do you currently provide unpaid care or regular assistance to?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-recipient-category",
+  "label": "Which broad category best describes the person you primarily provide care or assistance to?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-recipient-agegroup",
+  "label": "What is the broad age group of the primary person you care for?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "is-primary-caregiver",
+  "label": "Would you consider yourself the primary caregiver?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "personal-support",
+  "label": "Which types of support do you personally provide?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "unpaid-healthcare-involvement",
+  "label": "How involved are you in the healthcare-related activities of the person you care for?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "unpaid-healthcare-activities",
+  "label": "Which healthcare-related activities do you personally help with?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-decision",
+  "label": "What is your role in healthcare decisions for the person you care for?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-employment-arrangement",
+  "label": "What is your current professional caregiving employment arrangement?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-describe",
+  "label": "Which of the following best describes you?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-describe-professional",
+  "label": "Which best describes your current work?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-professional-caregivingtype",
+  "label": "What type of care do you primarily provide?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-professional-experience",
+  "label": "How many years have you worked in a professional caregiving role?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-professional-primary-employment",
+  "label": "What is your primary employment setting?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-personal-care-aide",
+  "label": "Do you currently work as a Personal Care Aide or in a role with substantially similar responsibilities?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "personal-care-activities-assisted",
+  "label": "Which personal care activities do you regularly assist with?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-care-recipient",
+  "label": "Who do you primarily provide care for?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-job-title-personal-care-assistant",
+  "label": "Is your current job title Personal Care Assistant or equivalent?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "personal-care-time-percentage",
+  "label": "What percentage of your working time involves direct personal care?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "services-provided",
+  "label": "Which services do you provide?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "direct-client-patient-work",
+  "label": "Do you work directly with clients/patients?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "paid-home-care",
+  "label": "Do you currently provide paid care or support in clients' homes?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "type-of-home-care-provided",
+  "label": "What type of home care do you provide?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-client-count",
+  "label": "How many clients do you currently support?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "employer-type",
+  "label": "Who employs you?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-home-health-aide-employment",
+  "label": "Are you currently employed as a Home Health Aide or equivalent?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-in-client-private-residence",
+  "label": "Do you provide care in a client's private residence?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-activities-performed",
+  "label": "Which activities do you perform?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "healthcare-professional-direction",
+  "label": "Do you work under the direction of a nurse, physician, or other healthcare professional?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-healthcare-assistant-role",
+  "label": "Is your current role Healthcare Assistant or an equivalent healthcare support position?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-work-location",
+  "label": "Where do you primarily work?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "direct-patient-care-proportion",
+  "label": "What proportion of your role involves direct patient care?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "patient-care-activities-performed",
+  "label": "Which activities do you perform?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-nursing-assistant-role",
+  "label": "Do you currently work as a Nursing Assistant or equivalent?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-work-facility-type",
+  "label": "What type of facility do you primarily work in?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "patient-activities-assisted",
+  "label": "What patient activities do you assist with?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "work-under-nurse-supervision",
+  "label": "Do you work under the supervision of a nurse or other licensed healthcare professional?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "professional-caregiver-experience",
+  "label": "How long have you been working as a professional caregiver?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-patient-types-cared-for",
+  "label": "What types of patients do you primarily care for? (Select all that apply)",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "regular-caregiver-tasks",
+  "label": "Which of the following tasks do you regularly perform? (Select all that apply)",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "valid-nursing-assistant-certification",
+  "label": "Do you currently hold a valid nursing assistant certification/license applicable in your country or state?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-certified-nursing-assistant",
+  "label": "Are you currently working as a Certified Nursing Assistant or equivalent?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "certified-primary-work-location",
+  "label": "Where do you primarily work?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "direct-patient-care-frequency",
+  "label": "How frequently do you provide direct patient care?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "certification-duration",
+  "label": "How long have you held your certification?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-paid-support-worker-role",
+  "label": "Do you currently work in a paid support worker role?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-support-type",
+  "label": "What type of support do you primarily provide?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-support-recipient",
+  "label": "Who do you primarily support?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-support-location",
+  "label": "Where do you primarily provide support?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "paid-disability-support",
+  "label": "Do you currently provide paid support to people with disabilities?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-disability-groups-supported",
+  "label": "Which disability groups do you primarily support?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "support-type-provided",
+  "label": "What type of support do you provide?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "work-setting",
+  "label": "What is your primary work setting?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "paid-older-adult-care-support",
+  "label": "Do you currently provide paid care or support to older adults?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "client-age-group",
+  "label": "What age group do most of your clients belong to?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "common-care-needs-supported",
+  "label": "Which care needs do you commonly support?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-care-location",
+  "label": "Where do you primarily provide care?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-paid-childcare-role",
+  "label": "Do you currently work in a paid childcare role?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-childcare-age-groups",
+  "label": "What age groups do you primarily care for?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-childcare-location",
+  "label": "Where do you primarily provide childcare?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-childcare-responsibilities",
+  "label": "What are your primary responsibilities?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-live-in-caregiver",
+  "label": "Do you currently work as a live-in caregiver?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "live-in-care-recipient-residence",
+  "label": "Do you live in the same residence as the person you care for as part of your employment?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "live-in-care-experience",
+  "label": "How long have you been providing live-in care?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "role-responsibilities",
+  "label": "Which responsibilities are included in your role?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "paid-community-care-support",
+  "label": "Do you currently provide paid care/support services in a community setting?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-service-location",
+  "label": "Where do you primarily provide services?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-supported-population",
+  "label": "Which population do you primarily support?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "type-of-support-provided",
+  "label": "What type of support do you provide?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-residential-care-role",
+  "label": "Do you currently work in a residential care environment?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "residential-facility-type",
+  "label": "What type of residential facility do you work in?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-residents-supported",
+  "label": "Who are the primary residents you support?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "direct-resident-care-frequency",
+  "label": "How frequently do you provide direct resident care?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "shift-based-care",
+  "label": "Do you provide overnight or shift-based care?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-direct-support-professional",
+  "label": "Do you currently work as a Direct Support Professional (DSP) or equivalent?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "support-recipient",
+  "label": "Who do you primarily support?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "service-type",
+  "label": "Which services do you provide?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-work-environment",
+  "label": "What is your primary work environment?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-coordinator-care-manager-case-manager",
+  "label": "Is your current role Care Coordinator, Care Manager, Case Manager, or an equivalent position?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "type-of-care-coordinated",
+  "label": "What type of care do you coordinate?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "number-of-clients-patients-coordinated",
+  "label": "How many clients/patients do you currently coordinate care for?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "role-activities",
+  "label": "Which activities are part of your role?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "influence-care-provider-service-decisions",
+  "label": "Do you influence decisions regarding care providers or services?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "paid-patient-client-support-role",
+  "label": "Do you currently work in a paid patient/client support role?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "patient-primary-support-location",
+  "label": "Where do you primarily provide support?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "patient-type-of-support-provided",
+  "label": "What type of support do you provide?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-support-patient-client",
+  "label": "Who do you primarily support?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-position",
+  "label": "Which best describes your current position?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "years-supervisory-administrative-healthcare-caregiving",
+  "label": "How many years of supervisory or administrative experience do you have in healthcare or caregiving?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "caregiving-staff-supervised-managed",
+  "label": "How many caregiving staff do you supervise or manage?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "areas-of-responsibility",
+  "label": "Which areas are you responsible for?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "influence-care-related-purchasing-decisions",
+  "label": "Do you influence purchasing decisions for care-related products or services?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "managed-care-setting",
+  "label": "Which care setting do you manage?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "supervised-coordinated-facility-type",
+  "label": "Which type of facility do you currently supervise or coordinate?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "role-tasks",
+  "label": "Which of the following tasks are part of your role? (Select all that apply)",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "management-leadership-compliance-certifications",
+  "label": "Have you completed any management, leadership, or compliance certifications?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "licensed-clinical-role",
+  "label": "Are you licensed to practice in a clinical role (e.g., nurse license)?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "highest-nursing-medical-qualification",
+  "label": "What is your highest nursing or medical qualification?",
+  "parent": "",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "home-based-health-insurance-status",
+  "label": "What is your current health insurance status?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "insurance-provide-by",
+  "label": "Who provides your current health insurance?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "insurance-cover",
+  "label": "Who is covered under your health insurance?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "health-insurance-plan-decision-maker",
+  "label": "Who is primarily responsible for choosing your health insurance plan?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "health-insurance-payment-involvement",
+  "label": "How involved are you in paying for your health insurance?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "last-health-insurance-plan-change",
+  "label": "When did you last choose or change a health insurance plan?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "health-insurance-services-used-past-12-months",
+  "label": "Which health insurance services have you used in the past 12 months",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "health-insurance-claim-past-12-months",
+  "label": "Have you submitted a health insurance claim in the past 12 months?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "household-healthcare-expense-decision-involvement",
+  "label": "How involved are you in decisions about healthcare expenses for your household?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "health-insurance-plans-next-12-months",
+  "label": "Are you planning to purchase, renew, or change health insurance in the next 12 months?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "manage-health-insurance-for-care-recipient",
+  "label": "Do you currently help manage health insurance for a person you care for?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-person-assisted-with-insurance",
+  "label": "Who is the person you primarily manage or assist with insurance matters for?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "role-in-care-recipient-health-insurance-decisions",
+  "label": "What is your role in the care recipient's health insurance decisions?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-recipient-insurance-activities",
+  "label": "Which insurance activities do you handle for the care recipient?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-recipient-health-insurance-payer",
+  "label": "Who pays for the care recipient's health insurance?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-recipient-insurance-provider-interaction-frequency",
+  "label": "How frequently do you interact with the care recipient's health insurance provider?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-recipient-insurance-claim-past-12-months",
+  "label": "Has the care recipient submitted an insurance claim in the past 12 months?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "contacted-insurance-company-on-behalf-of-care-recipient",
+  "label": "Have you personally contacted an insurance company on behalf of the care recipient in the past 12 months?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "insurance-based-healthcare-provider-choice",
+  "label": "Are you involved in choosing healthcare providers based on insurance coverage?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "insurance-covered-health-product-service-selection",
+  "label": "Are you involved in purchasing or selecting health-related products/services covered by insurance?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "regular-household-food-grocery-purchases",
+  "label": "Which food and grocery products do you regularly purchase for your household?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-household-food-grocery-purchaser",
+  "label": "Who is primarily responsible for purchasing food and groceries in your household?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "usual-grocery-purchase-location",
+  "label": "Where do you usually purchase groceries?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "regular-beverage-types-consumed-purchased",
+  "label": "Which types of beverages do you regularly consume or purchase?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "household-beverage-purchase-decision-maker",
+  "label": "Who usually decides which beverages are purchased for your household?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-tobacco-nicotine-products-used",
+  "label": "Which of the following tobacco/nicotine products do you currently use?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "tobacco-nicotine-purchase-frequency",
+  "label": "How frequently do you purchase tobacco/nicotine products?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "tobacco-nicotine-purchase-location",
+  "label": "Where do you usually purchase tobacco/nicotine products?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "online-food-beverage-tobacco-lifestyle-platforms",
+  "label": "Which online platforms do you use to purchase food, beverages, tobacco/nicotine, or lifestyle products?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-household-purchase-decision-categories",
+  "label": "For which household categories are you a primary purchase decision-maker?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "regular-lifestyle-wellness-products-purchased",
+  "label": "Which lifestyle and wellness products do you regularly purchase?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "specific-diet-eating-plan",
+  "label": "Do you follow any specific diet or eating plan? (Select all that apply)",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "food-allergies",
+  "label": "Do you have any food allergies or intolerances?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "regular-hot-drinks-consumed",
+  "label": "Which of the following hot drinks do you regularly consume? (Select all that apply)",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-care-recipient-meal-planner",
+  "label": "Who is primarily responsible for planning meals for the person you care for?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-recipient-meal-preparer",
+  "label": "Who usually prepares or arranges meals for the person you care for?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-recipient-specific-diet",
+  "label": "Does the person you care for follow any specific diet?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-recipient-food-grocery-purchase-frequency",
+  "label": "How often do you purchase food or groceries specifically for the person you care for?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-recipient-regular-food-products-purchased",
+  "label": "Which food products do you regularly purchase for the person you care for?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-recipient-food-decision-involvement",
+  "label": "How involved are you in deciding what the person you care for eats?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-recipient-food-lifestyle-products-purchased",
+  "label": "Which food and lifestyle products do you personally purchase for the person you care for?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "online-food-grocery-lifestyle-purchase-platforms",
+  "label": "Which online platforms to purchase food, groceries, or lifestyle products?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "regular-physical-activities-sports",
+  "label": "Which physical activities or sports do you regularly participate in?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "usual-exercise-sports-location",
+  "label": "Where do you usually exercise or participate in sports?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "care-recipient-shared-physical-activity-type",
+  "label": "What type of physical activity do you participate in with the person you care for?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "current-fitness-technologies-used",
+  "label": "Which fitness technologies do you currently use?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "main-physical-activity",
+  "label": "What are your main reasons for participating in physical activity?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "nursing-medical-qualification",
+  "label": "What is your highest nursing or medical qualification?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "additional-certification",
+  "label": "Have you completed any additional certifications",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "practicing-licensed",
+  "label": "Are you currently licensed to practice nursing or caregiving in your region?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "manage-administer-medications-patients",
+  "label": "Do you manage or administer medications for patients?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "involved-in-patient-healthcare-decisions",
+  "label": "Are you involved in healthcare decisions for your patients?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "personal-aide-care-location",
+  "label": "Where do you primarily provide care?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "administrative-emp-status",
+  "label": "Current employment status",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "professional-qualification",
+  "label": "What is your highest qualification related to healthcare or management?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "other-specify",
+  "label": "If Other Please Specify",
+  "parent": "professional-qualification",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "empstat-homeuser",
+  "label": "What is your current employment status?",
+  "parent": "caregiving-situation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "pension-homeuser",
+  "label": "Are you availing pension facility?",
+  "parent": "empstat-homeuser",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "jobseeker-homeuser",
+  "label": "Are you seeking a job?",
+  "parent": "empstat-homeuser",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "hw-homeuser",
+  "label": "Which role you play in your homemaking?",
+  "parent": "empstat-homeuser",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "freelancer-homeuser",
+  "label": "If you are a Freelancer, please specify your job profile?",
+  "parent": "empstat-homeuser",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "professional-primary-care",
+  "label": "Who do you primarily care for?",
+  "parent": "cg-describe",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "cg-jobrole",
+  "label": "Job Title",
+  "parent": "department",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "orgoverseas",
+  "label": "How many branches your organization has in abroad?",
+  "parent": "empstat-homeuser",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "orgsize",
+  "label": "Total Number of Employees (all branches)",
+  "parent": "empstat-homeuser",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "experience-caregiver",
+  "label": "Approximate how much experience you have under your current designation?",
+  "parent": "empstat-homeuser",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "orgdecision",
+  "label": "Which of the following statements best describes your involvement in decision making in your Organization?",
+  "parent": "empstat-homeuser",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "money-spend-for-caregiving",
+  "label": "Approximately how much do you spend on food and groceries specifically for the person you care for in a typical month?",
+  "parent": "",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "monthly-spend-on-sports",
+  "label": "How much do you typically spend per month on your own sports, fitness, and exercise-related products or services?",
+  "parent": "",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "purposes-of-physical-activity",
+  "label": "What are the main purposes of physical activities you undertake with the person you care for?",
+  "parent": "care-recipient-shared-physical-activity-type",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "exercise-type",
+  "label": "What type of exercise do you usually do?",
+  "parent": "do-exercise",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "fitness-activities",
+  "label": "How often do you engage in physical exercise or fitness activities?",
+  "parent": "cg-exercise",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "how-long",
+  "label": "On average, how long is each exercise session?",
+  "parent": "cg-exercise",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "usually-exercise",
+  "label": "Where do you usually exercise",
+  "parent": "cg-exercise",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "maintain-fitness-routine",
+  "label": "What motivates you to exercise or maintain a fitness routine?",
+  "parent": "cg-exercise",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "outdoor-activities",
+  "label": "How frequently do you participate in sports or outdoor physical activities?",
+  "parent": "cg-sport-participation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "diet-follow-reason",
+  "label": "What is the main reason the person you care for follows their current diet, if applicable?",
+  "parent": "care-recipient-specific-diet",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "purchasing-product-online",
+  "label": "What are the main reasons you purchase these products online?",
+  "parent": "online-food-grocery-lifestyle-purchase-platforms",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "spending-household-on-groceries",
+  "label": "Approximately how much does your household spend on food and groceries in a typical month?",
+  "parent": "",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "reason-follow-current-diet",
+  "label": "What is the main reason you follow your current diet or eating plan?",
+  "parent": "specific-diet-eating-plan",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "primary-reason-for-insurance",
+  "label": "What was the primary reason for your most recent interaction with the insurance provider?",
+  "parent": "contacted-insurance-company-on-behalf-of-care-recipient",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "arranging-coordinating-healthcare",
+  "label": "Are you responsible for arranging or coordinating healthcare for any other household member?",
+  "parent": "",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "manage-healthcare",
+  "label": "Which household members do you help manage healthcare for?",
+  "parent": "arranging-coordinating-healthcare",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "outdoor-activity-participation",
+  "label": "Do you usually participate in sports or outdoor activities individually or with others?",
+  "parent": "cg-sport-participation",
+  "category": [
+    "care giver"
+  ]
+},
+{
+  "name": "reasons-to-participating-sport",
+  "label": "What are your main reasons for participating in sports or outdoor activities?",
+  "parent": "cg-sport-participation",
+  "category": [
+    "care giver"
+  ]
+}]

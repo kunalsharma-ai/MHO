@@ -1,0 +1,12 @@
+node_modules
+dist
+dist-embed
+.preview-tmp
+.prerender-tmp.mjs
+.extra-test.mjs
+e2e-*.png
+fit-*.png
+server/node_modules
+server/data
+server/uploads
+.env

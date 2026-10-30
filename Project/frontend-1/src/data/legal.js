@@ -1,169 +1,194 @@
-// Policy pages — based on the official MyFrequentRewards policy text supplied by the business (Oct 2026),
-// restructured for readability. The word "panel" is replaced by "community/member" per brand rules.
-// Legal owner must approve before go-live (see README → Legal review).
-// URLs are identical to the live site (/privacy, /gdpr, /cookies, /terms, /profiling) to preserve SEO.
-
-export const LEGAL_UPDATED = '2026-10-09';
+// Legal content, restructured from the existing MyHealthOpinions policies for readability.
+// IMPORTANT: have your legal adviser review any wording change before publishing. Section shape:
+// { id, title, icon, p: [paragraphs], list: [bullets] }. `glance` = summary cards at the top.
 
 export const LEGAL = {
-  privacy: {
-    path: '/privacy',
-    label: 'Privacy Policy',
+  '/privacy': {
+    theme: 'doc-privacy',
     icon: 'lock',
-    accent: '#2F6BFF',
-    metaTitle: 'Privacy Policy | How MyFrequentRewards Protects Your Data',
-    metaDescription: 'Read the MyFrequentRewards privacy policy: what we collect, why, how long we keep it, who can see it and how to access, correct or delete your personal data.',
-    hero: 'Your details stay yours.',
-    summary: [
-      { icon: 'doubleCheck', t: 'Voluntary & consented', d: 'Taking part in surveys is always your choice.' },
-      { icon: 'lock', t: 'Never sold', d: 'Personal information is not sold to third parties.' },
-      { icon: 'shield', t: 'Secured', d: 'Encryption and authentication protect your data.' },
-      { icon: 'user', t: 'Your control', d: 'Access, correct, delete or opt out at any time.' },
+    eyebrow: 'Privacy Policy',
+    title: ['How we protect', { t: 'your information', hl: 'grad' }],
+    lead: 'This privacy policy explains how My Health Opinions, operated by Frequent Research Fieldwork Solutions Private Limited, collects, uses and protects your personal information.',
+    updated: '2026-10-01',
+    glance: [
+      ['x', 'We never sell your data', 'No sale of personal information to anyone.'],
+      ['users', 'Aggregates only', 'Clients receive anonymised, combined answers.'],
+      ['shieldCheck', 'Consent first', 'Withdraw consent or delete your account any time.'],
+      ['lock', 'Secured', 'Encryption, firewalls and restricted access.'],
     ],
     sections: [
-      { h: 'About this policy', p: ['This privacy policy (“Policy”) for My Frequent Rewards is posted by Frequent Research Fieldwork Solutions Pvt. Ltd. (“Frequent Research”, “we”, “us”). It governs the use of our websites, including www.frequentresearch.com and www.myfrequentrewards.com, and our collection and use of personal information through the Site, our communications and survey research under the My Frequent Rewards or “Survey Surfing” brand names.', 'It describes (1) how we collect, use, transfer and store information about individuals (“you”); (2) your choices regarding your personal information; and (3) how we protect your privacy. Other Frequent Research products, such as the Insights platform, may be governed by separate policies.', 'We make the Site, including this Policy, accessible to individuals with disabilities. If you have trouble accessing it, please contact us. By using the Site or taking part in My Frequent Rewards or Survey Surfing research, you consent to this Policy. If you do not agree, please do not use the Site or take part in such research.'] },
-      { h: 'Notice to survey respondents', p: ['Your participation in any survey or market research programme is completely voluntary, and our use of your personal information is carried out with your consent. We may collect personal information directly from you, or receive it from partners we collaborate with who have obtained your consent.', 'Information provided through the Survey Surfing website may be used to direct respondents to third-party surveys and, in some cases, to invite them to join the MyFrequentRewards community.', 'Where you join us through a partner research community, your direct relationship is with that partner, which decides how your information is processed; we process it only at their request. Surveys run by our clients, partners or other third parties are governed by their own privacy policies, which we encourage you to read. However, personal information that we collect in connection with such surveys remains subject to this Policy.'] },
-      { h: 'Information we collect', list: ['Names, email addresses and phone numbers you give us through the Site or direct communication.', 'Log files: IP address, browser type and language, ISP, date and time of request, operating system, referring/exit pages, clickstream data and plug-ins.', 'Browsing information: when you visited, pages viewed, time spent on each page, and sites visited before or after a survey (via cookies).', 'Self-reported demographics such as age, gender and education.', 'Self-reported firmographics such as job title and profession.', 'Self-reported profile information such as technology usage, consumer preferences and ownership.', 'System metrics such as survey status (completed, terminated) and time spent in a survey.'], p: ['We may combine information your device transmits, information you submit and information we obtain from third-party sources, such as suppliers of market research sample, data marketing platforms, web publishers and advertisers who obtained it through cookies, pixels and similar technologies.'] },
-      { h: 'How we use your information', list: ['To operate, evaluate and improve our services, including developing new products and analysing performance.', 'To respond to your requests and communicate about services we provide to you.', 'To match you with surveys, invite you to research and reward your participation.', 'To send updates, newsletters or other communications you subscribed to — every message includes an opt-out link.', 'To understand your interest in surveys and communications using information derived from cookies, pixels and similar technologies.'] },
-      { h: 'Tracking technologies & cookies', p: ['We, or third parties we allow, may use Google Analytics on the Site to monitor the effectiveness of survey qualification. These tools may record the IP address of your device, the page URL and the time it was viewed, and may be linked to your personal information. We may also use pixels or cookies to understand traffic from marketing and advertising partners. Read our Cookies Policy for details.'] },
-      { h: 'Other communications', p: ['We may contact people who visited the Site or showed interest in our services. Every such communication includes a link to opt out, or you can contact us at support@myfrequentrewards.com.'] },
-      { h: 'Retention and accuracy', p: ['We work to keep personal information accurate, complete and reliable. In general, we keep personal information only as long as needed to provide the services you requested, or as long as needed to serve the third parties that engaged us. We may keep information longer where required by law, to resolve disputes or to enforce our agreements.'] },
-      { h: 'Protection of personal information', p: ['We use reasonable security measures — including encryption and authentication technology — to prevent loss, misuse and alteration of information under our control. No transmission over the Internet is completely secure, and we have no control over the security of other websites you visit.', 'If we learn of a security breach, we may notify you electronically by posting a notice on the Site and/or emailing you. Depending on where you live, you may have the right to receive written notice of a breach; to request one, contact us.'] },
-      { h: 'Your choices', p: ['You can choose whether your personal information is (i) disclosed to a third party or (ii) used for a purpose materially different from the one it was collected for. To opt out, email support@myfrequentrewards.com. Opting out may limit you to public areas of the Site or affect some features.'] },
-      { h: 'Third-party websites', p: ['The Site may link to external websites or areas where you provide information to third parties. We do not control their content, privacy or security practices, so please review their policies before sharing personal information.'] },
-      { h: 'Access, correction and deletion', p: ['You may access your information and ask us to correct, amend or delete it where it is inaccurate or has been processed improperly. To protect you, we may verify your identity first and will respond within a reasonable timeframe. Contact: Frequent Research Fieldwork Solutions Pvt. Ltd., Mangolpur Kalan, New Delhi – 110085 · support@myfrequentrewards.com.'] },
-      { h: 'Users under 18 — parental acknowledgement', p: ['My Frequent Rewards recognises the importance of protecting the privacy of minors while allowing responsible participation in market research.'], list: ['Eligibility: individuals under 18 may register and take part in surveys after informing a parent or legal guardian about their participation.', 'Parental acknowledgement: during registration, users under 18 may be asked for a valid parent/guardian email address, and an acknowledgement email may be sent to it. No mandatory parental verification is required for activation.', 'Responsibility: by registering, users under 18 confirm they have informed their parent or guardian and that the guardian email is accurate. We are not responsible for incorrect information provided during registration.', 'Parent/guardian rights: request details of the minor’s participation; object to or restrict use; request suspension or deletion of the account; or withdraw the acknowledgement — by writing to support@myfrequentrewards.com.', 'Action on request: we may restrict, suspend or close the account, and associated personal information may be deleted or anonymised, subject to legal and operational requirements.', 'Data protection: we do not knowingly collect sensitive personal information from minors without appropriate awareness; data is used strictly for research purposes.'] },
-      { h: 'Changes to this Policy', p: ['We may modify this Policy at any time. Changes will be posted here, and material changes will be notified by email or a notice on the Site. Information is used in accordance with the Policy in effect when it was collected.'] },
+      { id: 'who-we-are', title: 'Who we are', icon: 'building', p: [
+        'My Health Opinions is a provider of healthcare and pharmaceutical market research with a panel of healthcare professionals, patients and individual participants. It operates in India under Frequent Research Fieldwork Solutions Private Limited, established in 2017.',
+        'Our proprietary panel is managed globally and includes primary care physicians, medical specialists, pharmacy professionals, physician assistants, nurses and other healthcare experts, as well as individuals representing diverse health issues. Our website, survey platform (powered by third-party software) and related activities are our "Services".',
+        '"Personal Information" means data that identifies, relates to, describes or could reasonably be linked to a specific individual or household. We limit collection to what is reasonably necessary for the purposes we tell you about.',
+      ] },
+      { id: 'what-we-collect', title: 'Information you give us', icon: 'clipboard', list: [
+        'Account registration: name, email, password and preferred survey language.',
+        'Healthcare professionals: profession, employment, experience and, where registered, certificate/licence number.',
+        'Consumer health panels: mailing address, city and postcode, gender, employment and marital status, income, ethnicity, religion, health diagnosis and treatment status — some questions are optional.',
+        'Surveys, interviews and focus groups: information specific to each study.',
+        'Subscriptions and contact forms: name, email, company, request type and description.',
+      ] },
+      { id: 'automatic', title: 'Information collected automatically', icon: 'monitor', p: [
+        'When you use our Services we receive device, browser and operating-system details, your IP address, the referring website, pages requested and the date and time of each request. Cookies and similar technologies are explained in our Cookie Policy.',
+        'Our Services are not intended for children. If we learn that a child has submitted personal information without verifiable parental consent, we promptly delete it. You must be 18 or older to register as a panel member.',
+      ] },
+      { id: 'consent', title: 'Consent', icon: 'check', p: [
+        'We obtain your consent to collect, use or disclose personal information except where the law authorises or requires otherwise. Consent can be express or implied and given verbally, in writing or electronically. You may withdraw consent at any time with reasonable notice; we will explain the likely consequences, such as being unable to continue certain services.',
+      ] },
+      { id: 'how-we-use', title: 'How we use your information', icon: 'target', list: [
+        'Authenticating your identity and confirming your credentials.',
+        'Determining your eligibility for surveys and inviting you to take part.',
+        'Clarifying your survey responses and determining eligibility for rewards.',
+        'Providing and administering requested products and services.',
+        'Protecting members, clients and ourselves from fraud and error.',
+        'Managing business transfers such as mergers or acquisitions.',
+        'Complying with legal requirements and authorisations.',
+      ] },
+      { id: 'sharing', title: 'When we share information', icon: 'link', p: [
+        'Clients receive aggregate survey responses. We do not disclose personally identifiable information to clients without your prior written consent, unless required or authorised by law.',
+        'Service providers (payment providers, hosting, sales and marketing support, analytics and system support) may process data on our behalf under contracts requiring protection consistent with this policy. We may disclose information to governing or regulatory bodies, government agencies or law enforcement where legally required, to exercise or defend legal rights, to protect safety and security, or as part of a business transfer.',
+        'We do not sell Personal Information to any third party.',
+      ] },
+      { id: 'retention', title: 'How long we keep it', icon: 'clock', p: [
+        'We retain personal information for as long as needed for the purposes above, then archive it for periods required by law before deletion. Account information is kept while your account is active and deleted through our standard process when the account is closed. Survey contributions become part of anonymised, aggregated market data. Records needed for regulatory obligations, such as tax and transaction history, are retained accordingly.',
+      ] },
+      { id: 'protection', title: 'How we protect it', icon: 'shield', list: [
+        'Physical measures: locked storage and controlled access to physical records.',
+        'Organisational measures: access limited to authorised personnel.',
+        'Electronic measures: encryption, passwords and firewalls.',
+        'Suppliers and agents are contractually required to provide comparable protection.',
+        'No method of transmission or storage is 100% secure — please never send sensitive data by email or chat.',
+      ] },
+      { id: 'rights', title: 'Your privacy rights', icon: 'user', list: [
+        'Keep your profile up to date from your account settings.',
+        'Unsubscribe from emails using the link in any message.',
+        'Request correction of inaccurate or incomplete information.',
+        'Request account deletion from your profile (restorable for 30 days).',
+        'California residents (CCPA): know what we collect and disclose, access it, and receive equal service. We do not sell personal information.',
+      ] },
+      { id: 'contact', title: 'Contact us', icon: 'mail', p: [
+        'My Health Opinions, C/O Frequent Research Fieldwork Solutions Private Limited, Mangolpur Kalan, New Delhi – 110085, India. Email support@myhealthopinions.com · Phone +91 81300 15743.',
+        'We may update this policy from time to time; the "Last updated" date above shows the current version.',
+      ] },
     ],
   },
-  gdpr: {
-    path: '/gdpr',
-    label: 'GDPR Compliance',
-    icon: 'shield',
-    accent: '#14C9B5',
-    metaTitle: 'GDPR Compliance | MyFrequentRewards Data Protection Rights',
-    metaDescription: 'How MyFrequentRewards applies GDPR principles: lawful basis, consent, data minimisation, retention, international transfers and your rights as an EU/UK member.',
-    hero: 'Research that respects identity.',
-    summary: [
-      { icon: 'eye', t: 'Identity protected', d: 'Personal data is handled so it does not reveal who you are.' },
-      { icon: 'doubleCheck', t: 'Clear consent', d: 'Survey invitations only — marketing needs separate opt-in.' },
-      { icon: 'clock', t: 'Fixed retention', d: 'Data is kept for a stated period, then destroyed.' },
-      { icon: 'user', t: 'Right to be forgotten', d: 'Ask us to erase what we hold about you.' },
+
+  '/terms': {
+    theme: 'doc-terms',
+    icon: 'scale',
+    eyebrow: 'Terms of Use',
+    title: ['Member & licence', { t: 'terms of use', hl: 'grad' }],
+    lead: 'These terms govern registration with MyHealthOpinions, survey participation and reward redemption, and the licensing of Frequent Research products.',
+    updated: '2026-10-01',
+    glance: [
+      ['user', 'One person, one account', 'Registrations are personal and non-transferable.'],
+      ['gift', 'Rewards by country rules', 'Gift vouchers, PayPal or bank transfer as permitted.'],
+      ['x', 'Leave any time', 'Request account deletion whenever you wish.'],
+      ['scale', 'Fair use', 'Use products lawfully and ethically.'],
     ],
     sections: [
-      { h: 'GDPR and market research', p: ['The General Data Protection Regulation (GDPR) affects all EU nationals and every organisation that handles their data. It has changed how data is collected, stored, processed and analysed — and therefore how market research is done. GDPR-compliant research is about handling personal data so that it does not reveal a person’s identity.', 'Research uses quantitative methods (surveys, questionnaires, interviews, focus groups) and qualitative methods (expressions, emotions, behaviour). Under GDPR, organisations must be careful not only with individual elements of personal data, but also with combinations of elements that could identify someone.'] },
-      { h: 'Purpose and fit', p: ['We identify how each piece of data we collect fits our business and research projects, and collect only what that purpose needs. For instance, your date of birth is used only to confirm eligibility and match age-relevant studies.'] },
-      { h: 'Transparent cookies', p: ['When cookies are stored on your device, we explain their purpose and how the information will be used — including whether it could be used for offers or marketing. You choose which optional cookies to allow on our Cookies Policy.'] },
-      { h: 'Consent you can see', p: ['We contact only people who have agreed to be invited to opinion and feedback surveys, and we say so explicitly when asking for consent. Agreeing to survey invitations does not mean agreeing to marketing emails or newsletters — those require a separate subscription.'], list: ['Are they the right people to contact?', 'Will we get the information the research needs?', 'Do we have permission to contact them?'] },
-      { h: 'Privacy links and third parties', p: ['Links to our privacy and security policies appear on the website and in survey invitations. If any personal data is shared with a third party, we declare it at the point of collection as well as on our website.'] },
-      { h: 'Retention and the right to erasure', p: ['We tell respondents how long research data will be kept. Once the retention period ends, data is destroyed to protect it from unauthorised use. You also have the right to ask us to erase (“forget”) the information we hold about you.'] },
-      { h: 'Where data is stored', p: ['We take care over where personal data of EU nationals is stored and who is responsible for it — including cloud storage, where responsibility between provider, vendor and customer must be clear. Appropriate safeguards apply to international transfers.'] },
-      { h: 'Your rights', list: ['Access your personal data', 'Correct inaccurate data', 'Erase your data (“right to be forgotten”)', 'Restrict or object to processing', 'Data portability', 'Withdraw consent at any time', 'Complain to your supervisory authority'], p: ['Questions about GDPR-compliant research? Email support@myfrequentrewards.com with the subject “GDPR request”.'] },
+      { id: 'definitions', title: '1. Definitions', icon: 'book', list: [
+        'The Licensor — Frequent Research Fieldwork Solutions Private Limited.',
+        'The Licensee / Subscriber — individuals registered with MyHealthOpinions.',
+        'The Product — survey offers, survey rewards and reward redemption by gift vouchers, PayPal or bank transfer as per country guidelines.',
+      ] },
+      { id: 'agreement', title: '2. Licence agreement', icon: 'pen', p: [
+        'By signing and submitting a My Health Opinions order or registration form, you (and your organisation, where applicable) accept these Terms. The department responsible for allocating the product must inform users of appropriate and inappropriate use.',
+      ] },
+      { id: 'usage', title: '3. Usage rights & licensing options', icon: 'key', p: [
+        'The Licensor grants non-exclusive, non-transferable rights. Products are protected by copyright and must be used ethically and lawfully.',
+      ], list: [
+        'Panel registration — for a single individual only. Credentials may not be shared, transferred or sold. Members may request account deletion at any time.',
+        'Site licence — sharing among verified, signed clients at the designated business address; delivered as PDF.',
+        'Corporate licence — use by one corporation under a single name; subsidiaries under different names are excluded.',
+        'Executive summary — single-user, may not be copied or published.',
+        'Enterprise licence — all subsidiaries of the purchasing parent company.',
+        'Presentation, citation or publication of report information requires written permission from the Licensor.',
+      ] },
+      { id: 'tracker', title: '4. Reimbursement Tracker', icon: 'chart', p: [
+        'The Licensor provides market intelligence and reimbursement tracking for medical device and pharmaceutical companies. Corporate licences cover up to 5 users unless agreed otherwise, for 12 months via the web portal. Initial setup includes 4 subsegments per therapeutic area (1–15 keywords each). The Licensor does not guarantee continued access to every policy tracked, nor that keywords capture every desired policy.',
+      ] },
+      { id: 'limits', title: '5. Limitation of use', icon: 'filter', list: [
+        'Proprietary information, including specific data sources, is confidential.',
+        'Products may not be copied, transferred, modified, translated or incorporated into other products except as defined here.',
+        'Products may not be used in ways that cause material financial harm to the Licensor.',
+        'Public citation or distribution requires express written permission.',
+      ] },
+      { id: 'ownership', title: '6. Ownership & copyright', icon: 'shield', p: [
+        'Title and intellectual-property rights remain with the Licensor. Licensees must keep copyright notices, reproduce them on authorised copies and prevent unauthorised copying.',
+      ] },
+      { id: 'warranty', title: '7. Limited warranty', icon: 'check', p: [
+        'The Licensor warrants it has the right to distribute the Products and that they do not infringe third-party rights. Anticipated publication dates are estimates; delivered orders cannot be cancelled. All other warranties, including merchantability or fitness for a particular purpose, are disclaimed.',
+      ] },
+      { id: 'liability', title: '8. Limitation of liability', icon: 'info', p: [
+        'Liability is limited to replacement of physically defective media or documentation and never exceeds the original purchase amount. The Licensor is not liable for loss of profit, data, or special, incidental, consequential or punitive damages. The Licensor indemnifies licensees against third-party claims arising from breach of its warranty, subject to these terms.',
+      ] },
+      { id: 'entire', title: '9. Entire agreement', icon: 'layers', p: [
+        'These Terms are the complete agreement and supersede prior communications. Changes require written agreement; click-through licences do not modify these Terms.',
+      ] },
     ],
   },
-  cookies: {
-    path: '/cookies',
-    label: 'Cookies Policy',
+
+  '/gdpr': {
+    theme: 'doc-gdpr',
+    icon: 'shieldCheck',
+    eyebrow: 'GDPR Compliance',
+    title: ['Consent-first', { t: 'market research', hl: 'grad' }],
+    lead: 'GDPR changed how personal data is collected, stored and analysed. Here is how GDPR compliant market research works at MyHealthOpinions — and the rights you hold.',
+    updated: '2026-10-01',
+    glance: [
+      ['check', 'Consent before contact', 'We only invite people who agreed to research contact.'],
+      ['target', 'Purpose limitation', 'Survey contact is not marketing.'],
+      ['clock', 'Retention windows', 'Data kept only as long as needed.'],
+      ['x', 'Right to erasure', 'Ask us to delete your data.'],
+    ],
+    sections: [
+      { id: 'what', title: 'What GDPR means for surveys', icon: 'globe', p: [
+        'GDPR applies to the personal data of people in the EU and to organisations that handle it. Research must protect individual elements of personal data — and combinations of elements that could identify someone.',
+      ] },
+      { id: 'consent', title: 'Getting consent', icon: 'mail-check', p: [
+        'We invite only people who have agreed to be contacted for opinion or feedback surveys, and we tell you so explicitly when you sign up. Research invitations are not marketing: we do not send newsletters unless you subscribe to them separately.',
+      ], list: ['Are they the right people to contact?', 'Will the study get the information it needs?', 'Do we have permission to contact them?'] },
+      { id: 'transparency', title: 'Transparency', icon: 'link', p: [
+        'Links to our privacy and security policies appear in invitations and on this website. If data is shared with a third party, we declare it at the point of collection.',
+      ] },
+      { id: 'retention', title: 'Retention & erasure', icon: 'clock', p: [
+        'We tell respondents how long research data is kept and destroy it once the validity period ends. You have the right to be forgotten — request erasure from your profile or by emailing us.',
+      ] },
+      { id: 'storage', title: 'Where data is stored', icon: 'database', p: [
+        'We use certified, secure infrastructure with clear allocation of responsibility between us, our vendors and clients. Frequent Research is ISO 27001 certified for information security.',
+      ] },
+      { id: 'contact', title: 'Questions', icon: 'chat', p: ['Questions about GDPR compliant market research? Email support@myhealthopinions.com.'] },
+    ],
+  },
+
+  '/cookies': {
+    theme: 'doc-cookies',
     icon: 'cookie',
-    accent: '#FFC233',
-    metaTitle: 'Cookies Policy | MyFrequentRewards Cookie Types and Choices',
-    metaDescription: 'Understand the cookies MyFrequentRewards uses — essential, performance, functionality and social — what each does, who sets them and how to manage your choices.',
-    hero: 'Every cookie, explained.',
-    summary: [
-      { icon: 'lock', t: 'Essentials', d: 'Login, live chat, spam protection and video.' },
-      { icon: 'activity', t: 'Performance & Functionality', d: 'Hotjar and Google Analytics insights.' },
-      { icon: 'link', t: 'Social Networking', d: 'Share content on social networks.' },
-      { icon: 'question', t: 'Unclassified', d: 'Being classified with their providers.' },
-    ],
-    intro: 'We use different types of cookies to optimise your experience on our website. Open a category below to learn more about its purpose. You may choose which types of cookies to allow and can change your preferences at any time. Remember that disabling cookies may affect your experience on the website.',
-    cookieGroups: [
-      {
-        name: 'Essentials',
-        always: true,
-        desc: 'These cookies are necessary to the core functionality of our website and some of its features, such as access to secure areas.',
-        rows: [
-          { name: 'connection.sid', purpose: 'Stores authentication and authorisation of the user after login, used to provide a personalised experience.', type: 'http_cookie', expires: '30 days / Logout' },
-          { name: 'twk_idm_key, TawkConnectionTime, twk_uuid_XXXX', purpose: 'Provides live chat support to respondents. Set by a third party, but the chat feature depends on it entirely.', type: 'http_cookie', expires: 'Managed by third party (Tawk.to)' },
-          { name: 'Google_RECAPTCHA', purpose: 'Managed by Google for spam protection and robot detection.', type: 'http_cookie', expires: 'Managed by third party (Google)' },
-          { name: 'VisitorInfo*', purpose: 'Used by YouTube for video embedding and analytics.', type: 'http_cookie', expires: 'Managed by third party (YouTube)' },
-        ],
-      },
-      {
-        name: 'Performance and Functionality',
-        desc: 'These cookies enhance the performance and functionality of our websites but are non-essential. Without them, certain functionality (like videos) may become unavailable.',
-        rows: [
-          { name: '_hjSessionUser_XXXXXXX, _hjFirstSeen, _hjIncludedInSessionSample, _hjSession_XXXXXXXX, _hjIncludedInPageviewSample, _hjAbsoluteSessionInProgress', purpose: 'Proactive tracking of issues in the website and app before a visitor reports them.', type: 'http_cookie', expires: 'Managed by third party (Hotjar)' },
-          { name: '_GA*, NID*, IDE*, ANID*', purpose: 'Used by Google Analytics to provide information about user behaviour.', type: 'http_cookie', expires: 'Managed by third party (Google)' },
-        ],
-      },
-      {
-        name: 'Social Networking',
-        desc: 'These cookies enable you to share our website’s content through third-party social networks and other websites. They may also be used for advertising.',
-        rows: [],
-      },
-      {
-        name: 'Unclassified',
-        desc: 'These are cookies that have not yet been categorised. We are classifying them with the help of their providers.',
-        rows: [{ name: 'Auth', purpose: 'Auth token for automatic login if the user selects “remember me”.', type: 'html_local_storage', expires: 'Persistent' }],
-      },
+    eyebrow: 'Cookie Policy',
+    title: ['Cookies we use —', { t: 'and your choices', hl: 'grad' }],
+    lead: 'This website uses a small number of cookies and browser-storage items. Essential ones keep the site working; analytics cookies load only if you allow them.',
+    updated: '2026-10-01',
+    glance: [
+      ['lock', 'Essential', 'Security, consent choice and session.'],
+      ['chart', 'Analytics (opt-in)', 'Google Analytics 4, only after consent.'],
+      ['x', 'No ad trackers', 'We do not run advertising cookies on this site.'],
+      ['refresh', 'Change any time', 'Use “Cookie settings” in the footer.'],
     ],
     sections: [
-      { h: 'What are cookies?', p: ['Cookies are small text files stored on your device by your browser. Similar technologies include local storage and pixels. They keep you signed in, protect forms from bots, power live chat and help us understand how the site is used.'] },
-      { h: 'Managing your choices', p: ['Use the “Manage cookie preferences” button on this page to change your choices at any time. You can also block or delete cookies in your browser settings, but disabling Essentials may stop login and chat from working. Learn more in our Privacy Policy.'] },
-    ],
-  },
-  terms: {
-    path: '/terms',
-    label: 'Terms of Use',
-    icon: 'book',
-    accent: '#FF8A00',
-    metaTitle: 'Terms of Use | MyFrequentRewards Membership & Rewards Rules',
-    metaDescription: 'MyFrequentRewards terms of use: eligibility, one account per person, survey conduct, reward balances, claim thresholds, payouts, suspension and how to reach us.',
-    hero: 'Terms & conditions, made clear.',
-    summary: [
-      { icon: 'lock', t: 'Research use only', d: 'Your data is used for market research purposes only.' },
-      { icon: 'doubleCheck', t: 'Consent first', d: 'Accept Terms & Privacy Notice to activate your account.' },
-      { icon: 'pen', t: 'Honest answers', d: 'Thoughtful, truthful participation is required.' },
-      { icon: 'wallet', t: 'Clear rewards', d: 'Earn points, reach the threshold, redeem.' },
-    ],
-    sections: [
-      { h: 'We value your data privacy', p: ['We value and care about the privacy of your personal information. Under our data privacy policy, your personal data is used for market research purposes only and is kept secure and safe with us. Your data will not be shared with any third-party vendor, and we limit the use of sensitive data during data collection in any in-house or third-party survey.', 'You will get opportunities to take part in your preferred survey categories. Your opinions help our clients make better business decisions, and you earn rewards for your participation.'] },
-      { h: 'MyFrequentRewards general consent', p: ['MyFrequentRewards and our parent company, Frequent Research Fieldwork Solutions Private Limited, value your data inputs, and your data privacy matters to us. Once you log in, MyFrequentRewards collects your personal information and uses it to deliver our research services, websites and applications (collectively, our “Services”). This consent explains how, what and why we use your personal data, and how you can access, update or otherwise control it. Your personal data may include:'], list: ['Name', 'Location', 'Telephone number', 'Date of birth', 'Email address'] },
-      { h: 'What additional information do we collect?', list: ['Behaviour tracking (for quality and fraud prevention)', 'Cookies history (see our Cookies Policy)'] },
-      { h: 'Account activation', list: ['To activate your account you must accept the Terms and Conditions and the Privacy Notice.', 'To access more available surveys, you must agree to take part in surveys and other market research activities.', 'Only one account per person is allowed, using your own email, phone number and device.', 'Membership is free. You will never be asked to pay to join, participate or redeem rewards.'] },
-      { h: 'Taking part in surveys', p: ['Surveys are matched to your profile, and availability depends on research demand. Some surveys close once their quota is filled. Provide honest, thoughtful answers: inconsistent or false responses, speeding, copy-pasted open-ended answers, VPN/proxy use or automated tools may lead to disqualification, account review, suspension or termination.'] },
-      { h: 'Rewards and redemption', list: ['Points vary by survey length, complexity and sponsor requirements, and are shown before you begin.', 'Redeem from the “Redeem Now” section of your dashboard once you reach the minimum threshold.', 'Reward options may include PayPal, Amazon gift vouchers, bank transfer and UPI (subject to country regulations).', 'Our team verifies your account and participation before the accounts department processes payment; this may take 2–3 weeks depending on queue volume and verification.', 'Ensure your payment details are accurate to avoid delays. Rewards obtained through rule violations may be reversed.'] },
-      { h: 'Confidentiality of research content', p: ['Surveys may show unreleased products, adverts or concepts. You agree not to copy, screenshot, share or publish survey content.'] },
-      { h: 'Closing your account', p: ['You may request account deletion at any time by emailing support@myfrequentrewards.com. You will receive a confirmation email within 24–48 hours and must confirm the request. You may restore your account within 30 days; after 30 days, all data is permanently deleted.'] },
-      { h: 'Changes and contact', p: ['We may update these terms and will notify members of material changes. Questions? Email support@myfrequentrewards.com — please allow 24–72 business hours for a response.'] },
-    ],
-  },
-  profiling: {
-    path: '/profiling',
-    label: 'Profiling & Quality Score',
-    icon: 'badge',
-    accent: '#8B5CF6',
-    metaTitle: 'Profiling & Quality Score | How We Match You to Surveys',
-    metaDescription: 'Learn how MyFrequentRewards profiling matches you with relevant surveys and how your quality score is built through checks for bots, duplicates and attention.',
-    hero: 'Better profile. Better matches.',
-    scale: { min: 0, max: 200, gate: 60, labels: ['Needs attention', 'Gate pass', 'Trusted', 'Top quality'] },
-    summary: [
-      { icon: 'layers', t: 'Profile', d: 'Profiling segments describe your life and work.' },
-      { icon: 'bot', t: 'Validate', d: 'CAPTCHA, attention and open-end checks.' },
-      { icon: 'gate', t: 'Gate', d: 'Pass the gate survey before client surveys.' },
-      { icon: 'badge', t: 'Score', d: 'Quality is scored on a 0–200 scale.' },
-    ],
-    sections: [
-      { h: 'Profiling standard', p: ['Our profiling score measures individual respondent quality on a scale of 0–200. Members join through our own platforms, www.turn2opinion.com and www.myfrequentrewards.com, and through carefully selected recruitment channels, and are managed in line with market research industry standards.', 'A rigorous registration process validates new members, and profile information is kept current through periodic survey screeners. We show members how to complete their profile and why rich information helps them receive relevant surveys.', 'During registration, members complete profiling segments that help us understand them accurately and match them to incentivised surveys. Each completed profiling segment earns points (subject to validation), which count towards the redemption threshold.', 'After registration — and after every survey — we invite members to update any incomplete profile category, so profiles keep pace with changes in their lives and the market.'] },
-      { h: 'Bot validation', p: ['We apply strict measures to prevent bots: Google reCAPTCHA at registration, plus attention-check and open-ended question checks for every new user. Each user must pass a randomly selected attention question and achieve a minimum open-end score with 10–20 original words — no copy-paste.'] },
-      { h: 'Gate survey, pre-screener and security checks', p: ['The same authentication applies in the gate survey: users confirm their authenticity and genuine interest before entering a client survey, scoring at least 60/200 with 20–30 unique words. Users who fail attention or open-end checks cannot take part in the client survey.', 'At every survey level we apply CAPTCHA, gate survey, pre-screening, geo-tagging, IP score tracking, latitude and longitude tracking and digital fingerprinting so only quality members take part.'] },
-      { h: 'Quality standard', p: ['Frequent Research is an ISO 9001:2015, ISO 27001 and ISO 20252:2019 certified company and maintains questionnaire quality through comprehensive community care:'], list: ['Regular updating of master data for all members', 'Meticulous duplicate cleansing through automated processes and manual review', 'Regular suspension of inactive members', 'Tracking of completion time, response patterns (e.g. straight-lining) and open-answer quality', 'Systematic detection and exclusion of untrustworthy participants', 'Proactive member support and a helpline', 'Members can participate in a maximum of 3 surveys per month'] },
-      { h: 'Double opt-in', p: ['Every new member confirms sign-up through a double opt-in procedure. We then build the relationship through a retention programme based on attention, trust and honesty.'] },
-      { h: 'Email and postal address verification', p: ['We verify the registrant’s postal address and postal code against a current local address directory, and check our database to ensure every email address is unique — all registrants verify their email through double opt-in.'] },
-      { h: 'GeoIP, unique IP and proxy detection', p: ['Our servers locate the registrant’s country through their IP address and determine eligibility based on country-specific rules. Proxy and anonymising traffic is detected and blocked.'] },
-      { h: 'Unique recruitment process', p: ['Members are profiled across a wide range of criteria — demographics, fast-moving consumer goods, durables, automotive, telecommunications, IT and business decision-makers, finance and insurance, healthcare and more.'] },
-      { h: 'Digital fingerprinting', p: ['Our custom digital fingerprint system identifies each respondent and prevents fraud, eliminating duplicates so survey data is unique to each participant. We also use TrueSample, Radware and RelevantID technologies; RelevantID identifies and blocks duplicate respondents in real time as they enter a survey.'] },
-      { h: 'Bot prevention', p: ['We are integrated with Distil Networks bot-detection technology to eliminate bot traffic before it reaches our servers — stopping online fraud and cybersecurity threats so only humans enter our surveys.'] },
+      { id: 'what', title: 'What cookies are', icon: 'info', p: ['Cookies are small text files stored by your browser. Similar technologies such as localStorage keep small preferences on your device.'] },
+      { id: 'essential', title: 'Essential (always on)', icon: 'lock', list: [
+        'mho-consent — remembers your cookie choice (browser storage, until you clear it).',
+        'mho-sound, mho-reviewed, mho-reviews — remember chat-sound preference and reviews you submitted on this device.',
+        'Session items (mho-greeted, mho-rate-*) — limit pop-ups to a few per visit; cleared when you close the tab.',
+        'Member area cookies set by our survey platform after you log in, to keep you signed in securely.',
+      ] },
+      { id: 'analytics', title: 'Analytics (only with your consent)', icon: 'chart', list: [
+        '_ga, _ga_<ID> — Google Analytics 4, used to understand page visits in aggregate (IP anonymised). Expire after up to 2 years.',
+      ] },
+      { id: 'third', title: 'Third-party content', icon: 'globe', p: ['Fonts are hosted with the website itself, so no request is made to a third-party font service (country flags are hosted on our own server too). Links to social networks and WhatsApp open their own sites under their own policies.'] },
+      { id: 'manage', title: 'Managing cookies', icon: 'refresh', p: ['Use “Cookie settings” in the footer to change your choice at any time, or clear cookies in your browser settings. Blocking essential storage may stop parts of the site working.'] },
     ],
   },
 };

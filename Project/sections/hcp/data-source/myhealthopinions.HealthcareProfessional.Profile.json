@@ -1,0 +1,194 @@
+[{
+  "name": "basic profile",
+  "slug": "basic",
+  "pages": [
+    [
+      "Basic Profile",
+      "fullname",
+      "mail",
+      "gender",
+      "dob",
+      "country",
+      "ethnicity",
+      "state",
+      "city",
+      "zipcode",
+      "rural",
+      "personal-income",
+      "household-income",
+      "relationship-status",
+      "children",
+      "website"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "educational profile",
+  "slug": "educational",
+  "pages": [
+    [
+      "Educational Profile",
+      "doc-education",
+      "doc-education-diploma",
+      "doc-education-diploma-certified",
+      "doc-education-bachelors",
+      "doc-education-bachelors-registered",
+      "doc-education-masters",
+      "doc-education-master-recognition",
+      "doc-education-doctorate",
+      "doc-education-doctorate-registered",
+      "doc-education-others",
+      "doc-education-others-registered"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "speciality and area of practice",
+  "slug": "professional",
+  "pages": [
+    [
+      "Speciality And Area of Practice",
+      "doc-expertise",
+      "doc-specialization",
+      "doc-joblevel",
+      "healthcare-management-job-role"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "technology and digital health profile",
+  "slug": "technical",
+  "pages": [
+    [
+      "Technology and Digital Health",
+      "electronic-health-record-usage",
+      "telemedicine",
+      "health-initiatives",
+      "online-surveys",
+      "participating-research",
+      "research-participation",
+      "survey-participation-timeslot",
+      "recontact-consent",
+      "focus-groups"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "survey participation and reward preferences profile",
+  "slug": "survey-participation",
+  "pages": [
+    [
+      "Survey Participation and Reward Preferences",
+      "survey-participation-history",
+      "survey-participation-frequency",
+      "survey-participation-category",
+      "other-survey-panel",
+      "survey-mode",
+      "survey-participation-time-duration",
+      "willingness-survey-participation",
+      "survey-type-interested-in",
+      "share-consent",
+      "survey-participation-motivation",
+      "video-survey-participation-consent",
+      "video-platforms",
+      "video-based-research"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "documents",
+  "slug": "documents",
+  "pages": [
+    [
+      "Documents Required",
+      "clinician",
+      "medical-certification-no",
+      "issueing-authority",
+      "year-of-issueing",
+      "certification-no"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "social media and reward reclaim",
+  "slug": "social-media",
+  "pages": [
+    [
+      "Social Media and Reward Reclaim",
+      "social-media-x",
+      "social-media-youtube",
+      "social-media-linkedin",
+      "social-media-instagram",
+      "social-media-facebook",
+      "payment-method",
+      "payment-method-bank-name",
+      "payment-method-bank-ifsc",
+      "payment-method-bank-account",
+      "payment-method-upi",
+      "payment-method-paypal",
+      "payment-method-amazon"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "professional profile",
+  "slug": "professional-category",
+  "pages": [
+    [
+      "Professional Profile",
+      "doc-employment-status",
+      "sector",
+      "facility-type",
+      "facility-size",
+      "practice-location",
+      "teaching-hospital"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "professional address",
+  "slug": "professional-address",
+  "pages": [
+    [
+      "Professional Address",
+      "country",
+      "phone",
+      "state",
+      "practice-city",
+      "practice-locality",
+      "zip_code_of_practice",
+      "employer-address",
+      "name-of-employer",
+      "email-id",
+      "linkedin"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "experience",
+  "slug": "experience",
+  "pages": [
+    [
+      "Experience",
+      "experience",
+      "patients-per-week",
+      "clinical-trials",
+      "doc-clinical-trials-count",
+      "survey-participation-frequency",
+      "doc-decision-making-purchase",
+      "doc-drug-formulary-procurement",
+      "doc-equipments-purchase",
+      "doc-healthpolicy-guidelines"
+    ]
+  ],
+  "category": "healthcare professional"
+}]

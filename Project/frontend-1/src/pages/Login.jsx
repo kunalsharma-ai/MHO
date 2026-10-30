@@ -1,251 +1,186 @@
-import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+
+import { useState } from 'react';
 import Icon from '../components/Icon.jsx';
-import Captcha from '../components/Captcha.jsx';
-import { PageSeo } from '../components/PageHero.jsx';
-import { PAGES } from '../data/pages.js';
-import { BRAND, DEMO_MODE, MEMBER_PORTAL_URL } from '../data/site.js';
-import { postJSON } from '../utils/api.js';
-import { EMAIL_RE } from '../utils/validate.js';
-import { prefersReducedMotion } from '../utils/storage.js';
-import { loginMember } from '../utils/auth.js';
+import { HeartMark } from '../components/Brand.jsx';
+import { Field, PasswordField, Captcha } from '../components/FormKit.jsx';
+import { LiveZone } from '../components/ui.jsx';
 import SocialLogin from '../components/SocialLogin.jsx';
-import { flushPendingProfile } from '../utils/signupMemo.js';
-const page = PAGES.login;
-
-// Member log-in ("Member Pass").
-// Two ways to connect it to the existing member application (README → Login):
-//  • VITE_LOGIN_FORM_ACTION — the portal's own login URL. After client checks, the browser submits a normal
-//    form POST there (works across domains; the portal sets its own session cookie and redirects).
-//  • otherwise VITE_LOGIN_ENDPOINT (default /api/login) — JSON POST with credentials; the response may include
-//    { redirect: "https://…" }. Falls back to VITE_MEMBER_PORTAL_URL.
-// The server MUST verify the CAPTCHA token, rate-limit attempts and never reveal whether an email exists.
-const FORM_ACTION = import.meta.env.VITE_LOGIN_FORM_ACTION || '';
-const ENDPOINT = import.meta.env.VITE_LOGIN_ENDPOINT || '/api/login';
-const RESET_URL = import.meta.env.VITE_PASSWORD_RESET_URL || '';
-const MAX_TRIES = 5;
-const LOCK_SECONDS = 30;
-
-const maskEmail = (e) => {
-  const [u = '', d = ''] = e.split('@');
-  if (!u) return 'your@email.com';
-  const vis = u.slice(0, Math.min(3, u.length));
-  return `${vis}${u.length > 3 ? '•'.repeat(Math.min(6, u.length - 3)) : ''}${e.includes('@') ? '@' + d : ''}`;
-};
-
-function MemberPass({ email, pwLen, emailOk, pwOk, human, phase }) {
-  const card = useRef(null);
-  useEffect(() => {
-    const el = card.current;
-    if (!el || prefersReducedMotion() || window.matchMedia('(hover: none)').matches) return undefined;
-    let raf = 0;
-    const onMove = (e) => {
-      const r = el.getBoundingClientRect();
-      const x = (e.clientX - (r.left + r.width / 2)) / r.width;
-      const y = (e.clientY - (r.top + r.height / 2)) / r.height;
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        el.style.setProperty('--rx', `${(-y * 14).toFixed(2)}deg`);
-        el.style.setProperty('--ry', `${(x * 18).toFixed(2)}deg`);
-        el.style.setProperty('--gx', `${(50 + x * 60).toFixed(1)}%`);
-      });
-    };
-    const reset = () => { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); };
-    window.addEventListener('pointermove', onMove, { passive: true });
-    document.addEventListener('pointerleave', reset);
-    return () => { window.removeEventListener('pointermove', onMove); document.removeEventListener('pointerleave', reset); cancelAnimationFrame(raf); };
-  }, []);
-  const ready = emailOk && pwOk && human;
-  const lights = [
-    { k: 'Email', on: emailOk, icon: 'mail' },
-    { k: 'Password', on: pwOk, icon: 'lock' },
-    { k: 'Human', on: human, icon: 'captcha' },
-  ];
-  return (
-    <div className="mp-stage" aria-hidden="true">
-      <div className={`mp-card ${ready ? 'is-ready' : ''} ${phase === 'success' ? 'is-flipped' : ''}`} ref={card}>
-        <div className="mp-face mp-front">
-          <div className="mp-glare" />
-          <div className="mp-top">
-            <img src={BRAND.monogram} alt="" width="44" height="44" />
-            <span className="mp-brand">Myfrequent<b>rewards</b></span>
-            <span className="mp-tag">MEMBER PASS</span>
-          </div>
-          <div className="mp-chip"><i /><i /><i /><i /></div>
-          <p className="mp-email">{maskEmail(email)}</p>
-          <p className="mp-dots">{Array.from({ length: 12 }, (_, i) => <i key={i} className={i < pwLen ? 'on' : ''} />)}</p>
-          <ul className="mp-lights">
-            {lights.map((l) => (
-              <li key={l.k} className={l.on ? 'on' : ''}><Icon name={l.on ? 'check' : l.icon} size={13} stroke={l.on ? 3 : 2} /> {l.k}</li>
-            ))}
-          </ul>
-          <span className="mp-ready">{ready ? 'READY ✓' : 'LOCKED'}</span>
-        </div>
-        <div className="mp-face mp-back">
-          <span className="mp-burst"><Icon name="check" size={46} stroke={3} /></span>
-          <p className="mp-welcome">Welcome back!</p>
-          <p className="mp-sub">Opening your dashboard…</p>
-        </div>
-      </div>
-      <div className="mp-orbit">
-        {['coins', 'gift', 'wallet', 'shield', 'star', 'chat'].map((ic, i) => <span key={ic} style={{ '--i': i }}><Icon name={ic} size={18} /></span>)}
-      </div>
-    </div>
-  );
-}
+import { Link } from '../router.jsx';
+import { API } from '../config/site.js';
+import { validateEmail, apiRequest, auth, resetLimit, track } from '../utils/helpers.js';
+import { syncPendingAnswers } from '../utils/pendingAnswers.js';
+import { useGuestOnly } from '../utils/session.js';
 
 export default function Login() {
-  const [f, setF] = useState({ email: '', password: '', remember: true, captchaOk: false });
-  const [touched, setTouched] = useState({});
-  const [show, setShow] = useState(false);
-  const [phase, setPhase] = useState('idle'); // idle | sending | success
-  const [msg, setMsg] = useState('');
-  const [tries, setTries] = useState(0);
-  const [lockLeft, setLockLeft] = useState(0);
-  const captchaRef = useRef(null);
-  const formRef = useRef(null);
-  const tokenRef = useRef(null);
+  useGuestOnly(); // already logged in -> straight to the dashboard
+  const [email, setEmail] = useState('');
+  const [pw, setPw] = useState('');
+  const [remember, setRemember] = useState(false);
+  const [human, setHuman] = useState(false);
+  const [capKey, setCapKey] = useState(0);
+  const [err, setErr] = useState({});
+  const [state, setState] = useState('form');
+  const [alert, setAlert] = useState('');
+  const [notice, setNotice] = useState('');
+  const [view, setView] = useState('login'); // login | forgot
+  const [fpState, setFpState] = useState('form'); // form | sending | sent (forgot-password panel)
 
-  const emailOk = EMAIL_RE.test(f.email.trim());
-  const pwOk = f.password.length >= 6;
-  const errs = {
-    email: !f.email.trim() ? 'Enter the email you joined with.' : !emailOk ? 'Enter a valid email address.' : '',
-    password: !f.password ? 'Enter your password.' : !pwOk ? 'Passwords are at least 6 characters.' : '',
-    captcha: !f.captchaOk ? 'Please complete the security check.' : '',
-  };
-  const err = (k) => (touched[k] || touched.submit ? errs[k] : '');
-  const set = (k, val) => setF((s) => ({ ...s, [k]: val }));
-
-  useEffect(() => {
-    if (!lockLeft) return undefined;
-    const t = setTimeout(() => setLockLeft((n) => n - 1), 1000);
-    return () => clearTimeout(t);
-  }, [lockLeft]);
-
-  async function submit(e) {
+  const submit = async (e) => {
     e.preventDefault();
-    setTouched((t) => ({ ...t, submit: true }));
-    setMsg('');
-    if (lockLeft) return;
-    if (errs.email || errs.password || errs.captcha) {
-      const first = errs.email ? 'login-email' : errs.password ? 'login-password' : 'captcha-input';
-      const el = document.getElementById(first);
-      if (el) el.focus();
+    const x = {};
+    const em = validateEmail(email); if (em) x.email = em;
+    if (!pw) x.password = 'Please enter your password.';
+    if (!human) x.captcha = 'Please complete the human check.';
+    setErr(x);
+    if (Object.keys(x).length) return;
+    setState('sending');
+    setAlert('');
+    setNotice('');
+    const res = await apiRequest('POST', API.login, { mail: email.trim().toLowerCase(), password: pw, remember });
+    if (!res.ok) {
+      setState('form');
+      const msg = res.data?.message || '';
+      setAlert(res.status === 0 ? 'We could not reach the server. Check your connection and try again.' : /invalid|password/i.test(msg) ? 'That email and password do not match. Please try again.' : msg || 'We could not log you in right now. Please try again shortly.');
+      setCapKey((k) => k + 1);
+      setHuman(false);
       return;
     }
-    const captchaToken = captchaRef.current?.token?.() || undefined;
-    if (FORM_ACTION && !DEMO_MODE) {
-      setPhase('sending');
-      if (tokenRef.current) tokenRef.current.value = captchaToken || '';
-      formRef.current.submit(); // classic POST to the member portal
-      return;
+    // Login worked (status "success"). Same as web-1: go straight to the member area. If the backend also sent a token,
+    // keep it under "token" (the member area sends it as "Authorization: Bearer"); it is not required to continue.
+    const token = res.data?.token || res.data?.data?.token || '';
+    if (token) auth.setToken(token);
+    track('login', { method: 'email' });
+    setState('done');
+    if (!res.preview) {
+      // Answers given at sign-up wait in this browser: save them to the account now that it is logged in — with the token, or with the
+      // login cookie when the back-end gives no token (never blocks the login for long).
+      await Promise.race([syncPendingAnswers({ email: email.trim().toLowerCase() }), new Promise((r) => setTimeout(r, 6000))]);
+      // replace(), not assign(): the log-in page must not stay in the browser history, otherwise the Back arrow of a logged-in person
+      // (or of the next person using this computer) leads straight back to the log-in form.
+      window.location.replace('/member/profiles');
     }
-    setPhase('sending');
-    try {
-   const res = await loginMember({
-  mail: f.email.trim().toLowerCase(),
-  password: f.password,
-  remember: f.remember ? 'on' : undefined,
-});
-    // login ke baad signup ke pending answers backend ko bhejo (kabhi throw nahi karta; 4s se zyada nahi rukega)
-    if (!res.demo) await Promise.race([flushPendingProfile(), new Promise((r) => setTimeout(r, 4000))]);
-    setPhase('success');
-    const to = res.redirect || MEMBER_PORTAL_URL || '/member/dashboard';
-      if (!res.demo && to) setTimeout(() => window.location.assign(to), 1400);
-      if (res.demo) setMsg('Preview mode: login simulated — no real account was accessed.');
-    } catch (ex) {
-      setPhase('idle');
-      const n = tries + 1;
-      setTries(n);
-      captchaRef.current?.refresh();
-      set('captchaOk', false);
-      setF((s) => ({ ...s, password: '' }));
-      if (n >= MAX_TRIES) {
-        setLockLeft(LOCK_SECONDS);
-        setTries(0);
-        setMsg(`Too many attempts. Please wait ${LOCK_SECONDS} seconds, or reset your password.`);
-      } else setMsg(ex.message && ex.message !== 'Something went wrong. Please try again.' ? ex.message : 'That email and password don’t match our records. Please try again.');
-    }
-  }
+  };
 
-  const aria = (k, id) => ({ 'aria-invalid': Boolean(err(k)), 'aria-describedby': err(k) ? `${id}-err` : undefined });
+  // "Forgot password?" only OPENS the reset panel — nothing is sent until the person presses "Send reset link".
+  const openForgot = (e) => {
+    e.preventDefault();
+    setAlert('');
+    setNotice('');
+    setErr({});
+    setFpState('form');
+    setView('forgot');
+  };
+  const backToLogin = (e) => {
+    if (e) e.preventDefault();
+    setAlert('');
+    setNotice('');
+    setErr({});
+    setFpState('form');
+    setView('login');
+  };
+  const sendReset = async (e) => {
+    e.preventDefault();
+    setAlert('');
+    setNotice('');
+    const em = validateEmail(email);
+    if (em) { setErr({ email: em }); return; }
+    setErr({});
+    if (!resetLimit.canSend()) { setAlert('Maximum requests reached for today. Please try again after 24 hours.'); return; }
+    setFpState('sending');
+    const res = await apiRequest('POST', API.forgot, { user: email.trim().toLowerCase() });
+    if (!res.ok) {
+      setFpState('form');
+      setAlert(res.status === 0 ? 'We could not reach the server. Check your connection and try again.' : res.data?.message || 'We could not send the reset link right now. Please try again shortly.');
+      return;
+    }
+    resetLimit.record();
+    setNotice(res.data?.message || 'A password reset link has been sent to your mailbox. Please check your email and proceed.');
+    setFpState('sent');
+  };
 
   return (
-    <>
-      <PageSeo page={page} />
-      <section className="lx" aria-labelledby="lx-title">
-        <div className="lx-bg" aria-hidden="true">
-          <span className="lx-ring r1" /><span className="lx-ring r2" /><span className="lx-ring r3" />
-          {Array.from({ length: 14 }, (_, i) => <i key={i} className="lx-spark" style={{ '--i': i }} />)}
-        </div>
-        <div className="container lx-row">
-          <div className="lx-art">
-            <p className="lx-eyebrow"><span className="live-dot" /> Secure member area</p>
-            <h2 className="lx-hero">Your opinions, <span>your rewards</span> — all in one pass.</h2>
-            <MemberPass email={f.email} pwLen={Math.min(12, f.password.length)} emailOk={emailOk} pwOk={pwOk} human={f.captchaOk} phase={phase} />
-            <ul className="lx-perks">
-              <li style={{ '--c': '#FFC233' }}><Icon name="clipboard" size={20} /><span><b>New invitations</b> waiting in your dashboard</span></li>
-              <li style={{ '--c': '#2EE6CF' }}><Icon name="wallet" size={20} /><span><b>Track & redeem</b> via PayPal, UPI, bank or gift card</span></li>
-              <li style={{ '--c': '#B49CFF' }}><Icon name="layers" size={20} /><span><b>Profile surveys</b> that unlock better matches</span></li>
-            </ul>
+    <section className="login2">
+      <div className="l2-bg" aria-hidden="true"><i /><i /><i /></div>
+      <div className="container l2-grid">
+        <LiveZone className="l2-visual" aria-hidden="true">
+          <div className="l2v-copy">
+            <span className="l2v-pill"><span className="dot" /> Members area</span>
+            <p className="l2v-big">Your next paid survey is <span>waiting</span>.</p>
+            <p className="l2v-small">Pick up where you left off — invitations, points and payouts in one place.</p>
           </div>
+          <div className="l2v-wallet">
+            {[['paypal', 'PayPal', '#003087', '#009cde'], ['upi', 'UPI · India', '#5f259f', '#ff7909'], ['gift', 'Gift Card', '#232f3e', '#ff9900'], ['bank', 'Wire', '#0f766e', '#14b8a6']].map(([ic, l, c1, c2], i) => (
+              <span key={l} className="l2v-card" style={{ '--i': i, '--c1': c1, '--c2': c2 }}><Icon name={ic} size={18} />{l}<i /></span>
+            ))}
+            <span className="l2v-heart"><HeartMark size={74} /></span>
+          </div>
+          <div className="l2v-meter">
+            <span>Points to next reward</span>
+            <i><b /></i>
+          </div>
+          {['$', '₹', '€', '£', '★'].map((c, i) => <span key={i} className="l2v-float" style={{ '--i': i }}>{c}</span>)}
+        </LiveZone>
 
-          <div className="lx-card">
-            <div className="lx-card-head">
-              <span className="lx-badge"><Icon name="lock" size={22} /></span>
-              <div>
-                <h1 id="lx-title">{page.h1}</h1>
-                <p>Log in to see invitations, your balance and rewards.</p>
-              </div>
+        <div className="login-card">
+          <div className="lc-head">
+            <span className="lc-mark"><HeartMark size={50} /></span>
+            <h1>{view === 'forgot' ? 'Reset your password' : 'Welcome back'}</h1>
+            <p>{view === 'forgot' ? 'Enter your registered email and we will send you a link to create a new password.' : 'Log in with your email and password.'}</p>
+          </div>
+          {state === 'done' ? (
+            <div className="lc-done" role="status">
+              <Icon name="check" size={30} stroke={3} />
+              <p>You're signed in. Taking you to your dashboard…</p>
             </div>
-
-            <form ref={formRef} className="lx-form" onSubmit={submit} noValidate method="post" action={FORM_ACTION || undefined}>
-              <div className={`lx-field ${err('email') ? 'bad' : ''} ${emailOk ? 'good' : ''}`}>
-                <Icon name="mail" size={18} />
-                <input id="login-email" name="email" type="email" placeholder=" " autoComplete="username" inputMode="email" value={f.email} onChange={(e) => set('email', e.target.value)} onBlur={() => setTouched((t) => ({ ...t, email: true }))} {...aria('email', 'login-email')} />
-                <label htmlFor="login-email">Email address</label>
-                <span className="lx-tick" aria-hidden="true"><Icon name="check" size={13} stroke={3} /></span>
+          ) : view === 'forgot' ? (
+            fpState === 'sent' ? (
+              <div className="lc-done" role="status">
+                <Icon name="mail" size={30} stroke={2.5} />
+                <p>{notice}</p>
+                <p className="form-fine">Open the email and tap the link to create your new password. It can take a minute to arrive — check your spam folder too.</p>
+                <button type="button" className="btn btn-ghost" onClick={backToLogin}><span className="btn-label">Back to log in</span></button>
               </div>
-              {err('email') ? <p className="f-err" id="login-email-err" role="alert">{err('email')}</p> : null}
-
-              <div className={`lx-field ${err('password') ? 'bad' : ''} ${pwOk ? 'good' : ''}`}>
+            ) : (
+              <form onSubmit={sendReset} noValidate>
+                <Field label="Registered email address" required htmlFor="fp-em" error={err.email} icon="mail">
+                  <input id="fp-em" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" aria-invalid={!!err.email} placeholder="you@example.com" />
+                </Field>
+                {alert && <p className="form-alert" role="alert">{alert}</p>}
+                <button className="btn btn-primary btn-block" type="submit" disabled={fpState === 'sending'}>
+                  <span className="btn-label">{fpState === 'sending' ? 'Sending…' : 'Send reset link'}</span>
+                  <Icon name="mail" size={18} />
+                </button>
+                <p className="lc-alt"><a href="/login" onClick={backToLogin}>Back to log in</a></p>
+              </form>
+            )
+          ) : (
+            <>
+            <form onSubmit={submit} noValidate>
+              <Field label="Email address" required htmlFor="l-em" error={err.email} icon="mail">
+                <input id="l-em" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" aria-invalid={!!err.email} placeholder="you@example.com" />
+              </Field>
+              <Field label="Password" required htmlFor="l-pw" error={err.password} icon="lock">
+                <PasswordField id="l-pw" value={pw} onChange={setPw} invalid={!!err.password} showMeter={false} autoComplete="current-password" placeholder="Your password" />
+              </Field>
+              <div className="lc-row">
+                <label className="lc-remember"><input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} /><span aria-hidden="true" />Keep me signed in</label>
+                <a href="/login" onClick={openForgot}>Forgot password?</a>
+              </div>
+              <Captcha onChange={setHuman} invalid={!!err.captcha} resetKey={capKey} />
+              {err.captcha && <p className="field-error" role="alert"><Icon name="info" size={14} /> {err.captcha}</p>}
+              {alert && <p className="form-alert" role="alert">{alert}</p>}
+              <button className="btn btn-primary btn-block" type="submit" disabled={state === 'sending'}>
+                <span className="btn-label">{state === 'sending' ? 'Checking…' : 'Log in securely'}</span>
                 <Icon name="lock" size={18} />
-                <input id="login-password" name="password" type={show ? 'text' : 'password'} placeholder=" " autoComplete="current-password" value={f.password} onChange={(e) => set('password', e.target.value)} onBlur={() => setTouched((t) => ({ ...t, password: true }))} {...aria('password', 'login-password')} />
-                <label htmlFor="login-password">Password</label>
-                <button type="button" className="lx-eye" onClick={() => setShow((s) => !s)} aria-label={show ? 'Hide password' : 'Show password'} aria-pressed={show}><Icon name="eye" size={18} /></button>
-              </div>
-              {err('password') ? <p className="f-err" id="login-password-err" role="alert">{err('password')}</p> : null}
-
-              <div className="lx-row2">
-                <label className="lx-check">
-                  <input type="checkbox" name="remember" checked={f.remember} onChange={(e) => set('remember', e.target.checked)} />
-                  <span aria-hidden="true" /> Keep me logged in
-                </label>
-                {RESET_URL ? <a href={RESET_URL} className="lx-forgot">Forgot password?</a> : <Link to="/forgot-password" className="lx-forgot">Forgot password?</Link>}
-              </div>
-
-              <div className={`lx-captcha ${err('captcha') ? 'bad' : ''} ${f.captchaOk ? 'good' : ''}`}>
-                <p className="lx-cap-title"><Icon name="shield" size={16} /> Quick security check {f.captchaOk ? <b>Verified</b> : null}</p>
-                <Captcha ref={captchaRef} error={err('captcha')} onChange={(ok) => set('captchaOk', ok)} />
-              </div>
-              <input type="hidden" name="captchaToken" ref={tokenRef} defaultValue="" />
-
-              {msg ? <p className={`lx-msg ${phase === 'success' ? 'ok' : ''}`} role="status">{msg}</p> : null}
-
-              <button type="submit" className={`btn btn-primary btn-lg btn-block lx-submit ${phase}`} disabled={phase === 'sending' || lockLeft > 0}>
-                {phase === 'sending' ? <><span className="lx-spin" aria-hidden="true" /> Checking…</> : phase === 'success' ? <>Logged in <Icon name="check" size={18} /></> : lockLeft ? `Try again in ${lockLeft}s` : <>Log in securely <Icon name="arrow" size={18} /></>}
               </button>
             </form>
-            <SocialLogin />
-
-            <div className="lx-divider"><span>New to MyFrequentRewards?</span></div>
-
-            
-            <Link to="/sign-up" className="btn btn-ghost-dark btn-block lx-join"><Icon name="gift" size={18} /> Create your free account</Link>
-            <p className="lx-safe"><Icon name="shield" size={14} /> We will never ask for your password by email, SMS or WhatsApp.</p>
-          </div>
+            <SocialLogin label="Or log in with" />
+            </>
+          )}
+          <p className="lc-alt">New here? <Link to="/join">Create a free account</Link></p>
+          <p className="lc-safe"><Icon name="shieldCheck" size={14} /> We will never ask for your password by email, chat or phone.</p>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

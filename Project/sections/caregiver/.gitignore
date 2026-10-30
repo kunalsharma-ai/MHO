@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.dev/
+.preview-tmp/
+.ssr-tmp.*
+*.log
+.DS_Store

@@ -1,0 +1,32 @@
+{
+  "name": "mho-patient-dashboard-section",
+  "version": "2.0.0",
+  "private": true,
+  "description": "MyHealthOpinions patient dashboard section: About You profiles, health surveys (locked → unlocked one at a time), Health Pulse rewards (Reward Points + Quality Score), 12 fully translated + 80 auto-translated languages. React 19, embeddable in any dashboard.",
+  "type": "module",
+  "main": "dist/embed/mho-patient-section.esm.js",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/build.mjs",
+    "build:preview": "node scripts/build.mjs --preview",
+    "build:all": "node scripts/build-data.mjs && node scripts/build.mjs && node scripts/build.mjs --preview",
+    "data": "node scripts/build-data.mjs",
+    "flags:states": "node scripts/build-state-flags.mjs",
+    "serve": "node scripts/serve.mjs dist 4173",
+    "i18n:check": "node scripts/i18n-check.mjs",
+    "test:dashboard": "node scripts/test-dashboard.mjs",
+    "test:responsive": "node scripts/test-responsive.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0",
+    "playwright": "^1.48.0",
+    "sharp": "^0.34.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

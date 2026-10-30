@@ -768,37 +768,7 @@ export function SurveyHistory() {
   }, [user, dateRange]);
 
   const renderStatusBadge = (status, source, slug) => {
-    if (source === "internal" && status === "dropout") {
-      return (
-        <Page.Link
-          href={`/survey?name=${slug}`}
-          sx={{
-            display: "inline-block",
-            textDecoration: "none",
-            bgcolor: "primary.main",
-            color: "#fff !important",
-            px: 2,
-            py: 0.4,
-            borderRadius: "20px",
-            fontSize: "12px",
-            fontWeight: "600",
-            textAlign: "center",
-            boxShadow: "0 2px 8px rgba(12, 90, 219, 0.2)",
-            transition: "all 0.25s ease",
-            "&:hover": {
-              textDecoration: "none",
-              transform: "translateY(-1px)",
-              boxShadow: "0 4px 12px rgba(12, 90, 219, 0.4)",
-              bgcolor: "secondary.main",
-            },
-          }}
-        >
-          Dropout
-        </Page.Link>
-      );
-    }
-
-    const config = {
+   const config = {
       complete: {
         bg: "#e6f4ea",
         color: "#137333",

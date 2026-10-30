@@ -1,0 +1,170 @@
+import {
+  init_define_import_meta_env
+} from "/assets/chunk-HJYHZKH5.js";
+
+// src/data/blogs/posts/make-money-from-home-side-income-ideas.js
+init_define_import_meta_env();
+var make_money_from_home_side_income_ideas_default = {
+  body: `There is a particular kind of tiredness that comes from reading "make money from home" articles. They assume you have empty days, a fast laptop, a marketing degree and no children asking for snacks. Real homes are messier. Time comes in fragments, energy dips in the afternoon, and anything that needs a three-hour block simply will not happen.
+
+So this guide starts from real life and works backwards. We sort side income ideas by the kind of time you actually have, and we are honest about effort, pay and risk.
+
+## First, map your real time
+
+Before choosing anything, take one ordinary week and note when you genuinely have free time. Most people discover three types:
+
+- **Crumbs:** 5\u201315 minute gaps \u2014 waiting rooms, commutes, kettle boiling.
+- **Slices:** 30\u201360 minute windows \u2014 an evening, a nap time, a lunch break.
+- **Blocks:** two hours or more \u2014 weekends or days off.
+
+The best way to make money from home is to match each type of time with the right kind of work.
+
+## Ideas for crumbs of time
+
+### Paid surveys and quick polls
+
+Surveys are perfectly shaped for short gaps. You can start a screener in a queue and finish a short survey before your name is called. For longer studies, save them for a slice. Our [beginner's guide to paid surveys](/blog/paid-surveys-for-money-beginners-guide/) explains how they work, and our members can choose from [PayPal, Wire Transfer, Amazon Gift Cards and UPI in India](/rewards/) when they redeem.
+
+**Effort:** low. **Pay:** modest, higher for specialist profiles. **Risk:** low on reputable sites.
+
+### Micro-tasks
+
+Image tagging, short transcriptions and quick data checks pay little per task but can be done in tiny bursts.
+
+**Effort:** low. **Pay:** low. **Risk:** low if the platform is established.
+
+### Reselling things you no longer need
+
+Photographing and listing unused items takes minutes and turns clutter into cash.
+
+**Effort:** low. **Pay:** one-off. **Risk:** watch for payment scams from "buyers".
+
+## Ideas for slices of time
+
+### Online tutoring
+
+An hour in the evening can be a tutoring session. Language conversation practice is especially popular and does not require a teaching degree on many platforms.
+
+**Effort:** medium. **Pay:** good per hour. **Risk:** low.
+
+### Freelance writing or proofreading
+
+A 600-word article or a proofreading task fits into an evening. Specialists \u2014 including nurses, pharmacists and therapists \u2014 can write health content that pays better than general topics.
+
+**Effort:** medium. **Pay:** medium to high. **Risk:** low; use reputable marketplaces.
+
+### Website testing
+
+Thirty-minute testing sessions where you speak your thoughts aloud while using a site. Invitations come and go, but pay per session is fair.
+
+**Effort:** low to medium. **Pay:** medium. **Risk:** low.
+
+### Longer healthcare surveys
+
+Healthcare professional and patient studies can take 20\u201330 minutes and reward the depth of your experience. They are a great use of a quiet evening. See our guides for [doctors](/blog/paid-surveys-for-doctors/), [nurses](/blog/paid-surveys-for-nurses/) and [patients](/blog/paid-health-surveys-for-patients/).
+
+## Ideas for blocks of time
+
+### Building a small online shop
+
+Handmade goods, printables, recipes or digital templates. It takes a few weekends to set up and steady effort to grow, but once running, it can earn while you sleep.
+
+### Remote part-time work
+
+Customer support, virtual assistance, data entry and moderation roles are often part-time and fully remote. These need applications and interviews, but they offer the most stable side income.
+
+### Paid focus groups
+
+Focus groups usually run for an hour or more at a set time, and reward that commitment generously. Read [what to expect from paid online focus groups](/blog/online-focus-groups-paid/).
+
+## A sample weekly mix
+
+Here is how a realistic week might look for someone with a full-time job:
+
+- **Weekday crumbs:** two short survey windows a day.
+- **Two evening slices:** one tutoring session, one longer survey or writing task.
+- **One weekend block:** working on a slower, growing project like a shop.
+
+Nothing here requires quitting your job or spending money. Together, though, it builds an income stream with three legs: quick (surveys), skilled (tutoring or writing) and growing (a shop or portfolio).
+
+## Ideas tailored to your situation
+
+### If you work in healthcare
+
+Your expertise is your advantage. Professional surveys, medical writing, exam tutoring for students and telehealth-adjacent roles all pay for knowledge you already have. Our [side hustle guide for healthcare workers](/blog/side-hustle-for-healthcare-workers/) explores options that fit around shifts.
+
+### If you are a caregiver
+
+Time is fragmented and unpredictable. Favour work that pauses easily \u2014 surveys, reselling, small writing tasks. Your caregiving experience is also valuable to researchers: see [caregiver surveys](/blog/caregiver-surveys-get-paid-for-your-opinion/).
+
+### If you are a student
+
+Tutoring younger students, campus-adjacent gigs and surveys are good starters. We list more in [online jobs for students without investment](/blog/online-jobs-for-students-without-investment/).
+
+### If you are retired or a homemaker
+
+Patience and life experience are strengths. Longer surveys, focus groups and gentle tutoring suit you well. Read [extra income from home for retirees and homemakers](/blog/extra-income-from-home-for-retirees-and-homemakers/).
+
+## Turning a side income into a habit that lasts
+
+Starting is easy. Keeping going is where most home-income plans fade. A few practical ideas help the habit survive busy months.
+
+### Give the money a job
+
+Earnings with no purpose tend to disappear into everyday spending, which makes the effort feel invisible. Decide in advance what your side income is for: a holiday fund, school supplies, an emergency cushion, a monthly family treat. When you can see the result, you stay motivated.
+
+### Protect the boundary between work and home
+
+Working from home blurs lines. Use a specific chair, corner or time of day for earning tasks, and stop when that time is up. Your family will know when you are "at work" and when you are not, and you will avoid the guilt of half-working all evening.
+
+### Review every quarter
+
+Every three months, look at what you earned from each source and how long it took. Drop the method with the worst return on your time and give that time to the best one. This simple review is how small side incomes grow into meaningful ones.
+
+### Learn one new skill a year
+
+The highest-paying home work rewards skills. One online course a year \u2014 in writing, design, spreadsheets, a language or bookkeeping \u2014 steadily raises what you can earn per hour.
+
+## What about "make money from home" apps?
+
+App stores are full of apps that promise rewards for playing games, watching adverts or walking. Some are legitimate but pay very little per hour; others exist mainly to show you adverts. Before installing, check who publishes the app, read recent reviews about payouts and look at what permissions it requests. A survey community with a mobile-friendly website, like MyHealthOpinions, does not need intrusive permissions to send you invitations. Our guide on [making money from your phone](/blog/make-money-from-your-phone-with-surveys/) covers this in more detail.
+
+## Red flags for work-from-home offers
+
+Work-from-home scams target people who need flexibility. Be wary of:
+
+- **Upfront fees** for training, kits or registration.
+- **Cheque or overpayment schemes** where you are asked to send back "extra" money.
+- **Vague job descriptions** with unusually high pay.
+- **Requests to receive or forward packages or money** for a "company".
+- **Messaging-app recruiters** offering paid likes or reviews.
+
+The [FTC's guidance on job scams](https://consumer.ftc.gov/) is a useful reference wherever you live, and Indian users can report fraud at [cybercrime.gov.in](https://cybercrime.gov.in/).
+
+## Keep it sustainable
+
+Side income should support your life, not swallow it. A few guardrails help:
+
+- **Set a weekly cap** on hours so it does not crowd out rest or family.
+- **Track earnings honestly**, including time spent, so you can drop low-value tasks.
+- **Check local tax rules.** In many countries, side income above certain thresholds must be declared.
+- **Protect your data.** Share only what each platform genuinely needs; read our [privacy policy](/privacy/) to see what a responsible platform explains.
+
+## Start small, start today
+
+The best way to make money from home is the one you will still be doing in three months. For most people, that starts with something easy and low-risk, then adds one skill-based option once the habit sticks.
+
+If surveys sound like the right first step, [join MyHealthOpinions free](/join/). It takes a few minutes, and your first invitation could arrive the same week.`,
+  faqs: [
+    { q: "What is the easiest way to make money from home?", a: "Paid surveys and micro-tasks are the easiest because they need no special skills and fit into short gaps in your day." },
+    { q: "How can I make money from home with only a few hours a week?", a: "Combine short survey windows with one skill-based task, such as a weekly tutoring or writing session." },
+    { q: "Are work-from-home jobs safe?", a: "Many are, but avoid any offer that asks for upfront fees, cheque handling or forwarding money or packages." },
+    { q: "Do I need to pay tax on side income?", a: "Often yes above certain thresholds, so check your local tax rules or speak to a tax adviser." },
+    { q: "Which side income suits healthcare workers?", a: "Professional surveys, medical writing and exam tutoring use expertise you already have and fit around shifts." },
+    { q: "Can I make money from home without investing money?", a: "Yes, surveys, tutoring, freelancing and testing can all be started without spending any money." }
+  ]
+};
+export {
+  make_money_from_home_side_income_ideas_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiLi4vLi4vc3JjL2RhdGEvYmxvZ3MvcG9zdHMvbWFrZS1tb25leS1mcm9tLWhvbWUtc2lkZS1pbmNvbWUtaWRlYXMuanMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImV4cG9ydCBkZWZhdWx0IHtcbiAgYm9keTogYFRoZXJlIGlzIGEgcGFydGljdWxhciBraW5kIG9mIHRpcmVkbmVzcyB0aGF0IGNvbWVzIGZyb20gcmVhZGluZyBcIm1ha2UgbW9uZXkgZnJvbSBob21lXCIgYXJ0aWNsZXMuIFRoZXkgYXNzdW1lIHlvdSBoYXZlIGVtcHR5IGRheXMsIGEgZmFzdCBsYXB0b3AsIGEgbWFya2V0aW5nIGRlZ3JlZSBhbmQgbm8gY2hpbGRyZW4gYXNraW5nIGZvciBzbmFja3MuIFJlYWwgaG9tZXMgYXJlIG1lc3NpZXIuIFRpbWUgY29tZXMgaW4gZnJhZ21lbnRzLCBlbmVyZ3kgZGlwcyBpbiB0aGUgYWZ0ZXJub29uLCBhbmQgYW55dGhpbmcgdGhhdCBuZWVkcyBhIHRocmVlLWhvdXIgYmxvY2sgc2ltcGx5IHdpbGwgbm90IGhhcHBlbi5cblxuU28gdGhpcyBndWlkZSBzdGFydHMgZnJvbSByZWFsIGxpZmUgYW5kIHdvcmtzIGJhY2t3YXJkcy4gV2Ugc29ydCBzaWRlIGluY29tZSBpZGVhcyBieSB0aGUga2luZCBvZiB0aW1lIHlvdSBhY3R1YWxseSBoYXZlLCBhbmQgd2UgYXJlIGhvbmVzdCBhYm91dCBlZmZvcnQsIHBheSBhbmQgcmlzay5cblxuIyMgRmlyc3QsIG1hcCB5b3VyIHJlYWwgdGltZVxuXG5CZWZvcmUgY2hvb3NpbmcgYW55dGhpbmcsIHRha2Ugb25lIG9yZGluYXJ5IHdlZWsgYW5kIG5vdGUgd2hlbiB5b3UgZ2VudWluZWx5IGhhdmUgZnJlZSB0aW1lLiBNb3N0IHBlb3BsZSBkaXNjb3ZlciB0aHJlZSB0eXBlczpcblxuLSAqKkNydW1iczoqKiA1XHUyMDEzMTUgbWludXRlIGdhcHMgXHUyMDE0IHdhaXRpbmcgcm9vbXMsIGNvbW11dGVzLCBrZXR0bGUgYm9pbGluZy5cbi0gKipTbGljZXM6KiogMzBcdTIwMTM2MCBtaW51dGUgd2luZG93cyBcdTIwMTQgYW4gZXZlbmluZywgYSBuYXAgdGltZSwgYSBsdW5jaCBicmVhay5cbi0gKipCbG9ja3M6KiogdHdvIGhvdXJzIG9yIG1vcmUgXHUyMDE0IHdlZWtlbmRzIG9yIGRheXMgb2ZmLlxuXG5UaGUgYmVzdCB3YXkgdG8gbWFrZSBtb25leSBmcm9tIGhvbWUgaXMgdG8gbWF0Y2ggZWFjaCB0eXBlIG9mIHRpbWUgd2l0aCB0aGUgcmlnaHQga2luZCBvZiB3b3JrLlxuXG4jIyBJZGVhcyBmb3IgY3J1bWJzIG9mIHRpbWVcblxuIyMjIFBhaWQgc3VydmV5cyBhbmQgcXVpY2sgcG9sbHNcblxuU3VydmV5cyBhcmUgcGVyZmVjdGx5IHNoYXBlZCBmb3Igc2hvcnQgZ2Fwcy4gWW91IGNhbiBzdGFydCBhIHNjcmVlbmVyIGluIGEgcXVldWUgYW5kIGZpbmlzaCBhIHNob3J0IHN1cnZleSBiZWZvcmUgeW91ciBuYW1lIGlzIGNhbGxlZC4gRm9yIGxvbmdlciBzdHVkaWVzLCBzYXZlIHRoZW0gZm9yIGEgc2xpY2UuIE91ciBbYmVnaW5uZXIncyBndWlkZSB0byBwYWlkIHN1cnZleXNdKC9ibG9nL3BhaWQtc3VydmV5cy1mb3ItbW9uZXktYmVnaW5uZXJzLWd1aWRlLykgZXhwbGFpbnMgaG93IHRoZXkgd29yaywgYW5kIG91ciBtZW1iZXJzIGNhbiBjaG9vc2UgZnJvbSBbUGF5UGFsLCBXaXJlIFRyYW5zZmVyLCBBbWF6b24gR2lmdCBDYXJkcyBhbmQgVVBJIGluIEluZGlhXSgvcmV3YXJkcy8pIHdoZW4gdGhleSByZWRlZW0uXG5cbioqRWZmb3J0OioqIGxvdy4gKipQYXk6KiogbW9kZXN0LCBoaWdoZXIgZm9yIHNwZWNpYWxpc3QgcHJvZmlsZXMuICoqUmlzazoqKiBsb3cgb24gcmVwdXRhYmxlIHNpdGVzLlxuXG4jIyMgTWljcm8tdGFza3NcblxuSW1hZ2UgdGFnZ2luZywgc2hvcnQgdHJhbnNjcmlwdGlvbnMgYW5kIHF1aWNrIGRhdGEgY2hlY2tzIHBheSBsaXR0bGUgcGVyIHRhc2sgYnV0IGNhbiBiZSBkb25lIGluIHRpbnkgYnVyc3RzLlxuXG4qKkVmZm9ydDoqKiBsb3cuICoqUGF5OioqIGxvdy4gKipSaXNrOioqIGxvdyBpZiB0aGUgcGxhdGZvcm0gaXMgZXN0YWJsaXNoZWQuXG5cbiMjIyBSZXNlbGxpbmcgdGhpbmdzIHlvdSBubyBsb25nZXIgbmVlZFxuXG5QaG90b2dyYXBoaW5nIGFuZCBsaXN0aW5nIHVudXNlZCBpdGVtcyB0YWtlcyBtaW51dGVzIGFuZCB0dXJucyBjbHV0dGVyIGludG8gY2FzaC5cblxuKipFZmZvcnQ6KiogbG93LiAqKlBheToqKiBvbmUtb2ZmLiAqKlJpc2s6Kiogd2F0Y2ggZm9yIHBheW1lbnQgc2NhbXMgZnJvbSBcImJ1eWVyc1wiLlxuXG4jIyBJZGVhcyBmb3Igc2xpY2VzIG9mIHRpbWVcblxuIyMjIE9ubGluZSB0dXRvcmluZ1xuXG5BbiBob3VyIGluIHRoZSBldmVuaW5nIGNhbiBiZSBhIHR1dG9yaW5nIHNlc3Npb24uIExhbmd1YWdlIGNvbnZlcnNhdGlvbiBwcmFjdGljZSBpcyBlc3BlY2lhbGx5IHBvcHVsYXIgYW5kIGRvZXMgbm90IHJlcXVpcmUgYSB0ZWFjaGluZyBkZWdyZWUgb24gbWFueSBwbGF0Zm9ybXMuXG5cbioqRWZmb3J0OioqIG1lZGl1bS4gKipQYXk6KiogZ29vZCBwZXIgaG91ci4gKipSaXNrOioqIGxvdy5cblxuIyMjIEZyZWVsYW5jZSB3cml0aW5nIG9yIHByb29mcmVhZGluZ1xuXG5BIDYwMC13b3JkIGFydGljbGUgb3IgYSBwcm9vZnJlYWRpbmcgdGFzayBmaXRzIGludG8gYW4gZXZlbmluZy4gU3BlY2lhbGlzdHMgXHUyMDE0IGluY2x1ZGluZyBudXJzZXMsIHBoYXJtYWNpc3RzIGFuZCB0aGVyYXBpc3RzIFx1MjAxNCBjYW4gd3JpdGUgaGVhbHRoIGNvbnRlbnQgdGhhdCBwYXlzIGJldHRlciB0aGFuIGdlbmVyYWwgdG9waWNzLlxuXG4qKkVmZm9ydDoqKiBtZWRpdW0uICoqUGF5OioqIG1lZGl1bSB0byBoaWdoLiAqKlJpc2s6KiogbG93OyB1c2UgcmVwdXRhYmxlIG1hcmtldHBsYWNlcy5cblxuIyMjIFdlYnNpdGUgdGVzdGluZ1xuXG5UaGlydHktbWludXRlIHRlc3Rpbmcgc2Vzc2lvbnMgd2hlcmUgeW91IHNwZWFrIHlvdXIgdGhvdWdodHMgYWxvdWQgd2hpbGUgdXNpbmcgYSBzaXRlLiBJbnZpdGF0aW9ucyBjb21lIGFuZCBnbywgYnV0IHBheSBwZXIgc2Vzc2lvbiBpcyBmYWlyLlxuXG4qKkVmZm9ydDoqKiBsb3cgdG8gbWVkaXVtLiAqKlBheToqKiBtZWRpdW0uICoqUmlzazoqKiBsb3cuXG5cbiMjIyBMb25nZXIgaGVhbHRoY2FyZSBzdXJ2ZXlzXG5cbkhlYWx0aGNhcmUgcHJvZmVzc2lvbmFsIGFuZCBwYXRpZW50IHN0dWRpZXMgY2FuIHRha2UgMjBcdTIwMTMzMCBtaW51dGVzIGFuZCByZXdhcmQgdGhlIGRlcHRoIG9mIHlvdXIgZXhwZXJpZW5jZS4gVGhleSBhcmUgYSBncmVhdCB1c2Ugb2YgYSBxdWlldCBldmVuaW5nLiBTZWUgb3VyIGd1aWRlcyBmb3IgW2RvY3RvcnNdKC9ibG9nL3BhaWQtc3VydmV5cy1mb3ItZG9jdG9ycy8pLCBbbnVyc2VzXSgvYmxvZy9wYWlkLXN1cnZleXMtZm9yLW51cnNlcy8pIGFuZCBbcGF0aWVudHNdKC9ibG9nL3BhaWQtaGVhbHRoLXN1cnZleXMtZm9yLXBhdGllbnRzLykuXG5cbiMjIElkZWFzIGZvciBibG9ja3Mgb2YgdGltZVxuXG4jIyMgQnVpbGRpbmcgYSBzbWFsbCBvbmxpbmUgc2hvcFxuXG5IYW5kbWFkZSBnb29kcywgcHJpbnRhYmxlcywgcmVjaXBlcyBvciBkaWdpdGFsIHRlbXBsYXRlcy4gSXQgdGFrZXMgYSBmZXcgd2Vla2VuZHMgdG8gc2V0IHVwIGFuZCBzdGVhZHkgZWZmb3J0IHRvIGdyb3csIGJ1dCBvbmNlIHJ1bm5pbmcsIGl0IGNhbiBlYXJuIHdoaWxlIHlvdSBzbGVlcC5cblxuIyMjIFJlbW90ZSBwYXJ0LXRpbWUgd29ya1xuXG5DdXN0b21lciBzdXBwb3J0LCB2aXJ0dWFsIGFzc2lzdGFuY2UsIGRhdGEgZW50cnkgYW5kIG1vZGVyYXRpb24gcm9sZXMgYXJlIG9mdGVuIHBhcnQtdGltZSBhbmQgZnVsbHkgcmVtb3RlLiBUaGVzZSBuZWVkIGFwcGxpY2F0aW9ucyBhbmQgaW50ZXJ2aWV3cywgYnV0IHRoZXkgb2ZmZXIgdGhlIG1vc3Qgc3RhYmxlIHNpZGUgaW5jb21lLlxuXG4jIyMgUGFpZCBmb2N1cyBncm91cHNcblxuRm9jdXMgZ3JvdXBzIHVzdWFsbHkgcnVuIGZvciBhbiBob3VyIG9yIG1vcmUgYXQgYSBzZXQgdGltZSwgYW5kIHJld2FyZCB0aGF0IGNvbW1pdG1lbnQgZ2VuZXJvdXNseS4gUmVhZCBbd2hhdCB0byBleHBlY3QgZnJvbSBwYWlkIG9ubGluZSBmb2N1cyBncm91cHNdKC9ibG9nL29ubGluZS1mb2N1cy1ncm91cHMtcGFpZC8pLlxuXG4jIyBBIHNhbXBsZSB3ZWVrbHkgbWl4XG5cbkhlcmUgaXMgaG93IGEgcmVhbGlzdGljIHdlZWsgbWlnaHQgbG9vayBmb3Igc29tZW9uZSB3aXRoIGEgZnVsbC10aW1lIGpvYjpcblxuLSAqKldlZWtkYXkgY3J1bWJzOioqIHR3byBzaG9ydCBzdXJ2ZXkgd2luZG93cyBhIGRheS5cbi0gKipUd28gZXZlbmluZyBzbGljZXM6Kiogb25lIHR1dG9yaW5nIHNlc3Npb24sIG9uZSBsb25nZXIgc3VydmV5IG9yIHdyaXRpbmcgdGFzay5cbi0gKipPbmUgd2Vla2VuZCBibG9jazoqKiB3b3JraW5nIG9uIGEgc2xvd2VyLCBncm93aW5nIHByb2plY3QgbGlrZSBhIHNob3AuXG5cbk5vdGhpbmcgaGVyZSByZXF1aXJlcyBxdWl0dGluZyB5b3VyIGpvYiBvciBzcGVuZGluZyBtb25leS4gVG9nZXRoZXIsIHRob3VnaCwgaXQgYnVpbGRzIGFuIGluY29tZSBzdHJlYW0gd2l0aCB0aHJlZSBsZWdzOiBxdWljayAoc3VydmV5cyksIHNraWxsZWQgKHR1dG9yaW5nIG9yIHdyaXRpbmcpIGFuZCBncm93aW5nIChhIHNob3Agb3IgcG9ydGZvbGlvKS5cblxuIyMgSWRlYXMgdGFpbG9yZWQgdG8geW91ciBzaXR1YXRpb25cblxuIyMjIElmIHlvdSB3b3JrIGluIGhlYWx0aGNhcmVcblxuWW91ciBleHBlcnRpc2UgaXMgeW91ciBhZHZhbnRhZ2UuIFByb2Zlc3Npb25hbCBzdXJ2ZXlzLCBtZWRpY2FsIHdyaXRpbmcsIGV4YW0gdHV0b3JpbmcgZm9yIHN0dWRlbnRzIGFuZCB0ZWxlaGVhbHRoLWFkamFjZW50IHJvbGVzIGFsbCBwYXkgZm9yIGtub3dsZWRnZSB5b3UgYWxyZWFkeSBoYXZlLiBPdXIgW3NpZGUgaHVzdGxlIGd1aWRlIGZvciBoZWFsdGhjYXJlIHdvcmtlcnNdKC9ibG9nL3NpZGUtaHVzdGxlLWZvci1oZWFsdGhjYXJlLXdvcmtlcnMvKSBleHBsb3JlcyBvcHRpb25zIHRoYXQgZml0IGFyb3VuZCBzaGlmdHMuXG5cbiMjIyBJZiB5b3UgYXJlIGEgY2FyZWdpdmVyXG5cblRpbWUgaXMgZnJhZ21lbnRlZCBhbmQgdW5wcmVkaWN0YWJsZS4gRmF2b3VyIHdvcmsgdGhhdCBwYXVzZXMgZWFzaWx5IFx1MjAxNCBzdXJ2ZXlzLCByZXNlbGxpbmcsIHNtYWxsIHdyaXRpbmcgdGFza3MuIFlvdXIgY2FyZWdpdmluZyBleHBlcmllbmNlIGlzIGFsc28gdmFsdWFibGUgdG8gcmVzZWFyY2hlcnM6IHNlZSBbY2FyZWdpdmVyIHN1cnZleXNdKC9ibG9nL2NhcmVnaXZlci1zdXJ2ZXlzLWdldC1wYWlkLWZvci15b3VyLW9waW5pb24vKS5cblxuIyMjIElmIHlvdSBhcmUgYSBzdHVkZW50XG5cblR1dG9yaW5nIHlvdW5nZXIgc3R1ZGVudHMsIGNhbXB1cy1hZGphY2VudCBnaWdzIGFuZCBzdXJ2ZXlzIGFyZSBnb29kIHN0YXJ0ZXJzLiBXZSBsaXN0IG1vcmUgaW4gW29ubGluZSBqb2JzIGZvciBzdHVkZW50cyB3aXRob3V0IGludmVzdG1lbnRdKC9ibG9nL29ubGluZS1qb2JzLWZvci1zdHVkZW50cy13aXRob3V0LWludmVzdG1lbnQvKS5cblxuIyMjIElmIHlvdSBhcmUgcmV0aXJlZCBvciBhIGhvbWVtYWtlclxuXG5QYXRpZW5jZSBhbmQgbGlmZSBleHBlcmllbmNlIGFyZSBzdHJlbmd0aHMuIExvbmdlciBzdXJ2ZXlzLCBmb2N1cyBncm91cHMgYW5kIGdlbnRsZSB0dXRvcmluZyBzdWl0IHlvdSB3ZWxsLiBSZWFkIFtleHRyYSBpbmNvbWUgZnJvbSBob21lIGZvciByZXRpcmVlcyBhbmQgaG9tZW1ha2Vyc10oL2Jsb2cvZXh0cmEtaW5jb21lLWZyb20taG9tZS1mb3ItcmV0aXJlZXMtYW5kLWhvbWVtYWtlcnMvKS5cblxuIyMgVHVybmluZyBhIHNpZGUgaW5jb21lIGludG8gYSBoYWJpdCB0aGF0IGxhc3RzXG5cblN0YXJ0aW5nIGlzIGVhc3kuIEtlZXBpbmcgZ29pbmcgaXMgd2hlcmUgbW9zdCBob21lLWluY29tZSBwbGFucyBmYWRlLiBBIGZldyBwcmFjdGljYWwgaWRlYXMgaGVscCB0aGUgaGFiaXQgc3Vydml2ZSBidXN5IG1vbnRocy5cblxuIyMjIEdpdmUgdGhlIG1vbmV5IGEgam9iXG5cbkVhcm5pbmdzIHdpdGggbm8gcHVycG9zZSB0ZW5kIHRvIGRpc2FwcGVhciBpbnRvIGV2ZXJ5ZGF5IHNwZW5kaW5nLCB3aGljaCBtYWtlcyB0aGUgZWZmb3J0IGZlZWwgaW52aXNpYmxlLiBEZWNpZGUgaW4gYWR2YW5jZSB3aGF0IHlvdXIgc2lkZSBpbmNvbWUgaXMgZm9yOiBhIGhvbGlkYXkgZnVuZCwgc2Nob29sIHN1cHBsaWVzLCBhbiBlbWVyZ2VuY3kgY3VzaGlvbiwgYSBtb250aGx5IGZhbWlseSB0cmVhdC4gV2hlbiB5b3UgY2FuIHNlZSB0aGUgcmVzdWx0LCB5b3Ugc3RheSBtb3RpdmF0ZWQuXG5cbiMjIyBQcm90ZWN0IHRoZSBib3VuZGFyeSBiZXR3ZWVuIHdvcmsgYW5kIGhvbWVcblxuV29ya2luZyBmcm9tIGhvbWUgYmx1cnMgbGluZXMuIFVzZSBhIHNwZWNpZmljIGNoYWlyLCBjb3JuZXIgb3IgdGltZSBvZiBkYXkgZm9yIGVhcm5pbmcgdGFza3MsIGFuZCBzdG9wIHdoZW4gdGhhdCB0aW1lIGlzIHVwLiBZb3VyIGZhbWlseSB3aWxsIGtub3cgd2hlbiB5b3UgYXJlIFwiYXQgd29ya1wiIGFuZCB3aGVuIHlvdSBhcmUgbm90LCBhbmQgeW91IHdpbGwgYXZvaWQgdGhlIGd1aWx0IG9mIGhhbGYtd29ya2luZyBhbGwgZXZlbmluZy5cblxuIyMjIFJldmlldyBldmVyeSBxdWFydGVyXG5cbkV2ZXJ5IHRocmVlIG1vbnRocywgbG9vayBhdCB3aGF0IHlvdSBlYXJuZWQgZnJvbSBlYWNoIHNvdXJjZSBhbmQgaG93IGxvbmcgaXQgdG9vay4gRHJvcCB0aGUgbWV0aG9kIHdpdGggdGhlIHdvcnN0IHJldHVybiBvbiB5b3VyIHRpbWUgYW5kIGdpdmUgdGhhdCB0aW1lIHRvIHRoZSBiZXN0IG9uZS4gVGhpcyBzaW1wbGUgcmV2aWV3IGlzIGhvdyBzbWFsbCBzaWRlIGluY29tZXMgZ3JvdyBpbnRvIG1lYW5pbmdmdWwgb25lcy5cblxuIyMjIExlYXJuIG9uZSBuZXcgc2tpbGwgYSB5ZWFyXG5cblRoZSBoaWdoZXN0LXBheWluZyBob21lIHdvcmsgcmV3YXJkcyBza2lsbHMuIE9uZSBvbmxpbmUgY291cnNlIGEgeWVhciBcdTIwMTQgaW4gd3JpdGluZywgZGVzaWduLCBzcHJlYWRzaGVldHMsIGEgbGFuZ3VhZ2Ugb3IgYm9va2tlZXBpbmcgXHUyMDE0IHN0ZWFkaWx5IHJhaXNlcyB3aGF0IHlvdSBjYW4gZWFybiBwZXIgaG91ci5cblxuIyMgV2hhdCBhYm91dCBcIm1ha2UgbW9uZXkgZnJvbSBob21lXCIgYXBwcz9cblxuQXBwIHN0b3JlcyBhcmUgZnVsbCBvZiBhcHBzIHRoYXQgcHJvbWlzZSByZXdhcmRzIGZvciBwbGF5aW5nIGdhbWVzLCB3YXRjaGluZyBhZHZlcnRzIG9yIHdhbGtpbmcuIFNvbWUgYXJlIGxlZ2l0aW1hdGUgYnV0IHBheSB2ZXJ5IGxpdHRsZSBwZXIgaG91cjsgb3RoZXJzIGV4aXN0IG1haW5seSB0byBzaG93IHlvdSBhZHZlcnRzLiBCZWZvcmUgaW5zdGFsbGluZywgY2hlY2sgd2hvIHB1Ymxpc2hlcyB0aGUgYXBwLCByZWFkIHJlY2VudCByZXZpZXdzIGFib3V0IHBheW91dHMgYW5kIGxvb2sgYXQgd2hhdCBwZXJtaXNzaW9ucyBpdCByZXF1ZXN0cy4gQSBzdXJ2ZXkgY29tbXVuaXR5IHdpdGggYSBtb2JpbGUtZnJpZW5kbHkgd2Vic2l0ZSwgbGlrZSBNeUhlYWx0aE9waW5pb25zLCBkb2VzIG5vdCBuZWVkIGludHJ1c2l2ZSBwZXJtaXNzaW9ucyB0byBzZW5kIHlvdSBpbnZpdGF0aW9ucy4gT3VyIGd1aWRlIG9uIFttYWtpbmcgbW9uZXkgZnJvbSB5b3VyIHBob25lXSgvYmxvZy9tYWtlLW1vbmV5LWZyb20teW91ci1waG9uZS13aXRoLXN1cnZleXMvKSBjb3ZlcnMgdGhpcyBpbiBtb3JlIGRldGFpbC5cblxuIyMgUmVkIGZsYWdzIGZvciB3b3JrLWZyb20taG9tZSBvZmZlcnNcblxuV29yay1mcm9tLWhvbWUgc2NhbXMgdGFyZ2V0IHBlb3BsZSB3aG8gbmVlZCBmbGV4aWJpbGl0eS4gQmUgd2FyeSBvZjpcblxuLSAqKlVwZnJvbnQgZmVlcyoqIGZvciB0cmFpbmluZywga2l0cyBvciByZWdpc3RyYXRpb24uXG4tICoqQ2hlcXVlIG9yIG92ZXJwYXltZW50IHNjaGVtZXMqKiB3aGVyZSB5b3UgYXJlIGFza2VkIHRvIHNlbmQgYmFjayBcImV4dHJhXCIgbW9uZXkuXG4tICoqVmFndWUgam9iIGRlc2NyaXB0aW9ucyoqIHdpdGggdW51c3VhbGx5IGhpZ2ggcGF5LlxuLSAqKlJlcXVlc3RzIHRvIHJlY2VpdmUgb3IgZm9yd2FyZCBwYWNrYWdlcyBvciBtb25leSoqIGZvciBhIFwiY29tcGFueVwiLlxuLSAqKk1lc3NhZ2luZy1hcHAgcmVjcnVpdGVycyoqIG9mZmVyaW5nIHBhaWQgbGlrZXMgb3IgcmV2aWV3cy5cblxuVGhlIFtGVEMncyBndWlkYW5jZSBvbiBqb2Igc2NhbXNdKGh0dHBzOi8vY29uc3VtZXIuZnRjLmdvdi8pIGlzIGEgdXNlZnVsIHJlZmVyZW5jZSB3aGVyZXZlciB5b3UgbGl2ZSwgYW5kIEluZGlhbiB1c2VycyBjYW4gcmVwb3J0IGZyYXVkIGF0IFtjeWJlcmNyaW1lLmdvdi5pbl0oaHR0cHM6Ly9jeWJlcmNyaW1lLmdvdi5pbi8pLlxuXG4jIyBLZWVwIGl0IHN1c3RhaW5hYmxlXG5cblNpZGUgaW5jb21lIHNob3VsZCBzdXBwb3J0IHlvdXIgbGlmZSwgbm90IHN3YWxsb3cgaXQuIEEgZmV3IGd1YXJkcmFpbHMgaGVscDpcblxuLSAqKlNldCBhIHdlZWtseSBjYXAqKiBvbiBob3VycyBzbyBpdCBkb2VzIG5vdCBjcm93ZCBvdXQgcmVzdCBvciBmYW1pbHkuXG4tICoqVHJhY2sgZWFybmluZ3MgaG9uZXN0bHkqKiwgaW5jbHVkaW5nIHRpbWUgc3BlbnQsIHNvIHlvdSBjYW4gZHJvcCBsb3ctdmFsdWUgdGFza3MuXG4tICoqQ2hlY2sgbG9jYWwgdGF4IHJ1bGVzLioqIEluIG1hbnkgY291bnRyaWVzLCBzaWRlIGluY29tZSBhYm92ZSBjZXJ0YWluIHRocmVzaG9sZHMgbXVzdCBiZSBkZWNsYXJlZC5cbi0gKipQcm90ZWN0IHlvdXIgZGF0YS4qKiBTaGFyZSBvbmx5IHdoYXQgZWFjaCBwbGF0Zm9ybSBnZW51aW5lbHkgbmVlZHM7IHJlYWQgb3VyIFtwcml2YWN5IHBvbGljeV0oL3ByaXZhY3kvKSB0byBzZWUgd2hhdCBhIHJlc3BvbnNpYmxlIHBsYXRmb3JtIGV4cGxhaW5zLlxuXG4jIyBTdGFydCBzbWFsbCwgc3RhcnQgdG9kYXlcblxuVGhlIGJlc3Qgd2F5IHRvIG1ha2UgbW9uZXkgZnJvbSBob21lIGlzIHRoZSBvbmUgeW91IHdpbGwgc3RpbGwgYmUgZG9pbmcgaW4gdGhyZWUgbW9udGhzLiBGb3IgbW9zdCBwZW9wbGUsIHRoYXQgc3RhcnRzIHdpdGggc29tZXRoaW5nIGVhc3kgYW5kIGxvdy1yaXNrLCB0aGVuIGFkZHMgb25lIHNraWxsLWJhc2VkIG9wdGlvbiBvbmNlIHRoZSBoYWJpdCBzdGlja3MuXG5cbklmIHN1cnZleXMgc291bmQgbGlrZSB0aGUgcmlnaHQgZmlyc3Qgc3RlcCwgW2pvaW4gTXlIZWFsdGhPcGluaW9ucyBmcmVlXSgvam9pbi8pLiBJdCB0YWtlcyBhIGZldyBtaW51dGVzLCBhbmQgeW91ciBmaXJzdCBpbnZpdGF0aW9uIGNvdWxkIGFycml2ZSB0aGUgc2FtZSB3ZWVrLmAsXG4gIGZhcXM6IFtcbiAgICB7IHE6ICdXaGF0IGlzIHRoZSBlYXNpZXN0IHdheSB0byBtYWtlIG1vbmV5IGZyb20gaG9tZT8nLCBhOiAnUGFpZCBzdXJ2ZXlzIGFuZCBtaWNyby10YXNrcyBhcmUgdGhlIGVhc2llc3QgYmVjYXVzZSB0aGV5IG5lZWQgbm8gc3BlY2lhbCBza2lsbHMgYW5kIGZpdCBpbnRvIHNob3J0IGdhcHMgaW4geW91ciBkYXkuJyB9LFxuICAgIHsgcTogJ0hvdyBjYW4gSSBtYWtlIG1vbmV5IGZyb20gaG9tZSB3aXRoIG9ubHkgYSBmZXcgaG91cnMgYSB3ZWVrPycsIGE6ICdDb21iaW5lIHNob3J0IHN1cnZleSB3aW5kb3dzIHdpdGggb25lIHNraWxsLWJhc2VkIHRhc2ssIHN1Y2ggYXMgYSB3ZWVrbHkgdHV0b3Jpbmcgb3Igd3JpdGluZyBzZXNzaW9uLicgfSxcbiAgICB7IHE6ICdBcmUgd29yay1mcm9tLWhvbWUgam9icyBzYWZlPycsIGE6ICdNYW55IGFyZSwgYnV0IGF2b2lkIGFueSBvZmZlciB0aGF0IGFza3MgZm9yIHVwZnJvbnQgZmVlcywgY2hlcXVlIGhhbmRsaW5nIG9yIGZvcndhcmRpbmcgbW9uZXkgb3IgcGFja2FnZXMuJyB9LFxuICAgIHsgcTogJ0RvIEkgbmVlZCB0byBwYXkgdGF4IG9uIHNpZGUgaW5jb21lPycsIGE6ICdPZnRlbiB5ZXMgYWJvdmUgY2VydGFpbiB0aHJlc2hvbGRzLCBzbyBjaGVjayB5b3VyIGxvY2FsIHRheCBydWxlcyBvciBzcGVhayB0byBhIHRheCBhZHZpc2VyLicgfSxcbiAgICB7IHE6ICdXaGljaCBzaWRlIGluY29tZSBzdWl0cyBoZWFsdGhjYXJlIHdvcmtlcnM/JywgYTogJ1Byb2Zlc3Npb25hbCBzdXJ2ZXlzLCBtZWRpY2FsIHdyaXRpbmcgYW5kIGV4YW0gdHV0b3JpbmcgdXNlIGV4cGVydGlzZSB5b3UgYWxyZWFkeSBoYXZlIGFuZCBmaXQgYXJvdW5kIHNoaWZ0cy4nIH0sXG4gICAgeyBxOiAnQ2FuIEkgbWFrZSBtb25leSBmcm9tIGhvbWUgd2l0aG91dCBpbnZlc3RpbmcgbW9uZXk/JywgYTogJ1llcywgc3VydmV5cywgdHV0b3JpbmcsIGZyZWVsYW5jaW5nIGFuZCB0ZXN0aW5nIGNhbiBhbGwgYmUgc3RhcnRlZCB3aXRob3V0IHNwZW5kaW5nIGFueSBtb25leS4nIH0sXG4gIF0sXG59O1xuIl0sCiAgIm1hcHBpbmdzIjogIjs7Ozs7QUFBQTtBQUFBLElBQU8saURBQVE7QUFBQSxFQUNiLE1BQU07QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsRUFzSk4sTUFBTTtBQUFBLElBQ0osRUFBRSxHQUFHLG9EQUFvRCxHQUFHLHdIQUF3SDtBQUFBLElBQ3BMLEVBQUUsR0FBRyxnRUFBZ0UsR0FBRyx3R0FBd0c7QUFBQSxJQUNoTCxFQUFFLEdBQUcsaUNBQWlDLEdBQUcsNkdBQTZHO0FBQUEsSUFDdEosRUFBRSxHQUFHLHdDQUF3QyxHQUFHLCtGQUErRjtBQUFBLElBQy9JLEVBQUUsR0FBRywrQ0FBK0MsR0FBRyxnSEFBZ0g7QUFBQSxJQUN2SyxFQUFFLEdBQUcsdURBQXVELEdBQUcsaUdBQWlHO0FBQUEsRUFDbEs7QUFDRjsiLAogICJuYW1lcyI6IFtdCn0K

@@ -1,0 +1,108 @@
+/* =====================================================================================================
+   Universal device compatibility (loaded last).
+   Device classes this file is tuned for:
+     small phones 320–359 · phones 360–479 · large phones 480–767 · tablets portrait 768–1023 ·
+     tablets landscape / small laptops 1024–1279 · laptops 1280–1439 · desktops 1440+ · large 1920+
+   Also covers: notches & home bars (safe-area insets), dynamic mobile toolbars (dvh), touch devices
+   (no hover, 44px targets), landscape phones (short viewports) and reduced motion.
+   ===================================================================================================== */
+
+/* ---------- safe areas (iPhone notch / home bar, Android gesture bar) ---------- */
+.site-header { padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+.help-stack { right: calc(20px + env(safe-area-inset-right)); bottom: calc(20px + env(safe-area-inset-bottom)); }
+.site-footer { padding-bottom: env(safe-area-inset-bottom); }
+
+/* ---------- media never overflows ---------- */
+img, svg, video, canvas, iframe { max-width: 100%; }
+img { height: auto; }
+table { max-width: 100%; }
+pre, code { white-space: pre-wrap; word-break: break-word; }
+/* long words / URLs / emails wrap instead of pushing the layout */
+p, li, dd, td, h1, h2, h3, h4, blockquote, .lead { overflow-wrap: break-word; }
+
+/* ---------- touch devices: comfortable targets, no sticky hover states ---------- */
+@media (hover: none) and (pointer: coarse) {
+  .btn, .chat-quick button, .si-tabs button, .f4-chips button, .chip-links a, .msg-links a, .msg-related button { min-height: 40px; }
+  .chat-quick button, .msg-links a { display: inline-flex; align-items: center; }
+  input, select, textarea { font-size: max(16px, 1rem); } /* stops iOS zooming into form fields */
+}
+
+/* ---------- phones (≤ 520px): live help as a full-height sheet ---------- */
+@media (max-width: 520px) {
+  .help-stack { right: calc(12px + env(safe-area-inset-right)); bottom: calc(12px + env(safe-area-inset-bottom)); }
+  .chat-win {
+    position: fixed; left: 8px; right: 8px; top: auto; width: auto;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    height: calc(100vh - 16px); height: calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    border-radius: 24px; z-index: 260;
+  }
+  .help-stack.chat-open .fab-chat, .help-stack.chat-open .fab-wa, .help-stack.chat-open .hello-bubble { opacity: 0; pointer-events: none; }
+  .ch4-tiles { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---------- short landscape phones ---------- */
+@media (max-height: 520px) and (orientation: landscape) {
+  .chat-win { height: calc(100dvh - 24px); bottom: 12px; }
+  .ch4-welcome { display: none; }
+}
+
+/* ---------- header on small phones: logo, Join and menu always fit ---------- */
+.header-logo { min-width: 0; flex: 0 1 auto; }
+.header-logo .vlogo, .header-logo .vlogo svg { max-width: 100%; }
+@media (max-width: 400px) {
+  .header-inner { gap: 8px; }
+  .header-logo .vlogo svg { height: 30px; }
+  .header-cta { gap: 6px; }
+  .btn-join { padding: 8px 12px; font-size: .86rem; }
+  .burger { width: 40px; height: 40px; }
+  .burger span { left: 10px; }
+  .burger span:nth-child(1) { top: 13px; } .burger span:nth-child(2) { top: 19px; } .burger span:nth-child(3) { top: 25px; }
+}
+@media (max-width: 340px) {
+  .header-logo .vlogo svg { height: 26px; }
+  .btn-join { padding: 7px 10px; font-size: .8rem; }
+}
+
+/* ---------- let every grid / flex column shrink to the screen (phones, tablets, small laptops) ----------
+   Grid and flex items default to min-width:auto, so one long word, input or card can force a column
+   wider than the phone. :where() keeps specificity at 0, so any component that sets its own min-width
+   still wins. */
+@media (max-width: 1279px) {
+  :where(main, header, footer, .chat-win, .rate-modal, [role="dialog"]) :where(div, section, article, aside, form, fieldset, ul, ol, li, dl, p, label, nav, figure, header, footer, blockquote) { min-width: 0; }
+  :where(main, [role="dialog"]) :where(input, select, textarea) { min-width: 0; max-width: 100%; }
+}
+
+/* ---------- touch screens: 40–44px tap targets for links that are not inside running text ---------- */
+@media (hover: none) and (pointer: coarse) {
+  .fm-col li a { display: inline-block; padding: 9px 0; }
+  .fm-col ul { gap: 0; }
+  .th-cloud a, .chip-links a, .crumbs a, .text-link { min-height: 40px; }
+  .crumbs a { display: inline-flex; align-items: center; }
+  .text-link { padding-block: 8px; }
+  .slot-lever::after { content: ''; position: absolute; inset: -14px; }
+  .legal-toc a, .sitemap a, .tags a { display: inline-block; padding-block: 8px; }
+}
+
+/* ---------- readable text inside illustrations on phones ---------- */
+@media (max-width: 520px) {
+  .vm-cell small, .vm-credit small, .vl-card small { font-size: 9.5px; }
+  .reel-item small { font-size: .7rem; }
+  .hb-node { font-size: max(.7rem, 10.5px); }
+  .vn-txt { font-size: 11px; }
+}
+
+/* ---------- home: survey rate ruler on phones (coin stacks must not cover the labels) ---------- */
+@media (max-width: 600px) {
+  .rr-track { margin-top: 16px; }
+  .rr-stack i:nth-child(n+4) { display: none; }
+  .rr-stack i { width: 20px; height: 8px; bottom: calc(var(--k) * 4px + 3px); }
+}
+
+/* ---------- audience pages: reward flip cards two per row on phones ---------- */
+@media (max-width: 600px) {
+  .flipgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .flip { height: 150px; }
+  .flip-f, .flip-b { padding: 12px 10px; border-radius: 18px; }
+  .flip-f b { font-size: .88rem; }
+  .flip-b { font-size: .8rem; line-height: 1.35; }
+}

@@ -1,247 +1,362 @@
+// 24/7 help assistant + WhatsApp shortcut (bottom-right stack).
+//
+// Answers come from the website's own content (FAQ page, audience pages, How It Works, every blog FAQ,
+// legal pages, quality checks, plus hand-written intents) via src/components/chat/engine.js, which is
+// loaded only when the chat opens. Every answer links to the page it comes from ("Read more").
+//
+// When the assistant has no confident answer it does not guess: it asks for the visitor's full name,
+// email, phone (optional) and country, then posts the question to API.enquiry (source: "live-chat") so a
+// person can reply. In dev / preview builds the request is simulated (PREVIEW_FORMS).
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '../router.jsx';
+import { SITE, API, whatsappLink } from '../config/site.js';
 import Icon from './Icon.jsx';
-import { ALL_FAQS } from '../data/pages.js';
-import { BRAND, CONTACT, whatsappLink } from '../data/site.js';
-import { pop, setSound, soundOn } from '../utils/sound.js';
+import { pop, store, session, validateEmail, validateName, postJSON, track } from '../utils/helpers.js';
+import { ALL_COUNTRIES } from '../data/countries.js';
 
-// 24/7 Live Help ("Help Hub"): instant answers from the FAQ knowledge base, a topic launcher that invites
-// questions, and one-tap hand-off to a human (WhatsApp, email, or Tawk.to when VITE_TAWK_* are configured).
-
-const TAWK_P = import.meta.env.VITE_TAWK_PROPERTY_ID;
-const TAWK_W = import.meta.env.VITE_TAWK_WIDGET_ID;
-
-const INTENTS = [
-  { k: ['hi', 'hello', 'hey', 'namaste', 'good morning'], a: 'Hello! 👋 I can help with joining, surveys, rewards, payouts, privacy or your account. What would you like to know?' },
-  { k: ['sign up', 'signup', 'register', 'join', 'create account'], a: 'Joining is free and takes about two minutes. You’ll need your email, mobile number, country and date of birth — then confirm your email and you’re in.', link: ['/sign-up', 'Start sign-up'] },
-  { k: ['upi'], a: 'UPI is available for members in India only. Members in India can claim via UPI, PayPal, wire transfer or Amazon gift card; members in other countries can choose PayPal, wire transfer or Amazon gift card.', link: ['/rewards-and-payouts', 'See payout options'] },
-  { k: ['payout', 'paypal', 'wire', 'bank', 'gift card', 'amazon', 'withdraw', 'redeem', 'claim', 'payment'], a: 'Once your balance reaches the claim threshold you can redeem from your dashboard. India: UPI, PayPal, wire transfer or Amazon gift card. Other countries: PayPal, wire transfer or Amazon gift card. Verification and processing can take 2–3 weeks.', link: ['/rewards-and-payouts', 'See payout options'] },
-  { k: ['pending', 'not received', 'delay', 'late', 'missing reward'], a: 'Rewards can stay pending while quality checks finish. If a claim seems late, share your registered email with our team on WhatsApp and we’ll check it.', human: true },
-  { k: ['screen', 'disqualif', 'not qualify', 'kicked'], a: 'Screen-outs happen when a study needs a different audience or its quota is full. Keeping your profile complete and accurate helps you match more often.', link: ['/blog/survey-profile-tips-to-qualify-more', 'Profile tips'] },
-  { k: ['how much', 'earn', 'money', 'reward per', 'points'], a: 'Every survey shows its reward and estimated time before you start. Typical rewards range by topic — for instance shopping surveys around $4 for ~10 minutes and travel surveys around $7 for ~18 minutes.', link: ['/how-it-works', 'How it works'] },
-  { k: ['professional', 'b2b', 'business', 'manager', 'linkedin', 'company email'], a: 'Business professionals receive B2B studies about their role and industry. We verify credentials (such as a company email or LinkedIn) to protect research quality.', link: ['/paid-surveys-for-professionals', 'For professionals'] },
-  { k: ['privacy', 'data', 'share', 'sell', 'gdpr', 'delete', 'safe'], a: 'Your personal details are never sold or shared. Clients only see anonymised answers, and you can request access or deletion anytime.', link: ['/privacy', 'Privacy policy'] },
-  { k: ['password', 'login', 'log in', 'locked', 'verify', 'otp', 'verification', 'account'], a: 'For login or verification issues, use “Forgot password?” on the login page. Never share your OTP with anyone — our team will never ask for it.', link: ['/login', 'Go to login'], human: true },
-  { k: ['vpn', 'proxy', 'tor'], a: 'VPNs, proxies and TOR are blocked by our location and network checks. Please connect from your real location.' },
-  { k: ['age', 'birth', 'minor', 'old'], a: 'We confirm eligibility using the date of birth you pick in the sign-up calendar. It’s kept private and never shared.' },
-  { k: ['fee', 'pay to join', 'cost', 'charge', 'free'], a: 'MyFrequentRewards is 100% free. We never ask for a joining, membership or claim fee.' },
-  { k: ['human', 'agent', 'person', 'call', 'talk', 'support'], a: 'Of course — connect with a real person below. 🙌', human: true },
+const QUICK = ['How much does each survey pay?', 'Is it free to join?', 'How do I get paid?', 'Is UPI available?', 'Which countries?', 'Why was I screened out?', 'Is my data safe?', 'Talk to a person'];
+const TILES = [
+  ['sparkle', 'Join free', 'How do I join?', '#2457f5'],
+  ['coins', 'Survey rates', 'How much does each survey pay?', '#00b386'],
+  ['wallet', 'Get paid', 'How do I get paid?', '#ff6a2c'],
+  ['filter', 'Screen-outs', 'Why was I screened out?', '#ffb020'],
+  ['stethoscope', 'Professionals', 'I am a doctor or nurse. How do I join?', '#0ea5e9'],
+  ['lock', 'Privacy', 'Is my data safe?', '#8a4dff'],
 ];
 
-const TOPICS = [
-  { q: 'How do I join?', t: 'Joining', d: 'Free · 2 minutes', icon: 'user', c: '#FF8A00' },
-  { q: 'What are the payout options?', t: 'Payouts', d: 'UPI · PayPal · more', icon: 'wallet', c: '#14C9B5' },
-  { q: 'How much can I earn per survey?', t: 'Rewards', d: 'Per-survey points', icon: 'coins', c: '#FFC233' },
-  { q: 'Why was I screened out?', t: 'Surveys', d: 'Screeners & quotas', icon: 'clipboard', c: '#2F6BFF' },
-  { q: 'Is my data safe?', t: 'Privacy', d: 'Never sold or shared', icon: 'shield', c: '#8B5CF6' },
-  { q: 'I want to talk to a person', t: 'Real person', d: 'WhatsApp · email', icon: 'headset', c: '#E8457A' },
-];
-const POPULAR = ['Is it really free?', 'When do I get paid?', 'Can professionals join?', 'Is UPI available?', 'I forgot my password', 'Do I need an app?'];
-const GREETINGS = ['How can we help today?', 'Got a question about payouts?', 'Curious how surveys work?', 'Ready to start earning?'];
+const LEAD_PROMPT = {
+  message: 'What would you like to ask our team?',
+  name: 'What’s your full name?',
+  email: 'Thanks! What’s your email address? We’ll reply there.',
+  phone: 'Your contact number, with country code? (Optional — tap “Skip”.)',
+  country: 'And which country are you in?',
+};
+const PLACEHOLDER = {
+  message: 'Type your question…', name: 'Your full name', email: 'you@example.com', phone: '+91 98xxxxxx10 — or tap Skip', country: 'Start typing your country…',
+};
+const ORDER = ['message', 'name', 'email', 'phone', 'country', 'confirm'];
+const next = (step) => ORDER[ORDER.indexOf(step) + 1];
 
-function answer(q) {
-  const t = q.toLowerCase();
-  const hit = INTENTS.find((i) => i.k.some((k) => t.includes(k)));
-  if (hit) return hit;
-  if (t.includes('app')) return { a: 'No app download is needed — MyFrequentRewards works in any mobile or desktop browser, and invitations arrive by dashboard, SMS, WhatsApp or email.' };
-  const words = t.split(/\W+/).filter((w) => w.length > 3);
-  let best = null;
-  let score = 0;
-  ALL_FAQS.forEach((f) => {
-    const s = words.filter((w) => (f.q + ' ' + f.a).toLowerCase().includes(w)).length;
-    if (s > score) { score = s; best = f; }
+const cNorm = (s) => s.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^a-z ]/g, '').trim();
+const C_ALIAS = { usa: 'us', us: 'us', america: 'us', uk: 'gb', england: 'gb', britain: 'gb', uae: 'ae', dubai: 'ae', ksa: 'sa', saudi: 'sa', korea: 'kr', russia: 'ru' };
+function findCountry(input) {
+  const q = cNorm(input);
+  if (!q) return { list: [] };
+  if (C_ALIAS[q]) return { hit: ALL_COUNTRIES.find((c) => c.code === C_ALIAS[q]) };
+  const exact = ALL_COUNTRIES.find((c) => cNorm(c.name) === q);
+  if (exact) return { hit: exact };
+  const list = ALL_COUNTRIES.filter((c) => cNorm(c.name).startsWith(q)).concat(ALL_COUNTRIES.filter((c) => !cNorm(c.name).startsWith(q) && cNorm(c.name).includes(q)));
+  if (list.length === 1) return { hit: list[0] };
+  return { list: list.slice(0, 5) };
+}
+
+function ChatLogo({ size = 30 }) {
+  return (
+    <svg className="chat-logo" width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
+      <defs>
+        <linearGradient id="cl-g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#fff" />
+          <stop offset="1" stopColor="#ffe4e6" />
+        </linearGradient>
+      </defs>
+      <path d="M8 8h32a4 4 0 0 1 4 4v18a4 4 0 0 1-4 4H20l-9 8v-8H8a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4z" fill="url(#cl-g)" />
+      <path className="cl-ecg" d="M10 21h7l2.5-5 4 10 3-8 2 3H38" fill="none" stroke="#e8344e" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" pathLength="100" />
+    </svg>
+  );
+}
+
+/** Bot text → paragraphs and bullet lists ("• " lines). */
+function Rich({ text }) {
+  const blocks = [];
+  text.split('\n').forEach((line) => {
+    if (line.startsWith('• ')) {
+      const last = blocks[blocks.length - 1];
+      if (last?.ul) last.ul.push(line.slice(2));
+      else blocks.push({ ul: [line.slice(2)] });
+    } else if (line.trim()) blocks.push({ p: line });
   });
-  if (best && score >= 1) return { a: best.a };
-  return { a: 'Good question! Let me connect you with our support team so they can help directly.', human: true };
+  return blocks.map((b, i) => (b.ul ? <ul key={i}>{b.ul.map((x) => <li key={x}>{x}</li>)}</ul> : <p key={i}>{b.p}</p>));
 }
 
-function loadTawk() {
-  if (!TAWK_P || !TAWK_W || window.Tawk_API) {
-    if (window.Tawk_API && window.Tawk_API.maximize) window.Tawk_API.maximize();
-    return Boolean(TAWK_P && TAWK_W);
-  }
-  window.Tawk_API = window.Tawk_API || {};
-  window.Tawk_API.onLoad = () => window.Tawk_API.maximize();
-  const s = document.createElement('script');
-  s.async = true;
-  s.src = `https://embed.tawk.to/${TAWK_P}/${TAWK_W}`;
-  s.charset = 'UTF-8';
-  s.setAttribute('crossorigin', '*');
-  document.body.appendChild(s);
-  return true;
-}
-
-const timeNow = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-function Typewriter({ lines }) {
-  const [i, setI] = useState(0);
-  const [n, setN] = useState(0);
-  useEffect(() => {
-    const full = lines[i];
-    if (n < full.length) {
-      const t = setTimeout(() => setN(n + 1), 38);
-      return () => clearTimeout(t);
-    }
-    const t = setTimeout(() => { setI((i + 1) % lines.length); setN(0); }, 2600);
-    return () => clearTimeout(t);
-  }, [i, n, lines]);
-  return <span className="hc-type">{lines[i].slice(0, n)}<i aria-hidden="true" /></span>;
-}
-
-export default function LiveChat({ open, onClose }) {
+export default function LiveChat() {
+  const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState([]);
-  const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
-  const [sent, setSent] = useState(0);
-  const bodyRef = useRef(null);
-  const inputRef = useRef(null);
-  const started = msgs.length > 0;
+  const [text, setText] = useState('');
+  const [sound, setSound] = useState(true);
+  const [hello, setHello] = useState(false);
+  const [lead, setLead] = useState(null); // { step, q, name, email, phone, country, sending }
+  const [chips, setChips] = useState(null); // step-specific quick replies while collecting details
+  const engine = useRef(null);
+  const body = useRef(null);
+  const input = useRef(null);
 
-  const [sound, setSoundState] = useState(true);
-  useEffect(() => setSoundState(soundOn()), []);
   useEffect(() => {
-    if (open) {
-      pop(); // pop every time the chat opens
-      setTimeout(() => inputRef.current && inputRef.current.focus({ preventScroll: true }), 300);
-    }
-  }, [open]);
-  const toggleSound = () => {
-    const next = !sound;
-    setSound(next);
-    setSoundState(next);
-    if (next) pop({ volume: 0.15 });
+    setSound(store.get('mho-sound', true) !== false);
+    // Friendly greeting bubble + soft pop on the visitor's first interaction (browsers block audio before it).
+    if (session.get('mho-greeted')) return;
+    const greet = () => {
+      session.set('mho-greeted', true);
+      pop(0.12);
+      setHello(true);
+      setTimeout(() => setHello(false), 7000);
+      cleanup();
+    };
+    const cleanup = () => {
+      window.removeEventListener('pointerdown', greet);
+      window.removeEventListener('keydown', greet);
+    };
+    window.addEventListener('pointerdown', greet, { once: true });
+    window.addEventListener('keydown', greet, { once: true });
+    return cleanup;
+  }, []);
+
+  useEffect(() => {
+    body.current?.scrollTo({ top: body.current.scrollHeight, behavior: 'smooth' });
+  }, [msgs, typing, chips]);
+
+  const loadEngine = () => {
+    if (!engine.current) engine.current = import('./chat/engine.js');
+    return engine.current;
   };
-  useEffect(() => {
-    // Keep the welcome screen at the top; follow the conversation once it starts.
-    if (bodyRef.current && (msgs.length || typing)) bodyRef.current.scrollTo({ top: bodyRef.current.scrollHeight, behavior: 'smooth' });
-  }, [msgs, typing]);
-  useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && open && onClose();
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
 
-  const ask = (text) => {
-    const q = text.trim();
-    if (!q || typing) return;
-    setMsgs((m) => [...m, { from: 'me', text: q, at: timeNow() }]);
-    setInput('');
-    setSent((s) => s + 1);
+  const botSay = (item, delay = 650) => new Promise((resolve) => {
     setTyping(true);
-    const res = answer(q);
     setTimeout(() => {
       setTyping(false);
-      setMsgs((m) => [...m, { from: 'bot', text: res.a, link: res.link, human: res.human, at: timeNow() }]);
-      pop({ volume: 0.1, pitch: 1.3 }); // gentle pop for each reply
-    }, 750 + Math.min(q.length * 12, 900));
+      setMsgs((m) => [...m, { from: 'bot', ...item }]);
+      if (sound) pop(0.08);
+      resolve();
+    }, delay);
+  });
+
+  const openChat = () => {
+    setOpen(true);
+    setHello(false);
+    pop();
+    loadEngine();
+    if (!msgs.length) {
+      botSay({ a: "Hi there! 👋 I'm the MyHealthOpinions help assistant — online 24/7. Ask me anything about joining, survey rates, rewards, payouts or privacy." }, 500);
+    }
+    setTimeout(() => input.current?.focus(), 350);
   };
-  const rate = (idx, v) => setMsgs((m) => m.map((x, i) => (i === idx ? { ...x, rated: v } : x)));
-  const tab = open ? 0 : -1;
+
+  /* ---------- details collection (for questions the assistant can't answer) ---------- */
+  const startLead = async (q = '', intro) => {
+    const first = q ? 'name' : 'message';
+    setLead({ step: first, q, name: '', email: '', phone: '', country: '' });
+    setChips(['Cancel']);
+    if (intro) await botSay({ a: intro }, 600);
+    await botSay({ a: LEAD_PROMPT[first], step: true }, 500);
+  };
+
+  const cancelLead = () => {
+    setLead(null);
+    setChips(null);
+    botSay({ a: 'No problem — your details were not sent. Ask me anything else.' }, 400);
+  };
+
+  const sendLead = async (L) => {
+    setLead({ ...L, sending: true });
+    setChips(null);
+    const res = await postJSON(API.enquiry, {
+      name: L.name, email: L.email, phone: L.phone, country: L.country,
+      topic: 'Live chat question', message: L.q.slice(0, 2000), source: 'live-chat',
+      page: typeof window !== 'undefined' ? window.location.pathname + window.location.hash : '',
+    });
+    if (res.ok) {
+      track('chat_lead', { country: L.country });
+      setLead(null);
+      const first = L.name.split(' ')[0];
+      await botSay({ a: `✅ Sent! Thanks ${first} — a member of our team will reply to ${L.email}, usually the same working day.${res.preview ? ' (Preview build: nothing was actually sent.)' : ''}\nAnything else I can help with?`, done: true }, 500);
+    } else {
+      setLead({ ...L, sending: false, step: 'confirm' });
+      await botSay({ a: 'Sorry — that didn’t go through. Please try again, or reach us directly on WhatsApp or email.', human: true }, 400);
+    }
+  };
+
+  const handleLead = async (raw) => {
+    const v = raw.trim();
+    if (/^(cancel|stop|exit|quit)$/i.test(v)) { cancelLead(); return; }
+    const L = { ...lead };
+    let err = '';
+    if (L.step === 'message') {
+      if (v.length < 5) err = 'Please add a little more detail so the team can help.';
+      else L.q = v;
+    } else if (L.step === 'name') {
+      err = validateName(v, 'full name');
+      if (!err) L.name = v.replace(/\s+/g, ' ');
+    } else if (L.step === 'email') {
+      err = validateEmail(v);
+      if (!err) L.email = v.trim();
+    } else if (L.step === 'phone') {
+      if (/^skip$/i.test(v) || /^(no|none|na|n\/a)$/i.test(v)) L.phone = '';
+      else {
+        const digits = v.replace(/[^\d]/g, '');
+        if (!/^[+\d][\d\s()-]*$/.test(v) || digits.length < 7 || digits.length > 15) err = 'That number doesn’t look right — use digits with your country code (7–15 digits), or tap “Skip”.';
+        else L.phone = v;
+      }
+    } else if (L.step === 'country') {
+      const f = findCountry(v);
+      if (f.hit) L.country = f.hit.name;
+      else if (f.list.length) {
+        setChips([...f.list.map((c) => c.name), 'Cancel']);
+        await botSay({ a: 'Did you mean one of these?' }, 400);
+        return;
+      } else err = 'I couldn’t find that country — please type its full name.';
+    }
+    if (err) { await botSay({ a: err, warn: true }, 400); return; }
+    L.step = next(L.step);
+    setLead(L);
+    if (L.step === 'confirm') {
+      setChips(null);
+      await botSay({ a: 'Please check your details:', card: { ...L } }, 500);
+      return;
+    }
+    setChips(L.step === 'phone' ? ['Skip', 'Cancel'] : ['Cancel']);
+    await botSay({ a: L.step === 'email' ? `Thanks, ${L.name.split(' ')[0]}! What’s your email address? We’ll reply there.` : LEAD_PROMPT[L.step], step: true }, 500);
+  };
+
+  /* ---------- main send ---------- */
+  const send = async (raw) => {
+    const q = (raw ?? text).trim();
+    if (!q || typing) return;
+    setMsgs((m) => [...m, { from: 'me', a: q }]);
+    setText('');
+    if (lead && lead.step !== 'confirm') { handleLead(q); return; }
+    if (lead && lead.step === 'confirm') setLead(null);
+    const mod = await loadEngine();
+    const r = mod.respond(q);
+    track('chat_question', { matched: r.unknown ? 'unknown' : r.id || 'answer' });
+    const delay = 600 + Math.min(q.length * 10, 800);
+    if (r.unknown) {
+      await botSay({ a: 'Good question! I don’t have a confirmed answer for that on our website, and I’d rather not guess. A member of our team can answer you personally — I just need a few details.', related: r.related }, delay);
+      startLead(q);
+      return;
+    }
+    await botSay({ ...r, leadQ: r.lead ? q : '' }, delay);
+  };
+
+  const toggleSound = () => {
+    const v = !sound;
+    setSound(v);
+    store.set('mho-sound', v);
+  };
+
+  const step = lead?.step;
+  const quick = chips || QUICK;
 
   return (
-    <div className={`hc ${open ? 'is-open' : ''}`} role="dialog" aria-modal="false" aria-label="Live Help chat" aria-hidden={!open}>
-      <div className="hc-head">
-        <span className="hc-aurora a1" aria-hidden="true" />
-        <span className="hc-aurora a2" aria-hidden="true" />
-        <div className="hc-head-row">
-          <div className="hc-avatar" aria-hidden="true">
-            <span className="hc-avatar-ring" />
-            <img src={BRAND.monogram} alt="" width="40" height="40" />
-            <i className="hc-online" />
-          </div>
-          <div className="hc-title">
-            <strong>Live Help <span>24/7</span></strong>
-            <small><i className="hc-dot" /> Online now · replies in seconds</small>
-          </div>
-          <button type="button" className={`hc-snd ${sound ? '' : 'off'}`} onClick={toggleSound} aria-pressed={!sound} aria-label={sound ? 'Mute chat sounds' : 'Turn chat sounds on'} title={sound ? 'Sound on' : 'Sound off'} tabIndex={tab}>
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M11 5 6 9H3v6h3l5 4z" />
-              {sound ? <><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M18.5 5.5a9 9 0 0 1 0 13" /></> : <path d="m16 9 5 6m0-6-5 6" />}
-            </svg>
-          </button>
-          <button type="button" className="hc-x" onClick={onClose} aria-label="Close chat" tabIndex={tab}><Icon name="close" size={18} /></button>
-        </div>
-        <div className="hc-wave" aria-hidden="true">
-          <svg viewBox="0 0 400 24" preserveAspectRatio="none"><path d="M0 12 C 60 0, 100 24, 160 12 S 260 0, 320 12 S 380 24, 400 12 V24 H0Z" /></svg>
-        </div>
-      </div>
+    <div className={`help-stack ${open ? 'chat-open' : ''}`}>
+      <a className="fab-wa" href={whatsappLink()} target="_blank" rel="noopener noreferrer" aria-label={`Chat on WhatsApp ${SITE.whatsappDisplay}`}>
+        <span className="fab-wa-ping" aria-hidden="true" />
+        <Icon name="whatsapp" size={26} />
+        <span className="fab-tip">WhatsApp us</span>
+      </a>
 
-      <div className="hc-body" ref={bodyRef} aria-live="polite">
-        {!started ? (
-          <div className="hc-welcome">
-            <p className="hc-hi"><span className="hc-wave-hand" aria-hidden="true">👋</span> Hi there!</p>
-            <h3><Typewriter lines={GREETINGS} /></h3>
-            <p className="hc-sub">Pick a topic or type below — answers are instant, any time of day.</p>
-            <div className="hc-topics">
-              {TOPICS.map((t, i) => (
-                <button type="button" key={t.t} className="hc-topic" style={{ '--c': t.c, '--i': i }} onClick={() => ask(t.q)} tabIndex={tab}>
-                  <span className="hc-topic-ico"><Icon name={t.icon} size={18} /></span>
-                  <b>{t.t}</b>
-                  <small>{t.d}</small>
-                </button>
-              ))}
-            </div>
-            <a className="hc-wa-card" href={whatsappLink()} target="_blank" rel="noopener noreferrer" tabIndex={tab}>
-              <span className="hc-wa-ico"><Icon name="whatsapp" size={20} /></span>
-              <span><b>Prefer WhatsApp?</b><small>Chat with our support team</small></span>
-              <Icon name="arrow" size={16} />
-            </a>
-          </div>
-        ) : null}
+      {hello && !open && (
+        <button className="hello-bubble" onClick={openChat}>
+          <b>Need a hand?</b> We're online 24/7 — ask me anything. <Icon name="x" size={12} />
+        </button>
+      )}
 
-        {msgs.map((m, i) => (
-          <div key={i} className={`hc-msg ${m.from}`}>
-            {m.from === 'bot' ? <img className="hc-msg-av" src={BRAND.monogram} alt="" width="28" height="28" /> : null}
-            <div className="hc-bubble">
-              <p>{m.text}</p>
-              {m.link ? (
-                <Link to={m.link[0]} className="hc-link" onClick={onClose} tabIndex={tab}>{m.link[1]} <Icon name="arrow" size={14} /></Link>
-              ) : null}
-              {m.human ? (
-                <div className="hc-human">
-                  <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" tabIndex={tab} className="wa"><Icon name="whatsapp" size={16} /> WhatsApp</a>
-                  <a href={`mailto:${CONTACT.email}`} tabIndex={tab}><Icon name="mail" size={16} /> Email</a>
-                  {TAWK_P ? <button type="button" onClick={loadTawk} tabIndex={tab}><Icon name="chat" size={16} /> Live agent</button> : null}
+      <button className="fab-chat" onClick={open ? () => setOpen(false) : openChat} onPointerEnter={loadEngine} aria-expanded={open} aria-controls="mho-chat" aria-label={open ? 'Close live help' : 'Open live help, available 24/7'}>
+        <span className="fab-orbit" aria-hidden="true"><i /><i /><i /></span>
+        <span className="fab-face">{open ? <Icon name="x" size={24} /> : <ChatLogo size={32} />}</span>
+        <span className="fab-label"><i className="dot" />Live help 24/7</span>
+      </button>
+
+      <section id="mho-chat" className={`chat-win ${open ? 'is-open' : ''}`} aria-label="Live help chat" aria-hidden={!open} inert={!open}>
+        <header className="chat-head ch4">
+          <div className="chat-avatar"><ChatLogo size={34} /><span className="chat-online" /></div>
+          <div className="chat-title">
+            <strong>Live Help <em>24/7</em></strong>
+            <span><i className="dot" /> Online now · replies in seconds</span>
+          </div>
+          <button onClick={toggleSound} aria-label={sound ? 'Mute chat sounds' : 'Unmute chat sounds'}><Icon name={sound ? 'volume' : 'mute'} size={18} /></button>
+          <button onClick={() => setOpen(false)} aria-label="Close chat"><Icon name="x" size={18} /></button>
+          <svg className="ch4-wave" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22 C 60 6, 120 40, 200 22 S 340 6, 400 22 V40 H0z" /></svg>
+        </header>
+        <div className="chat-body" ref={body} aria-live="polite">
+          {msgs.map((m, i) => (
+            <div key={i} className={`msg msg-${m.from} ${m.warn ? 'msg-warn' : ''} ${m.step ? 'msg-step' : ''} ${m.done ? 'msg-done' : ''}`}>
+              {m.from === 'bot' ? <div className="msg-bubble"><Rich text={m.a} /></div> : <p>{m.a}</p>}
+              {m.card && (
+                <div className="lead-card">
+                  <dl>
+                    <div><dt>Question</dt><dd>{m.card.q}</dd></div>
+                    <div><dt>Full name</dt><dd>{m.card.name}</dd></div>
+                    <div><dt>Email</dt><dd>{m.card.email}</dd></div>
+                    <div><dt>Phone</dt><dd>{m.card.phone || '—'}</dd></div>
+                    <div><dt>Country</dt><dd>{m.card.country}</dd></div>
+                  </dl>
+                  {lead?.step === 'confirm' && i === msgs.length - 1 && (
+                    <div className="lead-actions">
+                      <button type="button" className="lc-send" disabled={lead.sending} onClick={() => sendLead(lead)}>{lead.sending ? 'Sending…' : 'Send to our team'} <Icon name="send" size={14} /></button>
+                      <button type="button" className="lc-ghost" disabled={lead.sending} onClick={() => startLead(lead.q)}>Edit details</button>
+                      <button type="button" className="lc-ghost" disabled={lead.sending} onClick={cancelLead}>Cancel</button>
+                    </div>
+                  )}
+                  <small><Icon name="lock" size={11} /> Used only to answer your question. <Link to="/privacy" onClick={() => setOpen(false)}>Privacy Policy</Link></small>
                 </div>
-              ) : null}
-              <span className="hc-meta">
-                {m.at}
-                {m.from === 'bot' ? (
-                  m.rated ? <em className="hc-thanks">Thanks for the feedback!</em> : (
-                    <span className="hc-rate">
-                      Helpful?
-                      <button type="button" onClick={() => rate(i, 'up')} aria-label="Yes, helpful" tabIndex={tab}>👍</button>
-                      <button type="button" onClick={() => rate(i, 'down')} aria-label="Not helpful" tabIndex={tab}>👎</button>
-                    </span>
-                  )
-                ) : <span className="hc-tick" aria-label="Sent">✓✓</span>}
-              </span>
+              )}
+              {m.links?.length > 0 && (
+                <div className="msg-src">
+                  <span><Icon name="book" size={12} /> Read more on our website</span>
+                  <div className="msg-links">
+                    {m.links.map(([to, label]) => <Link key={to + label} to={to} onClick={() => setOpen(false)}>{label} <Icon name="arrow" size={12} /></Link>)}
+                  </div>
+                </div>
+              )}
+              {m.human && (
+                <div className="msg-links">
+                  <a href={whatsappLink()} target="_blank" rel="noopener noreferrer"><Icon name="whatsapp" size={13} /> WhatsApp</a>
+                  <a href={`mailto:${SITE.email}`}><Icon name="mail" size={13} /> Email support</a>
+                </div>
+              )}
+              {m.leadQ !== undefined && m.lead && !lead && (
+                <button type="button" className="msg-leadbtn" onClick={() => startLead(m.leadQ && !/^(talk|human|agent|contact|call)/i.test(m.leadQ) ? m.leadQ : '')}><Icon name="user" size={13} /> Leave my details for the team</button>
+              )}
+              {m.related?.length > 0 && (
+                <div className="msg-related">
+                  <span>People also ask</span>
+                  {m.related.map((q) => <button key={q} type="button" onClick={() => send(q)}>{q}</button>)}
+                </div>
+              )}
             </div>
-          </div>
-        ))}
-        {typing ? (
-          <div className="hc-msg bot">
-            <img className="hc-msg-av" src={BRAND.monogram} alt="" width="28" height="28" />
-            <div className="hc-bubble hc-typing" aria-label="Support is typing"><span /><span /><span /></div>
-          </div>
-        ) : null}
-      </div>
-
-      <div className="hc-popular" aria-label="Popular questions">
-        <div className="hc-popular-track">
-          {[...POPULAR, ...POPULAR].map((q, i) => (
-            <button type="button" key={q + i} onClick={() => ask(q)} tabIndex={i < POPULAR.length ? tab : -1} aria-hidden={i >= POPULAR.length}>{q}</button>
           ))}
+          {msgs.length === 1 && !typing && (
+            <div className="ch4-welcome">
+              <h3>Curious how <span>surveys work?</span></h3>
+              <p>Pick a topic or type below — answers are instant, any time of day.</p>
+              <div className="ch4-tiles">
+                {TILES.map(([ic, t, q, c]) => (
+                  <button key={t} type="button" onClick={() => send(q)} style={{ '--c': c }}><span><Icon name={ic} size={18} /></span>{t}</button>
+                ))}
+              </div>
+            </div>
+          )}
+          {typing && <div className="msg msg-bot typing" aria-label="Assistant is typing"><i /><i /><i /></div>}
         </div>
-      </div>
-
-      <form className="hc-input" onSubmit={(e) => { e.preventDefault(); ask(input); }}>
-        <label htmlFor="chat-q" className="sr-only">Type your question</label>
-        <span className="hc-input-ico" aria-hidden="true"><Icon name="sparkle" size={18} /></span>
-        <input id="chat-q" ref={inputRef} value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask anything about surveys or rewards…" maxLength={300} autoComplete="off" tabIndex={tab} />
-        <button type="submit" className={`hc-send ${input.trim() ? 'ready' : ''} ${sent ? 'flew' : ''}`} aria-label="Send" tabIndex={tab} key={sent}><Icon name="send" size={18} /></button>
-      </form>
-      <p className="hc-foot"><Icon name="lock" size={12} /> Secure · We’ll never ask for your password or OTP</p>
+        <div className={`chat-quick ${chips ? 'is-lead' : ''}`}>
+          {quick.map((q) => <button key={q} onClick={() => (q === 'Cancel' && lead ? (setMsgs((m) => [...m, { from: 'me', a: 'Cancel' }]), cancelLead()) : send(q))}>{q}</button>)}
+        </div>
+        <form className="chat-form ch4-form" onSubmit={(e) => { e.preventDefault(); send(); }}>
+          <span className="ch4-spark" aria-hidden="true"><Icon name={step && step !== 'confirm' ? 'user' : 'sparkle'} size={16} /></span>
+          <input
+            ref={input}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder={step && PLACEHOLDER[step] ? PLACEHOLDER[step] : 'Ask anything about surveys or rewards…'}
+            aria-label={step && PLACEHOLDER[step] ? PLACEHOLDER[step] : 'Your message'}
+            inputMode={step === 'email' ? 'email' : step === 'phone' ? 'tel' : 'text'}
+            autoComplete={step === 'name' ? 'name' : step === 'email' ? 'email' : step === 'phone' ? 'tel' : step === 'country' ? 'country-name' : 'off'}
+            maxLength={step === 'message' ? 500 : 300}
+          />
+          <button type="submit" aria-label="Send" disabled={!text.trim()}><Icon name="send" size={18} /></button>
+        </form>
+        <p className="chat-foot"><Icon name="lock" size={11} /> Secure · we’ll never ask for your password or OTP</p>
+      </section>
     </div>
   );
 }

@@ -31,7 +31,14 @@ services:
       - ./environment/${PROJECT}.env
     container_name: ${PROJECT}-api-auth
     volumes:
+      - ./Project/backend/app/controller/Profile.js:/app/app/controller/Profile.js
+      - ./Project/backend/app/new-module:/app/app/new-module
+      - ./uploads:/src/public/social/screenshots
+      # - ./Project/backend/package.json:/src/package.json
+      # - ./Project/utils:/src/utils
+      # - ./defaultData:/data
       - ./logs:/app/app/logs
+    command: "npm run dev"
   email-template:
     image: registry.sampledge.com/microservice/email-template
     restart: unless-stopped
@@ -110,6 +117,18 @@ services:
     networks:
       - mho
     restart: unless-stopped
+  frontend-1:
+    # image: mfr-web:dev-1.0.0
+    build:
+      context: Project/frontend-1
+      target: development
+    restart: unless-stopped
+
+    volumes:
+     - ./Project/frontend-1:/frfs
+     -  frontend-2_node_modules:/frfs/node_modules
+    networks:
+      - mho
   web-dev:
     image: ${PROJECT}-web-dev
     build:
@@ -127,6 +146,7 @@ services:
       - ./Project/web/jsconfig.json:/app/jsconfig.json
       - ./Project/web/next.config.mjs:/app/next.config.mjs
       - ./Project/web/package.json:/app/package.json
+      - ./uploads:/app/public/social/screenshots
   web-prod:
     image: registry.sampledge.com/${PROJECT}/web:prod-0.0.1
     build:
@@ -147,3 +167,5 @@ services:
     volumes:
       - ./experimental/app:/src/app
       - ./experimental/package.json:/src/package.json
+volumes:
+  frontend-2_node_modules:

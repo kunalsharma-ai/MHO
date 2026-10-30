@@ -1,94 +1,40 @@
-import { PART1 } from './part1.js';
-import { PART2 } from './part2.js';
-import { PART3 } from './part3.js';
-import { PART4A } from './part4a.js';
-import { PART4B } from './part4b.js';
-import { PART4C } from './part4c.js';
-import { PART4D } from './part4d.js';
-import { EXTRA_A } from './extra-a.js';
-import { EXTRA_A2 } from './extra-a2.js';
-import { EXTRA_A3 } from './extra-a3.js';
-import { EXTRA_B } from './extra-b.js';
-import { EXTRA_B2 } from './extra-b2.js';
-import { EXTRA_B3 } from './extra-b3.js';
-import { EXTRA_C } from './extra-c.js';
-import { EXTRA_C2 } from './extra-c2.js';
-import { EXTRA_D } from './extra-d.js';
-import { EXTRA_D2 } from './extra-d2.js';
-import { EXTRA_Z } from './extra-z.js';
-import { EXTRA_Z2 } from './extra-z2.js';
-import { EXTRA_Z3 } from './extra-z3.js';
+// Blog index: metadata only (keeps the main bundle small). Full article bodies live in ./posts/<slug>.js
+// and are loaded on demand. Each entry: one primary keyword + 3–8 secondary keywords (see SEO-KEYWORD-MAP.md).
+const B = (o) => o;
 
-// Each post = base article (part*.js) + long-form expansion layers (extra-*.js), in order.
-const LAYERS = [
-  [EXTRA_A, 1], [EXTRA_A2, 2], [EXTRA_A3, 3],
-  [EXTRA_B, 1], [EXTRA_B2, 2], [EXTRA_B3, 3],
-  [EXTRA_C, 1], [EXTRA_C2, 2],
-  [EXTRA_D, 1], [EXTRA_D2, 2],
-  [EXTRA_Z, 4], [EXTRA_Z2, 3], [EXTRA_Z3, 3],
+export const BLOG_CATEGORIES = ['Earn Online', 'Paid Surveys', 'Healthcare Professionals', 'Rewards & Payouts', 'Clinical Research', 'Safety & Privacy'];
+
+export const BLOGS = [
+  B({ slug: 'earn-money-online-without-investment', title: 'How to Earn Money Online Without Investment: An Honest Guide', metaTitle: 'Earn Money Online Without Investment: 2026 Honest Guide', metaDescription: 'Want to earn money online without investment? Learn which zero-cost methods genuinely pay, which are scams, and where paid surveys fit into a realistic plan.', primary: 'earn money online without investment', secondary: ['online earning without investment', 'make money online free', 'zero investment earning', 'online work without investment', 'legit ways to make money online'], category: 'Earn Online', date: '2026-10-08', trending: true, cover: { from: '#1e5bff', to: '#14b8a6', icon: 'coins' } }),
+  B({ slug: 'paid-surveys-for-money-beginners-guide', title: 'Paid Surveys for Money: The Complete Beginner’s Guide', metaTitle: 'Paid Surveys for Money: A Complete Beginner’s Guide (2026)', metaDescription: 'New to paid surveys? See how surveys for money work, what you can realistically earn, how screening works and how to get paid without wasting your time.', primary: 'paid surveys', secondary: ['surveys for money', 'paid surveys for cash', 'take surveys for money', 'online surveys for money', 'paid online surveys'], category: 'Paid Surveys', date: '2026-10-05', trending: true, cover: { from: '#f97316', to: '#ef4444', icon: 'clipboard' } }),
+  B({ slug: 'legit-ways-to-make-money-online', title: '12 Legit Ways to Make Money Online (and 5 to Avoid)', metaTitle: '12 Legit Ways to Make Money Online — and 5 Traps to Avoid', metaDescription: 'A grounded list of legit ways to make money online in 2026, from paid surveys to freelancing, plus the red flags that separate real earning sites from scams.', primary: 'legit ways to make money online', secondary: ['ways to make money online', 'real ways to make money online', 'trusted online earning sites', 'making money online legit', 'online earning websites'], category: 'Earn Online', date: '2026-10-01', trending: true, cover: { from: '#7c3aed', to: '#ec4899', icon: 'check' } }),
+  B({ slug: 'are-online-surveys-for-money-legit', title: 'Are Online Surveys for Money Legit? How to Spot the Scams', metaTitle: 'Are Online Surveys for Money Legit? How to Spot Survey Scams', metaDescription: 'Online surveys for money can be legit — or a trap. Learn the warning signs of survey scams, what legit survey sites never ask for, and how to protect yourself.', primary: 'online surveys for money', secondary: ['surveys for money legit', 'paid surveys legit', 'legitimate paid surveys', 'survey scams', 'surveys that actually pay'], category: 'Safety & Privacy', date: '2026-09-28', trending: true, cover: { from: '#0f766e', to: '#22c55e', icon: 'shield' } }),
+  B({ slug: 'get-paid-to-take-surveys-from-home', title: 'Get Paid to Take Surveys From Home: A Practical Routine', metaTitle: 'Get Paid to Take Surveys From Home: A Simple Daily Routine', metaDescription: 'Get paid to take surveys from home with a simple routine: when to check invitations, how to answer well, and how to turn spare minutes into steady rewards.', primary: 'get paid to take surveys', secondary: ['get paid to do surveys', 'get paid for surveys', 'paid to do surveys', 'survey and get paid', 'take surveys and get paid'], category: 'Paid Surveys', date: '2026-09-24', cover: { from: '#2563eb', to: '#06b6d4', icon: 'home' } }),
+  B({ slug: 'make-money-from-home-side-income-ideas', title: 'Make Money From Home: Side Income Ideas That Fit Real Life', metaTitle: 'Make Money From Home: Side Income Ideas That Fit Real Life', metaDescription: 'Practical ways to make money from home without quitting your job — paid surveys, micro-tasks, tutoring and more — with honest notes on time, pay and effort.', primary: 'make money from home', secondary: ['ways to make money from home', 'side income from home', 'extra income from home', 'side hustle from home', 'earn money from home'], category: 'Earn Online', date: '2026-09-20', trending: true, cover: { from: '#f59e0b', to: '#f43f5e', icon: 'home' } }),
+  B({ slug: 'paid-surveys-for-doctors', title: 'Paid Surveys for Doctors: How Physician Research Works', metaTitle: 'Paid Surveys for Doctors: How Physician Research Works', metaDescription: 'How paid surveys for doctors work: who commissions physician research, how incentives are set, how verification works and how to fit studies around clinics.', primary: 'paid surveys for doctors', secondary: ['paid medical surveys', 'physician market research', 'healthcare professional surveys', 'get paid for your opinion', 'medicine research'], category: 'Healthcare Professionals', date: '2026-09-16', trending: true, cover: { from: '#3d5afe', to: '#0ea5e9', icon: 'stethoscope' } }),
+  B({ slug: 'paid-surveys-for-nurses', title: 'Paid Surveys for Nurses: Turn Your Shift Insight Into Rewards', metaTitle: 'Paid Surveys for Nurses: Earn From Your Clinical Experience', metaDescription: 'Nurses see healthcare up close. Learn how paid surveys for nurses work, which topics researchers ask about, and how to take part around demanding shifts.', primary: 'paid surveys for nurses', secondary: ['nurse side hustle', 'extra income for nurses', 'healthcare surveys', 'online surveys that pay', 'work from home side jobs'], category: 'Healthcare Professionals', date: '2026-09-12', cover: { from: '#ec4899', to: '#8b5cf6', icon: 'nurse' } }),
+  B({ slug: 'caregiver-surveys-get-paid-for-your-opinion', title: 'Caregiver Surveys: Get Paid for Your Opinion on Care at Home', metaTitle: 'Caregiver Surveys: Get Paid for Your Opinion on Home Care', metaDescription: 'Family caregivers hold knowledge researchers rarely capture. See how caregiver surveys work, what you will be asked and how to get paid for your opinion.', primary: 'get paid for your opinion', secondary: ['caregiver surveys', 'paid surveys at home', 'opinion surveys for money', 'get paid to share your opinions', 'extra income from home'], category: 'Paid Surveys', date: '2026-09-08', cover: { from: '#f59e0b', to: '#fb7185', icon: 'hands' } }),
+  B({ slug: 'paid-health-surveys-for-patients', title: 'Paid Health Surveys for Patients: Share Experience Safely', metaTitle: 'Paid Health Surveys for Patients: Share Experience Safely', metaDescription: 'Living with a health condition gives you insight researchers need. Learn how paid health surveys for patients work, what stays private and how rewards work.', primary: 'paid health surveys', secondary: ['patient surveys', 'medical research surveys', 'paid surveys for cash', 'healthcare research', 'survey privacy'], category: 'Paid Surveys', date: '2026-09-04', cover: { from: '#10b981', to: '#0ea5e9', icon: 'heart' } }),
+  B({ slug: 'paid-clinical-studies-vs-paid-surveys', title: 'Paid Clinical Studies vs Paid Surveys: What’s the Difference?', metaTitle: 'Paid Clinical Studies vs Paid Surveys: Key Differences', metaDescription: 'Searching for paid clinical studies near me? Understand how clinical trials differ from paid health surveys in risk, time, pay and how to find each safely.', primary: 'paid clinical studies', secondary: ['clinical trials near me paid', 'paid medical research studies near me', 'paid drug trials near me', 'paid medical studies near me', 'clinical trials for money', 'paid clinical research', 'clinical studies near me'], category: 'Clinical Research', date: '2026-08-31', trending: true, cover: { from: '#0891b2', to: '#6366f1', icon: 'flask' } }),
+  B({ slug: 'what-is-a-clinical-research-organization', title: 'What Is a Clinical Research Organization (CRO)?', metaTitle: 'What Is a Clinical Research Organization (CRO)? Plain Guide', metaDescription: 'A plain-English guide to the clinical research organization: what CROs do, how they differ from market research firms, and where patient voices fit in.', primary: 'clinical research organization', secondary: ['CRO meaning', 'clinical trial testing', 'medicine research', 'paid clinical research trials'], category: 'Clinical Research', date: '2026-08-27', cover: { from: '#4f46e5', to: '#06b6d4', icon: 'building' } }),
+  B({ slug: 'randomised-clinical-trials-explained', title: 'Randomised Clinical Trials Explained for Everyday Readers', metaTitle: 'Randomised Clinical Trials Explained in Plain English', metaDescription: 'What are randomised clinical trials, why do they matter, and what does taking part involve? A clear explainer for patients, caregivers and curious readers.', primary: 'randomised clinical trials', secondary: ['clinical trial testing', 'clinical trial studies near me', 'paid clinical studies', 'medicine research'], category: 'Clinical Research', date: '2026-08-23', cover: { from: '#14b8a6', to: '#3b82f6', icon: 'dice' } }),
+  B({ slug: 'surveys-that-pay-via-paypal', title: 'Surveys That Pay via PayPal: How Payouts Really Work', metaTitle: 'Surveys That Pay via PayPal: How Survey Payouts Really Work', metaDescription: 'Looking for surveys for money PayPal can pay out? Learn how PayPal survey payouts work, typical timelines, fees to check and how to avoid payout delays.', primary: 'surveys that pay via PayPal', secondary: ['surveys for money paypal', 'paid surveys paypal', 'make money online paypal', 'earn money online paypal', 'survey earn paypal'], category: 'Rewards & Payouts', date: '2026-08-19', trending: true, cover: { from: '#003087', to: '#009cde', icon: 'paypal' } }),
+  B({ slug: 'surveys-for-amazon-gift-cards', title: 'Surveys for Amazon Gift Cards: Are They Worth It?', metaTitle: 'Surveys for Amazon Gift Cards: Are the Rewards Worth It?', metaDescription: 'Surveys for Amazon gift cards are popular for good reason. See how gift card rewards compare with cash, when they make sense, and how to redeem them safely.', primary: 'surveys for amazon gift cards', secondary: ['earn gift cards for surveys', 'paid surveys amazon gift cards', 'complete surveys for gift cards', 'get gift cards for surveys'], category: 'Rewards & Payouts', date: '2026-08-15', cover: { from: '#232f3e', to: '#ff9900', icon: 'gift' } }),
+  B({ slug: 'upi-survey-rewards-earn-online-india', title: 'Earn Online in India With UPI Survey Rewards', metaTitle: 'Earn Online in India: Paid Surveys With UPI Rewards', metaDescription: 'A guide for Indian members: how paid surveys pay through UPI, what online earning without investment really looks like, and how to stay safe from scams.', primary: 'earn online in India', secondary: ['earn money online India', 'online earning without investment', 'real money earning app', 'UPI survey rewards', 'earn money online without investment for students'], category: 'Rewards & Payouts', date: '2026-08-11', trending: true, cover: { from: '#5f259f', to: '#ff7909', icon: 'upi' } }),
+  B({ slug: 'best-paid-survey-sites-checklist', title: 'How to Choose the Best Paid Survey Sites: A 10-Point Checklist', metaTitle: 'Best Paid Survey Sites: A 10-Point Checklist Before You Join', metaDescription: 'Not all paid survey sites are equal. Use this 10-point checklist to judge payout options, privacy, support and fairness before you join any survey website.', primary: 'best paid survey sites', secondary: ['paid survey sites', 'survey websites that pay', 'best survey sites to make money', 'top paid surveys', 'legit survey sites for money'], category: 'Paid Surveys', date: '2026-08-07', cover: { from: '#0ea5e9', to: '#22c55e', icon: 'list' } }),
+  B({ slug: 'high-paying-surveys-what-sets-the-reward', title: 'High Paying Surveys: What Really Decides the Reward', metaTitle: 'High Paying Surveys: What Actually Decides a Survey’s Reward', metaDescription: 'Why do some surveys pay far more than others? Learn what makes high paying surveys, from niche audiences to study length, and how to qualify for more of them.', primary: 'high paying surveys', secondary: ['highest paying online surveys', 'surveys that pay well', 'highest paying survey sites', 'surveys that pay the most'], category: 'Paid Surveys', date: '2026-08-03', cover: { from: '#eab308', to: '#f97316', icon: 'chart' } }),
+  B({ slug: 'online-jobs-for-students-without-investment', title: 'Online Jobs for Students Without Investment', metaTitle: 'Online Jobs for Students Without Investment: Safe List', metaDescription: 'Students can earn online without investment. Compare surveys, tutoring, freelancing and campus gigs, with honest pay expectations and scam warnings to note.', primary: 'online jobs for students', secondary: ['online jobs for students without investment', 'earn money online for students', 'online earning for students', 'side income for students', 'paid surveys for students'], category: 'Earn Online', date: '2026-07-30', cover: { from: '#8b5cf6', to: '#06b6d4', icon: 'student' } }),
+  B({ slug: 'side-hustle-for-healthcare-workers', title: 'Side Hustles for Healthcare Workers That Respect Your Rota', metaTitle: 'Side Hustle From Home for Healthcare Workers on Shifts', metaDescription: 'Healthcare workers have unusual hours and valuable skills. Explore a side hustle from home that fits shift work, from medical surveys to tutoring and writing.', primary: 'side hustle from home', secondary: ['side hustle for nurses', 'work from home side jobs', 'side jobs from home', 'extra income online', 'paid medical surveys'], category: 'Healthcare Professionals', date: '2026-07-26', cover: { from: '#0d9488', to: '#4f46e5', icon: 'clock' } }),
+  B({ slug: 'make-money-from-your-phone-with-surveys', title: 'Make Money From Your Phone: Mobile Surveys Done Right', metaTitle: 'Make Money From Your Phone: A Mobile Paid Surveys Guide', metaDescription: 'Turn idle phone time into rewards. Learn how to make money from your phone with mobile surveys, which settings help, and how to avoid risky money apps.', primary: 'make money from your phone', secondary: ['earn money from phone', 'make money from phone', 'money earning app', 'legit app to earn money', 'earn money from your phone'], category: 'Earn Online', date: '2026-07-22', cover: { from: '#06b6d4', to: '#a855f7', icon: 'phone' } }),
+  B({ slug: 'why-you-get-screened-out-of-surveys', title: 'Why You Get Screened Out of Surveys (and What Helps)', metaTitle: 'Why You Get Screened Out of Surveys & How to Qualify More', metaDescription: 'Screened out again? Here is why surveys disqualify people, why it is not personal, and the profile habits that help you qualify for more paid surveys.', primary: 'screened out of surveys', secondary: ['surveys that actually pay', 'how to qualify for surveys', 'paid surveys tips', 'get more surveys'], category: 'Paid Surveys', date: '2026-07-18', cover: { from: '#64748b', to: '#3b82f6', icon: 'filter' } }),
+  B({ slug: 'get-more-paid-survey-invitations', title: 'How to Get More Paid Survey Invitations', metaTitle: 'How to Get More Paid Survey Invitations: 9 Proven Habits', metaDescription: 'Want more paid survey invitations? These nine habits — complete profiles, quick replies, honest answers — help you match more studies and earn more rewards.', primary: 'paid survey invitations', secondary: ['get paid for online surveys', 'earn money doing surveys', 'make money doing surveys', 'surveys to earn money'], category: 'Paid Surveys', date: '2026-07-14', cover: { from: '#22c55e', to: '#0ea5e9', icon: 'mail' } }),
+  B({ slug: 'online-focus-groups-paid', title: 'Paid Online Focus Groups: What to Expect and How to Prepare', metaTitle: 'Paid Online Focus Groups: What to Expect and How to Prepare', metaDescription: 'Paid online focus groups often reward more than surveys. Learn how they are recruited, what happens in a session and how to get invited back.', primary: 'paid online focus groups', secondary: ['paid online market research', 'get paid for opinions online', 'market research online surveys paid', 'online interviews for money'], category: 'Paid Surveys', date: '2026-07-10', cover: { from: '#a855f7', to: '#f43f5e', icon: 'mic' } }),
+  B({ slug: 'paid-online-market-research-explained', title: 'Paid Online Market Research: Who Pays and Why', metaTitle: 'Paid Online Market Research: Who Pays You and Why They Do It', metaDescription: 'Why would a company pay for your opinion? A behind-the-scenes look at paid online market research, who commissions studies and why honest answers matter.', primary: 'paid online market research', secondary: ['get paid market research', 'market research online surveys paid', 'research paid surveys', 'paid survey companies'], category: 'Paid Surveys', date: '2026-07-06', cover: { from: '#1e3a8a', to: '#14b8a6', icon: 'search' } }),
+  B({ slug: 'survey-privacy-and-gdpr', title: 'Survey Privacy and GDPR: What Happens to Your Answers', metaTitle: 'Survey Privacy & GDPR: What Happens to Your Answers and Data', metaDescription: 'What happens to your data after a survey? Learn how GDPR protects respondents, what anonymised aggregate reporting means and the rights you can exercise.', primary: 'survey privacy', secondary: ['GDPR survey', 'safe ways to make money online', 'data protection', 'legit online surveys'], category: 'Safety & Privacy', date: '2026-07-02', cover: { from: '#0f172a', to: '#3d5afe', icon: 'lock' } }),
+  B({ slug: 'extra-income-ideas-for-pharmacists', title: 'Extra Income Ideas for Pharmacists', metaTitle: 'Extra Income Ideas for Pharmacists: 8 Options Worth a Look', metaDescription: 'Pharmacists can earn beyond the counter. Explore extra income ideas from paid pharmacy surveys to medical writing and locum work, with honest pros and cons.', primary: 'extra income ideas for pharmacists', secondary: ['pharmacist surveys', 'extra income online', 'online jobs that pay well', 'paid medical surveys'], category: 'Healthcare Professionals', date: '2026-06-28', cover: { from: '#16a34a', to: '#0891b2', icon: 'pill' } }),
+  B({ slug: 'extra-income-from-home-for-retirees-and-homemakers', title: 'Extra Income From Home for Retirees and Homemakers', metaTitle: 'Extra Income From Home for Retirees and Homemakers (2026)', metaDescription: 'Gentle, low-pressure ways for retirees and homemakers to earn extra income from home, including paid surveys, with tips for staying safe from online scams.', primary: 'extra income from home', secondary: ['earn extra money at home', 'make extra money from home', 'work from home extra income', 'paid surveys at home'], category: 'Earn Online', date: '2026-06-24', cover: { from: '#fb923c', to: '#facc15', icon: 'users' } }),
+  B({ slug: 'surveys-that-pay-instantly-truth', title: 'Surveys That Pay Instantly: Separating Hype From Reality', metaTitle: 'Surveys That Pay Instantly: The Honest Truth About Payouts', metaDescription: 'Do surveys that pay instantly exist? Learn why legit survey payouts include validation, how long payments really take and why “instant cash” is a red flag.', primary: 'surveys that pay instantly', secondary: ['surveys that pay cash instantly', 'paid surveys instant payout', 'get paid instantly online', 'work online and get paid instantly'], category: 'Rewards & Payouts', date: '2026-06-20', cover: { from: '#ef4444', to: '#f59e0b', icon: 'bolt' } }),
+  B({ slug: 'how-much-can-you-earn-from-paid-surveys', title: 'How Much Can You Really Earn From Paid Surveys?', metaTitle: 'How Much Can You Really Earn From Paid Surveys? Real Math', metaDescription: 'Can you really earn money through surveys? A realistic look at what shapes your income, how professional rewards differ and how to set expectations.', primary: 'earn money through surveys', secondary: ['earn cash for surveys', 'survey and earn money', 'make money taking surveys', 'surveys that pay real money', 'paid surveys money'], category: 'Paid Surveys', date: '2026-06-16', cover: { from: '#2563eb', to: '#f59e0b', icon: 'calculator' } }),
 ];
-// Chapters keep each article at 4–8 H2 sections; individual topics render as H3 underneath.
-const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
-const CHAPTERS = (kw) => [
-  `${cap(kw)}: the essentials`,
-  'Going deeper',
-  'Your practical playbook',
-  'Expert tips',
-  'Key takeaways',
-];
-const MAX_FAQS = 8; // SEO spec: 5–8 FAQs (with FAQPage schema). Extra Q&As become a body section.
-const MAX_SECONDARY = 8; // SEO spec: 3–8 secondary keywords
 
-function merge(post) {
-  // part1–3 posts are base articles (chapter 0) plus expansion layers; part4 posts carry their own `ch` per section.
-  const sections = post.sections.map((sec) => ({ ...sec, ch: typeof sec.ch === 'number' ? sec.ch : 0 }));
-  const faqs = [...post.faqs];
-  const kws = [...(post.secondaryKeywords || [])];
-  LAYERS.forEach(([L, ch]) => {
-    const x = L[post.slug];
-    if (!x) return;
-    sections.push(...(x.sections || []).map((sec) => ({ ...sec, ch })));
-    faqs.push(...(x.faqs || []));
-    (x.keywords || []).forEach((k) => !kws.includes(k) && kws.push(k));
-  });
-  const extraQa = faqs.slice(MAX_FAQS);
-  if (extraQa.length) sections.push({ h2: 'More quick answers', qa: extraQa, ch: 4 });
-  const names = CHAPTERS(post.primaryKeyword);
-  const chapters = names
-    .map((title, i) => ({ title, sections: sections.filter((sec) => sec.ch === i) }))
-    .filter((c) => c.sections.length);
-  return {
-    ...post,
-    sections: chapters.flatMap((c) => c.sections),
-    chapters,
-    faqs: faqs.slice(0, MAX_FAQS),
-    secondaryKeywords: kws.slice(0, MAX_SECONDARY),
-    relatedKeywords: kws.slice(MAX_SECONDARY),
-    cover: `/images/blog/${post.slug}.webp`,
-  };
-}
-
-export const wordCount = (post) => {
-  const txt = [
-    post.title,
-    post.excerpt,
-    ...post.sections.flatMap((s) => [s.h2 || '', ...(s.p || []), ...(s.list || []), ...(s.qa || []).flatMap((q) => [q.q, q.a])]),
-    ...post.faqs.flatMap((f) => [f.q, f.a]),
-  ].join(' ');
-  return txt.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').split(/\s+/).filter(Boolean).length;
-};
-const withReadTime = (p) => ({ ...p, readMins: Math.max(1, Math.round(wordCount(p) / 220)) });
-
-export const BLOGS = [...PART1, ...PART2, ...PART3, ...PART4A, ...PART4B, ...PART4C, ...PART4D].map(merge).map((p) => withReadTime(p)).sort((a, b) => (a.date < b.date ? 1 : -1));
-
-export const BLOG_CATEGORIES = ['All', ...Array.from(new Set(BLOGS.map((b) => b.category)))];
-
-export const getBlog = (slug) => BLOGS.find((b) => b.slug === slug);
-
-export const relatedBlogs = (post, n = 3) =>
-  BLOGS.filter((b) => b.slug !== post.slug)
-    .map((b) => ({ b, score: (b.category === post.category ? 2 : 0) + (b.trending ? 1 : 0) }))
-    .sort((x, y) => y.score - x.score)
-    .slice(0, n)
-    .map((x) => x.b);
-
+export const findBlog = (slug) => BLOGS.find((b) => b.slug === slug);

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>My Health Profile | MyHealthOpinions</title>
+  <meta name="description" content="Your MyHealthOpinions patient dashboard: About You profiles, health surveys, Reward Points and Quality Score." />
+  <meta name="theme-color" content="#0F7EA8" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="favicon.ico" sizes="32x32" />
+  <link rel="icon" href="images/brand/favicon.svg" type="image/svg+xml" />
+  <!--SHELLCSS-->
+</head>
+<body>
+  <!--
+    SAMPLE DASHBOARD SHELL (preview only). In production your MyHealthOpinions dashboard provides the sidebar,
+    top bar and tabs; the section is mounted into one element with mountMHOPatient(el, options).
+    See docs/DASHBOARD_INTEGRATION.md.
+  -->
+  <div class="shell">
+    <aside class="shell-side" aria-label="Dashboard navigation">
+      <div class="shell-logo"><img src="images/brand/mho-logo.png" srcset="images/brand/mho-logo.png 1x, images/brand/mho-logo@2x.png 2x" alt="MyHealthOpinions" width="160" height="45" /></div>
+      <nav>
+        <a href="#" class="sn"><span>🏠</span><b>Dashboard</b></a>
+        <a href="#" class="sn on" data-mho-view="all"><span>🙋</span><b>My Profile</b></a>
+        <a href="#" class="sn" data-mho-view="surveys"><span>🩺</span><b>Surveys</b></a>
+        <a href="#" class="sn"><span>🎁</span><b>Rewards</b></a>
+        <a href="#" class="sn"><span>🤝</span><b>Refer &amp; Earn</b></a>
+        <a href="#" class="sn"><span>⚙️</span><b>Settings</b></a>
+      </nav>
+      <p class="shell-note">Preview shell. Your dashboard provides this frame.</p>
+    </aside>
+    <div class="shell-body">
+      <header class="shell-top">
+        <div class="shell-crumb"><b>My Profile</b><span>Dashboard / Profile</span></div>
+        <div class="shell-user"><span class="bell">🔔</span><span class="avatar">K</span><b>Kunal</b></div>
+      </header>
+      <main class="shell-main">
+        <div id="mho-root" class="mho-host"></div>
+      </main>
+    </div>
+  </div>
+  <script>window.MHO_MOUNT = { user: { firstName: 'Kunal', id: 'demo-kunal' } };</script>
+  <script src="config.js"></script>
+  <!--SCRIPTS-->
+</body>
+</html>

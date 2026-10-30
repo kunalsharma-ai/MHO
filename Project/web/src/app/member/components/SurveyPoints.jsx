@@ -2,20 +2,20 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Avatar, Box, Button, Grid, Typography } from "@mui/material";
-import { api } from "@/util";
 import { useToast } from "@/hooks";
+import { useRewardsTick, fetchRewardBalance } from "@/hooks/useRewardsRefresh";
+import { useMember } from "@/Context";
 
 export default function SurveyPoints() {
   const router = useRouter();
   const [points, setPoints] = React.useState(0); //todo: set from api call
   const [conversionRate, setConversionRate] = React.useState(1); //todo: set conversion rate from api call
   const [threshold, setThreshold] = React.useState(1500); //todo: set from server config
+  const member = useMember();
+  const rewardsTick = useRewardsTick();
   React.useEffect(() => {
-    api
-      .get(`/api/v1/me/points`)
+    fetchRewardBalance(member)
       .then((resp) => {
-        if (resp.status === "error") router.replace("/survey?name=welcome");
-       
         let data = resp.data;
         setPoints(data.totalPoints);
         setThreshold(data.threshold);
@@ -23,7 +23,7 @@ export default function SurveyPoints() {
       })
       .catch((err) => {})
       .finally(() => {});
-  }, []);
+  }, [rewardsTick, member?._id]);
   return (
     <Grid
       size={{ xs: 12, md: 6 }}

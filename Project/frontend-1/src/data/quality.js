@@ -1,42 +1,37 @@
+// Quality & security checks and verification protocols (supplied by MyHealthOpinions / Frequent Research).
+// Stage = where in the member journey the check runs (used by the Trust & Safety pipeline visual).
 export const QUALITY_CHECKS = [
-  { name: 'Timezone Validation', icon: 'clock', line: 'Device timezone must match your registered country.', layer: 'identity' },
-  { name: 'Age Validation', icon: 'calendar', line: 'Birth-year checks keep every study age-appropriate.', layer: 'identity' },
-  { name: 'BOT Validation', icon: 'bot', line: 'Automated traffic is filtered before it reaches a survey.', layer: 'device' },
-  { name: 'URL Protection', icon: 'link', line: 'Signed survey links block tampering and link sharing.', layer: 'device' },
-  { name: 'Browser Fingerprinting', icon: 'fingerprint', line: 'Each device is recognised to stop multi-accounting.', layer: 'device' },
-  { name: 'Duplicate Detection', icon: 'duplicate', line: 'One person, one account, one response per study.', layer: 'identity' },
-  { name: 'GEO-IP Validation', icon: 'pin', line: 'Location is matched to the country you registered from.', layer: 'device' },
-  { name: 'CAPTCHA Security Controls', icon: 'captcha', line: 'Human checks at sign-up and survey entry.', layer: 'device' },
-  { name: 'Gate Survey Screening', icon: 'gate', line: 'A short qualifier before client surveys open.', layer: 'response' },
-  { name: 'Security Question Validation', icon: 'question', line: 'Account recovery and identity confirmation.', layer: 'identity' },
-  { name: 'Screening Questions Filters', icon: 'filter', line: 'Only relevant surveys reach the right profile.', layer: 'response' },
-  { name: 'Open-End (OE) Quality Checks', icon: 'pen', line: 'Written answers are checked for effort and originality.', layer: 'response' },
-  { name: 'Red Herring Questions Controls', icon: 'eye', line: 'Attention checks catch careless clicking.', layer: 'response' },
-  { name: 'Pre-Screening Qualification Filters', icon: 'layers', line: 'Eligibility is confirmed before you spend time.', layer: 'response' },
-  { name: 'Double Opt-In Authentication', icon: 'doubleCheck', line: 'Email and phone confirmation activate your account.', layer: 'identity' },
-  { name: 'Browser Language', icon: 'language', line: 'Language settings align with your survey language.', layer: 'device' },
-  { name: 'TOR Detection', icon: 'onion', line: 'Anonymising networks and proxies are blocked.', layer: 'device' },
-  { name: 'Cookie Validation', icon: 'cookie', line: 'Session integrity is verified on every visit.', layer: 'device' },
+  { name: 'Double Opt-In Authentication', stage: 'join', icon: 'mail-check', note: 'Every account is confirmed from the inbox it was registered with.' },
+  { name: 'CAPTCHA Security Controls', stage: 'join', icon: 'shield', note: 'Human checks at sign-up, log-in and survey entry.' },
+  { name: 'Age Validation', stage: 'join', icon: 'cake', note: 'Date of birth is checked against minimum-age rules.' },
+  { name: 'BOT Validation', stage: 'join', icon: 'bot', note: 'Automated traffic is filtered before it reaches a survey.' },
+  { name: 'Duplicate Detection', stage: 'join', icon: 'copy', note: 'One person, one account — repeat sign-ups are blocked.' },
+  { name: 'Cookie Validation', stage: 'join', icon: 'cookie', note: 'Session cookies confirm a consistent, genuine visitor.' },
+  { name: 'GEO-IP Validation', stage: 'device', icon: 'pin', note: 'Your connection must match the country you registered in.' },
+  { name: 'Timezone Validation', stage: 'device', icon: 'clock', note: 'Device time zone is compared with your stated location.' },
+  { name: 'Browser Language', stage: 'device', icon: 'globe', note: 'Browser language is checked for consistency with your profile.' },
+  { name: 'Browser Fingerprinting', stage: 'device', icon: 'fingerprint', note: 'A privacy-safe device signature stops one person posing as many.' },
+  { name: 'TOR Detection', stage: 'device', icon: 'onion', note: 'Anonymising networks that hide true location are flagged.' },
+  { name: 'URL Protection', stage: 'device', icon: 'link', note: 'Encrypted survey links cannot be tampered with or skipped.' },
+  { name: 'Gate Survey Screening', stage: 'survey', icon: 'gate', note: 'A short gate confirms readiness before any client survey.' },
+  { name: 'Pre-Screening Qualification Filters', stage: 'survey', icon: 'filter', note: 'Only members who truly fit a study are routed into it.' },
+  { name: 'Screening Questions Filters', stage: 'survey', icon: 'list', note: 'Study-specific questions confirm the right audience.' },
+  { name: 'Security Question Validation', stage: 'survey', icon: 'key', note: 'Account-level questions confirm the owner is present.' },
+  { name: 'Red Herring Questions Controls', stage: 'survey', icon: 'fish', note: 'Attention checks catch rushed or random answering.' },
+  { name: 'Open-End (OE) Quality Checks', stage: 'survey', icon: 'pen', note: 'Written answers are reviewed for effort, originality and copy-paste.' },
 ];
 
-export const QUALITY_LAYERS = [
-  { id: 'identity', name: 'Identity layer', color: '#FF8A00', line: 'Who you are' },
-  { id: 'device', name: 'Device & network layer', color: '#2F6BFF', line: 'Where you connect from' },
-  { id: 'response', name: 'Response layer', color: '#14C9B5', line: 'How you answer' },
+export const QUALITY_STAGES = [
+  { id: 'join', label: 'At sign-up', color: '#3d5afe' },
+  { id: 'device', label: 'Device & location', color: '#14b8a6' },
+  { id: 'survey', label: 'Inside every survey', color: '#f59e0b' },
 ];
 
 export const VERIFICATION_PROTOCOLS = [
-  { name: 'Company email validation', icon: 'mail', line: 'Work email domains are confirmed for business members.' },
-  { name: 'Phone verification', icon: 'phone', line: 'One-time codes confirm a real, reachable number.' },
-  { name: 'Public profile cross-referencing', icon: 'linkedin', line: 'Professional details are matched with public profiles such as LinkedIn.' },
-  { name: 'External database validation', icon: 'database', line: 'Details are checked against trusted external sources.' },
-  { name: 'Behavioural pattern monitoring', icon: 'activity', line: 'Speeding, straight-lining and odd patterns are flagged.' },
-  { name: 'Backend quality audit reviews', icon: 'audit', line: 'Regular audits review accounts and response quality.' },
-];
-
-export const PRIVACY_PROMISES = [
-  { title: 'We never sell your personal details', line: 'Your name, email, phone and address are never sold or shared with anyone else.' },
-  { title: 'Answers are de-identified', line: 'Clients see research answers in anonymised or aggregated form — not who you are.' },
-  { title: 'Encrypted & access-controlled', line: 'Data is protected with encryption and strict role-based access.' },
-  { title: 'You stay in control', line: 'Access, correct or delete your data at any time by writing to support.' },
+  { name: 'Company email validation', icon: 'mail' },
+  { name: 'Phone verification', icon: 'phone' },
+  { name: 'Public profile cross-referencing (e.g. LinkedIn)', icon: 'linkedin' },
+  { name: 'External database validation', icon: 'database' },
+  { name: 'Behavioural pattern monitoring', icon: 'pulse' },
+  { name: 'Backend quality audit reviews', icon: 'audit' },
 ];

@@ -1,0 +1,501 @@
+[{
+  "name": "basic profile",
+  "slug": "basic",
+  "pages": [
+    [
+      "Basic Profile",
+      "fullname",
+      "gender",
+      "dob",
+      "mail",
+      "country",
+      "state",
+      "city",
+      "zipcode",
+      "ethnicity",
+      "rural",
+      "personal-income",
+      "household-income",
+      "relationship-status",
+      "children",
+      "website"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "educational profile",
+  "slug": "education",
+  "pages": [
+    [
+      "Educational Profile",
+      "education",
+      "education-diploma",
+      "education-associate-degree",
+      "education-ug",
+      "education-pg",
+      "education-doctorate"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "food and lifestyle profile",
+  "slug": "food-lifestyle",
+  "pages": [
+    [
+      "Food and Lifestyle Profile",
+      "diet-plan",
+      "have-food-allergy",
+      "food-allergy",
+      "hot-drinks",
+      "cold-drinks",
+      "alcohol",
+      "alcohol-category",
+      "smoke",
+      "smoke-category",
+      "suppliment",
+      "do-exercise",
+      "exercises",
+      "do-sport-participation",
+      "sport-category",
+      "sleep-duration"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "personal health profile",
+  "slug": "personal-health",
+  "pages": [
+    [
+      "Personal Health Profile",
+      "health-status",
+      "chronic-conditions",
+      "diabetes-type",
+      "diabetes-monitoring",
+      "diabetes-research-consent",
+      "diabetes-docs-consent",
+      "hypertension",
+      "hypertension-medication",
+      "hypertension-research-consent",
+      "hypertension-docs-consent",
+      "cholesterol-age",
+      "cholesterol-type",
+      "comorbidities",
+      "cholesterol-family-history",
+      "cholesterol-treatment",
+      "asthma-age",
+      "asthma-type",
+      "asthma-diagnosis",
+      "asthma-severity",
+      "asthma-triggers",
+      "arthritis-type",
+      "arthritis-age",
+      "arthritis-severity",
+      "arthritis-affected-joints",
+      "heart-disease-type",
+      "heart-disease-age",
+      "heart-disease-severity",
+      "depression-condition",
+      "depression-age",
+      "depression-severity",
+      "depression-symptom",
+      "depression-treatment",
+      "depression-treatment-category",
+      "obesity-age",
+      "bmi",
+      "obesity-severity",
+      "obesity-mesures",
+      "obesity-treatment-category",
+      "cancer-category",
+      "cancer-age",
+      "cancer-stage",
+      "cancer-experience",
+      "cancer-treatment-status",
+      "cancer-treatment-category",
+      "thiroid-category",
+      "thiroid-age",
+      "thiroid-severity",
+      "thiroid-treatment-status",
+      "thiroid-treatment-category",
+      "anidra-category",
+      "anidra-age",
+      "anidra-severity",
+      "anidra-treatment-status",
+      "anidra-treatment-category",
+      "skin-condition",
+      "skin-condition-age",
+      "skin-condition-severity",
+      "skin-condition-treatment",
+      "skin-condition-treatment-category",
+      "stomach-condition",
+      "stomach-condition-age",
+      "stomach-condition-severity",
+      "stomach-condition-treatment",
+      "stomach-condition-treatment-category",
+      "neuro-condition",
+      "neuro-age",
+      "neuro-sevirity",
+      "neuro-treatment-status",
+      "neuro-treatment-category",
+      "vision-condition",
+      "vision-condition-age",
+      "vision-condition-sevirity",
+      "vision-condition-treatment",
+      "vision-condition-treatment-category",
+      "lense-type",
+      "lense-brand",
+      "hearing-device",
+      "hearing-device-brand",
+      "blood-condition",
+      "blood-condition-age",
+      "blood-condition-sevirity",
+      "blood-condition-treatment",
+      "blood-condition-treatment-category",
+      "dental-condition",
+      "dental-condition-age",
+      "dental-condition-sevirity",
+      "dental-condition-treatment",
+      "dental-condition-treatment-category",
+      "dental-condition-alignment",
+      "dental-condition-tooth-aligner-category",
+      "dental-condition-tooth-aligner-brand",
+      "spine-condition",
+      "spine-condition-age",
+      "spine-condition-sevirity",
+      "spine-condition-treatment",
+      "spine-condition-treatment-category",
+      "sex-condition",
+      "sex-condition-age",
+      "sex-condition-sevirity",
+      "sex-condition-treatment",
+      "sex-condition-treatment-category",
+      "hiv-test",
+      "hiv-test-result",
+      "hiv-age",
+      "hiv-treatment",
+      "doctor-visit-category",
+      "health-insurance",
+      "health-insurance-type",
+      "health-checkup",
+      "covid-vaccine"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "professional profile",
+  "slug": "professional",
+  "pages": [
+    [
+      "Professional Profile",
+      "employment-status",
+      "jobseeker-patient",
+      "availing-pension",
+      "industry",
+      "patient-sector",
+      "department",
+      "employment-jobrole",
+      "organization-revenue",
+      "patient-orgoverseas",
+      "patient-orgsize",
+      "hw",
+      "experience-patient",
+      "orgdecision-patient",
+      "freelancer-patient"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "survey participation and reward preferences profile",
+  "slug": "survery-participation",
+  "pages": [
+    [
+      "Survey Participation and Reward Preferences",
+      "survey-participation-history",
+      "survey-participation-frequency",
+      "survey-participation-category",
+      "other-survey-panel",
+      "survey-mode",
+      "survey-participation-time-duration",
+      "willingness-survey-participation",
+      "survey-type-interested-in",
+      "share-consent",
+      "survey-participation-motivation",
+      "video-survey-participation-consent",
+      "mode-of-payment",
+      "survey-participation-timeslot",
+      "recontact-consent"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "technology and digital health profile",
+  "slug": "digital-health",
+  "pages": [
+    [
+      "Technology and Digital Health",
+      "use-fitness-mobile-app",
+      "use-devices",
+      "health-management-app",
+      "health-service"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "general health profile",
+  "slug": "general health profile",
+  "pages": [
+    [
+      "General Health Profile",
+      "health-status",
+      "patient-health-condition",
+      "no-health-problem",
+      "health-condition-timing",
+      "diagnosed-condition",
+      "current-condition-status"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "medical condition profile",
+  "slug": "medical condition profile",
+  "pages": [
+    [
+      "Medical Condition Profile",
+      "disease-types",
+      "primary-health-condition",
+      "condition-diagnsis-by-healthcareprofessional",
+      "first-diagnosed-timing"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "symptoms and severity",
+  "slug": "symptoms and severity",
+  "pages": [
+    [
+      "Symptoms and Severity",
+      "experience-symptoms-releted-to-primary-condition",
+      "describe-severity-symptoms",
+      "condition-affect-daily-life",
+      "condition-affect-work-study",
+      "condition-affect-everyday-activities"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "healthcare provider profile",
+  "slug": "healthcare provider profile",
+  "pages": [
+    [
+      "Healthcare Provider Profile",
+      "professional-list",
+      "visit-healthcare-for-primary-condition",
+      "place-receive-care",
+      "manages-treatment"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "treatment profile",
+  "slug": "treatment profile",
+  "pages": [
+    [
+      "Treatment Profile",
+      "receiving-treatment-primary-condition",
+      "types-of-treatment-currently-using",
+      "medications-prescription-currently-taking",
+      "prescribed-medication-timing",
+      "treatment-stopped-of-side-effects",
+      "treatment-satisfaction"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "medication and pharmacy behaviour",
+  "slug": "medication and pharmacy behaviour",
+  "pages": [
+    [
+      "Medication and Pharmacy Behaviour",
+      "obtain-prescription-medicines",
+      "manage-medications",
+      "switched-medication"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "diagnostic testing",
+  "slug": "diagnostic testing",
+  "pages": [
+    [
+      "Diagnostic Testing",
+      "diagnostic-test-releted-to-primary-condition",
+      "types-of-test-received",
+      "frequently-undergo-monitoring-for-condition"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "medical devices and digital health",
+  "slug": "medical devices and digital health",
+  "pages": [
+    [
+      "Medical Devices and Digital Health",
+      "health-monitoring-device",
+      "device-type",
+      "frequently-using-health-monitoring-device",
+      "health-medical-apps",
+      "types-of-health-apps"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "hospital and healthcare utilisation",
+  "slug": "hospital and healthcare utilisation",
+  "pages": [
+    [
+      "Hospital and Healthcare Utilisation",
+      "visiting-hospital",
+      "howmany-times-visiting-healthcare",
+      "hospitalised"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "health insurance and healthcare payment",
+  "slug": "health insurance and healthcare payment",
+  "pages": [
+    [
+      "Health Insurance and Healthcare Payment",
+      "health-insurance-currenlty",
+      "healthcare-expenses",
+      "affected-healthcare-costs",
+      "delayed-healthcare-cost"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "lifestyle and behaviour",
+  "slug": "lifestyle and behaviour",
+  "pages": [
+    [
+      "Lifestyle and Behaviour",
+      "physically-active",
+      "descrive-typical-diet",
+      "smoking-tobacco-nicotine",
+      "consume-alcohlic-beverages",
+      "hours-sleep"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "patient experience and treatment decisions",
+  "slug": "patient experience and treatment decisions",
+  "pages": [
+    [
+      "Patient Experience and Treatment Decisions",
+      "healthcare-treatment-decisions",
+      "factors-choosing-treatment",
+      "second-medical-opinion",
+      "health-condition-managing-confidence"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "health information and online behaviour",
+  "slug": "health information and online behaviour",
+  "pages": [
+    [
+      "Health Information and Online Behaviour",
+      "looking-health-information",
+      "online-information-about-health-condition",
+      "participate-online-health-community",
+      "share-health-experience-online"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "clinical research and market research experience",
+  "slug": "clinical research and market research experience",
+  "pages": [
+    [
+      "Clinical Research and Market Research Experience",
+      "participate-market-research",
+      "participated-in-clinical-trial",
+      "participating-future-healthcare-market",
+      "types-of-research-consider-participating",
+      "spending-time-on-research",
+      "healthcare-experiences"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "documentation and verification",
+  "slug": "documentation and verification",
+  "pages": [
+    [
+      "Documentation and Verification",
+      "document-verification",
+      "types-of-documentation",
+      "provide-photograph",
+      "verification-call"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "patient recruitment eligibility",
+  "slug": "patient recruitment eligibility",
+  "pages": [
+    [
+      "Patient Recruitment Eligibility",
+      "selected-health-condition",
+      "receiving-treatment",
+      "received-treatment",
+      "contacted-for-research-opportunities",
+      "types-of-studies"
+    ]
+  ],
+  "category": "patient"
+},
+{
+  "name": "social media and reward reclaim",
+  "slug": "social media and reward reclaim",
+  "pages": [
+    [
+      "Social media and reward reclaim",
+      "social-media-x",
+      "social-media-youtube",
+      "social-media-facebook",
+      "social-media-instagram",
+      "social-media-linkedin",
+      "payment-method",
+      "payment-method-bank-name",
+      "payment-method-bank-ifsc",
+      "payment-method-bank-account",
+      "payment-method-upi",
+      "payment-method-paypal",
+      "payment-method-amazon"
+    ]
+  ],
+  "category": "patient"
+}]

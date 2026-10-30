@@ -1,144 +1,119 @@
-import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+// Blog article: hero cover, reading progress, sticky table of contents, body, FAQs, related guides.
+import { useEffect, useMemo, useReducer, useState } from 'react';
+import { Link } from '../router.jsx';
 import Icon from '../components/Icon.jsx';
-import RichText from '../components/RichText.jsx';
-import { Breadcrumbs, CtaBand, FaqList } from '../components/Common.jsx';
-import Seo from '../seo/Seo.jsx';
-import { articleLd, breadcrumbLd, faqLd } from '../seo/schema.js';
-import { getBlog, relatedBlogs } from '../data/blogs/index.js';
-import { SITE_URL } from '../data/site.js';
+import Markdown, { parseBlocks } from '../components/Markdown.jsx';
+import { Breadcrumbs, Accordion, Button } from '../components/ui.jsx';
+import { BlogCover, BlogCard } from './Blog.jsx';
+import { findBlog, BLOGS } from '../data/blogs/index.js';
+import { postCache, loadPost, readingTime } from '../data/blogs/postStore.js';
+import { getMeta, applyHead } from '../seo/head.js';
 import NotFound from './NotFound.jsx';
 
-const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-const fmt = (d) => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const fmt = (d) => new Date(d + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 
-export default function BlogPost() {
-  const { slug } = useParams();
-  const post = getBlog(slug);
-  const [copied, setCopied] = useState(false);
-  const [progress, setProgress] = useState(0);
+function Toc({ items }) {
+  const [active, setActive] = useState('');
+  useEffect(() => {
+    const els = items.map((i) => document.getElementById(i.id)).filter(Boolean);
+    if (!els.length || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => e.isIntersecting && setActive(e.target.id));
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [items]);
+  return (
+    <nav className="toc" aria-label="On this page">
+      <b>On this page</b>
+      <ol>
+        {items.map((i) => (
+          <li key={i.id} className={active === i.id ? 'on' : ''}>
+            <a href={`#${i.id}`} onClick={(e) => { e.preventDefault(); document.getElementById(i.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}>{i.text}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}
+
+export default function BlogPost({ path }) {
+  const slug = path.replace(/^\/blog\//, '');
+  const meta = findBlog(slug);
+  const [, rerender] = useReducer((x) => x + 1, 0);
+  const post = postCache[slug];
 
   useEffect(() => {
-    const on = () => {
-      const el = document.querySelector('.post-body');
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      const total = r.height - window.innerHeight * 0.6;
-      setProgress(Math.max(0, Math.min(1, -r.top / (total || 1))));
-    };
-    window.addEventListener('scroll', on, { passive: true });
-    on();
-    return () => window.removeEventListener('scroll', on);
-  }, [slug]);
+    if (meta && !postCache[slug]) loadPost(slug).then(() => { rerender(); applyHead(getMeta(path, { post: postCache[slug] })); });
+  }, [slug, meta, path]);
 
-  if (!post) return <NotFound />;
-  const path = `/blog/${post.slug}`;
-  const crumbs = [{ name: 'Home', path: '/' }, { name: 'Blogs', path: '/blog' }, { name: post.title, path }];
-  const toc = post.chapters;
-  const url = SITE_URL + path;
-  const share = [
-    { n: 'WhatsApp', i: 'whatsapp', h: `https://wa.me/?text=${encodeURIComponent(post.title + ' ' + url)}` },
-    { n: 'LinkedIn', i: 'linkedin', h: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}` },
-    { n: 'Facebook', i: 'facebook', h: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}` },
-  ];
+  const blocks = useMemo(() => (post ? parseBlocks(post.body) : []), [post]);
+  const toc = blocks.filter((b) => b.t === 'h2');
+  const related = useMemo(() => {
+    if (!meta) return [];
+    const same = BLOGS.filter((b) => b.slug !== slug && b.category === meta.category);
+    const other = BLOGS.filter((b) => b.slug !== slug && b.category !== meta.category);
+    return [...same, ...other].slice(0, 3);
+  }, [slug, meta]);
+
+  if (!meta) return <NotFound />;
 
   return (
-    <>
-      <Seo
-        title={post.metaTitle}
-        description={post.metaDescription}
-        path={path}
-        image={post.cover}
-        type="article"
-        keywords={[post.primaryKeyword, ...post.secondaryKeywords].join(', ')}
-        jsonLd={[articleLd(post), breadcrumbLd(crumbs), faqLd(post.faqs)]}
-      />
-      <div className="read-bar" style={{ transform: `scaleX(${progress})` }} aria-hidden="true" />
-      <header className="post-hero">
-        <img className="post-hero-img" src={post.cover} alt="" width="1200" height="675" fetchpriority="high" />
-        <div className="post-hero-shade" aria-hidden="true" />
+    <article className="post">
+      <header className="post-hero" style={{ '--from': meta.cover.from, '--to': meta.cover.to }}>
         <div className="container post-hero-inner">
-          <Breadcrumbs items={crumbs} />
-          <p className="post-cat">{post.category}{post.trending ? <span><Icon name="trend" size={14} /> Trending</span> : null}</p>
-          <h1>{post.title}</h1>
-          <p className="post-meta">
-            <span><Icon name="pen" size={14} /> MyFrequentRewards Editorial Team</span>
-            <span><Icon name="calendar" size={14} /> {fmt(post.date)}</span>
-            <span><Icon name="clock" size={14} /> {post.readMins} min read</span>
-          </p>
+          <div className="ph-copy">
+            <Breadcrumbs items={[{ to: '/', label: 'Home' }, { to: '/blog', label: 'Blogs' }, { label: meta.title }]} />
+            <span className="post-cat">{meta.category}</span>
+            <h1>{meta.title}</h1>
+            <p className="post-lead">{meta.metaDescription}</p>
+            <p className="post-meta">
+              <span><Icon name="calendar" size={14} /> {fmt(meta.date)}</span>
+              <span><Icon name="clock" size={14} /> {readingTime(post)} min read</span>
+              <span><Icon name="user" size={14} /> MyHealthOpinions editorial team</span>
+            </p>
+          </div>
+          <BlogCover post={meta} big />
         </div>
       </header>
 
-      <div className="container post-row">
+      <div className="container post-layout">
         <aside className="post-aside">
-          <nav className="post-toc" aria-label="Table of contents">
-            <p>In this article</p>
-            <ol>{toc.map((c) => (<li key={c.title}><a href={`#${slugify(c.title)}`}>{c.title}</a><ol>{c.sections.filter((x) => x.h2).map((x) => <li key={x.h2}><a href={`#${slugify(x.h2)}`}>{x.h2}</a></li>)}</ol></li>))}<li><a href="#faqs">FAQs</a></li></ol>
-          </nav>
-          <div className="post-share">
-            <p>Share</p>
-            {share.map((s) => <a key={s.n} href={s.h} target="_blank" rel="noopener noreferrer" aria-label={`Share on ${s.n}`}><Icon name={s.i} size={18} /></a>)}
-            <button type="button" aria-label="Copy link" onClick={() => { navigator.clipboard?.writeText(url).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1600); }).catch(() => {}); }}>
-              <Icon name={copied ? 'check' : 'copy'} size={18} />
-            </button>
+          {toc.length > 0 && <Toc items={toc} />}
+          <div className="aside-cta">
+            <Icon name="coins" size={22} />
+            <b>Get paid for your opinion</b>
+            <span>Free to join. Rewards via PayPal, Amazon Gift Cards, Wire — and UPI in India.</span>
+            <Link to="/join" className="btn btn-primary btn-sm"><span className="btn-label">Join free</span></Link>
           </div>
         </aside>
 
-        <article className="post-body">
-          <p className="post-lead">{post.excerpt}</p>
-          {post.chapters.map((c, ci) => (
-            <div key={c.title} className="post-chapter">
-              <h2 id={slugify(c.title)}><span className="ch-n">{String(ci + 1).padStart(2, '0')}</span>{c.title}</h2>
-              {c.sections.map((s, i) => (
-                <section key={i} id={s.h2 ? slugify(s.h2) : undefined}>
-                  {s.h2 ? <h3>{s.h2}</h3> : null}
-                  {(s.p || []).map((p, k) => <p key={k}><RichText text={p} /></p>)}
-                  {s.list ? <ul className="post-list">{s.list.map((l) => <li key={l}><Icon name="check" size={16} stroke={2.4} /> <span><RichText text={l} /></span></li>)}</ul> : null}
-                  {s.qa ? <dl className="post-qa">{s.qa.map((q) => <div key={q.q}><dt>{q.q}</dt><dd>{q.a}</dd></div>)}</dl> : null}
-                </section>
-              ))}
-              {ci === 0 ? (
-                <aside className="post-cta-inline">
-                  <div><strong>Turn this into rewards.</strong><span>Join free — no investment needed.</span></div>
-                  <Link to="/sign-up" className="btn btn-primary btn-sm">Join free <Icon name="arrow" size={14} /></Link>
-                </aside>
-              ) : null}
-              {ci === 2 ? (
-                <aside className="post-cta-inline alt">
-                  <div><strong>Your opinion has value.</strong><span>Consumers and professionals earn rewards — free to join.</span></div>
-                  <Link to="/how-it-works" className="btn btn-light btn-sm">See how it works <Icon name="arrow" size={14} /></Link>
-                </aside>
-              ) : null}
+        <div className="post-body prose">
+          {post ? <Markdown blocks={blocks} /> : <div className="post-skeleton" aria-label="Loading article"><i /><i /><i /><i /></div>}
+
+          {post?.faqs?.length > 0 && (
+            <section className="post-faq">
+              <h2 id="faqs">Frequently asked questions</h2>
+              <Accordion items={post.faqs} idPrefix={`pf-${slug}`} defaultOpen={0} />
+            </section>
+          )}
+
+          <div className="post-cta">
+            <div>
+              <h2>Ready to turn your opinions into rewards?</h2>
+              <p>Join MyHealthOpinions free — healthcare professionals, caregivers, patients and consumers in 55 countries.</p>
             </div>
-          ))}
-          <div className="post-keys">
-            <p>Topics</p>
-            <ul>{[post.primaryKeyword, ...post.secondaryKeywords].map((k) => <li key={k}>{k}</li>)}</ul>
+            <Button to="/join" variant="gold">Create free account</Button>
           </div>
-          <section id="faqs" className="post-faqs">
-            <h2>Frequently asked questions</h2>
-            <FaqList faqs={post.faqs} />
-          </section>
-        </article>
+        </div>
       </div>
 
-      <section className="section related" aria-labelledby="rel-title">
+      <section className="section post-related">
         <div className="container">
-          <h2 id="rel-title">Keep reading</h2>
-          <ul className="rel-grid">
-            {relatedBlogs(post).map((r) => (
-              <li key={r.slug}>
-                <Link to={`/blog/${r.slug}`}>
-                  <img src={r.cover} alt={`Cover illustration: ${r.title}`} width="1200" height="675" loading="lazy" />
-                  <span className="bc-cat">{r.category}</span>
-                  <h3>{r.title}</h3>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <h2 className="related-title">Keep reading</h2>
+          <div className="blog-grid">{related.map((p, i) => <BlogCard key={p.slug} post={p} i={i} />)}</div>
         </div>
       </section>
-      <CtaBand title="Ready to put this into practice?" />
-    </>
+    </article>
   );
 }

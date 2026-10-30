@@ -1,0 +1,555 @@
+[{
+  "name": "basic profile",
+  "pages": [
+    [
+      "Basic Profile",
+      "fullname",
+      "mail",
+      "gender",
+      "dob",
+      "country",
+      "ethnicity",
+      "state",
+      "city",
+      "zipcode",
+      "rural",
+      "personal-income",
+      "household-income",
+      "relationship-status",
+      "children",
+      "website"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "educational profile",
+  "pages": [
+    [
+      "Educational Profile",
+      "doc-education",
+      "doc-education-diploma",
+      "doc-education-diploma-certified",
+      "doc-education-bachelors",
+      "doc-education-bachelors-registered",
+      "doc-education-masters",
+      "doc-education-master-recognition",
+      "doc-education-doctorate",
+      "doc-education-doctorate-registered",
+      "doc-education-others",
+      "doc-education-others-registered"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "speciality and area of practice",
+  "pages": [
+    [
+      "Speciality And Area of Practice",
+      "doc-expertise",
+      "doc-specialization",
+      "doc-joblevel",
+      "healthcare-management-job-role"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "technology and digital health profile",
+  "pages": [
+    [
+      "Technology and Digital Health",
+      "electronic-health-record-usage",
+      "telemedicine",
+      "health-initiatives",
+      "online-surveys",
+      "participating-research",
+      "research-participation",
+      "survey-participation-timeslot",
+      "recontact-consent",
+      "focus-groups"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "survey participation and reward preferences profile",
+  "pages": [
+    [
+      "Survey Participation and Reward Preferences",
+      "survey-participation-history",
+      "survey-participation-frequency",
+      "survey-participation-category",
+      "other-survey-panel",
+      "survey-mode",
+      "survey-participation-time-duration",
+      "willingness-survey-participation",
+      "survey-type-interested-in",
+      "share-consent",
+      "survey-participation-motivation",
+      "video-survey-participation-consent",
+      "video-platforms",
+      "video-based-research"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "basic profile",
+  "pages": [
+    [
+      "Basic Profile",
+      "fullname",
+      "gender",
+      "dob",
+      "mail",
+      "country",
+      "ethnicity",
+      "state",
+      "city",
+      "zipcode",
+      "rural",
+      "personal-income",
+      "household-income",
+      "website",
+      "relationship-status",
+      "children"
+    ]
+  ],
+  "category": "care giver"
+},
+{
+  "name": "educational profile",
+  "pages": [
+    [
+      "Educational Profile",
+      "caregiver-support",
+      "caregiving-situation",
+      "education",
+      "education-diploma",
+      "education-associate-degree",
+      "education-ug",
+      "education-pg",
+      "education-doctorate",
+      "nursing-medical-qualification",
+      "additional-certification",
+      "practicing-licensed",
+      "manage-administer-medications-patients",
+      "involved-in-patient-healthcare-decisions",
+      "relationship-to-person",
+      "care-type",
+      "unpaid-care-count",
+      "care-recipient-category",
+      "care-recipient-agegroup",
+      "is-primary-caregiver",
+      "personal-support",
+      "unpaid-healthcare-involvement",
+      "unpaid-healthcare-activities",
+      "cg-decision"
+    ]
+  ],
+  "category": "care giver"
+},
+{
+  "name": "not in used",
+  "pages": [
+    [
+      "Food and Lifestyle Profile",
+      "cg-alcohol",
+      "cg-alcohol-category",
+      "cg-cold-drink",
+      "cg-diet-plan",
+      "cg-exercise",
+      "cg-exercise-category",
+      "cg-health-suppliment",
+      "cg-hot-drink",
+      "cg-sleep-duration",
+      "cg-smoke",
+      "cg-sport-category",
+      "cg-sport-participation",
+      "cg-tobacco-type"
+    ]
+  ],
+  "category": "care giver"
+},
+{
+  "name": "personal health profile",
+  "pages": [
+    [
+      "Personal Health Profile",
+      "cg-food-allergy",
+      "cg-have-insurance",
+      "cg-health-checkup",
+      "cg-insurance",
+      "cg-vaccine-covid"
+    ]
+  ],
+  "category": "care giver"
+},
+{
+  "name": "professional profile",
+  "pages": [
+    [
+      "Professional Profile",
+      "caregiver-support",
+      "caregiving-situation",
+      "cg-employment-arrangement",
+      "cg-describe",
+      "cg-describe-professional",
+      "cg-professional-caregivingtype",
+      "cg-professional-experience",
+      "cg-professional-primary-employment",
+      "current-personal-care-aide",
+      "personal-care-activities-assisted",
+      "primary-care-recipient",
+      "personal-aide-care-location",
+      "current-job-title-personal-care-assistant",
+      "personal-care-time-percentage",
+      "services-provided",
+      "direct-client-patient-work",
+      "paid-home-care",
+      "type-of-home-care-provided",
+      "current-client-count",
+      "employer-type",
+      "current-home-health-aide-employment",
+      "care-in-client-private-residence",
+      "care-activities-performed",
+      "healthcare-professional-direction",
+      "current-healthcare-assistant-role",
+      "primary-work-location",
+      "patient-care-activities-performed",
+      "current-nursing-assistant-role",
+      "primary-work-facility-type",
+      "patient-activities-assisted",
+      "work-under-nurse-supervision",
+      "professional-caregiver-experience",
+      "primary-patient-types-cared-for",
+      "regular-caregiver-tasks",
+      "valid-nursing-assistant-certification",
+      "current-certified-nursing-assistant",
+      "certified-primary-work-location",
+      "direct-patient-care-frequency",
+      "certification-duration",
+      "current-paid-support-worker-role",
+      "primary-support-type",
+      "primary-support-recipient",
+      "primary-support-location",
+      "paid-disability-support",
+      "primary-disability-groups-supported",
+      "support-type-provided",
+      "work-setting",
+      "paid-older-adult-care-support",
+      "client-age-group",
+      "common-care-needs-supported",
+      "primary-care-location",
+      "current-paid-childcare-role",
+      "primary-childcare-age-groups",
+      "primary-childcare-location",
+      "primary-childcare-responsibilities",
+      "current-live-in-caregiver",
+      "live-in-care-recipient-residence",
+      "service-type",
+      "live-in-care-experience",
+      "role-responsibilities",
+      "paid-community-care-support",
+      "primary-service-location",
+      "primary-supported-population",
+      "type-of-support-provided",
+      "current-residential-care-role",
+      "residential-facility-type",
+      "primary-residents-supported",
+      "direct-resident-care-frequency",
+      "shift-based-care",
+      "current-direct-support-professional",
+      "support-recipient",
+      "professional-primary-care",
+      "primary-work-environment",
+      "care-coordinator-care-manager-case-manager",
+      "type-of-care-coordinated",
+      "number-of-clients-patients-coordinated",
+      "role-activities",
+      "influence-care-provider-service-decisions",
+      "paid-patient-client-support-role",
+      "patient-primary-support-location",
+      "patient-type-of-support-provided",
+      "primary-support-patient-client",
+      "current-position",
+      "administrative-emp-status",
+      "years-supervisory-administrative-healthcare-caregiving",
+      "caregiving-staff-supervised-managed",
+      "areas-of-responsibility",
+      "influence-care-related-purchasing-decisions",
+      "managed-care-setting",
+      "supervised-coordinated-facility-type",
+      "role-tasks",
+      "professional-qualification",
+      "other-specify",
+      "management-leadership-compliance-certifications",
+      "licensed-clinical-role",
+      "empstat-homeuser",
+      "jobseeker-homeuser",
+      "pension-homeuser",
+      "employment-industry",
+      "employment-sector",
+      "department",
+      "cg-jobrole",
+      "orgoverseas",
+      "orgsize",
+      "freelancer",
+      "hw",
+      "experience-caregiver",
+      "orgdecision",
+      "orgspend"
+    ]
+  ],
+  "category": "care giver"
+},
+{
+  "name": "survey participation and reward preferences profile",
+  "pages": [
+    [
+      "Survey Participation and Reward Preferences",
+      "survey-participation-history",
+      "survey-participation-frequency",
+      "survey-participation-category",
+      "other-survey-panel",
+      "survey-mode",
+      "survey-participation-time-duration",
+      "willingness-survey-participation",
+      "survey-type-interested-in",
+      "share-consent",
+      "survey-participation-motivation",
+      "video-survey-participation-consent",
+      "mode-of-payment",
+      "survey-participation-timeslot",
+      "recontact-consent"
+    ]
+  ],
+  "category": "care giver"
+},
+{
+  "name": "documents",
+  "pages": [
+    [
+      "Documents Required",
+      "clinician",
+      "medical-certification-no",
+      "issueing-authority",
+      "year-of-issueing",
+      "certification-no"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "social media and reward reclaim",
+  "pages": [
+    [
+      "Social Media and Reward Reclaim",
+      "social-media-x",
+      "social-media-youtube",
+      "social-media-linkedin",
+      "social-media-instagram",
+      "social-media-facebook",
+      "payment-method",
+      "payment-method-bank-name",
+      "payment-method-bank-ifsc",
+      "payment-method-bank-account",
+      "payment-method-upi",
+      "payment-method-paypal",
+      "payment-method-amazon"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "professional profile",
+  "pages": [
+    [
+      "Professional Profile",
+      "doc-employment-status",
+      "sector",
+      "facility-type",
+      "facility-size",
+      "practice-location",
+      "teaching-hospital"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "professional address",
+  "pages": [
+    [
+      "Professional Address",
+      "country",
+      "phone",
+      "state",
+      "practice-city",
+      "practice-locality",
+      "zip_code_of_practice",
+      "employer-address",
+      "name-of-employer",
+      "email-id",
+      "linkedin"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "experience",
+  "pages": [
+    [
+      "Experience",
+      "experience",
+      "patients-per-week",
+      "clinical-trials",
+      "doc-clinical-trials-count",
+      "survey-participation-frequency",
+      "doc-decision-making-purchase",
+      "doc-drug-formulary-procurement",
+      "doc-equipments-purchase",
+      "doc-healthpolicy-guidelines"
+    ]
+  ],
+  "category": "healthcare professional"
+},
+{
+  "name": "health insurance profile",
+  "pages": [
+    [
+      "Health Insurance Profile",
+      "caregiver-support",
+      "caregiving-situation",
+      "home-based-health-insurance-status",
+      "insurance-provide-by",
+      "insurance-cover",
+      "health-insurance-plan-decision-maker",
+      "health-insurance-payment-involvement",
+      "last-health-insurance-plan-change",
+      "health-insurance-services-used-past-12-months",
+      "health-insurance-claim-past-12-months",
+      "household-healthcare-expense-decision-involvement",
+      "health-insurance-plans-next-12-months",
+      "manage-health-insurance-for-care-recipient",
+      "primary-person-assisted-with-insurance",
+      "role-in-care-recipient-health-insurance-decisions",
+      "care-recipient-insurance-activities",
+      "care-recipient-health-insurance-payer",
+      "care-recipient-insurance-provider-interaction-frequency",
+      "care-recipient-insurance-claim-past-12-months",
+      "contacted-insurance-company-on-behalf-of-care-recipient",
+      "insurance-based-healthcare-provider-choice",
+      "insurance-covered-health-product-service-selection"
+    ]
+  ],
+  "category": "care giver"
+},
+{
+  "name": "food and lifestyle",
+  "pages": [
+    [
+      "Food and Lifestyle Profile",
+      "caregiver-support",
+      "caregiving-situation",
+      "regular-household-food-grocery-purchases",
+      "primary-household-food-grocery-purchaser",
+      "usual-grocery-purchase-location",
+      "regular-beverage-types-consumed-purchased",
+      "household-beverage-purchase-decision-maker",
+      "current-tobacco-nicotine-products-used",
+      "tobacco-nicotine-purchase-frequency",
+      "tobacco-nicotine-purchase-location",
+      "regular-lifestyle-wellness-products-purchased",
+      "online-food-beverage-tobacco-lifestyle-platforms",
+      "primary-household-purchase-decision-categories",
+      "specific-diet-eating-plan",
+      "food-allergies",
+      "cg-allergy-details",
+      "regular-hot-drinks-consumed",
+      "cg-alcohol",
+      "cg-alcohol-category",
+      "cg-smoke",
+      "cg-tobacco-type",
+      "cg-health-suppliment",
+      "primary-care-recipient-meal-planner",
+      "care-recipient-meal-preparer",
+      "care-recipient-specific-diet",
+      "care-recipient-food-grocery-purchase-frequency",
+      "care-recipient-regular-food-products-purchased",
+      "care-recipient-food-decision-involvement",
+      "care-recipient-food-lifestyle-products-purchased",
+      "online-food-grocery-lifestyle-purchase-platforms"
+    ]
+  ],
+  "category": "care giver"
+},
+{
+  "name": "sports and physical fitness",
+  "pages": [
+    [
+      "Sports and Physical Fitness",
+      "caregiver-support",
+      "caregiving-situation",
+      "cg-exercise",
+      "cg-exercise-category",
+      "cg-sport-participation",
+      "sport-category",
+      "cg-sleep-duration",
+      "cg-health-checkup",
+      "cg-vaccine-covid",
+      "regular-physical-activities-sports",
+      "usual-exercise-sports-location",
+      "care-recipient-shared-physical-activity-type",
+      "current-fitness-technologies-used",
+      "main-physical-activity"
+    ]
+  ],
+  "category": "care giver"
+},
+{
+  "name": "technology and survey participation",
+  "pages": [
+    [
+      "Technology and Survey Participation",
+      "use-fitness-mobile-app",
+      "use-devices",
+      "health-management-app",
+      "health-service"
+    ]
+  ],
+  "category": "care giver"
+},
+{
+  "name": "social media and reward reclaim",
+  "pages": [
+    [
+      "Social Media and Reward Reclaim",
+      "social-media-x",
+      "social-media-youtube",
+      "social-media-linkedin",
+      "social-media-facebook",
+      "social-media-instagram",
+      "payment-method",
+      "payment-method-bank-name",
+      "payment-method-bank-ifsc",
+      "payment-method-bank-account",
+      "payment-method-upi",
+      "payment-method-paypal",
+      "payment-method-amazon"
+    ]
+  ],
+  "category": "care giver"
+},
+{
+  "name": "screener",
+  "pages": [
+    [
+      "Screener",
+      "caregiver-support",
+      "caregiving-situation"
+    ]
+  ],
+  "category": "care giver"
+}]

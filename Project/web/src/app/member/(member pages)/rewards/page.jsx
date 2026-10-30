@@ -3,6 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { Box, Grid, Typography, Button, LinearProgress } from "@mui/material";
 import { useMember } from "@/Context";
+import { useRewardsTick, fetchRewardBalance } from "@/hooks/useRewardsRefresh";
 import { Datatable } from "@/components";
 import { DateRangeSelector } from "@/components/Form";
 import { motion } from "framer-motion";
@@ -106,56 +107,54 @@ export default function page() {
 
   const [isLoading, setIsLoading] = React.useState(true);
 
-  React.useEffect(() => {
-  if (tourActive) {
-    setIsLoading(false);
-    return;
-  }
-    if (!user || !dateRange || dateRange.length !== 2) return;
-    setIsLoading(true);
-    let cancelled = false;
+const userId = user?._id ?? user?.id;
+const rangeKey = Array.isArray(dateRange) ? dateRange.join("|") : "";
 
-    const filters = {
-      status: { $nin: ["invited"] },
-      dateRange,
-    };
+React.useEffect(() => {
+  if (!userId || !Array.isArray(dateRange) || dateRange.length !== 2) return;
+  setIsLoading(true);
+  let cancelled = false;
 
-    // Teeno call alag-alag: ek fail ho to baaki rows phir bhi dikhengi
-    Promise.allSettled([
-  api.post(`/api/v1/response`, filters),
-  api.get(`/api/v1/follow-social/verify`),
-  api.post(`/api/v1/user`, { referredBy: user._id ?? user.id }),
-])
-  .then((results) => {
-    if (cancelled) return;
-    const list = (i) =>
-      results[i].status === "fulfilled" &&
-      Array.isArray(results[i].value?.data)
-        ? results[i].value.data
-        : [];
+  const filters = {
+    status: { $nin: ["invited"] },
+    dateRange,
+  };
 
-    const myId = String(user._id ?? user.id);
-    const socials = list(1).filter(
-      (s) => String(s?.created?.By?._id ?? s?.created?.By) === myId,
-    );
+  Promise.allSettled([
+    api.post(`/api/v1/response`, filters),
+    api.get(`/api/v1/follow-social/verify`),
+    api.post(`/api/v1/user`, { referredBy: userId }),
+  ])
+    .then((results) => {
+      if (cancelled) return;
+      const list = (i) =>
+        results[i].status === "fulfilled" &&
+        Array.isArray(results[i].value?.data)
+          ? results[i].value.data
+          : [];
 
-    setData(
-      buildRewardRows({
-        responses: list(0),
-        socials,
-        referred: list(2),
-        dateRange,
-      }),
-    );
-  })
-      .finally(() => {
-        if (!cancelled) setIsLoading(false);
-      });
+      const myId = String(userId);
+      const socials = list(1).filter(
+        (s) => String(s?.created?.By?._id ?? s?.created?.By) === myId,
+      );
 
-    return () => {
-      cancelled = true;
-    };
-  }, [user, dateRange, tourActive]);
+      setData(
+        buildRewardRows({
+          responses: list(0),
+          socials,
+          referred: list(2),
+          dateRange,
+        }),
+      );
+    })
+    .finally(() => {
+      if (!cancelled) setIsLoading(false);
+    });
+
+  return () => {
+    cancelled = true;
+  };
+}, [userId, rangeKey]);
 
   // Tour ka mock data bhi naye shape me
   const rows = React.useMemo(
@@ -235,7 +234,7 @@ export default function page() {
         transition={{ duration: 0.4 }}
       >
         <Datatable
-          isLoading={isLoading}
+          isLoading={isLoading && !tourActive}
           pagination={[10, 20, 50, 100]}
           pageSize={20}
           noDataMsg="No Record Found."
@@ -286,17 +285,14 @@ function RewardStatus() {
   const [points, setPoints] = React.useState(0);
   const [conversionRate, setConversionRate] = React.useState(1);
   const [threshold, setThreshold] = React.useState(1500);
+  const member = useMember();
+  const rewardsTick = useRewardsTick();
 
   React.useEffect(() => {
-    setLoading(true);
+    if (rewardsTick === 0) setLoading(true);
 
-    api
-      .get(`/api/v1/me/points`)
+    fetchRewardBalance(member)
       .then((resp) => {
-        if (resp.status === "error") {
-          router.replace("/survey?name=welcome");
-        }
-
         let data = resp.data;
 
         setPoints(data.totalPoints);
@@ -307,7 +303,7 @@ function RewardStatus() {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [rewardsTick, member?._id]);
 
   if (loading) return <></>;
 

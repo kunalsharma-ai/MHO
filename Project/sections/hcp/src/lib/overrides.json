@@ -1,0 +1,157 @@
+{
+  "_doc": "Gap-fills and UI hints layered on top of the raw MHO exports. See DATA.md.",
+
+  "textTypes": {
+    "fullname":                  { "type": "text", "rule": "name", "min": 2, "max": 80, "autocomplete": "name" },
+    "mail":                      { "type": "email", "rule": "email", "autocomplete": "email" },
+    "dob":                       { "type": "date", "rule": "dob", "minAge": 18, "maxAge": 100, "autocomplete": "bday" },
+    "zipcode":                   { "type": "text", "rule": "zip", "countryFrom": "country", "autocomplete": "postal-code" },
+    "website":                   { "type": "url", "rule": "url", "optional": true, "autocomplete": "url" },
+    "doc-education-others":      { "type": "text", "rule": "freetext", "min": 2, "max": 120 },
+    "medical-certification-no":  { "type": "text", "rule": "license", "min": 4, "max": 30 },
+    "issueing-authority":        { "type": "text", "rule": "org", "min": 3, "max": 120 },
+    "year-of-issueing":          { "type": "year", "rule": "year", "minYear": 1950 },
+    "certification-no":          { "type": "file", "rule": "file", "accept": ".pdf,.jpg,.jpeg,.png,.webp", "maxMB": 5 },
+    "social-media-x":            { "type": "handle", "rule": "handle", "optional": true, "prefix": "@" },
+    "social-media-youtube":      { "type": "handle", "rule": "handleOrUrl", "optional": true, "prefix": "@" },
+    "social-media-linkedin":     { "type": "url", "rule": "linkedinPerson", "optional": true, "placeholder": "https://www.linkedin.com/in/your-name" },
+    "social-media-instagram":    { "type": "handle", "rule": "handle", "optional": true, "prefix": "@" },
+    "social-media-facebook":     { "type": "handle", "rule": "handleOrUrl", "optional": true },
+    "payment-method-bank-name":  { "type": "text", "rule": "org", "min": 3, "max": 80 },
+    "payment-method-bank-ifsc":  { "type": "text", "rule": "bankCode", "upper": true },
+    "payment-method-bank-account": { "type": "text", "rule": "bankAccount", "inputmode": "numeric" },
+    "payment-method-upi":        { "type": "text", "rule": "upi" },
+    "payment-method-paypal":     { "type": "email", "rule": "email" },
+    "payment-method-amazon":     { "type": "email", "rule": "email" },
+    "phone":                     { "type": "tel", "rule": "phone", "countryFrom": "country", "autocomplete": "tel" },
+    "practice-locality":         { "type": "text", "rule": "address", "min": 3, "max": 150, "autocomplete": "address-line2" },
+    "zip_code_of_practice":      { "type": "text", "rule": "zip", "countryFrom": "country", "autocomplete": "postal-code" },
+    "employer-address":          { "type": "text", "rule": "address", "min": 3, "max": 200, "autocomplete": "address-line1" },
+    "name-of-employer":          { "type": "text", "rule": "org", "min": 2, "max": 150, "autocomplete": "organization" },
+    "email-id":                  { "type": "email", "rule": "email", "autocomplete": "work email" },
+    "linkedin":                  { "type": "url", "rule": "linkedinCompany", "optional": true, "placeholder": "https://www.linkedin.com/company/your-hospital" }
+  },
+
+  "multiSelect": ["survey-participation-category", "survey-type-interested-in", "survey-participation-motivation", "video-platforms", "video-based-research"],
+
+  "otherValues": ["Other healthcare-related diploma", "other"],
+
+  "conditions": {
+    "medical-certification-no":    { "q": "clinician", "in": ["yes"] },
+    "issueing-authority":          { "q": "clinician", "in": ["yes"] },
+    "year-of-issueing":            { "q": "clinician", "in": ["yes"] },
+    "certification-no":            { "q": "clinician", "in": ["yes"] },
+    "payment-method-upi":          { "q": "payment-method", "in": ["upi"] },
+    "payment-method-paypal":       { "q": "payment-method", "in": ["paypal"] },
+    "payment-method-amazon":       { "q": "payment-method", "in": ["amazon-gift-card"] },
+    "payment-method-bank-name":    { "q": "payment-method", "in": ["wire-transfer"] },
+    "payment-method-bank-ifsc":    { "q": "payment-method", "in": ["wire-transfer"] },
+    "payment-method-bank-account": { "q": "payment-method", "in": ["wire-transfer"] },
+    "doc-education-others":        { "q": "doc-education", "in": ["Others"] },
+    "zipcode":                     { "q": "country", "answered": true },
+    "zip_code_of_practice":        { "q": "country", "answered": true }
+  },
+
+  "parentOverride": {
+    "zip_code_of_practice": "country",
+    "practice-city": "state"
+  },
+
+  "sensitive": ["payment-method-bank-account", "payment-method-bank-ifsc", "payment-method-upi"],
+
+  "optional": [],
+
+  "removeOptions": {
+    "healthcare-management-job-role": ["General Dentist (BDS/DDS/DMD)", "Orthodontist", "Periodontist", "Endodontist", "Prosthodontist", "Oral & Maxillofacial Surgeon", "Paediatric Dentist Pedodontist", "Paediatric Dentist / Pedodontist", "Oral Medicine Specialist", "Oral Radiologist", "Public Health Dentist / Community Dentist", "Forensic Odontologist", "Implantologist"]
+  },
+
+  "extraOptions": {
+    "doc-specialization": [
+      { "l": "General Surgery", "v": "General Surgery", "p": ["Surgeons"] },
+      { "l": "Orthopaedic Surgery", "v": "Orthopaedic Surgery", "p": ["Surgeons"] },
+      { "l": "Neurosurgery", "v": "Neurosurgery", "p": ["Surgeons"] },
+      { "l": "Cardiothoracic Surgery", "v": "Cardiothoracic Surgery", "p": ["Surgeons"] },
+      { "l": "Vascular Surgery", "v": "Vascular Surgery", "p": ["Surgeons"] },
+      { "l": "Plastic & Reconstructive Surgery", "v": "Plastic & Reconstructive Surgery", "p": ["Surgeons"] },
+      { "l": "Paediatric Surgery", "v": "Paediatric Surgery", "p": ["Surgeons"] },
+      { "l": "Urology", "v": "Urology (Surgical)", "p": ["Surgeons"] },
+      { "l": "ENT / Otorhinolaryngology", "v": "ENT / Otorhinolaryngology", "p": ["Surgeons"] },
+      { "l": "Ophthalmic Surgery", "v": "Ophthalmic Surgery", "p": ["Surgeons"] },
+      { "l": "Obstetrics & Gynaecology", "v": "Obstetrics & Gynaecology (Surgical)", "p": ["Surgeons"] },
+      { "l": "Surgical Oncology", "v": "Surgical Oncology", "p": ["Surgeons"] },
+      { "l": "Gastrointestinal & Colorectal Surgery", "v": "Gastrointestinal & Colorectal Surgery", "p": ["Surgeons"] },
+      { "l": "Hepatobiliary & Transplant Surgery", "v": "Hepatobiliary & Transplant Surgery", "p": ["Surgeons"] },
+      { "l": "Bariatric Surgery", "v": "Bariatric Surgery", "p": ["Surgeons"] },
+      { "l": "Trauma & Emergency Surgery", "v": "Trauma & Emergency Surgery", "p": ["Surgeons"] },
+      { "l": "Endocrine & Breast Surgery", "v": "Endocrine & Breast Surgery", "p": ["Surgeons"] },
+      { "l": "Other surgical speciality", "v": "Other surgical speciality", "p": ["Surgeons"], "other": true },
+      { "l": "General Dentist (BDS/DDS/DMD)", "v": "General Dentist (BDS/DDS/DMD)", "p": ["Dental Professionals"] },
+      { "l": "Orthodontist", "v": "Orthodontist", "p": ["Dental Professionals"] },
+      { "l": "Periodontist", "v": "Periodontist", "p": ["Dental Professionals"] },
+      { "l": "Endodontist", "v": "Endodontist", "p": ["Dental Professionals"] },
+      { "l": "Prosthodontist", "v": "Prosthodontist", "p": ["Dental Professionals"] },
+      { "l": "Oral & Maxillofacial Surgeon", "v": "Oral & Maxillofacial Surgeon", "p": ["Dental Professionals"] },
+      { "l": "Paediatric Dentist / Pedodontist", "v": "Paediatric Dentist Pedodontist", "p": ["Dental Professionals"] },
+      { "l": "Oral Medicine Specialist", "v": "Oral Medicine Specialist", "p": ["Dental Professionals"] },
+      { "l": "Oral Radiologist", "v": "Oral Radiologist", "p": ["Dental Professionals"] },
+      { "l": "Public Health Dentist / Community Dentist", "v": "Public Health Dentist / Community Dentist", "p": ["Dental Professionals"] },
+      { "l": "Forensic Odontologist", "v": "Forensic Odontologist", "p": ["Dental Professionals"] },
+      { "l": "Implantologist", "v": "Implantologist", "p": ["Dental Professionals"] },
+      { "l": "Other dental speciality", "v": "Other dental speciality", "p": ["Dental Professionals"], "other": true }
+    ]
+  },
+
+  "extraJobLevels": {
+    "_surgeon": [],
+    "General Surgery": ["Head of Department / Chief Surgeon", "Consultant Surgeon", "Associate Consultant", "Senior Resident / Registrar", "Resident / Junior Surgeon", "Surgical Fellow", "Surgical Intern"],
+    "Orthopaedic Surgery": ["Head of Department / Chief Surgeon", "Consultant Surgeon", "Associate Consultant", "Senior Resident / Registrar", "Resident / Junior Surgeon", "Surgical Fellow"],
+    "Neurosurgery": ["Head of Department / Chief Surgeon", "Consultant Surgeon", "Associate Consultant", "Senior Resident / Registrar", "Resident / Junior Surgeon", "Surgical Fellow"],
+    "Cardiothoracic Surgery": ["Head of Department / Chief Surgeon", "Consultant Surgeon", "Associate Consultant", "Senior Resident / Registrar", "Resident / Junior Surgeon", "Surgical Fellow"],
+    "Vascular Surgery": ["Head of Department / Chief Surgeon", "Consultant Surgeon", "Associate Consultant", "Senior Resident / Registrar", "Resident / Junior Surgeon", "Surgical Fellow"],
+    "Plastic & Reconstructive Surgery": ["Head of Department / Chief Surgeon", "Consultant Surgeon", "Associate Consultant", "Senior Resident / Registrar", "Resident / Junior Surgeon", "Surgical Fellow"],
+    "Paediatric Surgery": ["Head of Department / Chief Surgeon", "Consultant Surgeon", "Associate Consultant", "Senior Resident / Registrar", "Resident / Junior Surgeon", "Surgical Fellow"],
+    "Surgical Oncology": ["Head of Department / Chief Surgeon", "Consultant Surgeon", "Associate Consultant", "Senior Resident / Registrar", "Resident / Junior Surgeon", "Surgical Fellow"]
+  },
+
+  "additionalQuestions": [
+    { "name": "add-languages-spoken", "label": "Which languages do you consult patients in?", "type": "multi", "translateOptions": true,
+      "options": [{"l":"English","v":"English"},{"l":"Hindi","v":"Hindi"},{"l":"Mandarin Chinese","v":"Mandarin"},{"l":"Spanish","v":"Spanish"},{"l":"French","v":"French"},{"l":"Arabic","v":"Arabic"},{"l":"Portuguese","v":"Portuguese"},{"l":"Russian","v":"Russian"},{"l":"German","v":"German"},{"l":"Japanese","v":"Japanese"},{"l":"Korean","v":"Korean"},{"l":"Italian","v":"Italian"},{"l":"Bengali","v":"Bengali"},{"l":"Tamil","v":"Tamil"},{"l":"Telugu","v":"Telugu"},{"l":"Urdu","v":"Urdu"},{"l":"Other","v":"Other","other":true}] },
+    { "name": "add-registration-country", "label": "In which country are you registered to practise?", "type": "country", "options": "@countries" },
+    { "name": "add-graduation-year", "label": "In which year did you complete your primary professional qualification?", "type": "year", "rule": "year", "minYear": 1950, "afterDob": 18 },
+    { "name": "add-years-current-role", "label": "How long have you been in your current role?", "type": "single",
+      "options": [{"l":"Less than 1 year","v":"<1"},{"l":"1–3 years","v":"1-3"},{"l":"4–7 years","v":"4-7"},{"l":"8–15 years","v":"8-15"},{"l":"More than 15 years","v":"15+"}] },
+    { "name": "add-hours-per-week", "label": "On average, how many hours do you work per week?", "type": "number", "rule": "number", "min": 1, "max": 120, "unit": "hrs" },
+    { "name": "add-patient-care-share", "label": "What percentage of your working time is direct patient care?", "type": "range", "rule": "number", "min": 0, "max": 100, "step": 5, "unit": "%" },
+    { "name": "add-consult-duration", "label": "How long is a typical patient consultation?", "type": "single",
+      "options": [{"l":"Under 5 minutes","v":"<5"},{"l":"5–10 minutes","v":"5-10"},{"l":"11–20 minutes","v":"11-20"},{"l":"21–30 minutes","v":"21-30"},{"l":"More than 30 minutes","v":"30+"},{"l":"I don't see patients","v":"none"}] },
+    { "name": "add-patient-age-groups", "label": "Which patient age groups do you treat?", "type": "multi",
+      "options": [{"l":"Newborns & infants (0–1)","v":"infants"},{"l":"Children (2–12)","v":"children"},{"l":"Adolescents (13–17)","v":"adolescents"},{"l":"Adults (18–64)","v":"adults"},{"l":"Older adults (65+)","v":"elderly"},{"l":"I don't see patients","v":"none","exclusive":true}] },
+    { "name": "add-therapy-areas", "label": "Which therapy areas are most relevant to your work?", "type": "multi", "max": 6,
+      "options": [{"l":"Oncology","v":"Oncology"},{"l":"Cardiology & Vascular","v":"Cardiology"},{"l":"Diabetes & Endocrinology","v":"Diabetes"},{"l":"Respiratory","v":"Respiratory"},{"l":"Neurology","v":"Neurology"},{"l":"Mental Health","v":"Mental Health"},{"l":"Infectious Diseases","v":"Infectious"},{"l":"Immunology & Rheumatology","v":"Immunology"},{"l":"Haematology","v":"Haematology"},{"l":"Nephrology","v":"Nephrology"},{"l":"Gastroenterology & Hepatology","v":"Gastro"},{"l":"Dermatology","v":"Dermatology"},{"l":"Ophthalmology","v":"Ophthalmology"},{"l":"Women's Health","v":"Womens Health"},{"l":"Paediatrics","v":"Paediatrics"},{"l":"Rare Diseases","v":"Rare"},{"l":"Vaccines","v":"Vaccines"},{"l":"Pain & Anaesthesia","v":"Pain"},{"l":"Other","v":"Other","other":true}] },
+    { "name": "add-conditions-treated", "label": "Which 3 conditions do you manage most often?", "type": "textarea", "rule": "freetext", "min": 5, "max": 200, "placeholder": "e.g. Type 2 diabetes, hypertension, asthma" },
+    { "name": "add-prescriber", "label": "Do you prescribe medicines?", "type": "single",
+      "options": [{"l":"Yes, independently","v":"independent"},{"l":"Yes, under supervision / protocol","v":"supervised"},{"l":"No","v":"no"}] },
+    { "name": "add-prescriptions-week", "label": "Roughly how many prescriptions do you write per week?", "type": "single", "when": {"q":"add-prescriber","in":["independent","supervised"]},
+      "options": [{"l":"0–25","v":"0-25"},{"l":"26–50","v":"26-50"},{"l":"51–100","v":"51-100"},{"l":"101–250","v":"101-250"},{"l":"More than 250","v":"250+"}] },
+    { "name": "add-hospital-affiliations", "label": "How many hospitals or clinics are you affiliated with?", "type": "number", "rule": "number", "min": 0, "max": 50 },
+    { "name": "add-rep-interactions", "label": "How many pharma / medtech representative interactions do you have per month?", "type": "single",
+      "options": [{"l":"None","v":"0"},{"l":"1–5","v":"1-5"},{"l":"6–10","v":"6-10"},{"l":"11–20","v":"11-20"},{"l":"More than 20","v":"20+"}] },
+    { "name": "add-kol-roles", "label": "Which of these roles do you currently hold?", "type": "multi",
+      "options": [{"l":"Conference speaker","v":"speaker"},{"l":"Advisory board member","v":"advisory"},{"l":"Clinical trial investigator","v":"investigator"},{"l":"Guideline author / committee member","v":"guideline"},{"l":"Medical educator / trainer","v":"educator"},{"l":"Journal reviewer / editor","v":"reviewer"},{"l":"None of these","v":"none","exclusive":true}] },
+    { "name": "add-publications", "label": "How many peer-reviewed publications have you authored?", "type": "single",
+      "options": [{"l":"None","v":"0"},{"l":"1–5","v":"1-5"},{"l":"6–20","v":"6-20"},{"l":"21–50","v":"21-50"},{"l":"More than 50","v":"50+"}] },
+    { "name": "add-conferences-year", "label": "How many medical conferences do you attend per year?", "type": "single",
+      "options": [{"l":"None","v":"0"},{"l":"1–2","v":"1-2"},{"l":"3–5","v":"3-5"},{"l":"6 or more","v":"6+"}] },
+    { "name": "add-cme-hours", "label": "How many CME / CPD hours did you complete last year?", "type": "number", "rule": "number", "min": 0, "max": 500, "unit": "hrs" },
+    { "name": "add-society-memberships", "label": "Which professional associations or societies are you a member of?", "type": "text", "rule": "freetext", "min": 2, "max": 200, "optional": true, "placeholder": "e.g. IMA, ESC, ADA, RCN" },
+    { "name": "add-info-sources", "label": "Where do you get your clinical information?", "type": "multi",
+      "options": [{"l":"Medical journals","v":"journals"},{"l":"Medical conferences","v":"conferences"},{"l":"Clinical guidelines","v":"guidelines"},{"l":"Online medical portals","v":"portals"},{"l":"Pharma / medtech representatives","v":"reps"},{"l":"Peer discussions","v":"peers"},{"l":"Professional social networks","v":"social"},{"l":"Webinars & e-learning","v":"webinars"},{"l":"Other","v":"Other","other":true}] },
+    { "name": "add-ai-usage", "label": "How often do you use AI tools in your clinical work?", "type": "single",
+      "options": [{"l":"Daily","v":"daily"},{"l":"Weekly","v":"weekly"},{"l":"Occasionally","v":"occasionally"},{"l":"Never, but I'm interested","v":"interested"},{"l":"Never, not interested","v":"no"}] },
+    { "name": "add-devices", "label": "Which devices do you use for work?", "type": "multi",
+      "options": [{"l":"Android smartphone","v":"android"},{"l":"iPhone","v":"iphone"},{"l":"Tablet","v":"tablet"},{"l":"Laptop / Desktop","v":"computer"},{"l":"Smartwatch / Wearable","v":"wearable"}] },
+    { "name": "add-best-days", "label": "Which days suit you best for research activities?", "type": "multi",
+      "options": [{"l":"Monday","v":"mon"},{"l":"Tuesday","v":"tue"},{"l":"Wednesday","v":"wed"},{"l":"Thursday","v":"thu"},{"l":"Friday","v":"fri"},{"l":"Saturday","v":"sat"},{"l":"Sunday","v":"sun"}] },
+    { "name": "add-clinical-focus", "label": "Briefly describe your clinical focus or areas of special interest", "type": "textarea", "rule": "freetext", "min": 20, "max": 500, "optional": true, "placeholder": "e.g. Interventional cardiology with a focus on structural heart disease" }
+  ]
+}

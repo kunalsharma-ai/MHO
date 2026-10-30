@@ -1,0 +1,27 @@
+{
+  "name": "mho-account-actions",
+  "version": "2.0.0",
+  "private": true,
+  "description": "MyHealthOpinions: Delete / Deactivate My Account page and dashboard Account Settings card (React 19 + esbuild).",
+  "type": "module",
+  "main": "dist/lib/index.js",
+  "module": "dist/lib/index.js",
+  "engines": { "node": ">=18.18" },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/build.mjs",
+    "build:preview": "node scripts/build-preview.mjs",
+    "mock-server": "node server/mock-server.mjs"
+  },
+  "peerDependencies": {
+    "react": ">=18.2",
+    "react-dom": ">=18.2"
+  },
+  "dependencies": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

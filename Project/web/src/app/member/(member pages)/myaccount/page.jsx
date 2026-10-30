@@ -49,11 +49,13 @@ import PopUp from "@/componentsMHO/PopUp";
 import { api, loadData, Page } from "@/util";
 import DataList from "@/componentsMHO/DataList";
 import { useMember } from "@/Context";
+import { useRewardsTick, fetchRewardBalance } from "@/hooks/useRewardsRefresh";
 import LoadingOverlay from "@/componentsMHO/LoadingOverlay";
 import { useToast } from "@/hooks";
 import { useTourActive } from "@/Context/tourStore";
 import mockRewardsProcessed from "@/mockData/rewardProcessed";
 import MyAccountPoints from "../../components/MyAccountPoints";
+import DeleteAccountSection from "./component/accountActions/DeleteAccountSection";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -925,6 +927,22 @@ linear-gradient(
       >
         <SocialAccounts user={user} />
       </Box>
+
+      <Box
+        sx={{
+          width: "100%",
+          px: 2,
+          pb: 1,
+          borderRadius: "18px",
+          background: "#fff",
+          border: "1px solid #E5EDF8",
+          backdropFilter: "blur(10px)",
+          position: "relative",
+          zIndex: 2,
+        }}
+      >
+        <DeleteAccountSection />
+      </Box>
     </Grid>
   );
 }
@@ -1373,9 +1391,13 @@ function Payment() {
   );
 }
 
+
+const SOCIAL_KEYS = ["whatsapp", "instagram", "facebook", "linkedin", "youtube", "x"];
+const hasValue = (v) => typeof v === "string" && v.trim() !== "";
+ 
 function SocialAccounts({ user }) {
   const [openContact, setOpenContact] = React.useState(false);
-
+ 
   const [contact, setContact] = React.useState({
     whatsapp: "",
     instagram: "",
@@ -1388,12 +1410,14 @@ function SocialAccounts({ user }) {
     if (!user) return () => {};
     setContact(
       Object.fromEntries(
-        Object.entries(user)
-          .filter((e) => e[0].startsWith("social-media"))
-          .map((d) => [d[0].replace("social-media-", ""), d[1]]),
+        SOCIAL_KEYS.map((key) => {
+          const v = user[`social-media-${key}`];
+          return [key, v == null ? "" : String(v)];
+        }),
       ),
     );
   }, [user]);
+ 
 
   const handleChange = (key) => (e) => {
     setContact((prev) => ({
@@ -1443,6 +1467,8 @@ function SocialAccounts({ user }) {
       icon: <XIcon sx={{ fontSize: 26, color: "black" }} />,
     },
   ];
+  const filledContacts = Object.entries(contact).filter(([_, v]) => hasValue(v));
+  const hasAny = filledContacts.length > 0;
 
   return (
     <Grid size={12} container spacing={1} justifyContent="center">
@@ -1468,7 +1494,7 @@ function SocialAccounts({ user }) {
         >
           Social Contacts
         </Typography>
-        {Object.values(contact).some((value) => value?.trim()) && (
+        {hasAny && (
           <IconButton
             onClick={() => setOpenContact(true)}
             sx={{
@@ -1487,20 +1513,17 @@ function SocialAccounts({ user }) {
         )}
       </Box>
 
-      <Grid container size={12} spacing={1.5}>
-        {Object.entries(contact).filter(([_, value]) => value?.trim())
-          .length ? (
-          Object.entries(contact)
-            .filter(([_, value]) => value?.trim())
-            .map(([key, value], index, arr) => (
-              <Tooltip
-                title={`${key?.Capitalize()} :  ${value}`}
-                key={index}
-                placement="top"
-              >
-                <Page.Box px={1.5}>{contactIcons[key]}</Page.Box>
-              </Tooltip>
-            ))
+     <Grid container size={12} spacing={1.5}>
+        {hasAny ? (
+          filledContacts.map(([key, value]) => (
+            <Tooltip
+              title={`${key?.Capitalize()} :  ${value}`}
+              key={key}
+              placement="top"
+            >
+              <Page.Box px={1.5}>{contactIcons[key]}</Page.Box>
+            </Tooltip>
+          ))
         ) : (
           <Box
             sx={{
@@ -1533,7 +1556,7 @@ function SocialAccounts({ user }) {
       <PopUp
         maxWidth="md"
         title={
-          Object.values(contact).some((value) => value?.trim())
+          hasAny
             ? "Edit Social Contacts"
             : "Add Social Contacts"
         }
@@ -1595,11 +1618,11 @@ function SocialAccounts({ user }) {
             <Button
               onClick={async () => {
                 const socials = Object.fromEntries(
-                  Object.entries(contact).map((c) => [
-                    `social-media-${c[0]}`,
-                    c[1],
-                  ]),
-                );
+  SOCIAL_KEYS.map((key) => [
+    `social-media-${key}`,
+    typeof contact[key] === "string" ? contact[key].trim() : "",
+  ]),
+);
                 const resp = await api.patch(`/api/v1/me/answer`, socials);
                 useToast(resp);
                 setOpenContact(false);
@@ -1615,7 +1638,7 @@ function SocialAccounts({ user }) {
                 px: 5,
               }}
             >
-              Save Chanegs
+              Save Changes
             </Button>
           </Box>
         </Grid>
@@ -1641,12 +1664,11 @@ function Summary() {
   const [conversionRate, setConversionRate] = React.useState(1); //todo: set conversion rate from api call
   const [threshold, setThreshold] = React.useState(1500); //todo: set from server config
   const tourActive = useTourActive();
+  const member = useMember();
+  const rewardsTick = useRewardsTick();
   React.useEffect(() => {
-    api
-      .get(`/api/v1/me/points`)
+    fetchRewardBalance(member)
       .then((resp) => {
-        // if (resp.status === "error") router.replace("/survey?name=welcome");
-        // if (!resp.data) return useToast(resp);
         let data = resp.data;
         setPoints(data.totalPoints);
         setThreshold(data.threshold);
@@ -1654,7 +1676,7 @@ function Summary() {
       })
       .catch((err) => {})
       .finally(() => {});
-  }, []);
+  }, [rewardsTick, member?._id]);
   const rewardSummary = [
     {
       label: "Current Rewards",
