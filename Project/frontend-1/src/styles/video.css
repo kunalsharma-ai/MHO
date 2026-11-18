@@ -357,3 +357,48 @@ html.vx-lock, html.vx-lock body { overflow: hidden; }
 .vx-door { left: auto; right: -150px; top: auto; bottom: -150px; margin: 0; }
 .vx-caps .p0 { left: 40%; top: 4%; }
 .vx-shieldmark { left: auto; right: 4%; bottom: 4%; }
+
+/* ---------- "Show & watch" bubble beside the Watch button ---------- */
+.vtip { position: fixed; left: 20px; bottom: 102px; z-index: 71; width: min(270px, calc(100vw - 40px)); opacity: 0; transform: translateY(14px) scale(.9); transform-origin: 30px 100%; pointer-events: none; transition: opacity .35s ease, transform .55s cubic-bezier(.34, 1.56, .64, 1); }
+.vtip.is-in { opacity: 1; transform: none; pointer-events: auto; }
+.vtip-body { position: relative; display: grid; gap: 5px; width: 100%; padding: 14px 34px 14px 16px; border: 0; border-radius: 18px 18px 18px 6px; text-align: left; cursor: pointer; color: #fff; background: linear-gradient(135deg, var(--fl, #0b1b3f), color-mix(in srgb, var(--fl, #0b1b3f) 70%, var(--f1, #ff3d5a))); box-shadow: 0 20px 40px -18px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 255, 255, .08); overflow: hidden; }
+.vtip-body::before { content: ''; position: absolute; inset: -1px; border-radius: inherit; padding: 1.5px; background: conic-gradient(from var(--dm-a, 0deg), var(--f1, #ff3d5a), var(--f2, #ffb020), var(--f3, #14b8a6), var(--f4, #3d5afe), var(--f1, #ff3d5a)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: vtip-spin 4s linear infinite; }
+@property --dm-a { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+@keyframes vtip-spin { to { --dm-a: 360deg; } }
+.vtip::after { content: ''; position: absolute; left: 22px; bottom: -7px; width: 14px; height: 14px; background: var(--fl, #0b1b3f); transform: rotate(45deg); border-radius: 0 0 3px 0; }
+.vtip-live { display: inline-flex; align-items: center; gap: 7px; font: 800 .62rem/1 var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--f2, #ffb020); }
+.vtip-live i { width: 7px; height: 7px; border-radius: 50%; background: #ff3d3d; box-shadow: 0 0 0 0 rgba(255, 61, 61, .7); animation: vtip-live 1.6s infinite; }
+@keyframes vtip-live { 70% { box-shadow: 0 0 0 8px rgba(255, 61, 61, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 61, 61, 0); } }
+.vtip-body b { font: 700 .95rem/1.25 var(--font-head); }
+.vtip-body b em { font-style: normal; color: var(--f2, #ffb020); }
+.vtip-body small { display: inline-flex; align-items: center; gap: 6px; font: 600 .72rem/1 var(--font-ui); color: rgba(255, 255, 255, .75); }
+.vtip-body small svg { padding: 3px; border-radius: 50%; background: #e62117; color: #fff; box-sizing: content-box; }
+.vtip-body:hover small { color: #fff; }
+.vtip-x { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 22px; height: 22px; border: 0; border-radius: 50%; color: #fff; background: rgba(255, 255, 255, .12); cursor: pointer; }
+.vtip-x:hover { background: rgba(255, 255, 255, .25); }
+.vtip.is-in { animation: vtip-nudge 3s ease-in-out 1.2s 2; }
+@keyframes vtip-nudge { 0%, 100% { translate: 0 0; } 10% { translate: 0 -6px; } 20% { translate: 0 0; } }
+/* the bubble takes the button's palette (vfab-* variables) */
+.vtip { --f1: #ff3d5a; --f2: #ffb020; --f3: #14b8a6; --f4: #3d5afe; --fl: #0b1b3f; }
+.vtip-arcade { --f1: #ff2bd6; --f2: #00f0ff; --f3: #fff04d; --f4: #7c3aed; --fl: #1a0638; }
+.vtip-surgical { --f1: #5eead4; --f2: #99f6e4; --f3: #14b8a6; --f4: #0ea5e9; --fl: #06303a; }
+.vtip-hearth { --f1: #fb923c; --f2: #fde68a; --f3: #f43f5e; --f4: #f97316; --fl: #451a03; }
+.vtip-bloom { --f1: #a78bfa; --f2: #6ee7b7; --f3: #f0abfc; --f4: #34d399; --fl: #2e1065; }
+.vtip-blueprint { --f1: #93c5fd; --f2: #bfdbfe; --f3: #3b82f6; --f4: #fff; --fl: #0b2a6b; }
+.vtip-vault { --f1: #fbbf24; --f2: #fde68a; --f3: #d97706; --f4: #facc15; --fl: #052e1c; }
+.vtip-shield { --f1: #22c55e; --f2: #a3e635; --f3: #0ea5e9; --f4: #16a34a; --fl: #031a12; }
+.vtip-magazine { --f1: #ef4444; --f2: #fca5a5; --f3: #f5f0e6; --f4: #111827; --fl: #1f1a14; }
+.vtip-quiz { --f1: #facc15; --f2: #fde047; --f3: #f472b6; --f4: #6366f1; --fl: #1e1b4b; }
+.vtip-postcard { --f1: #dc2626; --f2: #93c5fd; --f3: #1d4ed8; --f4: #fff; --fl: #1e3a8a; }
+.vtip-launch { --f1: #a855f7; --f2: #22d3ee; --f3: #f472b6; --f4: #6366f1; --fl: #0b0626; }
+.vtip-dossier { --f1: #94a3b8; --f2: #e2e8f0; --f3: #475569; --f4: #f8fafc; --fl: #1e293b; }
+.vtip-lightbox { --f2: #7fe3ff; --fl: #091a33; } .vtip-premiere { --f2: #ffc94d; --fl: #2a0f33; } .vtip-handheld { --f2: #2ee6a6; --fl: #08202b; } .vtip-monitor { --f2: #5ee7c6; --fl: #0d2a2c; }
+@media (max-width: 640px) {
+  /* beside the button instead of above it, so it never meets the bottom-centre reward notifications */
+  .vtip { left: 74px; bottom: 12px; width: min(230px, calc(100vw - 150px)); transform-origin: 0 50%; }
+  .vtip::after { left: -6px; bottom: 20px; }
+  .vtip-body { padding: 10px 30px 10px 12px; border-radius: 16px 16px 16px 6px; }
+  .vtip-body b { font-size: .82rem; }
+  .vtip-body small { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .vtip, .vtip.is-in { animation: none; transition: opacity .2s; transform: none; } .vtip-body::before, .vtip-live i { animation: none; } }

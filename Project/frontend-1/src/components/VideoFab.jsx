@@ -213,6 +213,24 @@ export default function VideoFab() {
 
   const close = useCallback(() => setOpen(false), []);
 
+  // "Show & watch" bubble: pops up beside the button a few seconds after each page loads, once per page per
+  // visit, and tucks itself away after a while (or when closed / when the video is opened).
+  const [tip, setTip] = useState(false);
+  useEffect(() => {
+    setTip(false);
+    let seen = false;
+    try { seen = sessionStorage.getItem(`mho-vtip-${path}`) === '1'; } catch { /* storage blocked */ }
+    if (seen) return undefined;
+    const t1 = setTimeout(() => setTip(true), 3500);
+    const t2 = setTimeout(() => setTip(false), 15500);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [path]);
+  const hideTip = useCallback(() => {
+    setTip(false);
+    try { sessionStorage.setItem(`mho-vtip-${path}`, '1'); } catch { /* storage blocked */ }
+  }, [path]);
+  useEffect(() => { if (open) hideTip(); }, [open, hideTip]);
+
   useEffect(() => {
     const onOpen = () => setOpen(true);
     window.addEventListener('mho-open-video', onOpen);
@@ -258,6 +276,14 @@ export default function VideoFab() {
         </span>
         <span className="vfab-label" aria-hidden="true"><b>Watch</b><small>{v.fab || 'this page’s video'}</small></span>
       </button>
+      <div className={`vtip vtip-${v.template} ${tip && !open ? 'is-in' : ''}`} role="status" aria-hidden={!tip || open}>
+        <button type="button" className="vtip-body" onClick={() => setOpen(true)} tabIndex={tip && !open ? 0 : -1}>
+          <span className="vtip-live"><i />Show &amp; watch</span>
+          <b>{v.title} <em>{v.em}</em></b>
+          <small><Icon name="play" size={11} fill="currentColor" stroke={0} />Watch this page&rsquo;s video</small>
+        </button>
+        <button type="button" className="vtip-x" onClick={hideTip} aria-label="Hide video tip" tabIndex={tip && !open ? 0 : -1}><Icon name="x" size={12} /></button>
+      </div>
       {open &&
         createPortal(
           <div className={`vx vx-${v.template}`} role="presentation" onMouseDown={(e) => e.target === e.currentTarget && close()}>
