@@ -787,8 +787,8 @@ html.chat-open .fx-typing, .dock.chat-open .fx-typing { display: none; }
 .air-nav button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 @media (max-width: 700px) {
   .air-stage { padding: 62px 8px 24px; border-radius: 26px; }
-  .air-flow { height: 430px; }
-  .air-card { min-height: 400px; padding: 22px 20px; transform: translateX(calc(var(--d) * 12% + clamp(-1, var(--d), 1) * 70%)) translateZ(calc(var(--ad) * -140px)) rotateY(calc(clamp(-1, var(--d), 1) * -38deg)); }
+  .air-flow { height: 380px; }
+  .air-card { min-height: 350px; padding: 22px 20px; transform: translateX(calc(var(--d) * 12% + clamp(-1, var(--d), 1) * 70%)) translateZ(calc(var(--ad) * -140px)) rotateY(calc(clamp(-1, var(--d), 1) * -38deg)); }
   .air-card:not(.on) { opacity: calc(.7 - var(--ad) * .3); }
   .air-place { display: none; }
   .air-beams i { width: 110px; }
