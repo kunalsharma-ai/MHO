@@ -56,8 +56,9 @@ export const API = {
 
 export const ANALYTICS = {
   ga4: env('GA4_ID', ''),
-  // Meta (Facebook) Pixel ID. Loaded only after the visitor allows analytics cookies, like GA4.
-  fbPixel: env('FB_PIXEL_ID', ''),
+  // Meta (Facebook) Pixel. Loaded only after the visitor allows analytics cookies, like GA4.
+  // Override with VITE_FB_PIXEL_ID, or set it to "off" to disable.
+  fbPixel: env('FB_PIXEL_ID', '2241850863212660').replace(/^off$/i, ''),
 };
 
 // Minimum participant age enforced in the sign-up form (server must enforce it too).

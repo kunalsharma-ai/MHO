@@ -376,6 +376,8 @@ export function loadAnalytics() {
 /** Fire a GA4 event if analytics consent was given. Never pass personal or health data here. */
 export function track(event, params = {}) {
   if (typeof window !== 'undefined' && typeof window.gtag === 'function') window.gtag('event', event, params);
+  // Meta Pixel counts client-side page changes too (its first PageView is sent when it loads).
+  if (event === 'page_view' && typeof window !== 'undefined' && typeof window.fbq === 'function') window.fbq('track', 'PageView');
 }
 
 export const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
