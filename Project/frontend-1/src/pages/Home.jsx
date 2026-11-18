@@ -68,7 +68,7 @@ export default function Home() {
 
       <section className="section s-voices">
         <div className="container">
-          <SectionHead eyebrow="Member voices" title="What our community is saying" lead="Doctors, nurses, allied health professionals, caregivers and patients from more than 20 countries. Tap any card in the columns to bring it into the spotlight." color="#ec4899" />
+          <SectionHead eyebrow="Member voices" title="What our community is saying" lead="Doctors, nurses, allied health professionals, caregivers and patients from more than 20 countries. Swipe, or tap a card at the side, to bring the next voice on stage." color="#ec4899" />
           <VoiceWall />
           <div className="center-cta"><Button to="/reviews" variant="ghost" icon="star">All reviews and rate us</Button></div>
         </div>

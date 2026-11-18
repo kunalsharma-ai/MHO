@@ -5,12 +5,12 @@
 // Each page: role-graded hero with its own animated scene, who can join (HCP role explorer with all
 // 1,300+ job titles / caregiver fridge notes / patient capsules), process, study journey, rewards,
 // the profile questions we ask, FAQs and a join call-to-action that preselects the role.
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import PageHero from '../components/PageHero.jsx';
 import Icon from '../components/Icon.jsx';
 import Persona from '../components/Persona.jsx';
 import { SectionHead, Button, LiveZone } from '../components/ui.jsx';
-import { StepRail, RewardWallet, FaqStage } from '../components/R8.jsx';
+import { StepRail, RewardWallet, FaqStage, RoleVoices } from '../components/R8.jsx';
 import { Link, useRouter } from '../router.jsx';
 import { AUDIENCE, AUDIENCE_FAQ } from '../data/audiences.js';
 import { ROLES as HCP_ROLES, jobCount, allJobs } from '../data/hcpProfile.js';
@@ -231,12 +231,119 @@ function Clipboard({ items, minutes }) {
   );
 }
 
+const ORDER = {
+  hcp: ['who', 'process', 'rewards', 'voices', 'journey', 'profile', 'faq', 'cta'],
+  caregiver: ['who', 'voices', 'journey', 'conditions', 'rewards', 'process', 'profile', 'faq', 'cta'],
+  patient: ['who', 'conditions', 'voices', 'rewards', 'process', 'journey', 'profile', 'faq', 'cta'],
+};
+
 export default function Audience() {
   const { path } = useRouter();
   const role = ROLE_BY_PATH[path] || 'hcp';
   const A = AUDIENCE[role];
   const Art = ART[role];
   const cta = role === 'hcp' ? 'Join as a professional' : role === 'caregiver' ? 'Join as a caregiver' : 'Join as a patient';
+  // Page sections, keyed so each role can order them differently (see ORDER).
+  const S = {
+    who: (
+    <section className="section aud-who" id="roles">
+            <div className="container">
+              {role === 'hcp' && <SectionHead eyebrow="Who can join" title="Every role in healthcare, all 1,300+ of them" lead="Pick your professional group to see every specialization and job level we recruit — or search for your exact title." color="#2457f5" />}
+              {role === 'caregiver' && <SectionHead eyebrow="Who can join" title="Fourteen kinds of caregiver, one community" lead="Pinned to the fridge, like the rest of your week. If one of these sounds like you, your experience is exactly what researchers need." color="#ff7a1a" />}
+              {role === 'patient' && <SectionHead eyebrow="Who can join" title="Patients of every kind" lead="Whatever your health story, there are studies that need it — and healthy, health-conscious people are welcome too." color="#00a88a" />}
+              {role === 'hcp' && <HcpExplorer />}
+              {role === 'caregiver' && <FridgeNotes />}
+              {role === 'patient' && <Capsules />}
+            </div>
+          </section>
+    ),
+    conditions: (
+          <section className="section aud-conditions">
+            <div className="container">
+              <SectionHead eyebrow="Health areas" title={role === 'patient' ? `${CONDITION_COUNT}+ conditions on our shelves` : 'Conditions the people you care for live with'} lead={role === 'patient' ? 'Open a shelf to see every condition in that therapy area. Pick yours during sign-up — it is optional and confidential.' : 'Dementia, cancer, diabetes, disability, mental health and more. During sign-up you choose the conditions involved in your caring role.'} color={role === 'patient' ? '#00a88a' : '#ff4f6d'} />
+              <ConditionShelves compact={role === 'caregiver'} />
+            </div>
+          </section>
+    ),
+    process: (
+    <section className="section aud-process">
+            <div className="container split">
+              <div className="split-copy">
+                <span className="eyebrow" style={{ '--eb': 'var(--g1)' }}><i aria-hidden="true" />Sign-up process</span>
+                <h2>{role === 'hcp' ? 'From screening to verified in five steps' : role === 'caregiver' ? 'Five steps that fit around caring' : 'Five steps, all from your phone'}</h2>
+                <p className="lead">{role === 'hcp' ? 'The professional profile follows our recruitment questionnaire, so you only see studies that match your specialty, job level and practice.' : role === 'caregiver' ? 'Tell us about your caring role once. Every question about the person you care for is general, never personal.' : 'Share as much or as little as you like. Health details are optional and never leave our hands.'}</p>
+                <Button to={`/join#${role}`}>{cta}</Button>
+              </div>
+              <StepRail steps={A.process} role={role} />
+            </div>
+          </section>
+    ),
+    journey: (
+    <section className="section aud-journey dark-band">
+            <div className="container">
+              <SectionHead eyebrow="A study, start to finish" title={role === 'hcp' ? 'From invitation to honorarium' : role === 'caregiver' ? 'A survey in a caregiver’s day' : 'Your first survey, step by step'} color="#ffb020" />
+              <Journey steps={A.journey} role={role} />
+            </div>
+          </section>
+    ),
+    rewards: (
+    <section className="section aud-rewards">
+            <div className="container">
+              <SectionHead eyebrow="Rewards" title={role === 'hcp' ? 'Honoraria and rewards for professionals' : role === 'caregiver' ? 'Rewards that help at home' : 'Rewards for sharing your story'} lead={role === 'hcp' ? 'Press a key to load that payout method onto the card. Exact options for each study are listed in its invitation.' : role === 'caregiver' ? 'Tap a gift tag to open it. Exact options for each study are listed in its invitation, and UPI is for members in India.' : 'Tap a petal to bring it to the centre. Exact options for each study are listed in its invitation, and UPI is for members in India.'} color={role === 'hcp' ? '#2457f5' : role === 'caregiver' ? '#ff4f6d' : '#00b386'} />
+              <RewardWallet role={role} />
+            </div>
+          </section>
+    ),
+    profile: (
+    <section className="section aud-profile">
+            <div className="container split">
+              <Clipboard items={A.profile} minutes={A.minutes} />
+              <div className="split-copy">
+                <span className="eyebrow" style={{ '--eb': 'var(--g1)' }}><i aria-hidden="true" />What we ask</span>
+                <h2>Your profile, one time only</h2>
+                <p className="lead">These answers decide which invitations reach you, so every study you open is one you qualify for. You can update them any time from your dashboard.</p>
+                <p className="aud-lock"><Icon name="lock" size={16} /> Your details are secured with us. We don’t share your personal details.</p>
+              </div>
+            </div>
+          </section>
+    ),
+    voices: (
+    <section className={`section aud-voices aud-voices-${role}`} aria-labelledby={`voices-${role}`}>
+            <div className="container">
+              <div className="section-head">
+                <span className="eyebrow">Member voices</span>
+                <h2 id={`voices-${role}`}>{role === 'hcp' ? 'Grand rounds: what professionals tell us' : role === 'caregiver' ? 'Notes from the people who care' : 'Stories that help others heal'}</h2>
+              </div>
+              <RoleVoices role={role} />
+            </div>
+          </section>
+    ),
+    faq: (
+    <section className="section aud-faq">
+            <div className="container">
+              <FaqStage items={AUDIENCE_FAQ[role]} idPrefix={`faq-${role}`} theme={role} eyebrow="Questions" title={`${A.name}: common questions`} />
+            </div>
+          </section>
+    ),
+    cta: (
+    <section className="section aud-cta">
+            <div className="container">
+              <div className="ac-band">
+                <span className="ac-rings" aria-hidden="true"><i /><i /><i /></span>
+                <h2>{role === 'hcp' ? 'Your expertise, rewarded.' : role === 'caregiver' ? 'You carry the care. We carry your voice.' : 'Your story can change someone’s treatment.'}</h2>
+                <p>Free to join, no investment, and your details are never sold.</p>
+                <div className="ac-btns">
+                  <Button to={`/join#${role}`}>{cta}</Button>
+                  <Link className="text-link light" to={role === 'hcp' ? '/caregivers' : role === 'caregiver' ? '/patients' : '/healthcare-professionals'}>
+                    {role === 'hcp' ? 'Looking after someone? See caregivers' : role === 'caregiver' ? 'Living with a condition? See patients' : 'Work in healthcare? See professionals'} <Icon name="arrow" size={14} />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+    ),
+  };
+
   return (
     <div className={`aud aud-${role} rgrade-${role}`}>
       <PageHero
@@ -253,85 +360,8 @@ export default function Audience() {
         <ul className="aud-stats">{A.stats.map(([n, l]) => <li key={l}><b>{n}</b><span>{l}</span></li>)}</ul>
       </PageHero>
 
-      <section className="section aud-who" id="roles">
-        <div className="container">
-          {role === 'hcp' && <SectionHead eyebrow="Who can join" title="Every role in healthcare, all 1,300+ of them" lead="Pick your professional group to see every specialization and job level we recruit — or search for your exact title." color="#2457f5" />}
-          {role === 'caregiver' && <SectionHead eyebrow="Who can join" title="Fourteen kinds of caregiver, one community" lead="Pinned to the fridge, like the rest of your week. If one of these sounds like you, your experience is exactly what researchers need." color="#ff7a1a" />}
-          {role === 'patient' && <SectionHead eyebrow="Who can join" title="Patients of every kind" lead="Whatever your health story, there are studies that need it — and healthy, health-conscious people are welcome too." color="#00a88a" />}
-          {role === 'hcp' && <HcpExplorer />}
-          {role === 'caregiver' && <FridgeNotes />}
-          {role === 'patient' && <Capsules />}
-        </div>
-      </section>
-
-      {role !== 'hcp' && (
-        <section className="section aud-conditions">
-          <div className="container">
-            <SectionHead eyebrow="Health areas" title={role === 'patient' ? `${CONDITION_COUNT}+ conditions on our shelves` : 'Conditions the people you care for live with'} lead={role === 'patient' ? 'Open a shelf to see every condition in that therapy area. Pick yours during sign-up — it is optional and confidential.' : 'Dementia, cancer, diabetes, disability, mental health and more. During sign-up you choose the conditions involved in your caring role.'} color={role === 'patient' ? '#00a88a' : '#ff4f6d'} />
-            <ConditionShelves compact={role === 'caregiver'} />
-          </div>
-        </section>
-      )}
-
-      <section className="section aud-process">
-        <div className="container split">
-          <div className="split-copy">
-            <span className="eyebrow" style={{ '--eb': 'var(--g1)' }}><i aria-hidden="true" />Sign-up process</span>
-            <h2>{role === 'hcp' ? 'From screening to verified in five steps' : role === 'caregiver' ? 'Five steps that fit around caring' : 'Five steps, all from your phone'}</h2>
-            <p className="lead">{role === 'hcp' ? 'The professional profile follows our recruitment questionnaire, so you only see studies that match your specialty, job level and practice.' : role === 'caregiver' ? 'Tell us about your caring role once. Every question about the person you care for is general, never personal.' : 'Share as much or as little as you like. Health details are optional and never leave our hands.'}</p>
-            <Button to={`/join#${role}`}>{cta}</Button>
-          </div>
-          <StepRail steps={A.process} role={role} />
-        </div>
-      </section>
-
-      <section className="section aud-journey dark-band">
-        <div className="container">
-          <SectionHead eyebrow="A study, start to finish" title={role === 'hcp' ? 'From invitation to honorarium' : role === 'caregiver' ? 'A survey in a caregiver’s day' : 'Your first survey, step by step'} color="#ffb020" />
-          <Journey steps={A.journey} role={role} />
-        </div>
-      </section>
-
-      <section className="section aud-rewards">
-        <div className="container">
-          <SectionHead eyebrow="Rewards" title={role === 'hcp' ? 'Honoraria and rewards for professionals' : role === 'caregiver' ? 'Rewards that help at home' : 'Rewards for sharing your story'} lead="Hover or tap a card to turn it over. Exact options for each study are listed in its invitation, and UPI is available for members in India." color="#ff6a2c" />
-          <RewardWallet role={role} />
-        </div>
-      </section>
-
-      <section className="section aud-profile">
-        <div className="container split">
-          <Clipboard items={A.profile} minutes={A.minutes} />
-          <div className="split-copy">
-            <span className="eyebrow" style={{ '--eb': 'var(--g1)' }}><i aria-hidden="true" />What we ask</span>
-            <h2>Your profile, one time only</h2>
-            <p className="lead">These answers decide which invitations reach you, so every study you open is one you qualify for. You can update them any time from your dashboard.</p>
-            <p className="aud-lock"><Icon name="lock" size={16} /> Your details are secured with us. We don’t share your personal details.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="section aud-faq">
-        <div className="container">
-          <FaqStage items={AUDIENCE_FAQ[role]} idPrefix={`faq-${role}`} theme={role} eyebrow="Questions" title={`${A.name}: common questions`} />
-        </div>
-      </section>
-
-      <section className="section aud-cta">
-        <div className="container">
-          <div className="ac-band">
-            <span className="ac-rings" aria-hidden="true"><i /><i /><i /></span>
-            <h2>{role === 'hcp' ? 'Your expertise, rewarded.' : role === 'caregiver' ? 'You carry the care. We carry your voice.' : 'Your story can change someone’s treatment.'}</h2>
-            <p>Free to join, no investment, and your details are never sold.</p>
-            <div className="ac-btns">
-              <Button to={`/join#${role}`}>{cta}</Button>
-              <Link className="text-link light" to={role === 'hcp' ? '/caregivers' : role === 'caregiver' ? '/patients' : '/healthcare-professionals'}>
-                {role === 'hcp' ? 'Looking after someone? See caregivers' : role === 'caregiver' ? 'Living with a condition? See patients' : 'Work in healthcare? See professionals'} <Icon name="arrow" size={14} />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Each audience page tells its story in its own order, so the three pages never read alike. */}
+      {ORDER[role].map((k) => <Fragment key={k}>{S[k]}</Fragment>)}
     </div>
   );
 }

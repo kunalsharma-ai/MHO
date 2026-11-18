@@ -5,6 +5,8 @@
 import { useState } from 'react';
 import { useRouter } from '../router.jsx';
 import Icon from './Icon.jsx';
+import VideoStage from './VideoStages.jsx';
+import '../styles/vstage.css';
 import { CHANNEL_URL, parseYouTube, videoFor, openPageVideo } from '../data/pageVideos.js';
 
 const HIDE = ['/login', '/create-password', '/reset-password', '/complete-profile'];
@@ -31,23 +33,15 @@ export default function PageVideoBand() {
   };
 
   return (
-    <section className={`vband vband-${v.template}`} aria-labelledby="vband-title">
+    <section className={`vband vband-${v.template}`} aria-labelledby="vband-title" data-mode-skip="">
       <span className="vb-aurora" aria-hidden="true"><i /><i /><i /></span>
       <div className="container vb-grid">
-        <button type="button" className="vb-screen" onClick={openPageVideo} aria-label={`Play the video: ${v.title} ${v.em}`}>
-          {yt && <img src={`https://i.ytimg.com/vi/${yt.id}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" width="480" height="360" />}
-          <span className="vb-shade" aria-hidden="true" />
-          <span className="vb-cap" aria-hidden="true"><small>{v.eyebrow}</small><b>{v.title}</b><em>{v.em}</em></span>
-          <span className="vb-brand" aria-hidden="true"><Icon name="youtube" size={14} />MyHealthOpinions</span>
-          <span className="vb-play" aria-hidden="true"><i /><i /><Icon name="play" size={34} fill="currentColor" stroke={0} /></span>
-          <span className="vb-bar" aria-hidden="true"><i /><b /></span>
-          <span className="vb-reacts" aria-hidden="true">
-            {['heart', 'thumb', 'star', 'heart', 'thumb'].map((n, i) => <i key={i} style={{ '--k': i }}><Icon name={n} size={14} fill={n === 'thumb' ? 'none' : 'currentColor'} stroke={n === 'thumb' ? 2 : 0} /></i>)}
-          </span>
+        <button type="button" className="vs-stage" onClick={openPageVideo} aria-label={`Play the video: ${v.title} ${v.em}`}>
+          <VideoStage template={v.template} yt={yt} v={v} />
         </button>
 
         <div className="vb-copy">
-          <span className="vb-eyebrow"><span className="vb-live" />Watch the full video</span>
+          <span className="vb-eyebrow"><span className="vb-live" />Watch the full video · {v.fab}</span>
           <h2 id="vband-title">{v.title} <em>{v.em}</em></h2>
           <p className="vb-lede">{v.lede} Watch it right to the end, then tell us what you think.</p>
           <ul className="vb-points">
