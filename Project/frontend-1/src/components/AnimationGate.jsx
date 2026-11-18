@@ -29,7 +29,7 @@ function tame() {
     // the browser producing frames, and dozens of them at once is what made slower laptops and phones lag.
     // A section replays its motion each time it scrolls back into view (see the observer below).
     const dur = Number(t.duration) || 1000;
-    try { fx.updateTiming({ iterations: Math.max(2, Math.ceil(BUDGET_MS / dur)) }); } catch { /* ignore */ }
+    try { fx.updateTiming({ iterations: Math.max(1, Math.round(BUDGET_MS / dur)) }); } catch { /* ignore */ }
   }
 }
 
