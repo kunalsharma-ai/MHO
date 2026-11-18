@@ -646,6 +646,7 @@ html[data-mode='dark'] .rv-bloom { background: radial-gradient(50% 60% at 50% 50
 .aud-caregiver .ac-band .btn-primary { background: #3a160c; color: #fff; }
 .aud-caregiver .ac-band .text-link.light { color: #3a160c; border-color: rgba(58, 22, 12, .5); }
 .aud-caregiver .ac-rings i { border-color: rgba(255, 79, 109, .35); border-radius: 46% 54% 50% 50%; }
-.aud-patient .ac-band { border-radius: 48% 52% 44% 56% / 60px 70px 60px 70px; background: radial-gradient(60% 90% at 0% 100%, rgba(18, 194, 233, .6), transparent 60%), linear-gradient(140deg, #00b386, #008f8a); box-shadow: 0 40px 80px -40px #00b386; }
+.aud-patient .ac-band { border-radius: 70px 180px 70px 180px; background: radial-gradient(60% 90% at 0% 100%, rgba(18, 194, 233, .6), transparent 60%), linear-gradient(140deg, #00b386, #008f8a); box-shadow: 0 40px 80px -40px #00b386; }
 .aud-patient .ac-rings i { border-style: dashed; }
 @media (max-width: 600px) { .aud-patient .ac-band { border-radius: 36px; } }
+.aud-hcp .ac-band .text-link.light, .aud-patient .ac-band .text-link.light { color: #fff; border-color: rgba(255, 255, 255, .6); }
