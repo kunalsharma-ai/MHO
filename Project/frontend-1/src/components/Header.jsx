@@ -56,6 +56,18 @@ export default function Header() {
   }, [activeIdx, mounted]);
 
   useEffect(() => setOpen(false), [path]);
+  // Dropdowns open on hover/focus. After a submenu link is clicked the pointer is still over the menu and the
+  // link keeps focus, so the panel would stay open: hide it until the pointer leaves the menu.
+  const [ddShut, setDdShut] = useState(false);
+  const shutDropdown = () => {
+    setDdShut(true);
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  };
+  const firstPath = useRef(true);
+  useEffect(() => {
+    if (firstPath.current) { firstPath.current = false; return; }
+    shutDropdown();
+  }, [path]);
   useEffect(() => {
     if (!pmenu) return;
     const away = (e) => { if (pmRef.current && !pmRef.current.contains(e.target)) setPmenu(false); };
@@ -86,13 +98,13 @@ export default function Header() {
             <span className="nav-pill" style={{ transform: `translateX(${pill.x}px)`, width: pill.w, opacity: pill.show ? 1 : 0 }} aria-hidden="true" />
             {NAV.map((n) =>
               n.children ? (
-                <div key={n.to} className="nav-dd">
+                <div key={n.to} className={`nav-dd ${ddShut ? 'is-shut' : ''}`} onMouseLeave={() => setDdShut(false)} onFocus={(e) => e.target.matches(':focus-visible') && setDdShut(false)}>
                   <Link to={n.to} className="nav-link" aria-haspopup="true">
                     {n.label}<Icon name="plus" size={12} className="dd-caret" />
                   </Link>
                   <div className="dd-panel">
                     {n.children.map((c) => (
-                      <Link key={c.to} to={c.to} className={`dd-item g-${c.grade}`}>
+                      <Link key={c.to} to={c.to} className={`dd-item g-${c.grade}`} onClick={shutDropdown}>
                         <span className="ddi-ic"><Icon name={c.icon} size={18} /></span>
                         <span><b>{c.label}</b><small>{c.sub}</small></span>
                         <Icon name="arrow" size={16} className="ddi-go" />
@@ -164,7 +176,7 @@ export default function Header() {
                         </span>
                         <div className="mm-sub">
                           {n.children.map((c) => (
-                            <Link key={c.to} to={c.to} className={`mm-sublink g-${c.grade}`}>
+                            <Link key={c.to} to={c.to} className={`mm-sublink g-${c.grade}`} onClick={() => setOpen(false)}>
                               <span className="mm-sub-ic"><Icon name={c.icon} size={16} /></span>
                               <span className="mm-sub-tx"><b>{c.label}</b>{c.sub && <small>{c.sub}</small>}</span>
                             </Link>
@@ -172,7 +184,7 @@ export default function Header() {
                         </div>
                       </>
                     ) : (
-                      <Link to={n.to} className="mm-link" style={{ '--i': i }}>
+                      <Link to={n.to} className="mm-link" style={{ '--i': i }} onClick={() => setOpen(false)}>
                         <span className="mm-num">{String(i + 1).padStart(2, '0')}</span>
                         <span className="mm-label">{n.label}</span>
                         {n.badge && <span className="nav-badge">{n.badge}</span>}

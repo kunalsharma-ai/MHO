@@ -273,3 +273,6 @@
   .bt, .ab-flow li, .ab-tl-card { opacity: 1 !important; transform: none !important; }
   .ab-flow-line path { stroke-dashoffset: 0; }
 }
+/* a submenu link was just clicked: keep the panel closed until the pointer leaves the menu (Header.jsx) */
+.nav-dd.is-shut .dd-panel, .nav-dd.is-shut:hover .dd-panel, .nav-dd.is-shut:focus-within .dd-panel { opacity: 0; pointer-events: none; transform: translate(-50%, 8px); }
+.nav-dd.is-shut .dd-caret { transform: none !important; }
