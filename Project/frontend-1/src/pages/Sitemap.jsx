@@ -7,7 +7,7 @@ import { PAGES } from '../seo/pages.js';
 import { BLOGS, BLOG_CATEGORIES } from '../data/blogs/index.js';
 
 const GROUPS = [
-  ['Explore', ['/', '/about-us', '/how-it-works', '/rewards', '/trust-safety', '/reviews']],
+  ['Explore', ['/', '/about-us', '/how-it-works', '/rewards', '/trust-safety', '/reviews', '/scan-and-connect']],
   ['Who it’s for', ['/healthcare-professionals', '/caregivers', '/patients', '/earn']],
   ['Help', ['/faq', '/contact', '/join', '/login']],
   ['Legal', ['/privacy', '/cookies', '/terms', '/gdpr', '/profiling']],

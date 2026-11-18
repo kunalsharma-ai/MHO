@@ -7,6 +7,7 @@ import Icon from './Icon.jsx';
 import { useMounted } from './ui.jsx';
 import { LanguageButton } from './Language.jsx';
 import { useSession, logout } from '../utils/session.js';
+import { RATING } from '../data/testimonials.js';
 
 const useIsoLayout = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
@@ -95,6 +96,9 @@ export default function Header() {
                       <Link key={c.to} to={c.to} className={`dd-item g-${c.grade}`}>
                         <span className="ddi-ic"><Icon name={c.icon} size={18} /></span>
                         <span><b>{c.label}</b><small>{c.sub}</small></span>
+                        {c.rating ? (
+                          <span className="ddi-score" aria-label={`Average ${RATING.average} out of 5 from ${RATING.count} reviews`}><b>{RATING.average.toFixed(1)}</b><small>{RATING.count} reviews</small></span>
+                        ) : <Icon name="arrow" size={16} className="ddi-go" />}
                       </Link>
                     ))}
                   </div>

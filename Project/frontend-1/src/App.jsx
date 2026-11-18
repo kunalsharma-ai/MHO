@@ -22,6 +22,7 @@ const LiveChat = lazy(() => import('./components/LiveChat.jsx'));
 const RateExperience = lazy(() => import('./components/RateExperience.jsx'));
 const RewardToasts = lazy(() => import('./components/RewardToasts.jsx'));
 const CookieBanner = lazy(() => import('./components/CookieBanner.jsx'));
+const VideoFab = lazy(() => import('./components/VideoFab.jsx'));
 // Same event as openCookieSettings() in CookieBanner.jsx (kept here so the banner can load lazily).
 const openCookieSettings = () => window.dispatchEvent(new Event('mho-cookie-settings'));
 
@@ -86,6 +87,7 @@ function Shell() {
           <RateExperience suppressed={quiet} />
           {!quiet && <RewardToasts />}
           <CookieBanner />
+          <VideoFab />
           <LanguagePicker />
           <TranslateStatus />
         </Suspense>
