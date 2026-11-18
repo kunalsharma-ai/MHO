@@ -37,6 +37,14 @@ function Player({ v, label }) {
       </div>
     );
   }
+  // Opened straight from disk (file://), YouTube refuses to play embedded videos (no page address to check),
+  // so there the cover opens the video on youtube.com instead. Online it plays right here.
+  const fromDisk = typeof window !== 'undefined' && window.location.protocol === 'file:';
+  const watchUrl = `https://www.youtube.com/watch?v=${encodeURIComponent(yt.id)}${yt.start ? `&t=${yt.start}s` : ''}`;
+  const play = () => {
+    if (fromDisk) window.open(watchUrl, '_blank', 'noopener');
+    else setOn(true);
+  };
   return (
     <div className="vx-player">
       {on ? (
@@ -44,15 +52,18 @@ function Player({ v, label }) {
           title={label}
           src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(yt.id)}?autoplay=1&rel=0&playsinline=1${yt.start ? `&start=${yt.start}` : ''}`}
           allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
         />
       ) : (
-        <button type="button" className="vx-poster" onClick={() => setOn(true)} aria-label={`Play video: ${label}`}>
-          <img src={`https://i.ytimg.com/vi/${yt.id}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" />
+        <button type="button" className="vx-poster" onClick={play} aria-label={fromDisk ? `Play video on YouTube: ${label}` : `Play video: ${label}`}>
+          <img src={`https://i.ytimg.com/vi/${yt.id}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
           <Cover v={v} />
           <span className="vx-play" aria-hidden="true"><i /><i /><Icon name="play" size={30} fill="currentColor" stroke={0} /></span>
+          {fromDisk && <span className="vx-onyt" aria-hidden="true"><Icon name="youtube" size={14} />Plays on YouTube</span>}
         </button>
       )}
+      <a className="vx-ytlink" href={watchUrl} target="_blank" rel="noopener noreferrer"><Icon name="youtube" size={14} />Not playing? Watch on YouTube</a>
     </div>
   );
 }

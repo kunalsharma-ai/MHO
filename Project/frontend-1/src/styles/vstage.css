@@ -448,3 +448,21 @@
 .vband.vband-premiere .vs-play { right: 50%; margin-right: calc(clamp(54px, 7vw, 76px) / -2); }
 .vband.vband-premiere .vs-cap { top: auto; bottom: 10%; translate: none; }
 @media (max-width: 640px) { .vs-code { display: none; } }
+
+/* ---------- designed poster under every video cover ----------
+   Shows whenever the YouTube cover image can't load (opened from disk, offline, blocked), so a video is never blank. */
+.vs-cover::before, .vx-poster::before { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, .16) 1.2px, transparent 1.6px) 0 0 / 18px 18px,
+    conic-gradient(from 200deg at 78% 40%, transparent 0 40deg, color-mix(in srgb, var(--f2, #ffb020) 40%, transparent) 60deg, transparent 120deg),
+    radial-gradient(70% 90% at 80% 40%, color-mix(in srgb, var(--f4, #3d5afe) 75%, transparent), transparent 70%),
+    radial-gradient(60% 80% at 10% 100%, color-mix(in srgb, var(--f1, #ff3d5a) 55%, transparent), transparent 70%),
+    var(--fl, #0b1b3f); }
+.vs-cover::after, .vx-poster::after { content: 'MyHealthOpinions · on film'; position: absolute; right: 5%; bottom: 7%; pointer-events: none; font: 800 .62rem/1 var(--font-ui, system-ui); letter-spacing: .2em; text-transform: uppercase; color: rgba(255, 255, 255, .7); }
+.vx-poster { overflow: hidden; }
+.vx-poster img, .vx-poster > * { z-index: 1; }
+.vx-onyt { position: absolute; left: 50%; bottom: 14%; translate: -50% 0; z-index: 2; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; font: 800 .74rem/1 var(--font-ui, system-ui); color: #fff; background: #e62117; box-shadow: 0 8px 18px -8px rgba(230, 33, 23, .9); }
+.vx-ytlink { position: absolute; right: 10px; top: 10px; z-index: 3; display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font: 700 .72rem/1 var(--font-ui, system-ui); color: #fff; text-decoration: none; background: rgba(0, 0, 0, .6); }
+.vx-ytlink svg { color: #ff3b30; }
+.vx-ytlink:hover { background: #e62117; }
+.vx-ytlink:hover svg { color: #fff; }
