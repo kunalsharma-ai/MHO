@@ -29,7 +29,7 @@ function tame() {
     // the browser producing frames, and dozens of them at once is what made slower laptops and phones lag.
     // A section replays its motion each time it scrolls back into view (see the observer below).
     const dur = Number(t.duration) || 1000;
-    try { fx.updateTiming({ iterations: Math.max(1, Math.round(BUDGET_MS / dur)) }); } catch { /* ignore */ }
+    try { fx.updateTiming({ iterations: Math.max(1, Math.round(BUDGET_MS / dur)) }); a.__capped = true; } catch { /* ignore */ }
   }
 }
 
@@ -69,7 +69,7 @@ export default function AnimationGate() {
           replay = false;
           try {
             for (const a of document.getAnimations()) {
-              if (a.playState !== 'finished' || !a.animationName) continue;
+              if (a.playState !== 'finished' || !a.__capped) continue;
               const el = a.effect && a.effect.target;
               const sec = el && el.closest && el.closest(SELECTOR);
               if (sec && !sec.hasAttribute('data-still')) a.play();
@@ -101,7 +101,7 @@ export default function AnimationGate() {
       const host = e.target instanceof Element && e.target.closest(REPLAY);
       if (!host || Date.now() - lastReplay < 1200) return;
       lastReplay = Date.now();
-      try { host.getAnimations({ subtree: true }).forEach((a) => a.playState === 'finished' && a.play()); } catch { /* ignore */ }
+      try { host.getAnimations({ subtree: true }).forEach((a) => a.__capped && a.playState === 'finished' && a.play()); } catch { /* ignore */ }
     };
     document.addEventListener('pointerover', onOver, { passive: true });
     const main = document.getElementById('main');

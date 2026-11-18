@@ -237,13 +237,16 @@ export default function VideoFab() {
   }, [path]);
   useEffect(() => {
     setTip(false);
-    // once per page per visit, and never again after the visitor closed it with ✕ (until a refresh)
-    if (isOff('video-card') || visit.get(`vtip-${path}`, false)) return undefined;
+    // The card pops up by itself at most once per visit (not on every page), and never after the visitor has
+    // closed it, pressed the YouTube button or opened a video. Kunal found it annoying when it kept coming back.
+    if (isOff('video-card') || visit.get('vtip-shown', false)) return undefined;
     // On phones the card would cover the hero's buttons, so there it waits until the visitor scrolls past the first screen.
     let t1 = 0;
     const show = () => {
+      if (isOff('video-card') || visit.get('vtip-shown', false)) return;
+      visit.set('vtip-shown', true);
       setTip(true);
-      autoHide.current = setTimeout(() => setTip(false), 12000);
+      autoHide.current = setTimeout(() => setTip(false), 6000);
     };
     const narrow = window.matchMedia('(max-width: 640px)').matches;
     const onScroll = () => {
@@ -252,7 +255,7 @@ export default function VideoFab() {
       t1 = setTimeout(show, 600);
     };
     if (narrow) window.addEventListener('scroll', onScroll, { passive: true });
-    else t1 = setTimeout(show, 3500);
+    else t1 = setTimeout(show, 15000);
     return () => { clearTimeout(t1); clearTimeout(autoHide.current); window.removeEventListener('scroll', onScroll); };
   }, [path]);
   // The YouTube button first shows the "watch this page" card; Watch now (or a second press) opens the video.
@@ -266,15 +269,17 @@ export default function VideoFab() {
     mq.addEventListener('change', check);
     return () => { window.removeEventListener('scroll', check); mq.removeEventListener('change', check); };
   }, [path]);
+  // Pressing the YouTube button opens the video straight away (no extra card step).
   const toggleTip = () => {
-    if (tip) { setOpen(true); return; } // card already showing: a second press plays the video
     clearTimeout(autoHide.current);
-    setTip(true);
-    sfx('playChatHello');
+    visit.set('vtip-shown', true);
+    setTip(false);
+    setOpen(true);
   };
   const hideTip = useCallback(() => {
     setTip(false);
     visit.set(`vtip-${path}`, true);
+    visit.set('vtip-shown', true);
   }, [path]);
   useEffect(() => {
     if (!open) return;
@@ -323,7 +328,7 @@ export default function VideoFab() {
     <>
       {/* Round YouTube button, bottom-left, with "Watch our video" circling it, and a notification card beside it
           that pops up a few seconds into each page (styles/dock.css). */}
-      <button type="button" className={`ytfab ytfab-${v.template} ${seen ? 'is-seen' : ''} ${tip ? 'is-on' : ''} ${atTop && !tip ? 'is-tucked' : ''}`} onClick={toggleTip} aria-expanded={tip} aria-controls="ytcard" aria-label="Watch this page's video" data-mode-skip="">
+      <button type="button" className={`ytfab ytfab-${v.template} ${seen ? 'is-seen' : ''} ${tip ? 'is-on' : ''} ${atTop && !tip ? 'is-tucked' : ''}`} onClick={toggleTip} aria-label="Watch this page's video" data-mode-skip="">
         <span className="ytb" aria-hidden="true">
           <span className="ytb-wave" /><span className="ytb-wave w2" />
           <span className="ytb-plate">
@@ -332,7 +337,6 @@ export default function VideoFab() {
           </span>
         </span>
         <span className="ytb-label" aria-hidden="true"><small>Watch</small>{v.fab}</span>
-        {!seen && !isOff('video-card') && <span className="ytfab-badge" aria-hidden="true">1</span>}
       </button>
       <div id="ytcard" className={`ytcard ${tip && !open ? 'is-in' : ''}`} role="status" aria-hidden={!tip || open} data-mode-skip="">
         <div className="ytcard-head">
