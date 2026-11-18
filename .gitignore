@@ -3,6 +3,8 @@ environment
 ollama-agent
 defaultData
 public
+# The marketing site's static files (favicons, OG image, flags, robots extras) must ship with the build.
+!Project/frontend-1/public
 .env
 *.md
 !README.md

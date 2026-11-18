@@ -67,7 +67,22 @@ fs.writeFileSync(
     '',
   ].join('\n')
 );
-fs.writeFileSync(path.join(DIST, 'robots.txt'), ['User-agent: *', 'Allow: /', '', `Sitemap: ${SITE_URL}/sitemap.xml`, ''].join('\n'));
+fs.writeFileSync(
+  path.join(DIST, 'robots.txt'),
+  [
+    '# Public site: open to search engines and AI assistants (see /llms.txt).',
+    'User-agent: *',
+    'Allow: /',
+    // Signed-in areas of the member/admin app and the API: nothing to index there.
+    'Disallow: /admin/',
+    'Disallow: /member/',
+    'Disallow: /api/',
+    'Disallow: /survey/',
+    '',
+    `Sitemap: ${SITE_URL}/sitemap.xml`,
+    '',
+  ].join('\n')
+);
 
 // 3. llms.txt + llms-full.txt (guides for AI assistants, see scripts/llms.mjs)
 const llmsPosts = writeLlms({ DIST, SITE_URL, server });

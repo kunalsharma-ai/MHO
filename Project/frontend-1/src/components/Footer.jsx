@@ -67,6 +67,7 @@ function SocialOrb({ s, i }) {
       <a href={s.url} target="_blank" rel="noopener noreferrer" className="sorb-ic" aria-label={`MyHealthOpinions on ${s.label}`}>
         <Icon name={s.id} size={22} />
       </a>
+      {QR[s.id] && (<>
       <button type="button" className="sorb-qr" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label={`${open ? 'Hide' : 'Show'} ${s.label} QR code`}>
         <Icon name="dashboard" size={12} />
       </button>
@@ -74,6 +75,7 @@ function SocialOrb({ s, i }) {
         <img src={QR[s.id]} alt={`QR code for MyHealthOpinions on ${s.label}`} width="104" height="104" loading="lazy" />
         <small>{s.handle}</small>
       </span>
+      </>)}
     </li>
   );
 }

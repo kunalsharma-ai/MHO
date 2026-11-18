@@ -10,7 +10,7 @@ export const PAGES = {
     name: 'Home',
     title: 'Paid Surveys for Money | Get Paid for Your Health Opinion',
     description:
-      'Join MyHealthOpinions free and take paid surveys for money. Doctors, nurses, patients, caregivers and consumers earn rewards via PayPal, UPI and gift cards.',
+      'Join free to take paid surveys for money. Doctors, nurses, patients and caregivers make money from health surveys via PayPal, UPI and digital gift cards.',
     primary: 'paid surveys',
     secondary: ['surveys for money', 'online surveys for money', 'get paid for surveys', 'paid survey sites', 'surveys that pay money', 'earn money online without investment', 'paid health surveys', 'paid surveys for doctors'],
     changefreq: 'weekly',
@@ -63,7 +63,7 @@ export const PAGES = {
     name: 'Patients',
     title: 'Paid Surveys for Patients | Get Paid for Your Health Story',
     description:
-      'Paid surveys for patients living with 195+ conditions across 20 therapy areas. No tests or clinic visits: share your experience from your phone and get rewarded.',
+      'Paid surveys for patients living with 195+ conditions across 20 therapy areas. No tests or clinic visits: share your experience by phone and get rewarded.',
     primary: 'paid surveys for patients',
     secondary: ['patient surveys', 'paid health surveys', 'paid medical research studies', 'chronic illness surveys', 'patient experience research'],
     changefreq: 'monthly',
@@ -114,7 +114,7 @@ export const PAGES = {
     name: 'Reviews',
     title: 'MyHealthOpinions Reviews | Members Rate Their Experience',
     description:
-      'Read reviews from doctors, nurses, allied health professionals, caregivers and patients — and rate your own MyHealthOpinions experience in under a minute.',
+      'Read MyHealthOpinions reviews from doctors, nurses, allied health professionals, caregivers and patients, then rate your own experience in under a minute.',
     primary: 'MyHealthOpinions reviews',
     secondary: ['paid surveys legit reviews', 'survey site reviews', 'healthcare survey reviews'],
     changefreq: 'weekly',
@@ -216,7 +216,7 @@ export const PAGES = {
     name: 'Privacy Policy',
     title: 'Privacy Policy | How MyHealthOpinions Protects Your Data',
     description:
-      'Read how MyHealthOpinions collects, uses, stores and protects personal information, the choices you have, and how we never sell your personal data.',
+      'Our privacy policy explains how MyHealthOpinions collects, uses, stores and protects personal information, your choices, and why we never sell your data.',
     primary: 'privacy policy',
     secondary: ['data protection', 'personal information'],
     changefreq: 'yearly',
@@ -224,9 +224,9 @@ export const PAGES = {
   },
   '/gdpr': {
     name: 'GDPR Compliance',
-    title: 'GDPR Compliance | Consent-First Market Research at MHO',
+    title: 'GDPR Compliant Market Research & Surveys | MyHealthOpinions',
     description:
-      'How MyHealthOpinions approaches GDPR: consent before contact, purpose limitation, retention windows, your right to erasure and transparent data sharing.',
+      'GDPR compliant market research at MyHealthOpinions: consent before contact, purpose limitation, retention windows, your right to erasure and clear sharing.',
     primary: 'GDPR compliant market research',
     secondary: ['GDPR survey', 'right to erasure', 'research consent'],
     changefreq: 'yearly',
@@ -236,7 +236,7 @@ export const PAGES = {
     name: 'Cookie Policy',
     title: 'Cookie Policy | Cookies We Use and Your Choices | MHO',
     description:
-      'See every cookie MyHealthOpinions uses — essential, performance and analytics — what each one does, how long it lasts and how to change your preferences.',
+      'Our cookie policy lists every cookie MyHealthOpinions uses (essential, performance and analytics), what each does, how long it lasts and how to opt out.',
     primary: 'cookie policy',
     secondary: ['cookie preferences', 'analytics cookies'],
     changefreq: 'yearly',
@@ -266,7 +266,7 @@ export const PAGES = {
     name: 'Sitemap',
     title: 'HTML Sitemap | Every MyHealthOpinions Page in One Place',
     description:
-      'Browse every MyHealthOpinions page: earning guides, how paid surveys work, rewards, trust and safety, all blog articles, support and legal information.',
+      'Our HTML sitemap lists every MyHealthOpinions page: earning guides, how paid surveys work, rewards, trust and safety, blog articles, support and legal.',
     primary: 'sitemap',
     secondary: [],
     changefreq: 'monthly',

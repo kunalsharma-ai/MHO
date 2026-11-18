@@ -1,8 +1,20 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+const jsxRuntime = (file) => fileURLToPath(new URL(`./src/jsx/${file}`, import.meta.url));
+
 export default defineConfig({
-  plugins: [react()],
+  // "mho-jsx" = React's JSX runtime plus style-prop → CSS class (src/jsx/atomic.js), so pages ship
+  // without inline style attributes.
+  plugins: [react({ jsxImportSource: 'mho-jsx' })],
+
+  resolve: {
+    alias: [
+      { find: /^mho-jsx\/jsx-runtime$/, replacement: jsxRuntime('jsx-runtime.js') },
+      { find: /^mho-jsx\/jsx-dev-runtime$/, replacement: jsxRuntime('jsx-dev-runtime.js') },
+    ],
+  },
 
   server: {
     host: '0.0.0.0',
@@ -21,4 +33,3 @@ export default defineConfig({
     noExternal: ['react-router-dom', 'react-router'],
   },
 });
-

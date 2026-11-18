@@ -70,7 +70,7 @@ export default function HeroOrbit() {
               ))}
             </div>
             <div className="coin">
-              <div className="coin-face coin-front"><img src={BRAND.monogram} alt="" width="150" height="150" /></div>
+              <div className="coin-face coin-front"><img src={BRAND.monogram} alt="MyHealthOpinions coin" width="150" height="150" /></div>
               <div className="coin-face coin-back"><Icon name="gift" size={64} /></div>
               <div className="coin-edge" />
             </div>

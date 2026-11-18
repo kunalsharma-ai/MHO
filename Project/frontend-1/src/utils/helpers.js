@@ -333,8 +333,32 @@ export const resetLimit = {
 export const endpoints = API;
 
 /* ---------------- analytics (GA4, consent-gated) ---------------- */
+let fbLoaded = false;
+function loadFacebookPixel() {
+  if (fbLoaded || !ANALYTICS.fbPixel || typeof document === 'undefined') return;
+  fbLoaded = true;
+  // Meta's standard base code, written out (no inline <script> in the page).
+  const fbq = function fbq() {
+    if (fbq.callMethod) fbq.callMethod.apply(fbq, arguments);
+    else fbq.queue.push(arguments);
+  };
+  if (!window._fbq) window._fbq = fbq;
+  fbq.push = fbq;
+  fbq.loaded = true;
+  fbq.version = '2.0';
+  fbq.queue = [];
+  window.fbq = window.fbq || fbq;
+  window.fbq('init', ANALYTICS.fbPixel);
+  window.fbq('track', 'PageView');
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://connect.facebook.net/en_US/fbevents.js';
+  document.head.appendChild(s);
+}
+
 let gaLoaded = false;
 export function loadAnalytics() {
+  loadFacebookPixel();
   if (gaLoaded || !ANALYTICS.ga4 || typeof document === 'undefined') return;
   gaLoaded = true;
   window.dataLayer = window.dataLayer || [];

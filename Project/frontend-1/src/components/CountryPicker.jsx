@@ -1,6 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Icon from './Icon.jsx';
 
+let regionNames;
+function regionName(iso) {
+  try {
+    regionNames = regionNames || new Intl.DisplayNames(['en'], { type: 'region' });
+    return regionNames.of(String(iso).toUpperCase()) || String(iso).toUpperCase();
+  } catch {
+    return String(iso).toUpperCase();
+  }
+}
+
 // Flag image by ISO code (flagcdn.com — free CDN, 20–40px PNGs). Falls back to the ISO letters if blocked.
 export function Flag({ iso, size = 22 }) {
   const [err, setErr] = useState(false);
@@ -12,6 +22,7 @@ export function Flag({ iso, size = 22 }) {
   }, []);
   if (!iso || err) return <span className="flag flag-fb" style={{ width: size * 1.4, height: size }}>{iso}</span>;
   const code = iso.toLowerCase();
+  const label = regionName(iso);
   return (
     <img
       ref={ref}
@@ -20,7 +31,7 @@ export function Flag({ iso, size = 22 }) {
       srcSet={`https://flagcdn.com/w80/${code}.png 2x`}
       width={Math.round(size * 1.4)}
       height={size}
-      alt=""
+      alt={`${label} flag`}
       loading="lazy"
       decoding="async"
       onError={() => setErr(true)}
