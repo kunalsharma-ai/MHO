@@ -6,6 +6,8 @@ import { Logo } from './Brand.jsx';
 import Icon from './Icon.jsx';
 import { useMounted } from './ui.jsx';
 import { LanguageButton } from './Language.jsx';
+import { useI18n } from '../i18n/I18nProvider.jsx';
+import ThemeSwitch from './ThemeSwitch.jsx';
 import { useSession, logout } from '../utils/session.js';
 
 const useIsoLayout = typeof window === 'undefined' ? useEffect : useLayoutEffect;
@@ -52,10 +54,60 @@ export default function Header() {
     };
     place();
     window.addEventListener('resize', place);
-    return () => window.removeEventListener('resize', place);
+    // The links change size when the header tightens to fit (and when fonts or translations load), so the
+    // pill behind the active link (Home etc.) is re-placed whenever the menu itself changes size.
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => requestAnimationFrame(place)) : null;
+    ro?.observe(nav);
+    nav.querySelectorAll('a.nav-link').forEach((a) => ro?.observe(a));
+    document.fonts?.ready.then(place).catch(() => {});
+    return () => { window.removeEventListener('resize', place); ro?.disconnect(); };
   }, [activeIdx, mounted]);
 
+  // Never let the menu bar overlap the buttons: when the links don't fit next to the logo and the buttons
+  // (narrow windows, larger system fonts, longer translations), switch to the menu button.
+  useIsoLayout(() => {
+    const nav = navRef.current;
+    const inner = nav?.parentElement;
+    const cta = inner?.querySelector('.header-cta');
+    if (!nav || !cta) return undefined;
+    // Two steps: first tighten the links (smaller padding, no "Trending" badge), then fall back to the menu button.
+    const over = () => {
+      if (getComputedStyle(nav).display === 'none') return false;
+      const last = nav.lastElementChild;
+      const navEnd = nav.getBoundingClientRect().right;
+      return nav.scrollWidth - 1 > nav.clientWidth && last && last.getBoundingClientRect().right > navEnd + 1
+        || navEnd > cta.getBoundingClientRect().left - 8
+        || cta.getBoundingClientRect().right > inner.getBoundingClientRect().right + 1;
+    };
+    const fit = () => {
+      inner.removeAttribute('data-tight');
+      inner.removeAttribute('data-snug');
+      if (!over()) return;
+      inner.setAttribute('data-snug', '');
+      if (over()) inner.setAttribute('data-tight', '');
+    };
+    fit();
+    const ro = new ResizeObserver(() => requestAnimationFrame(fit));
+    ro.observe(inner);
+    const mo = new MutationObserver(() => requestAnimationFrame(fit));
+    mo.observe(nav, { subtree: true, characterData: true, childList: true });
+    document.fonts?.ready.then(fit).catch(() => {});
+    return () => { ro.disconnect(); mo.disconnect(); };
+  }, [mounted]);
+
   useEffect(() => setOpen(false), [path]);
+  // Dropdowns open on hover/focus. After a submenu link is clicked the pointer is still over the menu and the
+  // link keeps focus, so the panel would stay open: hide it until the pointer leaves the menu.
+  const [ddShut, setDdShut] = useState(false);
+  const shutDropdown = () => {
+    setDdShut(true);
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  };
+  const firstPath = useRef(true);
+  useEffect(() => {
+    if (firstPath.current) { firstPath.current = false; return; }
+    shutDropdown();
+  }, [path]);
   useEffect(() => {
     if (!pmenu) return;
     const away = (e) => { if (pmRef.current && !pmRef.current.contains(e.target)) setPmenu(false); };
@@ -86,15 +138,16 @@ export default function Header() {
             <span className="nav-pill" style={{ transform: `translateX(${pill.x}px)`, width: pill.w, opacity: pill.show ? 1 : 0 }} aria-hidden="true" />
             {NAV.map((n) =>
               n.children ? (
-                <div key={n.to} className="nav-dd">
+                <div key={n.to} className={`nav-dd ${ddShut ? 'is-shut' : ''}`} onMouseLeave={() => setDdShut(false)} onFocus={(e) => e.target.matches(':focus-visible') && setDdShut(false)}>
                   <Link to={n.to} className="nav-link" aria-haspopup="true">
                     {n.label}<Icon name="plus" size={12} className="dd-caret" />
                   </Link>
                   <div className="dd-panel">
                     {n.children.map((c) => (
-                      <Link key={c.to} to={c.to} className={`dd-item g-${c.grade}`}>
+                      <Link key={c.to} to={c.to} className={`dd-item g-${c.grade}`} onClick={shutDropdown}>
                         <span className="ddi-ic"><Icon name={c.icon} size={18} /></span>
                         <span><b>{c.label}</b><small>{c.sub}</small></span>
+                        <Icon name="arrow" size={16} className="ddi-go" />
                       </Link>
                     ))}
                   </div>
@@ -108,6 +161,8 @@ export default function Header() {
             )}
           </nav>
           <div className="header-cta">
+            <ThemeSwitch compact />
+            <SoundSwitch />
             {user ? (
               <div className="hd-user" ref={pmRef}>
                 <button type="button" className="hd-user-btn" aria-haspopup="menu" aria-expanded={pmenu} onClick={() => setPmenu((o) => !o)}>
@@ -163,12 +218,15 @@ export default function Header() {
                         </span>
                         <div className="mm-sub">
                           {n.children.map((c) => (
-                            <Link key={c.to} to={c.to} className={`mm-sublink g-${c.grade}`}><Icon name={c.icon} size={16} />{c.label}</Link>
+                            <Link key={c.to} to={c.to} className={`mm-sublink g-${c.grade}`} onClick={() => setOpen(false)}>
+                              <span className="mm-sub-ic"><Icon name={c.icon} size={16} /></span>
+                              <span className="mm-sub-tx"><b>{c.label}</b>{c.sub && <small>{c.sub}</small>}</span>
+                            </Link>
                           ))}
                         </div>
                       </>
                     ) : (
-                      <Link to={n.to} className="mm-link" style={{ '--i': i }}>
+                      <Link to={n.to} className="mm-link" style={{ '--i': i }} onClick={() => setOpen(false)}>
                         <span className="mm-num">{String(i + 1).padStart(2, '0')}</span>
                         <span className="mm-label">{n.label}</span>
                         {n.badge && <span className="nav-badge">{n.badge}</span>}
@@ -196,5 +254,23 @@ export default function Header() {
           document.body
         )}
     </>
+  );
+}
+
+/** One switch for every sound on the site (vending machine, envelopes, theme switch, language picker, chat).
+ *  Animated equaliser bars while sound is on; a short chirp confirms switching it back on. */
+function SoundSwitch() {
+  const { sound, toggleSound } = useI18n();
+  const flip = () => {
+    const turningOn = !sound;
+    toggleSound();
+    if (turningOn) import('../i18n/sounds.js').then((m) => m.playSoundOn?.()).catch(() => {});
+  };
+  return (
+    <button type="button" className={`hd-sound ${sound ? 'is-on' : 'is-off'}`} onClick={flip} aria-pressed={sound} aria-label={sound ? 'Sound on. Turn all website sounds off' : 'Sound off. Turn website sounds on'} title={sound ? 'Sound on' : 'Sound off'}>
+      <span className="hs-ic"><Icon name={sound ? 'volume' : 'mute'} size={18} /></span>
+      <span className="hs-eq" aria-hidden="true"><i /><i /><i /><i /></span>
+      <span className="hs-tx">{sound ? 'Sound on' : 'Sound off'}</span>
+    </button>
   );
 }

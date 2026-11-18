@@ -758,6 +758,8 @@ export default function Join({ mode = 'signup' }) {
       <div className="container join-grid">
         {/* Left: animated role stage + journey */}
         <LiveZone className="join-stage">
+          <span className="js-motif" aria-hidden="true"><i /><i /><i /><i /><i /></span>
+          {f.role && <span className="js-wipe" key={f.role} aria-hidden="true" />}
           <Link to="/" className="js-logo" aria-label="MyHealthOpinions home"><Logo size={40} onDark /></Link>
           {complete ? (
             <>

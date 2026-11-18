@@ -43,3 +43,15 @@ export const TESTIMONIALS = [
   T('Keiko Sato', 'Japan', 'jp', 'Patient Experience Contributor', 4, 'I am interested in opportunities to provide feedback on healthcare communication and service accessibility. It is important that research participation is explained clearly and handled respectfully.', 'patients'),
   T('Mariam Al-Mansoori', 'United Arab Emirates', 'ae', 'Patient Community Member', 5, 'Healthcare research benefits when patient voices are included alongside those of medical professionals. A panel that values different viewpoints has the potential to support more patient-centred research.', 'patients'),
 ];
+
+// Score summary of the published reviews above (used by the About menu and the Ratings & Reviews page).
+// Computed from the data, never typed in by hand.
+const n = TESTIMONIALS.length;
+const sum = TESTIMONIALS.reduce((a, t) => a + t.rating, 0);
+export const RATING = {
+  count: n,
+  average: n ? Math.round((sum / n) * 10) / 10 : 0,
+  exact: n ? sum / n : 0,
+  dist: [5, 4, 3, 2, 1].map((s) => ({ stars: s, n: TESTIMONIALS.filter((t) => t.rating === s).length })),
+  countries: [...new Set(TESTIMONIALS.map((t) => t.country))].length,
+};

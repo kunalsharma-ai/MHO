@@ -1,0 +1,8 @@
+/* Smoothness pass (loaded last).
+   Live background blur is recomputed whenever anything behind it moves, so on scrolling walls and carousels it
+   was one of the biggest costs. Cards keep their glassy tint, just without the live blur. The modal backdrop
+   blurs only while a modal is actually open. */
+.rx-wc, .rx-slide, .vb-brand, .footer-cta, .ab-sat, .sc-chip, .rx-eyebrow, .rx-dock, .rx-chat { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+.rx-wc { background: rgba(255, 255, 255, .1); }
+.modal-backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.modal.is-open .modal-backdrop { -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }

@@ -9,10 +9,10 @@ import { useMemo, useState } from 'react';
 import PageHero from '../components/PageHero.jsx';
 import Icon from '../components/Icon.jsx';
 import Persona from '../components/Persona.jsx';
-import { SectionHead, Button, LiveZone, Accordion } from '../components/ui.jsx';
+import { SectionHead, Button, LiveZone } from '../components/ui.jsx';
+import { StepRail, RewardWallet, FaqStage } from '../components/R8.jsx';
 import { Link, useRouter } from '../router.jsx';
 import { AUDIENCE, AUDIENCE_FAQ } from '../data/audiences.js';
-import { REWARD_ROLES } from '../data/community.js';
 import { ROLES as HCP_ROLES, jobCount, allJobs } from '../data/hcpProfile.js';
 import { THERAPY_AREAS, CAREGIVER_TYPES, PATIENT_TYPES, CONDITION_COUNT } from '../data/conditions.js';
 
@@ -204,20 +204,6 @@ function ConditionShelves({ compact = false }) {
 }
 
 /* ---------------- shared sections ---------------- */
-function Process({ steps }) {
-  return (
-    <ol className="zz">
-      <svg className="zz-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M10 6 C 90 14, 90 26, 50 34 S 10 54, 50 62 S 90 82, 50 94" pathLength="100" /></svg>
-      {steps.map((s, i) => (
-        <li key={s.t} style={{ '--i': i }}>
-          <span className="zz-node"><Icon name={s.icon} size={20} /><em>{i + 1}</em></span>
-          <span className="zz-card"><b>{s.t}</b><small>{s.d}</small></span>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
 function Journey({ steps, role }) {
   return (
     <LiveZone className={`jr4 jr-${role}`}>
@@ -230,22 +216,6 @@ function Journey({ steps, role }) {
         </article>
       ))}
     </LiveZone>
-  );
-}
-
-function RewardFlip({ role }) {
-  const r = REWARD_ROLES.find((x) => x.id === role);
-  return (
-    <ul className="flipgrid">
-      {r.items.map((it, i) => (
-        <li key={it.t} className="flip" tabIndex={0} style={{ '--i': i }}>
-          <span className="flip-in">
-            <span className="flip-f"><span className="ff-ic"><Icon name={it.icon} size={24} /></span><b>{it.t}</b><small>Tap to see more</small></span>
-            <span className="flip-b"><Icon name={it.icon} size={18} /><span>{it.d}</span></span>
-          </span>
-        </li>
-      ))}
-    </ul>
   );
 }
 
@@ -311,7 +281,7 @@ export default function Audience() {
             <p className="lead">{role === 'hcp' ? 'The professional profile follows our recruitment questionnaire, so you only see studies that match your specialty, job level and practice.' : role === 'caregiver' ? 'Tell us about your caring role once. Every question about the person you care for is general, never personal.' : 'Share as much or as little as you like. Health details are optional and never leave our hands.'}</p>
             <Button to={`/join#${role}`}>{cta}</Button>
           </div>
-          <Process steps={A.process} />
+          <StepRail steps={A.process} role={role} />
         </div>
       </section>
 
@@ -325,7 +295,7 @@ export default function Audience() {
       <section className="section aud-rewards">
         <div className="container">
           <SectionHead eyebrow="Rewards" title={role === 'hcp' ? 'Honoraria and rewards for professionals' : role === 'caregiver' ? 'Rewards that help at home' : 'Rewards for sharing your story'} lead="Hover or tap a card to turn it over. Exact options for each study are listed in its invitation, and UPI is available for members in India." color="#ff6a2c" />
-          <RewardFlip role={role} />
+          <RewardWallet role={role} />
         </div>
       </section>
 
@@ -342,9 +312,8 @@ export default function Audience() {
       </section>
 
       <section className="section aud-faq">
-        <div className="container narrow">
-          <SectionHead eyebrow="Questions" title={`${A.name}: common questions`} color="#7c3aed" />
-          <Accordion items={AUDIENCE_FAQ[role]} idPrefix={`faq-${role}`} defaultOpen={0} />
+        <div className="container">
+          <FaqStage items={AUDIENCE_FAQ[role]} idPrefix={`faq-${role}`} theme={role} eyebrow="Questions" title={`${A.name}: common questions`} />
         </div>
       </section>
 

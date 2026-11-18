@@ -3,7 +3,7 @@
 //   Professional → a vital-signs monitor whose heartbeat pops coins onto a growing honorarium tower
 //   Caregiver    → paper-plane vouchers fly into a "care fund" jar that fills with coins and hearts
 //   Patient      → a survey ring hits 100%, a 3D gift box bursts open with a gift card and a coin fountain
-// The scene tilts gently towards the pointer. Tabs auto-advance until the visitor picks one.
+// The scene tilts gently towards the pointer. Tabs auto-advance every 5.5 s until the visitor picks one.
 // The prerendered HTML contains the first tab, so search engines always see a complete hero.
 import { useEffect, useRef, useState } from 'react';
 import Icon from './Icon.jsx';
@@ -17,7 +17,7 @@ export const ROLES = [
   {
     id: 'hcp',
     tab: 'Healthcare Professional',
-    tabSub: 'Doctors, nurses & allied health',
+    tabSub: 'Doctors & nurses',
     icon: 'stethoscope',
     persona: ['doctor', 2, 0, 0],
     motto: 'Your expertise, rewarded',
@@ -41,7 +41,7 @@ export const ROLES = [
   {
     id: 'patient',
     tab: 'Patient',
-    tabSub: 'Share your experience',
+    tabSub: 'Share your story',
     icon: 'heart',
     persona: ['patient', 3, 2, 0],
     motto: 'Your story can change someone’s treatment',
@@ -96,7 +96,7 @@ function ProScene() {
         <span><b>+$45 credited</b><small>Wire transfer · just now</small></span>
       </div>
       <div className="vm-lanyard">
-        <span className="vl-string" />
+        <svg className="vl-string" viewBox="0 0 60 44" aria-hidden="true"><path d="M8 0 Q12 30 30 40 Q48 30 52 0" /><rect x="24" y="34" width="12" height="10" rx="2" /></svg>
         <span className="vl-card">
           <Persona kind="doctor" skin={2} hair={0} size={40} />
           <span><b>Verified clinician</b><small><Icon name="shieldCheck" size={11} /> Licence checked</small></span>
@@ -163,11 +163,13 @@ function PatientScene() {
       <div className="gp-phone">
         <div className="gp-screen">
           <span className="gp-q">Living with type 2 diabetes</span>
-          <svg viewBox="0 0 100 100" className="gp-ring">
-            <circle cx="50" cy="50" r="40" className="gp-track" />
-            <circle cx="50" cy="50" r="40" className="gp-prog" pathLength="100" />
-          </svg>
-          <span className="gp-pct"><Count to={100} /><small>%</small></span>
+          <span className="gp-dial">
+            <svg viewBox="0 0 100 100" className="gp-ring">
+              <circle cx="50" cy="50" r="40" className="gp-track" />
+              <circle cx="50" cy="50" r="40" className="gp-prog" pathLength="100" />
+            </svg>
+            <span className="gp-pct"><Count to={100} /><small>%</small></span>
+          </span>
           <span className="gp-done"><Icon name="check" size={13} stroke={3} /> Survey complete</span>
         </div>
       </div>
@@ -221,21 +223,24 @@ function Stage({ role }) {
   );
 }
 
+const ROLE_MS = 5500; // keep in step with the .rht-timer animation in v3.css
+
 export default function RoleHero() {
   // English keeps the original colour grading; other languages show the same hero over their language grade.
   const { lang } = useI18n();
   const graded = lang !== 'en';
   const [idx, setIdx] = useState(0);
-  const touched = useRef(false);
   const role = ROLES[idx];
 
+  // The three audiences rotate on their own, all the time (Kunal asked for this). Picking a tab shows it and
+  // restarts the countdown, so the visitor gets a full turn before it moves on; a hidden tab pauses it.
+  const [cycle, setCycle] = useState(0);
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const t = setInterval(() => { if (!touched.current && !document.hidden) setIdx((i) => (i + 1) % ROLES.length); }, 9000);
-    return () => clearInterval(t);
-  }, []);
+    const t = setTimeout(() => { if (!document.hidden) setIdx((i) => (i + 1) % ROLES.length); else setCycle((c) => c + 1); }, ROLE_MS);
+    return () => clearTimeout(t);
+  }, [idx, cycle]);
 
-  const pick = (i) => { touched.current = true; setIdx(i); };
+  const pick = (i) => { setIdx(i); setCycle((c) => c + 1); };
 
   return (
     <section className={`role-hero rgrade-${role.id} ${graded ? 'aurora-hero' : ''}`}>
@@ -255,7 +260,7 @@ export default function RoleHero() {
               <button key={r.id} role="tab" id={`rh-tab-${r.id}`} aria-selected={i === idx} aria-controls="rh-panel" className={`rh-tab t-${r.id} ${i === idx ? 'on' : ''}`} onClick={() => pick(i)}>
                 <span className="rht-ic"><Icon name={r.icon} size={18} /></span>
                 <span className="rht-txt"><b>{r.tab}</b><small>{r.tabSub}</small></span>
-                {i === idx && !touched.current && <span className="rht-timer" key={idx} aria-hidden="true" />}
+                {i === idx && <span className="rht-timer" key={`${idx}-${cycle}`} aria-hidden="true" />}
               </button>
             ))}
           </div>

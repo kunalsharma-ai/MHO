@@ -11,8 +11,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from '../router.jsx';
 import { SITE, API, whatsappLink } from '../config/site.js';
 import Icon from './Icon.jsx';
-import { pop, store, session, validateEmail, validateName, postJSON, track } from '../utils/helpers.js';
+import { sfx, store, session, validateEmail, validateName, postJSON, track } from '../utils/helpers.js';
+import { visit } from '../utils/dismissed.js';
 import { ALL_COUNTRIES } from '../data/countries.js';
+import { isSoundEnabled, setSoundEnabled, onSoundChange } from '../i18n/soundPrefs.js';
 
 const QUICK = ['How much does each survey pay?', 'Is it free to join?', 'How do I get paid?', 'Is UPI available?', 'Which countries?', 'Why was I screened out?', 'Is my data safe?', 'Talk to a person'];
 const TILES = [
@@ -78,7 +80,7 @@ function Rich({ text }) {
   return blocks.map((b, i) => (b.ul ? <ul key={i}>{b.ul.map((x) => <li key={x}>{x}</li>)}</ul> : <p key={i}>{b.p}</p>));
 }
 
-export default function LiveChat() {
+export default function LiveChat({ quiet = false }) {
   const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState([]);
   const [typing, setTyping] = useState(false);
@@ -92,12 +94,16 @@ export default function LiveChat() {
   const input = useRef(null);
 
   useEffect(() => {
-    setSound(store.get('mho-sound', true) !== false);
+    setSound(isSoundEnabled());
+    return onSoundChange(setSound);
+  }, []);
+
+  useEffect(() => {
     // Friendly greeting bubble + soft pop on the visitor's first interaction (browsers block audio before it).
-    if (session.get('mho-greeted')) return;
+    if (visit.get('mho-greeted')) return;
     const greet = () => {
-      session.set('mho-greeted', true);
-      pop(0.12);
+      visit.set('mho-greeted', true);
+      sfx('playChatHello');
       setHello(true);
       setTimeout(() => setHello(false), 7000);
       cleanup();
@@ -125,7 +131,7 @@ export default function LiveChat() {
     setTimeout(() => {
       setTyping(false);
       setMsgs((m) => [...m, { from: 'bot', ...item }]);
-      if (sound) pop(0.08);
+      if (sound) sfx('playChatMessage');
       resolve();
     }, delay);
   });
@@ -133,13 +139,20 @@ export default function LiveChat() {
   const openChat = () => {
     setOpen(true);
     setHello(false);
-    pop();
+    sfx('playChatOpen');
     loadEngine();
     if (!msgs.length) {
       botSay({ a: "Hi there! 👋 I'm the MyHealthOpinions help assistant — online 24/7. Ask me anything about joining, survey rates, rewards, payouts or privacy." }, 500);
     }
     setTimeout(() => input.current?.focus(), 350);
   };
+  const openRef = useRef(openChat);
+  openRef.current = openChat;
+  useEffect(() => {
+    const onAsk = () => openRef.current();
+    window.addEventListener('mho-open-chat', onAsk);
+    return () => window.removeEventListener('mho-open-chat', onAsk);
+  }, []);
 
   /* ---------- details collection (for questions the assistant can't answer) ---------- */
   const startLead = async (q = '', intro) => {
@@ -222,6 +235,7 @@ export default function LiveChat() {
     const q = (raw ?? text).trim();
     if (!q || typing) return;
     setMsgs((m) => [...m, { from: 'me', a: q }]);
+    sfx('playChatSend');
     setText('');
     if (lead && lead.step !== 'confirm') { handleLead(q); return; }
     if (lead && lead.step === 'confirm') setLead(null);
@@ -237,22 +251,30 @@ export default function LiveChat() {
     await botSay({ ...r, leadQ: r.lead ? q : '' }, delay);
   };
 
-  const toggleSound = () => {
-    const v = !sound;
-    setSound(v);
-    store.set('mho-sound', v);
-  };
+  const toggleSound = () => setSoundEnabled(!isSoundEnabled());
 
   const step = lead?.step;
   const quick = chips || QUICK;
 
   return (
-    <div className={`help-stack ${open ? 'chat-open' : ''}`}>
-      <a className="fab-wa" href={whatsappLink()} target="_blank" rel="noopener noreferrer" aria-label={`Chat on WhatsApp ${SITE.whatsappDisplay}`}>
-        <span className="fab-wa-ping" aria-hidden="true" />
-        <Icon name="whatsapp" size={26} />
+    <div className={`help-stack dock ${open ? 'chat-open' : ''}`} data-mode-skip="">
+      {/* The help stack (styles/dock.css): WhatsApp on top, rate-us in the middle, live chat at the bottom with
+          its "Live help 24/7" pill. The page's video has its own round button on the left (VideoFab.jsx). */}
+      <a className="fab-wa dock-sat ds-1" href={whatsappLink()} target="_blank" rel="noopener noreferrer" aria-label={`Chat on WhatsApp ${SITE.whatsappDisplay}`}>
+        <span className="dock-halo" aria-hidden="true" />
+        <span className="dock-core"><Icon name="whatsapp" size={26} /></span>
         <span className="fab-tip">WhatsApp us</span>
       </a>
+      {!quiet && (
+        <button type="button" className="dock-sat dock-rate ds-2" onClick={() => window.dispatchEvent(new Event('mho-open-rate'))} aria-haspopup="dialog" aria-label="Rate your experience">
+          <span className="dock-halo" aria-hidden="true" />
+          <span className="dock-core">
+            <span className="dock-rate-stars" aria-hidden="true">{[0, 1, 2, 3, 4].map((i) => <i key={i} style={{ '--i': i }} />)}</span>
+            <Icon name="star" size={24} fill="currentColor" stroke={0} />
+          </span>
+          <span className="fab-tip">Rate your experience</span>
+        </button>
+      )}
 
       {hello && !open && (
         <button className="hello-bubble" onClick={openChat}>
@@ -260,9 +282,11 @@ export default function LiveChat() {
         </button>
       )}
 
-      <button className="fab-chat" onClick={open ? () => setOpen(false) : openChat} onPointerEnter={loadEngine} aria-expanded={open} aria-controls="mho-chat" aria-label={open ? 'Close live help' : 'Open live help, available 24/7'}>
+      <button className="fab-chat" onClick={open ? () => { setOpen(false); sfx('playChatClose'); } : openChat} onPointerEnter={loadEngine} aria-expanded={open} aria-controls="mho-chat" aria-label={open ? 'Close live help' : 'Open live help, available 24/7'}>
+        <span className="dock-halo" aria-hidden="true" />
         <span className="fab-orbit" aria-hidden="true"><i /><i /><i /></span>
-        <span className="fab-face">{open ? <Icon name="x" size={24} /> : <ChatLogo size={32} />}</span>
+        <span className="fab-face">{open ? <Icon name="x" size={24} /> : <ChatLogo size={34} />}</span>
+        {!open && !msgs.length && <span className="dock-badge" aria-hidden="true">1</span>}
         <span className="fab-label"><i className="dot" />Live help 24/7</span>
       </button>
 

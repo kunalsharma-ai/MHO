@@ -111,14 +111,24 @@ export const PAGES = {
     priority: '0.9',
   },
   '/reviews': {
-    name: 'Reviews',
-    title: 'MyHealthOpinions Reviews | Members Rate Their Experience',
+    name: 'Ratings & Reviews',
+    title: 'MyHealthOpinions Reviews & Ratings | Real Member Scores',
     description:
-      'Read MyHealthOpinions reviews from doctors, nurses, allied health professionals, caregivers and patients, then rate your own experience in under a minute.',
+      'MyHealthOpinions reviews and ratings from doctors, nurses, allied health staff, caregivers and patients, with full score breakdowns. Add your own rating today.',
     primary: 'MyHealthOpinions reviews',
-    secondary: ['paid surveys legit reviews', 'survey site reviews', 'healthcare survey reviews'],
+    secondary: ['MyHealthOpinions ratings', 'paid surveys legit reviews', 'survey site reviews', 'healthcare survey reviews'],
     changefreq: 'weekly',
     priority: '0.7',
+  },
+  '/scan-and-connect': {
+    name: 'Scan & Connect',
+    title: 'Scan & Connect | MyHealthOpinions QR Codes & Social Links',
+    description:
+      'Scan MyHealthOpinions QR codes for every official channel, sister panels Turn2Opinion and MyFrequentRewards, Frequent Research and Sampledge, or tap to follow.',
+    primary: 'MyHealthOpinions QR codes',
+    secondary: ['MyHealthOpinions social media', 'Frequent Research panels', 'Turn2Opinion', 'MyFrequentRewards', 'Sampledge'],
+    changefreq: 'monthly',
+    priority: '0.6',
   },
   '/faq': {
     name: 'FAQ',
@@ -283,7 +293,15 @@ export const PAGES = {
 
 export const NAV = [
   { to: '/', label: 'Home' },
-  { to: '/about-us', label: 'About Us' },
+  {
+    to: '/about-us',
+    label: 'About Us',
+    children: [
+      { to: '/about-us', label: 'About MyHealthOpinions', icon: 'building', sub: 'Who we are, our certifications and reach', grade: 'about' },
+      { to: '/reviews', label: 'Our Ratings & Reviews', icon: 'star', sub: 'Real scores from professionals, caregivers and patients', grade: 'reviews', rating: true },
+      { to: '/scan-and-connect', label: 'Scan & Connect', icon: 'qr', sub: 'QR codes for our panels and social channels', grade: 'scan' },
+    ],
+  },
   {
     to: '/earn',
     label: 'Who It’s For',

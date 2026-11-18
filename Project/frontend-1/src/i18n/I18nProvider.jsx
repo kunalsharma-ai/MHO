@@ -2,7 +2,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { BY_CODE, DEFAULT_LANG, LANGUAGES, matchLocale, resolveLang, themeFor } from './languages.js';
 import { onStatus, setPageLanguage, retryWithGesture } from './engine.js';
-import { isSoundEnabled, setSoundEnabled } from './soundPrefs.js';
+import { isSoundEnabled, setSoundEnabled, onSoundChange } from './soundPrefs.js';
 
 const loadSounds = () => import('./sounds.js');
 /** Play a language's signature sound (the synthesiser chunk is fetched on first use). */
@@ -118,11 +118,9 @@ export function I18nProvider({ children }) {
     return unsub;
   }, [setLang]);
 
+  useEffect(() => onSoundChange(setSound), []);
   const toggleSound = useCallback(() => {
-    setSound((s) => {
-      setSoundEnabled(!s);
-      return !s;
-    });
+    setSoundEnabled(!isSoundEnabled());
   }, []);
 
   const value = useMemo(

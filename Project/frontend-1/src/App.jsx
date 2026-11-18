@@ -5,6 +5,7 @@ import { lazy, Suspense, useEffect, useReducer, useRef } from 'react';
 import { Router, useRouter } from './router.jsx';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
+import PageVideoBand from './components/PageVideoBand.jsx';
 import { useMounted } from './components/ui.jsx';
 import { loaded, loadPage, pageKeyFor } from './pages/registry.js';
 import { postCache } from './data/blogs/postStore.js';
@@ -22,6 +23,7 @@ const LiveChat = lazy(() => import('./components/LiveChat.jsx'));
 const RateExperience = lazy(() => import('./components/RateExperience.jsx'));
 const RewardToasts = lazy(() => import('./components/RewardToasts.jsx'));
 const CookieBanner = lazy(() => import('./components/CookieBanner.jsx'));
+const VideoFab = lazy(() => import('./components/VideoFab.jsx'));
 // Same event as openCookieSettings() in CookieBanner.jsx (kept here so the banner can load lazily).
 const openCookieSettings = () => window.dispatchEvent(new Event('mho-cookie-settings'));
 
@@ -79,13 +81,15 @@ function Shell() {
       <main id="main" tabIndex={-1} className={`page page-${key.toLowerCase()} ${Page ? '' : 'is-loading'}`} key={shownPath}>
         {Show ? <Show path={shownPath} /> : <div className="page-loader" aria-label="Loading" />}
       </main>
+      {Page && key !== 'NotFound' && <PageVideoBand />}
       <Footer onCookieSettings={openCookieSettings} />
       {mounted && (
         <Suspense fallback={null}>
-          <LiveChat />
+          <LiveChat quiet={quiet} />
           <RateExperience suppressed={quiet} />
           {!quiet && <RewardToasts />}
           <CookieBanner />
+          <VideoFab />
           <LanguagePicker />
           <TranslateStatus />
         </Suspense>

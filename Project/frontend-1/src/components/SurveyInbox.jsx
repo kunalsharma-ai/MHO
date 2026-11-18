@@ -130,7 +130,10 @@ export default function SurveyInbox() {
     return () => clearInterval(t);
   }, [inView, shown]);
 
-  const userOpen = (v) => { userAt.current = Date.now(); setArrive(null); setOpen(v); };
+  const userOpen = (v) => {
+    userAt.current = Date.now(); setArrive(null); setOpen(v);
+    if (v) import('../i18n/sounds.js').then((m) => m.playEnvelope(shown.findIndex((x) => x.title === v))).catch(() => {});
+  };
   const pickBand = (v) => { userAt.current = Date.now(); setBand(v); setOpen(null); };
 
   return (

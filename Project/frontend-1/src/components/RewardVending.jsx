@@ -37,7 +37,10 @@ function Machine({ role, index }) {
     return () => { clearTimeout(start); clearInterval(t); };
   }, [inView, n, index]);
 
-  const vend = (i) => { hold.current = Date.now() + 9000; setUser(true); setSel(i); setTick((k) => k + 1); };
+  const vend = (i) => {
+    hold.current = Date.now() + 9000; setUser(true); setSel(i); setTick((k) => k + 1);
+    import('../i18n/sounds.js').then((m) => m.playVend(i)).catch(() => {});
+  };
   const item = role.items[sel];
   const spare = n % 3 ? 3 - (n % 3) : 0;
 

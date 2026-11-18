@@ -4,7 +4,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Icon from './Icon.jsx';
 import { Field } from './FormKit.jsx';
-import { store, session, pop, track } from '../utils/helpers.js';
+import { store, sfx, track } from '../utils/helpers.js';
+import { isOff, turnOff, visit as session } from '../utils/dismissed.js';
 import { submitReview, isKid, roleOf, reviewedKey, countryOf } from '../utils/reviews.js';
 import { getSession } from '../utils/session.js';
 import { Link } from '../router.jsx';
@@ -132,7 +133,7 @@ export default function RateExperience({ suppressed = false }) {
       const last = session.get('mho-rate-last', 0);
       const elapsed = (Date.now() - start) / 1000;
       const busy = document.documentElement.classList.contains('menu-open') || document.querySelector('.chat-win.is-open') || document.querySelector('.modal.is-open');
-      if (store.get(rvKey) || shown >= 3 || busy || suppressedRef.current) return;
+      if (store.get(rvKey) || isOff('rate-prompt') || shown >= 3 || busy || suppressedRef.current) return;
       const ready = shown === 0 ? (elapsed > 45 && maxScroll > 0.4) || elapsed > 80 : Date.now() - last > 4 * 60 * 1000;
       if (ready) {
         session.set('mho-rate-shown', shown + 1);
@@ -158,11 +159,12 @@ export default function RateExperience({ suppressed = false }) {
     lastFocus.current = document.activeElement;
     setOpen(true);
     setState((s) => (s === 'done' ? 'done' : 'form'));
-    pop(0.1);
+    sfx('playRateOpen');
     track('review_prompt_open', { source: src });
   };
   const close = () => {
     setOpen(false);
+    turnOff('rate-prompt'); // closed: it won't pop up by itself again this visit (the Rate button still opens it)
     session.set('mho-rate-last', Date.now());
     setTimeout(() => lastFocus.current?.focus?.(), 50);
   };
@@ -200,7 +202,7 @@ export default function RateExperience({ suppressed = false }) {
     const e = validate(step);
     setErr(e);
     if (Object.keys(e).length) return;
-    pop(0.06);
+    sfx('playStep');
     setStep((x) => Math.min(x + 1, 2));
   };
 
@@ -226,7 +228,7 @@ export default function RateExperience({ suppressed = false }) {
     store.set(rvKey, true);
     track('review_submitted', { rating: f.rating, role: f.role });
     setState('done');
-    pop(0.16);
+    sfx('playRateThanks');
   };
 
   const r = step === 1 ? hoverR || f.rating : f.rating;
@@ -236,14 +238,7 @@ export default function RateExperience({ suppressed = false }) {
 
   return (
     <>
-      {!suppressed && (
-        <button className="rate-tab" onClick={() => openModal('tab')} aria-haspopup="dialog">
-          <span className="rate-tab-stars" aria-hidden="true">
-            {[0, 1, 2, 3, 4].map((i) => <Icon key={i} name="star" size={12} fill="currentColor" style={{ '--i': i }} />)}
-          </span>
-          <span className="rate-tab-text">Rate your experience</span>
-        </button>
-      )}
+      {/* The rate-us launcher now lives in the help dock (LiveChat.jsx). */}
 
       <div className={`modal rate-modal rj4 ${open ? 'is-open' : ''}`} aria-hidden={!open} inert={!open}>
         <div className="modal-backdrop" onClick={close} />
@@ -341,7 +336,7 @@ export default function RateExperience({ suppressed = false }) {
                             onMouseEnter={() => setHoverR(n)}
                             onFocus={() => setHoverR(n)}
                             onBlur={() => setHoverR(0)}
-                            onClick={() => { set('rating')(n); pop(0.05 + n * 0.01); }}
+                            onClick={() => { set('rating')(n); sfx('playStar', n); }}
                           >
                             <span className="rrb-ic"><Icon name={f.role === 'hcp' ? 'pulse' : f.role === 'caregiver' ? 'heart' : 'sun'} size={18} fill={f.role === 'caregiver' && n <= r ? 'currentColor' : 'none'} /></span>
                             <b>{n}</b>

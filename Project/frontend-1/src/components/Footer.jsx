@@ -3,14 +3,16 @@ import { Link } from '../router.jsx';
 import { SITE, whatsappLink } from '../config/site.js';
 import { Logo } from './Brand.jsx';
 import Icon from './Icon.jsx';
-import { LiveZone } from './ui.jsx';
+import { LiveZone, useInView } from './ui.jsx';
 import { LanguageButton } from './Language.jsx';
-import frLogo from '../assets/brand/frequent-research-logo.webp';
-import iso9001 from '../assets/brand/aff-iso-9001.webp';
-import iso27001 from '../assets/brand/aff-iso-27001.webp';
-import iso20252 from '../assets/brand/aff-iso-20252.webp';
-import esomar from '../assets/brand/aff-esomar-member.webp';
-import msme from '../assets/brand/aff-msme-registered.webp';
+import ThemeSwitch from './ThemeSwitch.jsx';
+// Logos taken from the current Frequent Research website (preview build 82.3, Nov 2026).
+import frLogo from '../assets/brand/fr-lockup.webp';
+import iso9001 from '../assets/brand/fr-iso-9001.webp';
+import iso27001 from '../assets/brand/fr-iso-27001.webp';
+import iso20252 from '../assets/brand/fr-iso-20252.webp';
+import esomar from '../assets/brand/fr-esomar.webp';
+import msme from '../assets/brand/fr-msme.webp';
 import qrFacebook from '../assets/qr/facebook-qr.svg';
 import qrLinkedin from '../assets/qr/linkedin-qr.svg';
 import qrYoutube from '../assets/qr/youtube-qr.svg';
@@ -19,11 +21,11 @@ import qrInstagram from '../assets/qr/instagram-qr.svg';
 const QR = { facebook: qrFacebook, linkedin: qrLinkedin, youtube: qrYoutube, instagram: qrInstagram };
 
 export const BADGES = [
-  { img: iso9001, name: 'ISO 9001:2015', what: 'Quality management', round: true },
-  { img: iso27001, name: 'ISO 27001', what: 'Information security', round: true },
-  { img: iso20252, name: 'ISO 20252:2019', what: 'Market research standard', round: true },
-  { img: esomar, name: 'ESOMAR', what: 'Member, global research body' },
-  { img: msme, name: 'MSME', what: 'Registered with Govt. of India' },
+  { img: iso9001, name: 'ISO 9001:2015', what: 'Quality management', round: true, c: '#2563eb' },
+  { img: iso27001, name: 'ISO/IEC 27001', what: 'Information security', round: true, c: '#0d9488' },
+  { img: iso20252, name: 'ISO 20252:2019', what: 'Market research standard', round: true, c: '#7c3aed' },
+  { img: esomar, name: 'ESOMAR', what: 'Member, global research body', c: '#0f2a6b' },
+  { img: msme, name: 'MSME', what: 'Registered with Govt. of India', c: '#ea580c' },
 ];
 
 const COLS = [
@@ -53,7 +55,7 @@ export function FrShowcase() {
   return (
     <div className="fr-show">
       <span className="frs-card">
-        <img src={frLogo} alt="Frequent Research Fieldwork Solutions — Insights, Analytics, Growth. An ISO certified company" width="589" height="314" loading="lazy" />
+        <img src={frLogo} alt="Frequent Research Fieldwork Solutions Private Limited: Insights, Analytics, Growth" width="613" height="248" loading="lazy" />
         <span className="fr-shine" aria-hidden="true" />
       </span>
     </div>
@@ -92,13 +94,14 @@ const WORDMARK_GRADES = {
 };
 
 export function BrandWordmark({ text, grade = 'mho', id = grade, size = 'lg' }) {
+  const [ref, inView] = useInView({ threshold: 0.25 });
   const W = 1600;
   const fontSize = size === 'lg' ? 200 : 120;
   const H = size === 'lg' ? 230 : 150;
   const base = size === 'lg' ? 182 : 116;
   const cap = base - fontSize * 0.6;
   return (
-    <div className={`fr-wordmark wm-${size} notranslate`} translate="no" aria-hidden="true">
+    <div ref={ref} className={`fr-wordmark wm-${size} notranslate ${inView ? 'is-in' : ''}`} translate="no" aria-hidden="true">
       <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id={`${id}-fill`} x1="0" y1="0" x2={W} y2="0" gradientUnits="userSpaceOnUse">
@@ -122,7 +125,9 @@ export function BrandWordmark({ text, grade = 'mho', id = grade, size = 'lg' }) 
         <text x={W / 2} y={base} textAnchor="middle" className="frw-glyphs frw-fill" fontSize={fontSize} fill={`url(#${id}-fill)`} textLength={W - 80} lengthAdjust="spacingAndGlyphs">{text}</text>
         <g mask={`url(#${id}-mask)`}>
           <rect className="frw-sweep" x="-420" y="0" width="420" height={H} fill={`url(#${id}-sweep)`} />
+          <path className="frw-pulse" pathLength="100" d={`M0 ${cap + 40}h300l18-40 22 74 26-110 22 92 14-16h260l18-40 22 74 26-110 22 92 14-16h260l18-40 22 74 26-110 22 92 14-16h300`} />
         </g>
+        <path className="frw-pulse-ghost" pathLength="100" d={`M0 ${cap + 40}h300l18-40 22 74 26-110 22 92 14-16h260l18-40 22 74 26-110 22 92 14-16h260l18-40 22 74 26-110 22 92 14-16h300`} />
         <text x={W / 2} y={base} textAnchor="middle" className="frw-glyphs frw-outline" fontSize={fontSize} textLength={W - 80} lengthAdjust="spacingAndGlyphs">{text}</text>
         <g className="frw-spark" transform={`translate(${W - 28} ${H * 0.22})`}>
           <path d="M0 -14 L3.5 -3.5 L14 0 L3.5 3.5 L0 14 L-3.5 3.5 L-14 0 L-3.5 -3.5 Z" />
@@ -179,25 +184,38 @@ export default function Footer({ onCookieSettings }) {
           </div>
         </div>
 
-        <div className="container footer-trust">
-          <div className="ft-fr">
-            <span className="ft-label">Powered by</span>
-            <FrShowcase />
+        <LiveZone className="container trust2">
+          <span className="t2-aurora" aria-hidden="true"><i /><i /></span>
+          <a className="t2-fr" href="https://www.frequentresearch.com/" target="_blank" rel="noopener noreferrer" aria-label="Powered by Frequent Research (opens frequentresearch.com in a new tab)">
+            <span className="t2-label"><i />Powered by</span>
+            <span className="t2-logo">
+              <img src={frLogo} alt="Frequent Research Fieldwork Solutions Private Limited: Insights, Analytics, Growth" width="613" height="248" loading="lazy" />
+              <span className="fr-shine" aria-hidden="true" />
+            </span>
+            <span className="t2-since"><b>Since 2017</b> · Insights · Analytics · Growth <Icon name="external" size={12} /></span>
+          </a>
+          <div className="t2-certs">
+            <span className="t2-label"><i />Certified &amp; accredited</span>
+            <ul className="t2-grid">
+              {BADGES.map((b, i) => (
+                <li key={b.name} className={`t2-cert ${b.round ? 'is-round' : ''}`} style={{ '--c': b.c, '--i': i }}>
+                  <span className="t2-plate"><img src={b.img} alt={`${b.name}: ${b.what}`} loading="lazy" decoding="async" /><span className="fr-shine" aria-hidden="true" /></span>
+                  <b>{b.name}</b>
+                  <small>{b.what}</small>
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="ft-badges">
-            <span className="ft-label">Certified &amp; affiliated</span>
-            <BadgeParade />
-          </div>
-        </div>
+        </LiveZone>
 
         <div className="container footer-wordmarks">
           <BrandWordmark text="MyHealthOpinions" grade="mho" />
-          <BrandWordmark text="Frequent Research" grade="fr" size="sm" />
         </div>
 
         <div className="container footer-bottom">
           <p><span className="notranslate" translate="no">© {year} {SITE.legalName} (d/b/a MyHealthOpinions).</span> <span>All rights reserved.</span></p>
           <div>
+            <ThemeSwitch />
             <LanguageButton compact />
             <Link to="/sitemap">Sitemap</Link>
             <button type="button" onClick={onCookieSettings}>Cookie settings</button>

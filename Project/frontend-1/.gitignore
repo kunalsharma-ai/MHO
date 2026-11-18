@@ -11,3 +11,4 @@ dist-preview/
 .idea/
 coverage/
 server/data/
+preview/

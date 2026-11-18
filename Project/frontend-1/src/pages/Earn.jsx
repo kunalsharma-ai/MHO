@@ -6,7 +6,8 @@ import { SectionHead, Button, Eyebrow } from '../components/ui.jsx';
 import Icon from '../components/Icon.jsx';
 import TopicHub from '../components/TopicHub.jsx';
 import { Link } from '../router.jsx';
-import { CoinTowers, AudiencePortals, ConditionPulse, InterestDeck, ScamSwitch, DepartureBoard } from '../components/EarnV4.jsx';
+import { CoinTowers, AudiencePortals, ConditionPulse, InterestDeck, ScamSwitch } from '../components/EarnV4.jsx';
+import { CountryStamps } from '../components/R8.jsx';
 
 export default function Earn() {
   return (
@@ -96,7 +97,7 @@ export default function Earn() {
       <section className="section countries-sec" id="countries">
         <div className="container">
           <SectionHead eyebrow="Where you can earn" title="55 countries, 5 regions, one community" lead="Every destination on the board is open to join right now. Pick a region to flip the board." color="#14b8a6" />
-          <DepartureBoard />
+          <CountryStamps />
         </div>
       </section>
 
