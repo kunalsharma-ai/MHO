@@ -4,8 +4,8 @@ import { env, PREVIEW_FORMS as PREVIEW, PREVIEW_ACCOUNT as PREVIEW_ACC } from '.
 
 export const SITE_URL = env('SITE_URL', 'https://www.myhealthopinions.com').replace(/\/+$/, '');
 
-// X (Twitter) profile, e.g. https://x.com/myhealthopinion. Linked in the footer and in twitter:site once set.
-const X_URL = env('X_URL', '').replace(/\/+$/, '');
+// X (Twitter) profile: footer link, schema sameAs and twitter:site. Override with VITE_X_URL ("off" hides it).
+const X_URL = env('X_URL', 'https://x.com/MHO_Community').replace(/^off$/i, '').replace(/\/+$/, '');
 const X_HANDLE = X_URL ? '@' + X_URL.split('/').pop() : '';
 
 export const SITE = {
