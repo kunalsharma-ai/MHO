@@ -3,6 +3,7 @@
 // website plays on the visitor's first tap / click / key press (once per visit). The chat pop plays every time
 // the chat is opened. Visitors can mute both from the chat header (remembered on this device).
 import { session, store } from './storage.js';
+import { isSoundEnabled, setSoundEnabled } from '../i18n/soundPrefs.js';
 
 let ctx = null;
 const getCtx = () => {
@@ -13,8 +14,9 @@ const getCtx = () => {
   return ctx;
 };
 
-export const soundOn = () => store.get('mfr_sound', 'on') !== 'off';
-export const setSound = (on) => store.set('mfr_sound', on ? 'on' : 'off');
+// Same on/off switch as every other sound on the site (header toggle).
+export const soundOn = () => isSoundEnabled();
+export const setSound = (on) => setSoundEnabled(on);
 
 // A soft, bubbly pop: quick pitch drop + a tiny sparkle overtone.
 export function pop({ volume = 0.22, pitch = 1 } = {}) {

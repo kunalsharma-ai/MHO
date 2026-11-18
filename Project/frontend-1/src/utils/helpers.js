@@ -1,6 +1,7 @@
 // Validation, storage, sound, API and analytics helpers (browser-safe; all guarded for SSR).
 import { API, PREVIEW_FORMS, PREVIEW_ACCOUNT, ANALYTICS, MIN_AGE } from '../config/site.js';
 import { phoneLengthFor } from '../data/countries.js';
+import { isSoundEnabled } from '../i18n/soundPrefs.js';
 
 /* ---------------- validation ---------------- */
 export const RX = {
@@ -113,7 +114,7 @@ export const session = {
 let ctx;
 export function pop(volume = 0.18) {
   if (typeof window === 'undefined') return;
-  if (store.get('mho-sound', true) === false) return;
+  if (!isSoundEnabled()) return;
   try {
     ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
     if (ctx.state === 'suspended') ctx.resume();

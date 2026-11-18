@@ -270,11 +270,23 @@ export default function VideoFab() {
     <>
       <button ref={fabRef} type="button" className={`vfab vfab-${v.template}`} aria-haspopup="dialog" aria-label="Watch this page's video" onClick={() => setOpen(true)}>
         <span className="vfab-halo" aria-hidden="true" />
+        <span className="vfab-halo vfab-halo2" aria-hidden="true" />
         <span className="vfab-ring" aria-hidden="true" />
         <span className="vfab-core" aria-hidden="true">
-          <svg viewBox="0 0 28 20" width="28" height="20"><rect width="28" height="20" rx="5.5" fill="#fff" /><path d="M11 5.6v8.8l7.6-4.4z" fill="#e8344e" /></svg>
+          <span className="vfab-shine" />
+          <svg viewBox="0 0 28 20" width="30" height="22"><rect width="28" height="20" rx="5.5" fill="#fff" /><path d="M11 5.6v8.8l7.6-4.4z" fill="#e8344e" /></svg>
+          <span className="vfab-prog"><i /></span>
         </span>
-        <span className="vfab-label" aria-hidden="true"><b>Watch</b><small>{v.fab || 'this page’s video'}</small></span>
+        <span className="vfab-pops" aria-hidden="true">
+          <i style={{ '--k': 0 }}><Icon name="heart" size={13} fill="currentColor" stroke={0} /></i>
+          <i style={{ '--k': 1 }}><Icon name="thumb" size={13} /></i>
+          <i style={{ '--k': 2 }}><Icon name="bell" size={13} /></i>
+          <i style={{ '--k': 3 }}><Icon name="star" size={13} fill="currentColor" stroke={0} /></i>
+        </span>
+        <span className="vfab-label" aria-hidden="true">
+          <span className="vfab-yt"><svg viewBox="0 0 28 20" width="14" height="10"><rect width="28" height="20" rx="5.5" fill="currentColor" /><path d="M11 5.6v8.8l7.6-4.4z" fill="#fff" /></svg>YouTube</span>
+          <b>Watch now</b><small>{v.fab || 'this page’s video'}</small>
+        </span>
       </button>
       <div className={`vtip vtip-${v.template} ${tip && !open ? 'is-in' : ''}`} role="status" aria-hidden={!tip || open}>
         <button type="button" className="vtip-body" onClick={() => setOpen(true)} tabIndex={tip && !open ? 0 : -1}>

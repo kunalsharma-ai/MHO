@@ -1612,3 +1612,8 @@
 svg.vl-string { width: 9cqw; height: auto; min-width: 34px; max-width: 54px; margin-bottom: -2px; clip-path: none; border: 0; overflow: visible; }
 svg.vl-string path { fill: none; stroke: var(--g1); stroke-width: 4; stroke-linecap: round; }
 svg.vl-string rect { fill: #94a3b8; }
+/* DayDial auto-play: a progress bar fills under the active moment */
+.dl-list button { position: relative; overflow: hidden; }
+.dlt-prog { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: linear-gradient(90deg, #facc15, #fb923c); transform-origin: left; transform: scaleX(0); }
+.dial.is-playing .dlt-prog { animation: dl-prog var(--dial-ms, 3400ms) linear forwards; }
+@keyframes dl-prog { to { transform: scaleX(1); } }

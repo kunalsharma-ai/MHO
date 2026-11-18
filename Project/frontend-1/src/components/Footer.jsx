@@ -5,6 +5,7 @@ import { Logo } from './Brand.jsx';
 import Icon from './Icon.jsx';
 import { LiveZone, useInView } from './ui.jsx';
 import { LanguageButton } from './Language.jsx';
+import ThemeSwitch from './ThemeSwitch.jsx';
 // Logos taken from the current Frequent Research website (preview build 82.3, Nov 2026).
 import frLogo from '../assets/brand/fr-lockup.webp';
 import iso9001 from '../assets/brand/fr-iso-9001.webp';
@@ -214,6 +215,7 @@ export default function Footer({ onCookieSettings }) {
         <div className="container footer-bottom">
           <p><span className="notranslate" translate="no">© {year} {SITE.legalName} (d/b/a MyHealthOpinions).</span> <span>All rights reserved.</span></p>
           <div>
+            <ThemeSwitch />
             <LanguageButton compact />
             <Link to="/sitemap">Sitemap</Link>
             <button type="button" onClick={onCookieSettings}>Cookie settings</button>

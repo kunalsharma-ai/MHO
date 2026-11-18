@@ -3,8 +3,9 @@
 //                which stamps out a coin that hops into a wallet
 //   LoopTrack    the four steps as checkpoints on a looping race track; a glowing token laps it
 //   DayDial      a 24-hour dial: tap a moment of the day and the hand swings to it
+import { useEffect, useRef, useState } from 'react';
 import Icon from './Icon.jsx';
-import { LiveZone } from './ui.jsx';
+import { LiveZone, useInView } from './ui.jsx';
 
 export function ConveyorArt() {
   const boxes = [['user', 'Join'], ['clipboard', 'Profile'], ['mail', 'Invite'], ['check', 'Survey']];
@@ -68,11 +69,34 @@ const toAngle = (time) => {
   return ((h + m / 60) / 24) * 360;
 };
 
+const DIAL_MS = 3400;
+
 export function DayDial({ items, day, setDay }) {
   const cur = items[day];
-  const ang = toAngle(cur.time);
+  // The hand only ever turns forwards, so the loop from "Later" back to the morning keeps spinning clockwise.
+  const turns = useRef({ last: day, add: 0 });
+  if (day !== turns.current.last) {
+    if (day < turns.current.last) turns.current.add += 360;
+    turns.current.last = day;
+  }
+  const ang = toAngle(cur.time) + turns.current.add;
+  // Auto-play: moves to the next moment every 3.4 s in a continuous loop, while the dial is on screen
+  // and the visitor is not hovering it. A tap restarts the timer from that moment.
+  const [ref, visible] = useInView({ threshold: 0.3 }, false);
+  const [hold, setHold] = useState(false);
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (!visible || hold || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const t = setTimeout(() => setDay((d) => (d + 1) % items.length), DIAL_MS);
+    return () => clearTimeout(t);
+  }, [visible, hold, day, tick, items.length, setDay]);
+  // set with setProperty: the angle keeps growing, and a style prop would mint a new CSS class per value
+  const hand = useRef(null);
+  useEffect(() => { hand.current?.style.setProperty('transform', `rotate(${ang}deg)`); }, [ang]);
+  const go = (i) => { setDay(i); setTick((n) => n + 1); };
+  const playing = visible && !hold;
   return (
-    <div className="dial">
+    <div ref={ref} className={`dial ${playing ? 'is-playing' : ''}`} onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)} onFocus={() => setHold(true)} onBlur={() => setHold(false)} style={{ '--dial-ms': `${DIAL_MS}ms` }}>
       <div className="dl-face" aria-hidden="true">
         <svg viewBox="0 0 260 260">
           <circle cx="130" cy="130" r="118" className="dl-ring" />
@@ -86,7 +110,7 @@ export function DayDial({ items, day, setDay }) {
             const a = (toAngle(d.time) * Math.PI) / 180;
             return <circle key={d.t} cx={130 + 108 * Math.sin(a)} cy={130 - 108 * Math.cos(a)} r={i === day ? 10 : 7} className={`dl-dot ${i === day ? 'on' : i < day ? 'past' : ''}`} />;
           })}
-          <g className="dl-hand" style={{ transform: `rotate(${ang}deg)` }}><line x1="130" y1="130" x2="130" y2="40" /><circle cx="130" cy="130" r="8" /></g>
+          <g className="dl-hand" ref={hand}><line x1="130" y1="130" x2="130" y2="40" /><circle cx="130" cy="130" r="8" /></g>
         </svg>
         <span className="dl-icon" key={day}><Icon name={cur.ic} size={22} /></span>
       </div>
@@ -94,14 +118,15 @@ export function DayDial({ items, day, setDay }) {
         <ol>
           {items.map((d, i) => (
             <li key={d.t} className={i === day ? 'on' : i < day ? 'past' : ''}>
-              <button onClick={() => setDay(i)} aria-pressed={i === day}>
+              <button onClick={() => go(i)} aria-pressed={i === day}>
                 <span className="dlt-time">{d.time}</span>
                 <span className="dlt-txt"><b>{d.t}</b><small>{d.d}</small></span>
+                {i === day && <span className="dlt-prog" key={`${day}-${tick}`} aria-hidden="true" />}
               </button>
             </li>
           ))}
         </ol>
-        <button type="button" className="btn btn-gold" onClick={() => setDay((day + 1) % items.length)}>
+        <button type="button" className="btn btn-gold" onClick={() => go((day + 1) % items.length)}>
           <span className="btn-label">{day === items.length - 1 ? 'Start the day again' : 'Next moment'}</span><Icon name="arrow" size={18} />
         </button>
       </div>

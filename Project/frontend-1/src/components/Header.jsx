@@ -6,6 +6,7 @@ import { Logo } from './Brand.jsx';
 import Icon from './Icon.jsx';
 import { useMounted } from './ui.jsx';
 import { LanguageButton } from './Language.jsx';
+import { useI18n } from '../i18n/I18nProvider.jsx';
 import { useSession, logout } from '../utils/session.js';
 
 const useIsoLayout = typeof window === 'undefined' ? useEffect : useLayoutEffect;
@@ -121,6 +122,7 @@ export default function Header() {
             )}
           </nav>
           <div className="header-cta">
+            <SoundSwitch />
             {user ? (
               <div className="hd-user" ref={pmRef}>
                 <button type="button" className="hd-user-btn" aria-haspopup="menu" aria-expanded={pmenu} onClick={() => setPmenu((o) => !o)}>
@@ -212,5 +214,23 @@ export default function Header() {
           document.body
         )}
     </>
+  );
+}
+
+/** One switch for every sound on the site (vending machine, envelopes, theme switch, language picker, chat).
+ *  Animated equaliser bars while sound is on; a short chirp confirms switching it back on. */
+function SoundSwitch() {
+  const { sound, toggleSound } = useI18n();
+  const flip = () => {
+    const turningOn = !sound;
+    toggleSound();
+    if (turningOn) import('../i18n/sounds.js').then((m) => m.playSoundOn?.()).catch(() => {});
+  };
+  return (
+    <button type="button" className={`hd-sound ${sound ? 'is-on' : 'is-off'}`} onClick={flip} aria-pressed={sound} aria-label={sound ? 'Sound on. Turn all website sounds off' : 'Sound off. Turn website sounds on'} title={sound ? 'Sound on' : 'Sound off'}>
+      <span className="hs-ic"><Icon name={sound ? 'volume' : 'mute'} size={18} /></span>
+      <span className="hs-eq" aria-hidden="true"><i /><i /><i /><i /></span>
+      <span className="hs-tx">{sound ? 'Sound on' : 'Sound off'}</span>
+    </button>
   );
 }

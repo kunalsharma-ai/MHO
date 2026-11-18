@@ -13,6 +13,7 @@ import { SITE, API, whatsappLink } from '../config/site.js';
 import Icon from './Icon.jsx';
 import { pop, store, session, validateEmail, validateName, postJSON, track } from '../utils/helpers.js';
 import { ALL_COUNTRIES } from '../data/countries.js';
+import { isSoundEnabled, setSoundEnabled, onSoundChange } from '../i18n/soundPrefs.js';
 
 const QUICK = ['How much does each survey pay?', 'Is it free to join?', 'How do I get paid?', 'Is UPI available?', 'Which countries?', 'Why was I screened out?', 'Is my data safe?', 'Talk to a person'];
 const TILES = [
@@ -92,12 +93,16 @@ export default function LiveChat() {
   const input = useRef(null);
 
   useEffect(() => {
-    setSound(store.get('mho-sound', true) !== false);
+    setSound(isSoundEnabled());
+    return onSoundChange(setSound);
+  }, []);
+
+  useEffect(() => {
     // Friendly greeting bubble + soft pop on the visitor's first interaction (browsers block audio before it).
     if (session.get('mho-greeted')) return;
     const greet = () => {
       session.set('mho-greeted', true);
-      pop(0.12);
+      if (isSoundEnabled()) pop(0.12);
       setHello(true);
       setTimeout(() => setHello(false), 7000);
       cleanup();
@@ -237,11 +242,7 @@ export default function LiveChat() {
     await botSay({ ...r, leadQ: r.lead ? q : '' }, delay);
   };
 
-  const toggleSound = () => {
-    const v = !sound;
-    setSound(v);
-    store.set('mho-sound', v);
-  };
+  const toggleSound = () => setSoundEnabled(!isSoundEnabled());
 
   const step = lead?.step;
   const quick = chips || QUICK;

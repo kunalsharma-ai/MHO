@@ -15,6 +15,15 @@ export function setSoundEnabled(on) {
   } catch {
     /* storage blocked: setting lasts for this page only */
   }
+  // One switch for every sound on the site (header toggle, language picker, chat): tell the others.
+  if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('mho-sound-change', { detail: !!on }));
+}
+/** Subscribe to sound on/off changes made anywhere on the page. Returns an unsubscribe function. */
+export function onSoundChange(fn) {
+  if (typeof window === 'undefined') return () => {};
+  const h = (e) => fn(!!e.detail);
+  window.addEventListener('mho-sound-change', h);
+  return () => window.removeEventListener('mho-sound-change', h);
 }
 
 /** Short description of each sound (shown as the tooltip in the picker). */

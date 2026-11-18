@@ -16,7 +16,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { API, PREVIEW_FORMS } from '../config/site.js';
 import { COVERAGE } from '../data/countries.js';
 import { methodsFor, isMethodAllowed } from '../data/rewards.js';
-import { Flag, useMounted } from './ui.jsx';
+import { useMounted } from './ui.jsx';
 import Icon from './Icon.jsx';
 import { shuffle } from '../utils/helpers.js';
 import { Link } from '../router.jsx';
@@ -98,28 +98,35 @@ export default function RewardToasts() {
   const ini = current.live ? `${current.firstName[0]}${current.lastInitial || ''}`.toUpperCase() : '';
 
   const m = METHOD[current.method] || METHOD.paypal;
+  const cc = <span className="rtp-cc" title={current.country}>{String(current.cc || '').toUpperCase()}</span>;
   return (
     <aside
-      className={`rtoast rt-mini ${visible ? 'is-in' : ''}`}
+      className={`rtoast rt-pop ${visible ? 'is-in' : ''} ${current.live ? 'is-live' : 'is-open'}`}
       style={{ '--g1': g1, '--g2': g2 }}
       aria-live="polite"
       onMouseEnter={() => (hover.current = true)}
       onMouseLeave={() => (hover.current = false)}
     >
+      <span className="rtp-edge" aria-hidden="true" />
+      <span className="rtp-confetti" aria-hidden="true">{Array.from({ length: 12 }).map((_, i) => <i key={i} style={{ '--i': i }} />)}</span>
+      <span className="rtp-ribbon" aria-hidden="true"><i />{current.live ? 'Reward sent' : 'Now paying'}</span>
       <span className="rtt-av">
-        {current.live ? <b>{ini}</b> : <Icon name="globe" size={18} />}
-        <span className="rtt-coins" aria-hidden="true">{Array.from({ length: 5 }).map((_, i) => <i key={i} style={{ '--i': i }} />)}</span>
+        <span className="rtp-av-ring" aria-hidden="true" />
+        {current.live ? <b>{ini}</b> : <Icon name="globe" size={20} />}
+        <span className="rtt-coins" aria-hidden="true">{Array.from({ length: 6 }).map((_, i) => <i key={i} style={{ '--i': i }} />)}</span>
       </span>
       {current.live ? (
         <span className="rtt-body">
-          <span className="rtt-l1"><b>{current.firstName} {current.lastInitial ? current.lastInitial + '.' : ''}</b> received <strong>{(CUR[current.currency] || '') + current.amount}</strong></span>
-          <span className="rtt-l2"><span className={`rtt-m mchip-${current.method}`} title={m.label}><Icon name={m.icon} size={11} />{m.label}</span><Flag code={current.cc} name={current.country} size={14} />{current.city || current.country} · {current.minutesAgo ? `${current.minutesAgo}m ago` : 'now'}</span>
-          <span className="rtt-l3">{current.role}{PREVIEW_FORMS && <em className="rtt-preview">Preview data</em>}</span>
+          <span className="rtt-l1"><b>{current.firstName} {current.lastInitial ? current.lastInitial + '.' : ''}</b> just received</span>
+          <span className="rtp-amt"><strong>{(CUR[current.currency] || '') + current.amount}</strong><span className={`rtt-m mchip-${current.method}`} title={m.label}><Icon name={m.icon} size={11} />{m.label}</span></span>
+          <span className="rtt-l2">{cc}{current.city || current.country} · {current.minutesAgo ? `${current.minutesAgo}m ago` : 'now'} · {current.role}</span>
+          {PREVIEW_FORMS && <em className="rtt-preview">Preview data</em>}
         </span>
       ) : (
         <Link to="/rewards" className="rtt-body rtt-open">
-          <span className="rtt-l1"><Flag code={current.cc} name={current.country} size={14} /> <b className="notranslate" translate="no">{tr('Rewards open in {0}').replace('{0}', countryLabel(current.cc, current.country))}</b></span>
-          <span className="rtt-l2 rtt-icons">{current.methods.map((id) => <span key={id} className={`rtt-m mchip-${id}`} title={(METHOD[id] || METHOD.paypal).label}><Icon name={(METHOD[id] || METHOD.paypal).icon} size={11} /></span>)}<span className="rtt-more">How payouts work</span></span>
+          <span className="rtt-l1">{cc}<b className="notranslate" translate="no">{tr('Rewards open in {0}').replace('{0}', countryLabel(current.cc, current.country))}</b></span>
+          <span className="rtt-l2 rtt-icons">{current.methods.map((id) => <span key={id} className={`rtt-m mchip-${id}`} title={(METHOD[id] || METHOD.paypal).label}><Icon name={(METHOD[id] || METHOD.paypal).icon} size={11} />{(METHOD[id] || METHOD.paypal).label}</span>)}</span>
+          <span className="rtp-go">How payouts work <Icon name="arrow" size={12} /></span>
         </Link>
       )}
       <span className="rtt-timer" aria-hidden="true" />

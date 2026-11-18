@@ -100,26 +100,71 @@ export function ConditionPulse() {
 const DECK_COLORS = ['#8a4dff', '#ff6a2c', '#ef2d56', '#2457f5', '#00a88a', '#0ea5e9', '#f59e0b', '#ec4899'];
 export function InterestDeck() {
   const track = useRef(null);
-  const go = (d) => track.current?.scrollBy({ left: d * (track.current.clientWidth * 0.8), behavior: 'smooth' });
+  const hold = useRef(0); // auto-scroll pauses until this time (ms) after a manual nudge
+  const [wrap, inView] = useInView({ threshold: 0.1 }, false);
+  const [auto, setAuto] = useState(false);
   const cards = [
     ...CONSUMER_GROUPS.map((g, i) => ({ ...g, c: DECK_COLORS[i % DECK_COLORS.length] })),
     { title: 'Business decision makers', icon: 'briefcase', items: BUSINESS.titles.slice(0, 10), c: '#1b1035', more: BUSINESS.titles.length },
     { title: 'Industries we survey', icon: 'building', items: BUSINESS.industries.slice(0, 10), c: '#3b1d78', more: BUSINESS.industries.length },
   ];
+  const go = (d) => { hold.current = Date.now() + 4000; track.current?.scrollBy({ left: d * (track.current.clientWidth * 0.8), behavior: 'smooth' }); };
+
+  // Continuous marquee: the track drifts left on its own and loops seamlessly (the cards are rendered twice and
+  // the scroll position wraps by one set's width). Pauses on hover, focus, touch, off-screen and for reduced motion.
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return undefined;
+    setAuto(true);
+    return () => setAuto(false);
+  }, []);
+  useEffect(() => {
+    const el = track.current;
+    if (!auto || !inView || !el) return undefined;
+    let raf = 0; let last = performance.now(); let paused = false; let acc = el.scrollLeft;
+    const stop = () => { paused = true; };
+    const start = () => { paused = false; acc = el.scrollLeft; };
+    const touch = () => { hold.current = Date.now() + 3500; };
+    el.addEventListener('pointerenter', stop); el.addEventListener('pointerleave', start);
+    el.addEventListener('focusin', stop); el.addEventListener('focusout', start);
+    el.addEventListener('touchstart', touch, { passive: true }); el.addEventListener('wheel', touch, { passive: true });
+    const step = (now) => {
+      const dt = Math.min(64, now - last); last = now;
+      const half = el.scrollWidth / 2;
+      if (!paused && Date.now() > hold.current && half > el.clientWidth) {
+        acc += dt * 0.045; // ~45px per second
+        if (acc >= half) acc -= half;
+        el.scrollLeft = acc;
+      } else {
+        acc = el.scrollLeft >= half ? el.scrollLeft - half : el.scrollLeft;
+        if (el.scrollLeft >= half) el.scrollLeft = acc;
+      }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener('pointerenter', stop); el.removeEventListener('pointerleave', start);
+      el.removeEventListener('focusin', stop); el.removeEventListener('focusout', start);
+      el.removeEventListener('touchstart', touch); el.removeEventListener('wheel', touch);
+    };
+  }, [auto, inView]);
+
+  const card = (c, i, dup) => (
+    <article key={`${dup ? 'd' : 'c'}-${c.title}`} className="d4-card" style={{ '--c': c.c, '--i': i }} aria-hidden={dup || undefined} inert={dup || undefined}>
+      <header><span><Icon name={c.icon} size={22} /></span><h3>{c.title}</h3></header>
+      <ul>{c.items.map((x) => <li key={x}>{x}</li>)}</ul>
+      {c.more && c.more > c.items.length && <small>+{c.more - c.items.length} more</small>}
+    </article>
+  );
   return (
-    <div className="deck4">
+    <div className={`deck4 ${auto ? 'is-auto' : ''}`} ref={wrap}>
       <div className="d4-nav">
         <button type="button" onClick={() => go(-1)} aria-label="Previous cards"><Icon name="arrowLeft" size={18} /></button>
         <button type="button" onClick={() => go(1)} aria-label="Next cards"><Icon name="arrow" size={18} /></button>
       </div>
       <div className="d4-track" ref={track} tabIndex={0} aria-label="Audiences outside healthcare">
-        {cards.map((c, i) => (
-          <article key={c.title} className="d4-card" style={{ '--c': c.c, '--i': i }}>
-            <header><span><Icon name={c.icon} size={22} /></span><h3>{c.title}</h3></header>
-            <ul>{c.items.map((x) => <li key={x}>{x}</li>)}</ul>
-            {c.more && c.more > c.items.length && <small>+{c.more - c.items.length} more</small>}
-          </article>
-        ))}
+        {cards.map((c, i) => card(c, i, false))}
+        {auto && cards.map((c, i) => card(c, i, true))}
       </div>
     </div>
   );

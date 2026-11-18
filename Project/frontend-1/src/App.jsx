@@ -5,6 +5,7 @@ import { lazy, Suspense, useEffect, useReducer, useRef } from 'react';
 import { Router, useRouter } from './router.jsx';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
+import PageVideoBand from './components/PageVideoBand.jsx';
 import { useMounted } from './components/ui.jsx';
 import { loaded, loadPage, pageKeyFor } from './pages/registry.js';
 import { postCache } from './data/blogs/postStore.js';
@@ -80,6 +81,7 @@ function Shell() {
       <main id="main" tabIndex={-1} className={`page page-${key.toLowerCase()} ${Page ? '' : 'is-loading'}`} key={shownPath}>
         {Show ? <Show path={shownPath} /> : <div className="page-loader" aria-label="Loading" />}
       </main>
+      {Page && key !== 'NotFound' && <PageVideoBand />}
       <Footer onCookieSettings={openCookieSettings} />
       {mounted && (
         <Suspense fallback={null}>
