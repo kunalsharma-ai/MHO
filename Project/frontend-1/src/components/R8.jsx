@@ -183,40 +183,91 @@ const WALLET = {
   caregiver: { name: 'Care rewards', note: 'Pick what helps most at home' },
   patient: { name: 'Wellness wallet', note: 'Your story, rewarded your way' },
 };
+const scopeOf = (it) => (it.id === 'upi' ? 'India only' : it.id === 'report' ? 'Professionals only' : 'Where the study offers it');
+
+// Rewards, presented three different ways: a professional honorarium statement, a caregiver's thank-you jar with
+// gift tags, and a patient's bloom of petals. Same payout methods, nothing shared in the design.
 export function RewardWallet({ role }) {
   const r = REWARD_ROLES.find((x) => x.id === role) || REWARD_ROLES[0];
   const w = WALLET[role] || WALLET.hcp;
-  const [flip, setFlip] = useState(-1);
+  const [cur, setCur] = useState(0);
+  const it = r.items[cur] || r.items[0];
+  const style = { '--g1': r.color, '--g2': r.accent };
+
+  if (role === 'hcp') {
+    return (
+      <LiveZone className="rwal rled" style={style}>
+        <div className="rl-sheet">
+          <div className="rl-top">
+            <span className="rl-logo"><Icon name="stethoscope" size={18} /></span>
+            <span><b>Honorarium statement</b><small>Professional panel · paid for your clinical time</small></span>
+            <span className="rl-seal" aria-hidden="true"><i>VERIFIED</i></span>
+          </div>
+          <div className="rl-cols" aria-hidden="true"><span>Method</span><span>Availability</span><span>Status</span></div>
+          <ul className="rl-rows">
+            {r.items.map((x, i) => (
+              <li key={x.id} style={{ '--i': i }}>
+                <button type="button" className={i === cur ? 'on' : ''} aria-pressed={i === cur} onClick={() => setCur(i)}>
+                  <span className="rl-m"><span className="rl-ic"><Icon name={x.icon} size={18} /></span><b>{x.t}</b></span>
+                  <span className="rl-a">{scopeOf(x)}</span>
+                  <span className="rl-s"><i />Credited after quality checks</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+          <p className="rl-detail" key={cur}><Icon name={it.icon} size={16} /> <b>{it.t}:</b> {it.d}</p>
+          <p className="rl-foot"><Icon name="info" size={14} /> {w.note}.</p>
+        </div>
+      </LiveZone>
+    );
+  }
+
+  if (role === 'caregiver') {
+    return (
+      <LiveZone className="rwal rjar" style={style}>
+        <div className="rj-stage">
+          <div className="rj-jar" aria-hidden="true">
+            <span className="rj-lid" />
+            <span className="rj-glass">
+              {[0, 1, 2, 3, 4, 5].map((i) => <i key={i} className={i % 2 ? 'h' : 'c'} style={{ '--i': i }}>{i % 2 ? <Icon name="heart" size={14} fill="currentColor" stroke={0} /> : null}</i>)}
+              <b>Thank&nbsp;you</b>
+            </span>
+          </div>
+          <ul className="rj-tags">
+            {r.items.map((x, i) => (
+              <li key={x.id} style={{ '--i': i }}>
+                <button type="button" className={i === cur ? 'on' : ''} aria-pressed={i === cur} onClick={() => setCur(i)}>
+                  <span className="rj-hole" aria-hidden="true" />
+                  <Icon name={x.icon} size={20} />
+                  <b>{x.t}</b>
+                  {i === cur && <small>{x.d}</small>}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <p className="rj-note"><Icon name="heart" size={14} fill="currentColor" stroke={0} /> {w.note}. {scopeOf(it)}.</p>
+      </LiveZone>
+    );
+  }
+
+  const n = r.items.length;
   return (
-    <LiveZone className={`rwal rw-${role}`} style={{ '--g1': r.color, '--g2': r.accent }}>
-      <div className="rw-head">
-        <span className="rw-badge"><Icon name={r.icon} size={22} /></span>
-        <span className="rw-ttl"><b>{w.name}</b><small>{r.line}</small></span>
-        <span className="rw-count"><b>{r.items.length}</b> ways to get paid</span>
-      </div>
-      <ul className="rw-grid">
-        {r.items.map((it, i) => (
-          <li key={it.id} style={{ '--i': i, '--c': it.c }}>
-            <button type="button" className={`rw-card ${flip === i ? 'is-flipped' : ''}`} onClick={() => setFlip(flip === i ? -1 : i)} aria-pressed={flip === i} aria-label={`${it.t}: ${it.d}`}>
-              <span className="rw-in">
-                <span className="rw-f">
-                  <span className="rw-chip" aria-hidden="true" />
-                  <span className="rw-ic"><Icon name={it.icon} size={26} /></span>
-                  <b>{it.t}</b>
-                  <small>Tap to turn over</small>
-                  <span className="rw-holo" aria-hidden="true" />
-                </span>
-                <span className="rw-b">
-                  <Icon name={it.icon} size={20} />
-                  <span>{it.d}</span>
-                  <small>{it.id === 'upi' ? 'India only' : it.id === 'report' ? 'Professionals only' : 'Where the study offers it'}</small>
-                </span>
-              </span>
-            </button>
-          </li>
+    <LiveZone className="rwal rbloom" style={style}>
+      <div className="rb2-flower">
+        {r.items.map((x, i) => (
+          <button key={x.id} type="button" className={`rb2-petal ${i === cur ? 'on' : ''}`} style={{ '--a': `${(360 / n) * i}deg` }} aria-pressed={i === cur} onClick={() => setCur(i)} aria-label={x.t}>
+            <span><Icon name={x.icon} size={20} /><b>{x.t}</b></span>
+          </button>
         ))}
-      </ul>
-      <p className="rw-note"><Icon name="info" size={14} /> {w.note}.</p>
+        <div className="rb2-core" key={cur}>
+          <Icon name={it.icon} size={26} />
+          <b>{it.t}</b>
+          <small>{it.d}</small>
+          <i>{scopeOf(it)}</i>
+        </div>
+      </div>
+      <p className="rb2-note"><Icon name="sparkle" size={14} /> {w.note}.</p>
     </LiveZone>
   );
 }
