@@ -1,0 +1,19 @@
+/* ───────────── Final polish layer (imported last) ─────────────
+   Legibility, contrast and tap-target fixes found in the Lighthouse / PageSpeed audit, plus small layout
+   glitches. Kept in one place so the older layers stay untouched. */
+
+/* Legible text: nothing a visitor is meant to read goes below 12px (PageSpeed "legible font sizes"). */
+.vm-q { font-size: .78rem; }
+.vm-who b { font-size: .8rem; }
+.vm-who small, .vm-av { font-size: .75rem; }
+.reel-item small { font-size: .75rem; line-height: 1.1; }
+@media (max-width: 520px) { .reel-item small { font-size: .75rem; letter-spacing: -.01em; } }
+
+/* Eyebrow pills: the text was the raw accent colour on a 9% tint of itself (yellow on cream measured 1.5:1).
+   Same hue, darkened to pass WCAG AA on the light pill. Dark mode keeps its own palette. */
+html:not([data-mode='dark']) .eyebrow { color: color-mix(in srgb, var(--eb) 50%, #000); }
+html:not([data-mode='dark']) .eyebrow i { background: var(--eb); }
+
+/* Footer social QR badges: 24px minimum tap target. */
+.sorb-qr { width: 24px; height: 24px; right: -8px; bottom: -8px; }
+.an-row.ok code { color: #007358; }

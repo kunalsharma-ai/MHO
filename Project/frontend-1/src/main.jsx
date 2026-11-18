@@ -16,11 +16,10 @@ import './styles/index.css';
 // Prerendered pages inline only their critical CSS and load the full stylesheet without blocking the first
 // paint (scripts/prerender.mjs). Hydration waits for it, so nothing React adds later appears unstyled.
 function fullCss() {
-  const links = [...document.querySelectorAll('link[as="style"][onload]')];
+  const links = [...document.querySelectorAll('link[data-full-css]')];
   return Promise.all(
-    links.map((l) => (l.rel === 'stylesheet' && l.sheet ? null : new Promise((ok) => {
-      const done = () => { l.title = ''; l.rel = 'stylesheet'; ok(); };
-      l.addEventListener('load', done, { once: true });
+    links.map((l) => (l.sheet ? null : new Promise((ok) => {
+      l.addEventListener('load', ok, { once: true });
       l.addEventListener('error', ok, { once: true });
       setTimeout(ok, 4000);
     })))

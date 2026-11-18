@@ -45,7 +45,7 @@ const SITE_URL = String(server.SITE_URL || 'https://www.myhealthopinions.com').r
 // loads without blocking the paint. src/main.jsx waits for it before hydrating, so elements that only appear
 // once React runs (pop-ups, dock, menus) are never shown unstyled. Set PRERENDER_CRITICAL=0 to turn this off.
 const critical = process.env.PRERENDER_CRITICAL !== '0'
-  ? new Beasties({ path: DIST, publicPath: '/', preload: 'swap-high', pruneSource: false, inlineFonts: true, preloadFonts: false, keyframes: 'critical', compress: true, mergeStylesheets: true, reduceInlineStyles: false, logLevel: 'warn' })
+  ? new Beasties({ path: DIST, publicPath: '/', preload: 'media', pruneSource: false, inlineFonts: true, preloadFonts: false, keyframes: 'critical', compress: true, mergeStylesheets: true, reduceInlineStyles: false, logLevel: 'warn' })
   : null;
 
 // The two Latin font files every English page uses are preloaded, so text gets its final font before or right
@@ -55,6 +55,30 @@ const fontPreloads = fs.readdirSync(path.join(DIST, 'assets'))
   .map((f) => `<link rel="preload" href="/assets/${f}" as="font" type="font/woff2" crossorigin>`)
   .join('');
 
+// The page is complete and styled from its own HTML + critical CSS, so the full stylesheet and the app script
+// (which hydrates the page and adds the interactive extras) are requested only once the first frame is on
+// screen. They no longer compete with the first paint on slow phones and networks. Without JavaScript the
+// <noscript> stylesheet still applies.
+function deferAfterPaint(html) {
+  const css = [];
+  html = html.replace(/<link rel="stylesheet" crossorigin href="([^"]+\.css)" media="print" onload="this.media='all'">/g, (_, href) => {
+    css.push(href);
+    return '';
+  });
+  let js = '';
+  html = html.replace(/<script type="module" crossorigin src="([^"]+)"><\/script>/, (_, src) => {
+    js = src;
+    return '';
+  });
+  if (!js) return html;
+  const loader =
+    `<script>(function(){var d=document;function go(){` +
+    css.map((h) => `var l=d.createElement('link');l.rel='stylesheet';l.href=${JSON.stringify(h)};l.crossOrigin='';l.setAttribute('data-full-css','');d.head.appendChild(l);`).join('') +
+    `var s=d.createElement('script');s.type='module';s.crossOrigin='';s.src=${JSON.stringify(js)};d.head.appendChild(s);}` +
+    `requestAnimationFrame(function(){setTimeout(go,0)})})()</script>`;
+  return html.replace('</body>', () => loader + '</body>');
+}
+
 // 1. Pages
 const routes = server.getPrerenderRoutes();
 let count = 0;
@@ -62,6 +86,7 @@ for (const route of routes) {
   const { html, head } = await server.render(route);
   let page = template.replace('<!--app-head-->', () => fontPreloads + head).replace('<!--app-html-->', () => html);
   if (critical) page = await critical.process(page);
+  page = deferAfterPaint(page);
   const file = route === '/404' ? path.join(DIST, '404.html') : path.join(DIST, route, 'index.html');
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, page);

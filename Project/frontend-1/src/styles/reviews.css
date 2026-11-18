@@ -56,9 +56,9 @@
 /* 3D wall of reviews */
 .rx-wall { position: relative; height: 600px; perspective: 1100px; -webkit-mask: linear-gradient(transparent, #000 14%, #000 86%, transparent); mask: linear-gradient(transparent, #000 14%, #000 86%, transparent); }
 .rx-wall-tilt { position: absolute; inset: -60px -20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; transform: rotateX(22deg) rotateY(-16deg) rotateZ(6deg); transform-style: preserve-3d; }
-.rx-wcol { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; align-content: start; animation: rx-col 46s linear infinite; }
-.rx-wcol.c1 { animation-duration: 38s; animation-direction: reverse; transform: translateZ(40px); }
-.rx-wcol.c2 { animation-duration: 52s; }
+.rx-wcol { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; align-content: start; animation: rx-col 23s linear infinite; }
+.rx-wcol.c1 { animation-duration: 19s; animation-direction: reverse; transform: translateZ(40px); }
+.rx-wcol.c2 { animation-duration: 26s; }
 .rx-wall:hover .rx-wcol { animation-play-state: paused; }
 @keyframes rx-col { to { translate: 0 -50%; } }
 .rx-wc { display: grid; gap: 8px; padding: 14px; border-radius: 16px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .12); backdrop-filter: blur(8px); box-shadow: 0 20px 40px -24px #000; border-top: 3px solid var(--ac); }
