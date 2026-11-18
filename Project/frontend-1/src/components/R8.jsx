@@ -285,7 +285,7 @@ export function PanelPicker({ value, onChange, label = 'I am a' }) {
    patient: story bubbles, one in the centre, the rest floating around it */
 const ROLE_AUD = { hcp: ['doctors', 'nurses', 'allied'], caregiver: ['caregivers'], patient: ['patients'] };
 const initials = (n) => n.replace(/^Dr\.\s*/, '').split(/\s+/).map((w) => w[0]).slice(0, 2).join('');
-const Stars = ({ n }) => <span className="rv-stars" aria-label={`${n} out of 5 stars`}>{[0, 1, 2, 3, 4].map((i) => <Icon key={i} name="star" size={13} fill={i < n ? 'currentColor' : 'none'} stroke={i < n ? 0 : 1.6} />)}</span>;
+const Stars = ({ n }) => <span className="rv-stars" role="img" aria-label={`${n} out of 5 stars`}>{[0, 1, 2, 3, 4].map((i) => <Icon key={i} name="star" size={13} fill={i < n ? 'currentColor' : 'none'} stroke={i < n ? 0 : 1.6} />)}</span>;
 
 function pickVoices(role) {
   const auds = ROLE_AUD[role] || ROLE_AUD.patient;
