@@ -63,7 +63,7 @@ function Player({ v, label }) {
           {fromDisk && <span className="vx-onyt" aria-hidden="true"><Icon name="youtube" size={14} />Plays on YouTube</span>}
         </button>
       )}
-      <a className="vx-ytlink" href={watchUrl} target="_blank" rel="noopener noreferrer"><Icon name="youtube" size={14} />Not playing? Watch on YouTube</a>
+      {!fromDisk && <a className="vx-ytlink" href={watchUrl} target="_blank" rel="noopener noreferrer"><Icon name="youtube" size={14} />Not playing? Watch on YouTube</a>}
     </div>
   );
 }
