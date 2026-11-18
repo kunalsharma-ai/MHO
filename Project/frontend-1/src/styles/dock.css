@@ -1,0 +1,93 @@
+/* Help dock (LiveChat.jsx): live chat is the big round button in the corner, and WhatsApp, rate-us and the
+   page's video sit around it on a quarter circle, all round, all the same rhythm. Loaded last so it wins over the
+   older launcher rules in widgets.css / v2-v5.css / video.css. */
+.help-stack.dock {
+  --c: 64px; /* chat button */
+  --s: 50px; /* satellites */
+  --R: 94px; /* arc radius, centre to centre */
+  position: fixed; right: calc(20px + env(safe-area-inset-right)); bottom: calc(20px + env(safe-area-inset-bottom));
+  width: var(--c); height: var(--c); display: block; gap: 0; z-index: 200;
+}
+
+/* the arc the satellites ride on */
+.dock-arc { position: absolute; width: calc(var(--R) * 2); height: calc(var(--R) * 2); left: calc(var(--c) / 2 - var(--R)); top: calc(var(--c) / 2 - var(--R)); clip-path: inset(-14px 50% 50% -14px); pointer-events: none; transition: opacity .35s ease, transform .5s var(--ease); }
+.dock-arc i { position: absolute; inset: 0; border-radius: 50%; }
+.dock-arc i:first-child { border: 2px dashed color-mix(in srgb, #8a4dff 45%, transparent); animation: dock-spin 40s linear infinite; }
+.dock-arc i:last-child { animation: dock-spin 5s linear infinite; }
+.dock-arc i:last-child::before { content: ''; position: absolute; left: 50%; top: -4px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: #ffd25e; box-shadow: 0 0 10px 3px rgba(255, 190, 60, .8); }
+@keyframes dock-spin { to { transform: rotate(-360deg); } }
+
+/* the main chat button: a clean circle */
+.dock .fab-chat { position: absolute; inset: 0; width: var(--c); height: var(--c); padding: 0; border-radius: 50%; justify-content: center; z-index: 2; box-shadow: 0 16px 34px -12px rgba(232, 52, 78, .85), 0 0 0 4px rgba(255, 255, 255, .9); }
+.dock .fab-chat:hover { transform: scale(1.06); }
+.dock .fab-face { width: var(--c); height: var(--c); }
+.dock .fab-orbit { width: var(--c); height: var(--c); }
+.dock .fab-label { display: none; }
+.dock .fab-chat::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid rgba(255, 79, 109, .55); animation: dock-ring 2.8s ease-out infinite; pointer-events: none; }
+@keyframes dock-ring { from { transform: scale(.92); opacity: 1; } to { transform: scale(1.35); opacity: 0; } }
+
+/* satellites */
+.dock-sat { position: absolute; width: var(--s); height: var(--s); border-radius: 50%; display: grid; place-items: center; color: #fff; border: 0; padding: 0; cursor: pointer; z-index: 1;
+  box-shadow: 0 12px 24px -10px var(--sh, rgba(11, 27, 63, .6)), 0 0 0 3px rgba(255, 255, 255, .92);
+  animation: dock-in .7s cubic-bezier(.34, 1.56, .64, 1) both, dock-bob 4.2s ease-in-out infinite;
+  animation-delay: calc(var(--n) * .12s + .3s), calc(var(--n) * .7s + 1.2s);
+  transition: scale .3s var(--ease), opacity .3s ease; }
+.dock-sat:hover, .dock-sat:focus-visible { scale: 1.14; }
+.dock-sat > svg { position: relative; z-index: 1; }
+@keyframes dock-in { from { transform: translate(var(--fx), var(--fy)) scale(.2) rotate(-60deg); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes dock-bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -4px; } }
+
+/* positions on the arc: straight up, 45 degrees, straight left (from the chat button's centre) */
+.ds-1 { --n: 0; left: calc(var(--c) / 2 - var(--s) / 2); top: calc(var(--c) / 2 - var(--R) - var(--s) / 2); --fx: 0px; --fy: var(--R); }
+.ds-2 { --n: 1; left: calc(var(--c) / 2 - var(--R) * .7071 - var(--s) / 2); top: calc(var(--c) / 2 - var(--R) * .7071 - var(--s) / 2); --fx: calc(var(--R) * .7071); --fy: calc(var(--R) * .7071); }
+.ds-3 { --n: 2; left: calc(var(--c) / 2 - var(--R) - var(--s) / 2); top: calc(var(--c) / 2 - var(--s) / 2); --fx: var(--R); --fy: 0px; }
+
+/* WhatsApp */
+.dock .fab-wa { background: radial-gradient(circle at 30% 25%, #5cf08f, #25d366 45%, #128c7e); --sh: rgba(18, 140, 126, .8); }
+.dock .fab-wa:hover { transform: none; }
+.dock .fab-wa-ping { border-color: #25d366; }
+
+/* Rate us: a gold star with tiny stars circling it */
+.dock-rate { background: radial-gradient(circle at 30% 25%, #ffd25e, #ff9f1c 45%, #ff4f6d); --sh: rgba(255, 120, 40, .8); }
+.dock-rate > svg { filter: drop-shadow(0 2px 3px rgba(150, 50, 0, .45)); animation: dock-twinkle 3.2s ease-in-out infinite; }
+.dock-rate-stars { position: absolute; inset: 0; animation: dock-spin 9s linear infinite reverse; pointer-events: none; }
+.dock-rate-stars i { position: absolute; left: 50%; top: 50%; width: 5px; height: 5px; margin: -2.5px; border-radius: 50%; background: #fff4c2; box-shadow: 0 0 6px 1px #ffd25e; transform: rotate(calc(var(--i) * 72deg)) translateY(calc(var(--s) / -2 - 7px)); }
+@keyframes dock-twinkle { 0%, 100% { transform: rotate(0) scale(1); } 45% { transform: rotate(-12deg) scale(1.12); } 55% { transform: rotate(10deg) scale(1.12); } }
+
+/* Page video */
+.dock-video { background: radial-gradient(circle at 30% 25%, #ff6b81, #ff1f3d 50%, #b8002a); --sh: rgba(200, 0, 40, .8); }
+.dock-video::before { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid rgba(255, 31, 61, .6); animation: dock-ring 2.4s ease-out .8s infinite; pointer-events: none; }
+.dock-video > svg { filter: drop-shadow(0 2px 3px rgba(90, 0, 20, .5)); }
+
+/* tooltips slide out to the left */
+.dock .fab-tip { right: calc(100% + 12px); left: auto; top: 50%; transform: translateY(-50%) translateX(8px); background: #0b1b3f; color: #fff; font: 700 .78rem/1 var(--font-ui, inherit); padding: 8px 12px; border-radius: 999px; box-shadow: 0 10px 22px -10px rgba(11, 27, 63, .7); opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .3s var(--ease); z-index: 3; }
+.dock-sat:hover .fab-tip, .dock-sat:focus-visible .fab-tip { opacity: 1; transform: translateY(-50%); }
+
+/* greeting bubble sits above the arc */
+.dock .hello-bubble { position: absolute; right: 0; bottom: calc(var(--c) / 2 + var(--R) + var(--s) / 2 + 14px); width: 240px; max-width: calc(100vw - 32px); }
+
+/* chat open: everything folds back into the chat button */
+.dock.chat-open .dock-sat { opacity: 0; scale: .3; pointer-events: none; }
+.dock.chat-open .dock-arc { opacity: 0; transform: scale(.5); }
+
+/* the "Show & watch" bubble now points at the video button, on its left */
+.vtip { left: auto !important; right: calc(20px + 32px + 94px + 25px + 14px); bottom: 20px !important; transform-origin: 100% 50%; }
+
+html[data-mode='dark'] .dock .fab-chat { box-shadow: 0 16px 34px -12px rgba(232, 52, 78, .7), 0 0 0 4px #1d1b33; }
+html[data-mode='dark'] .dock-sat { box-shadow: 0 12px 24px -10px rgba(0, 0, 0, .7), 0 0 0 3px #2a2746; }
+html[data-mode='dark'] .dock .fab-tip { background: #f2f0ff; color: #12102a; }
+
+@media (max-width: 640px) {
+  .help-stack.dock { --c: 56px; --s: 44px; --R: 80px; right: calc(12px + env(safe-area-inset-right)); bottom: calc(12px + env(safe-area-inset-bottom)); }
+  .dock .fab-face > svg { width: 28px; height: 28px; }
+  .vtip { right: calc(12px + 28px + 80px + 22px + 10px); bottom: 12px !important; width: min(220px, calc(100vw - 166px)) !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock-sat { animation: dock-in .4s ease both; }
+  .dock-arc i, .dock-rate-stars, .dock-rate > svg, .dock .fab-chat::after, .dock-video::before { animation: none; }
+}
+
+/* Dark mode: the Frequent Research logo has dark lettering, so it sits on its own white plate */
+html[data-mode='dark'] img[alt^='Frequent Research'] { background: #fff; border-radius: 14px; padding: 6px 10px; box-sizing: border-box; box-shadow: 0 10px 24px -12px rgba(0, 0, 0, .7); }
+html[data-mode='dark'] .vb-watch span { background: rgba(255, 255, 255, .22); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .45); }

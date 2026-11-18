@@ -85,7 +85,7 @@ function Shell() {
       <Footer onCookieSettings={openCookieSettings} />
       {mounted && (
         <Suspense fallback={null}>
-          <LiveChat />
+          <LiveChat quiet={quiet} />
           <RateExperience suppressed={quiet} />
           {!quiet && <RewardToasts />}
           <CookieBanner />

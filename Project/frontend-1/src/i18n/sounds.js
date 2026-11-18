@@ -629,81 +629,176 @@ export function playSlotPull() {
   }
 }
 
-/**
- * Vending machine: keypad blip → motor whirr while the spiral turns → the item drops into the tray →
- * a bright "ding" sparkle. ≈1.3 s. `step` (0–8) nudges the pitch so every slot sounds a little different.
+/** Shared wrapper for the UI sounds below: checks the switch, starts audio, sets the level, never throws. */
+function sfx(level, fn) {
+  if (!isSoundEnabled()) return;
+  try {
+    if (!audio()) return;
+    const t = ctx.currentTime + 0.02;
+    master.gain.setValueAtTime(level, t);
+    fn(t);
+  } catch {
+    /* audio unavailable: stay silent */
+  }
+}
+
+/*
+ * Every UI sound has its own character, so a visitor can tell them apart with their eyes closed:
+ *   vending machine  mechanical: keypad beeps, motor, a can thudding into the tray, a fizz of bubbles
+ *   slot machine     casino: lever, ticking reels, ka-ching and a coin shower (playSlotPull above)
+ *   envelope         paper: seal crack, flap rustle, letter slide, a whistled two-note "you've got mail"
+ *   light mode       morning: rising air and birdsong chirps
+ *   dark mode        night: falling air, crickets and a low, warm chime
+ *   chat open        a friendly door chime (ding-dong); bot reply: a water-drop blip; sending: a paper-plane swish
+ *   rate us          a harp glissando opening; each star a twinkle that climbs with the rating; thank-you fanfare
+ *   video            projector: shutter clack and a film reel spinning up
+ *   reward pop-up    two small coins clinking (very quiet)
  */
+
+/** Vending machine (≈1.3 s). `step` (0–8) nudges the pitch so every slot sounds a little different. */
 export function playVend(step = 0) {
-  if (!isSoundEnabled()) return;
-  try {
-    if (!audio()) return;
-    const t = ctx.currentTime + 0.02;
-    master.gain.setValueAtTime(0.55, t);
-    // keypad: two quick square blips
-    tone(t, 84 + (step % 4), { dur: 0.05, vol: 0.1, a: 0.002, r: 0.03, type: 'square', verb: 0.2 });
-    tone(t + 0.07, 88 + (step % 4), { dur: 0.05, vol: 0.1, a: 0.002, r: 0.03, type: 'square', verb: 0.2 });
-    // motor: low buzzing hum + ratchet clicks of the spiral
-    tone(t + 0.15, 40, { dur: 0.5, vol: 0.12, a: 0.04, r: 0.08, type: 'sawtooth', filter: 600, verb: 0.1 });
-    for (let i = 0; i < 9; i++) noise(t + 0.17 + i * 0.055, { dur: 0.015, vol: 0.08, freq: 3200 + i * 120, q: 6, verb: 0.1 });
-    // drop: the item lands in the tray
-    drum(t + 0.72, { f0: 170, f1: 70, dur: 0.2, vol: 0.45, slap: 0.2, slapFreq: 1200 });
-    noise(t + 0.73, { dur: 0.06, vol: 0.12, freq: 1800, q: 1.5, verb: 0.3 });
-    // sparkle: rising chime arpeggio
-    [0, 4, 7, 12].forEach((iv, i) => mallet(t + 0.86 + i * 0.06, 84 + (step % 3) * 2 + iv, { partials: [1, 2.76, 5.4], dur: 0.5, vol: 0.09, pan: (i - 1.5) * 0.3 }));
-    bell(t + 1.06, 96, { ratio: 3.5, index: 2, dur: 1.1, vol: 0.12 });
-  } catch {
-    /* audio unavailable */
-  }
+  sfx(0.55, (t) => {
+    // keypad: three square beeps
+    [0, 0.07, 0.14].forEach((d, i) => tone(t + d, 86 + ((step + i) % 5), { dur: 0.045, vol: 0.09, a: 0.002, r: 0.02, type: 'square', verb: 0.1 }));
+    // motor whirr with the spiral ratcheting
+    tone(t + 0.24, 38, { from: 33, glide: 0.15, dur: 0.48, vol: 0.14, a: 0.05, r: 0.08, type: 'sawtooth', filter: 520, verb: 0.05 });
+    for (let i = 0; i < 8; i++) noise(t + 0.26 + i * 0.06, { dur: 0.014, vol: 0.09, freq: 2600 + i * 90, q: 7, verb: 0.05 });
+    // the can drops: hollow metallic thud + bounce
+    drum(t + 0.8, { f0: 150, f1: 55, dur: 0.24, vol: 0.55, slap: 0.25, slapFreq: 900 });
+    drum(t + 0.95, { f0: 120, f1: 60, dur: 0.12, vol: 0.22, slap: 0.1, slapFreq: 900 });
+    bell(t + 0.8, 62, { ratio: 1.41, index: 1.1, dur: 0.35, vol: 0.06, verb: 0.3 });
+    // fizz: a stream of tiny rising bubbles
+    for (let i = 0; i < 14; i++) tone(t + 1.02 + i * 0.03 + Math.random() * 0.02, 88 + Math.random() * 10, { from: 80, glide: 0.03, dur: 0.03, vol: 0.035, a: 0.002, r: 0.02, type: 'sine', verb: 0.3, pan: Math.random() * 0.8 - 0.4 });
+  });
 }
 
-/**
- * Light / dark switch. To dark: a descending "whoosh" into a deep, starry chord with twinkles.
- * To light: a rising whoosh into a bright major arpeggio. ≈1.4 s.
- */
+/** Light / dark switch: morning birdsong for light, a night of crickets for dark (≈1.3 s). */
 export function playThemeSwitch(toDark) {
-  if (!isSoundEnabled()) return;
-  try {
-    if (!audio()) return;
-    const t = ctx.currentTime + 0.02;
-    master.gain.setValueAtTime(0.55, t);
-    const sweep = toDark ? [5200, 3800, 2600, 1700, 1100, 700] : [700, 1100, 1700, 2600, 3800, 5200];
-    sweep.forEach((f, i) => noise(t + i * 0.045, { dur: 0.08, vol: 0.06, freq: f, q: 3, verb: 0.6, pan: (i / 5 - 0.5) * (toDark ? -1 : 1) }));
-    const chord = toDark ? [48, 55, 60, 63, 67] : [60, 64, 67, 72, 76];
-    chord.forEach((m, i) => tone(t + 0.25 + i * 0.07, m, { dur: 0.9, vol: 0.06, a: 0.08, r: 0.6, type: toDark ? 'triangle' : 'sine', verb: 1.4, pan: (i - 2) * 0.25 }));
-    const tw = toDark ? [96, 100, 103, 108] : [88, 91, 96, 100];
-    tw.forEach((m, i) => mallet(t + 0.55 + i * 0.09, m, { partials: [1, 2.76], dur: 0.4, vol: 0.06, pan: (i - 1.5) * 0.4 }));
-    bell(t + 0.3, toDark ? 72 : 84, { ratio: toDark ? 2.4 : 3.5, index: 1.8, dur: 1.3, vol: 0.1 });
-  } catch {
-    /* audio unavailable */
-  }
+  sfx(0.55, (t) => {
+    const sweep = toDark ? [4200, 3000, 2000, 1300, 800] : [800, 1300, 2000, 3000, 4200];
+    sweep.forEach((f, i) => noise(t + i * 0.05, { dur: 0.09, vol: 0.05, freq: f, q: 2.5, verb: 0.7, pan: (i / 4 - 0.5) * (toDark ? -1 : 1) }));
+    if (toDark) {
+      // crickets: fast pulsed high chirps, left and right
+      [[0.25, -0.5], [0.62, 0.5], [0.95, -0.2]].forEach(([d, pan]) => {
+        for (let i = 0; i < 4; i++) tone(t + d + i * 0.035, 100, { dur: 0.02, vol: 0.05, a: 0.002, r: 0.015, type: 'sine', verb: 0.6, pan });
+      });
+      // warm low chime under it
+      tone(t + 0.2, 45, { dur: 0.9, vol: 0.08, a: 0.15, r: 0.6, type: 'triangle', verb: 1.4 });
+      bell(t + 0.3, 69, { ratio: 2.4, index: 1.2, dur: 1.4, vol: 0.09 });
+    } else {
+      // birdsong: quick upward whistles with vibrato
+      [[0.22, 91, 84, -0.4], [0.36, 95, 88, -0.3], [0.62, 96, 91, 0.4], [0.72, 98, 93, 0.45], [0.82, 100, 94, 0.5]].forEach(([d, m, from, pan]) =>
+        tone(t + d, m, { from, glide: 0.06, dur: 0.07, vol: 0.06, a: 0.005, r: 0.04, type: 'sine', vib: 28, vibDepth: 0.03, verb: 0.8, pan }));
+      mallet(t + 0.3, 84, { partials: [1, 2.76], dur: 0.8, vol: 0.07 });
+      mallet(t + 0.42, 88, { partials: [1, 2.76], dur: 0.8, vol: 0.07 });
+    }
+  });
 }
 
-/**
- * Envelope opening: a paper slide and crinkle as the flap lifts, a soft wax-seal "pop", then the letter
- * slides out with a bright two-note "you've got mail" chime and a little coin sparkle. ≈1.1 s.
- */
+/** Envelope opening: seal crack, paper rustle, the letter sliding out, a whistled "you've got mail" (≈1.1 s). */
 export function playEnvelope(step = 0) {
-  if (!isSoundEnabled()) return;
-  try {
-    if (!audio()) return;
-    const t = ctx.currentTime + 0.02;
-    master.gain.setValueAtTime(0.55, t);
-    // seal pop
-    drum(t, { f0: 520, f1: 180, sweep: 0.05, dur: 0.09, vol: 0.28, slap: 0.12, slapFreq: 2600 });
-    // paper: flap lifting (soft rising swish) + crinkles
+  sfx(0.55, (t) => {
+    drum(t, { f0: 600, f1: 200, sweep: 0.04, dur: 0.07, vol: 0.26, slap: 0.15, slapFreq: 3200 }); // wax seal cracks
     [900, 1400, 2100, 3000].forEach((f, i) => noise(t + 0.05 + i * 0.04, { dur: 0.09, vol: 0.05, freq: f, q: 0.9, verb: 0.3, pan: -0.2 + i * 0.12 }));
-    for (let i = 0; i < 6; i++) noise(t + 0.1 + i * 0.03 + Math.random() * 0.02, { dur: 0.012, vol: 0.05, freq: 4200 + Math.random() * 2500, q: 4, verb: 0.15 });
-    // letter slides out: long gentle swish
-    noise(t + 0.26, { dur: 0.32, vol: 0.07, freq: 2400, q: 0.6, a: 0.12, verb: 0.5, pan: 0.15 });
-    // "you've got mail" chime: up a fifth, then a sparkle
+    for (let i = 0; i < 7; i++) noise(t + 0.1 + i * 0.028 + Math.random() * 0.02, { dur: 0.012, vol: 0.05, freq: 4200 + Math.random() * 2500, q: 4, verb: 0.15 });
+    noise(t + 0.26, { dur: 0.34, vol: 0.07, freq: 2400, q: 0.6, a: 0.12, verb: 0.5, pan: 0.15 }); // letter slides out
     const root = 79 + (step % 3) * 2;
-    mallet(t + 0.42, root, { partials: [1, 2.76, 5.4], dur: 0.6, vol: 0.12, pan: -0.15 });
-    mallet(t + 0.56, root + 7, { partials: [1, 2.76, 5.4], dur: 0.8, vol: 0.13, pan: 0.15 });
-    [12, 16, 19].forEach((iv, i) => mallet(t + 0.72 + i * 0.05, root + iv, { partials: [1, 2.76], dur: 0.35, vol: 0.05, pan: (i - 1) * 0.4 }));
-    bell(t + 0.6, root + 12, { ratio: 3.5, index: 1.6, dur: 0.9, vol: 0.07 });
-  } catch {
-    /* audio unavailable */
-  }
+    tone(t + 0.48, root + 7, { from: root, glide: 0.08, dur: 0.14, vol: 0.08, a: 0.01, r: 0.06, type: 'sine', vib: 6, vibDepth: 0.01, verb: 0.9, pan: -0.1 });
+    tone(t + 0.66, root + 12, { from: root + 9, glide: 0.06, dur: 0.24, vol: 0.08, a: 0.01, r: 0.15, type: 'sine', vib: 6, vibDepth: 0.012, verb: 1, pan: 0.1 });
+  });
+}
+
+/** Chat window opening: a friendly two-tone door chime. */
+export function playChatOpen() {
+  sfx(0.5, (t) => {
+    noise(t, { dur: 0.12, vol: 0.04, freq: 1800, q: 0.8, a: 0.04, verb: 0.4 });
+    mallet(t + 0.04, 81, { partials: [1, 3.0, 5.2], dur: 0.9, vol: 0.13, pan: -0.15 });
+    mallet(t + 0.24, 76, { partials: [1, 3.0, 5.2], dur: 1.1, vol: 0.12, pan: 0.15 });
+  });
+}
+
+/** Chat window closing: the chime in reverse, shorter. */
+export function playChatClose() {
+  sfx(0.45, (t) => {
+    mallet(t, 76, { partials: [1, 3.0], dur: 0.4, vol: 0.08 });
+    mallet(t + 0.09, 72, { partials: [1, 3.0], dur: 0.5, vol: 0.07 });
+  });
+}
+
+/** The assistant's reply arriving: a round water-drop blip. */
+export function playChatMessage() {
+  sfx(0.45, (t) => {
+    tone(t, 86, { from: 74, glide: 0.07, dur: 0.06, vol: 0.12, a: 0.003, r: 0.07, type: 'sine', verb: 0.5 });
+    tone(t + 0.075, 93, { from: 86, glide: 0.04, dur: 0.03, vol: 0.05, a: 0.002, r: 0.05, type: 'sine', verb: 0.6 });
+  });
+}
+
+/** Visitor sends a message: a quick paper-plane swish upwards. */
+export function playChatSend() {
+  sfx(0.45, (t) => {
+    noise(t, { dur: 0.16, vol: 0.07, freq: 1500, q: 1.2, a: 0.05, verb: 0.2, pan: -0.2 });
+    noise(t + 0.06, { dur: 0.14, vol: 0.06, freq: 3600, q: 1.5, a: 0.04, verb: 0.3, pan: 0.3 });
+    tone(t + 0.04, 88, { from: 79, glide: 0.12, dur: 0.08, vol: 0.04, a: 0.01, r: 0.06, type: 'triangle', verb: 0.4 });
+  });
+}
+
+/** "Need a hand?" greeting bubble: a cheerful three-note "hel-lo-there". */
+export function playChatHello() {
+  sfx(0.45, (t) => {
+    [76, 79, 84].forEach((m, i) => mallet(t + i * 0.11, m, { partials: [1, 4], dur: 0.5, vol: 0.09, pan: (i - 1) * 0.3 }));
+  });
+}
+
+/** Rate-us window opening: a harp glissando with a sparkle on top. */
+export function playRateOpen() {
+  sfx(0.5, (t) => {
+    [60, 64, 67, 71, 72, 76, 79, 83, 84].forEach((m, i) => pluck(t + i * 0.035, m, { bright: 0.75, decay: 0.997, dur: 1.2, vol: 0.2, pan: (i / 8 - 0.5) * 0.8 }));
+    bell(t + 0.34, 96, { ratio: 3.5, index: 1.4, dur: 0.9, vol: 0.05 });
+  });
+}
+
+/** A star picked (1–5): a twinkle that climbs and brightens with the rating. */
+export function playStar(n = 3) {
+  sfx(0.5, (t) => {
+    const notes = [72, 74, 76, 79, 84].slice(0, Math.max(1, Math.min(5, n)));
+    notes.forEach((m, i) => mallet(t + i * 0.045, m + 12, { partials: [1, 2.76, 5.4], dur: 0.45, vol: 0.06 + n * 0.006, pan: (i - 2) * 0.25 }));
+    if (n >= 4) bell(t + notes.length * 0.045, 96 + (n - 4) * 3, { ratio: 3.5, index: 1.6, dur: 0.8, vol: 0.06 });
+  });
+}
+
+/** Moving between the steps of the rate-us form: a soft wooden tick. */
+export function playStep() {
+  sfx(0.45, (t) => {
+    mallet(t, 79, { partials: [1, 3.9], dur: 0.18, vol: 0.09, verb: 0.3 });
+  });
+}
+
+/** Rating submitted: a short brass-like fanfare and confetti pops. */
+export function playRateThanks() {
+  sfx(0.5, (t) => {
+    [[0, 67], [0.12, 72], [0.24, 76], [0.36, 79]].forEach(([d, m]) => tone(t + d, m, { dur: d === 0.36 ? 0.55 : 0.1, vol: 0.07, a: 0.02, r: 0.2, type: 'sawtooth', filter: 2600, filterEnv: 0.06, verb: 0.9, detune: 6 }));
+    for (let i = 0; i < 8; i++) noise(t + 0.4 + i * 0.05 + Math.random() * 0.03, { dur: 0.02, vol: 0.06, freq: 3000 + Math.random() * 3000, q: 3, verb: 0.4, pan: Math.random() * 1.2 - 0.6 });
+  });
+}
+
+/** Page video opening: projector shutter clack and a film reel spinning up. */
+export function playVideoOpen() {
+  sfx(0.5, (t) => {
+    drum(t, { f0: 300, f1: 120, sweep: 0.03, dur: 0.06, vol: 0.3, slap: 0.2, slapFreq: 2400 });
+    let x = t + 0.08;
+    let gap = 0.06;
+    while (x < t + 0.7) { noise(x, { dur: 0.01, vol: 0.06, freq: 4200, q: 6, verb: 0.15 }); x += gap; gap *= 0.88; }
+    tone(t + 0.1, 57, { from: 45, glide: 0.5, dur: 0.6, vol: 0.06, a: 0.1, r: 0.2, type: 'sawtooth', filter: 900, verb: 0.3 });
+    mallet(t + 0.72, 84, { partials: [1, 2.76], dur: 0.6, vol: 0.06 });
+  });
+}
+
+/** Reward pop-up landing: two small coins clinking, kept very quiet. */
+export function playRewardToast() {
+  sfx(0.35, (t) => {
+    mallet(t, 100, { partials: [1, 2.4, 4.1], dur: 0.3, vol: 0.05, pan: -0.2 });
+    mallet(t + 0.07, 103, { partials: [1, 2.4, 4.1], dur: 0.4, vol: 0.045, pan: 0.2 });
+  });
 }
 
 /** Sound switched back on: a quick bright "bloop-ding". */

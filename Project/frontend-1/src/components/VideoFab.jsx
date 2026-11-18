@@ -8,6 +8,7 @@ import { createPortal } from 'react-dom';
 import { useRouter, Link } from '../router.jsx';
 import Icon from './Icon.jsx';
 import { CHANNEL_URL, parseYouTube, videoFor } from '../data/pageVideos.js';
+import { sfx } from '../utils/helpers.js';
 import { openRateExperience } from './RateExperience.jsx';
 
 function Cover({ v }) {
@@ -207,7 +208,6 @@ export default function VideoFab() {
   const { path } = useRouter();
   const v = videoFor(path);
   const [open, setOpen] = useState(false);
-  const fabRef = useRef(null);
   const closeRef = useRef(null);
   const label = `${v.title} ${v.em}`.trim();
 
@@ -216,14 +216,6 @@ export default function VideoFab() {
   // "Show & watch" bubble: pops up beside the button a few seconds after each page loads, once per page per
   // visit, and tucks itself away after a while (or when closed / when the video is opened).
   const [tip, setTip] = useState(false);
-  // The "Watch now" label shows for a few seconds on each page, then tucks away so it never sits over the page
-  // (it slides out again on hover / focus, and whenever the Show & watch bubble is up).
-  const [peek, setPeek] = useState(true);
-  useEffect(() => {
-    setPeek(true);
-    const t = setTimeout(() => setPeek(false), 7000);
-    return () => clearTimeout(t);
-  }, [path]);
   useEffect(() => {
     setTip(false);
     let seen = false;
@@ -237,7 +229,7 @@ export default function VideoFab() {
     setTip(false);
     try { sessionStorage.setItem(`mho-vtip-${path}`, '1'); } catch { /* storage blocked */ }
   }, [path]);
-  useEffect(() => { if (open) hideTip(); }, [open, hideTip]);
+  useEffect(() => { if (open) { hideTip(); sfx('playVideoOpen'); } }, [open, hideTip]);
 
   useEffect(() => {
     const onOpen = () => setOpen(true);
@@ -268,7 +260,7 @@ export default function VideoFab() {
     return () => {
       document.documentElement.classList.remove('vx-lock');
       document.removeEventListener('keydown', onKey);
-      (prev && prev.focus ? prev : fabRef.current)?.focus?.();
+      (prev && prev.focus ? prev : document.querySelector('.dock-video'))?.focus?.();
     };
   }, [open]);
 
@@ -276,26 +268,7 @@ export default function VideoFab() {
 
   return (
     <>
-      <button ref={fabRef} type="button" className={`vfab vfab-${v.template} ${peek || tip ? 'is-peek' : ''}`} aria-haspopup="dialog" aria-label="Watch this page's video" onClick={() => setOpen(true)}>
-        <span className="vfab-halo" aria-hidden="true" />
-        <span className="vfab-halo vfab-halo2" aria-hidden="true" />
-        <span className="vfab-ring" aria-hidden="true" />
-        <span className="vfab-core" aria-hidden="true">
-          <span className="vfab-shine" />
-          <svg viewBox="0 0 28 20" width="30" height="22"><rect width="28" height="20" rx="5.5" fill="#fff" /><path d="M11 5.6v8.8l7.6-4.4z" fill="#e8344e" /></svg>
-          <span className="vfab-prog"><i /></span>
-        </span>
-        <span className="vfab-pops" aria-hidden="true">
-          <i style={{ '--k': 0 }}><Icon name="heart" size={13} fill="currentColor" stroke={0} /></i>
-          <i style={{ '--k': 1 }}><Icon name="thumb" size={13} /></i>
-          <i style={{ '--k': 2 }}><Icon name="bell" size={13} /></i>
-          <i style={{ '--k': 3 }}><Icon name="star" size={13} fill="currentColor" stroke={0} /></i>
-        </span>
-        <span className="vfab-label" aria-hidden="true">
-          <span className="vfab-yt"><svg viewBox="0 0 28 20" width="14" height="10"><rect width="28" height="20" rx="5.5" fill="currentColor" /><path d="M11 5.6v8.8l7.6-4.4z" fill="#fff" /></svg>YouTube</span>
-          <b>Watch now</b><small>{v.fab || 'this page’s video'}</small>
-        </span>
-      </button>
+      {/* The round video launcher sits in the help dock (LiveChat.jsx) and opens this window via openPageVideo(). */}
       <div className={`vtip vtip-${v.template} ${tip && !open ? 'is-in' : ''}`} role="status" aria-hidden={!tip || open}>
         <button type="button" className="vtip-body" onClick={() => setOpen(true)} tabIndex={tip && !open ? 0 : -1}>
           <span className="vtip-live"><i />Show &amp; watch</span>

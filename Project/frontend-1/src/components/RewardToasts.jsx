@@ -1,4 +1,4 @@
-// Reward payout notifications (bottom centre).
+// Reward payout notifications: a rectangular ticket in the bottom-left corner (top of the screen on phones). Styles: styles/rewardpop.css.
 //
 // PRODUCTION — shows REAL recent payouts from PUBLIC_REWARD_FEED_URL (your backend, or a JSON file you
 // keep updated, e.g. /reward-feed.json). Expected JSON array:
@@ -18,7 +18,7 @@ import { COVERAGE } from '../data/countries.js';
 import { methodsFor, isMethodAllowed } from '../data/rewards.js';
 import { useMounted } from './ui.jsx';
 import Icon from './Icon.jsx';
-import { shuffle } from '../utils/helpers.js';
+import { shuffle, sfx } from '../utils/helpers.js';
 import { Link } from '../router.jsx';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tr, countryLabel } from '../i18n/engine.js';
@@ -85,6 +85,7 @@ export default function RewardToasts() {
       const row = order[idx.current++ % order.length];
       setCurrent(feed ? { live: true, ...row } : { live: false, cc: row.code, country: row.name, methods: methodsFor(row.code).map((m) => m.id) });
       setVisible(true);
+      if (navigator.userActivation?.hasBeenActive) sfx('playRewardToast');
       t2 = setTimeout(() => { setVisible(false); t1 = setTimeout(next, 11000 + Math.random() * 8000); }, 7000);
     };
     t1 = setTimeout(next, 8000);
@@ -98,39 +99,41 @@ export default function RewardToasts() {
   const ini = current.live ? `${current.firstName[0]}${current.lastInitial || ''}`.toUpperCase() : '';
 
   const m = METHOD[current.method] || METHOD.paypal;
-  const cc = <span className="rtp-cc" title={current.country}>{String(current.cc || '').toUpperCase()}</span>;
+  const cc = <span className="rtx-cc" title={current.country}>{String(current.cc || '').toUpperCase()}</span>;
   return (
     <aside
-      className={`rtoast rt-pop ${visible ? 'is-in' : ''} ${current.live ? 'is-live' : 'is-open'}`}
+      className={`rtx ${visible ? 'is-in' : ''} ${current.live ? 'is-live' : 'is-open'}`}
       style={{ '--g1': g1, '--g2': g2 }}
       aria-live="polite"
+      data-mode-skip=""
       onMouseEnter={() => (hover.current = true)}
       onMouseLeave={() => (hover.current = false)}
     >
-      <span className="rtp-edge" aria-hidden="true" />
-      <span className="rtp-confetti" aria-hidden="true">{Array.from({ length: 12 }).map((_, i) => <i key={i} style={{ '--i': i }} />)}</span>
-      <span className="rtp-ribbon" aria-hidden="true"><i />{current.live ? 'Reward sent' : 'Now paying'}</span>
-      <span className="rtt-av">
-        <span className="rtp-av-ring" aria-hidden="true" />
-        {current.live ? <b>{ini}</b> : <Icon name="globe" size={20} />}
-        <span className="rtt-coins" aria-hidden="true">{Array.from({ length: 6 }).map((_, i) => <i key={i} style={{ '--i': i }} />)}</span>
+      <span className="rtx-bar" aria-hidden="true"><i /></span>
+      <span className="rtx-side" aria-hidden="true">
+        <span className="rtx-av">{current.live ? <b>{ini}</b> : <Icon name="globe" size={22} />}</span>
+        <span className="rtx-coins">{Array.from({ length: 6 }).map((_, i) => <i key={i} style={{ '--i': i }} />)}</span>
       </span>
       {current.live ? (
-        <span className="rtt-body">
-          <span className="rtt-l1"><b>{current.firstName} {current.lastInitial ? current.lastInitial + '.' : ''}</b> just received</span>
-          <span className="rtp-amt"><strong>{(CUR[current.currency] || '') + current.amount}</strong><span className={`rtt-m mchip-${current.method}`} title={m.label}><Icon name={m.icon} size={11} />{m.label}</span></span>
-          <span className="rtt-l2">{cc}{current.city || current.country} · {current.minutesAgo ? `${current.minutesAgo}m ago` : 'now'} · {current.role}</span>
-          {PREVIEW_FORMS && <em className="rtt-preview">Preview data</em>}
+        <span className="rtx-main">
+          <span className="rtx-tag"><i />Reward sent{PREVIEW_FORMS && <em>Preview data</em>}</span>
+          <span className="rtx-l1"><b>{current.firstName} {current.lastInitial ? current.lastInitial + '.' : ''}</b> just got paid</span>
+          <span className="rtx-l2">{cc}{current.city || current.country} · {current.minutesAgo ? `${current.minutesAgo}m ago` : 'now'} · {current.role}</span>
         </span>
       ) : (
-        <Link to="/rewards" className="rtt-body rtt-open">
-          <span className="rtt-l1">{cc}<b className="notranslate" translate="no">{tr('Rewards open in {0}').replace('{0}', countryLabel(current.cc, current.country))}</b></span>
-          <span className="rtt-l2 rtt-icons">{current.methods.map((id) => <span key={id} className={`rtt-m mchip-${id}`} title={(METHOD[id] || METHOD.paypal).label}><Icon name={(METHOD[id] || METHOD.paypal).icon} size={11} />{(METHOD[id] || METHOD.paypal).label}</span>)}</span>
-          <span className="rtp-go">How payouts work <Icon name="arrow" size={12} /></span>
+        <Link to="/rewards" className="rtx-main">
+          <span className="rtx-tag"><i />Now paying</span>
+          <span className="rtx-l1 notranslate" translate="no">{cc}<b>{tr('Rewards open in {0}').replace('{0}', countryLabel(current.cc, current.country))}</b></span>
+          <span className="rtx-l2 rtx-methods">{current.methods.map((id) => <span key={id} className="rtx-m" title={(METHOD[id] || METHOD.paypal).label}><Icon name={(METHOD[id] || METHOD.paypal).icon} size={11} />{(METHOD[id] || METHOD.paypal).label}</span>)}</span>
         </Link>
       )}
-      <span className="rtt-timer" aria-hidden="true" />
-      <button className="rtt-x" onClick={() => setMuted(true)} aria-label="Hide reward notifications"><Icon name="x" size={12} /></button>
+      {current.live ? (
+        <span className="rtx-amt"><strong>{(CUR[current.currency] || '') + current.amount}</strong><small><Icon name={m.icon} size={11} />{m.label}</small></span>
+      ) : (
+        <Link to="/rewards" className="rtx-amt rtx-go" tabIndex={-1} aria-hidden="true"><Icon name="arrow" size={18} /><small>Payouts</small></Link>
+      )}
+      <span className="rtx-sheen" aria-hidden="true" />
+      <button className="rtx-x" onClick={() => setMuted(true)} aria-label="Hide reward notifications"><Icon name="x" size={11} /></button>
     </aside>
   );
 }

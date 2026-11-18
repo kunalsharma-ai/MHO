@@ -80,7 +80,9 @@ function darkSurface(c) {
   const { h, s } = toHsl(c);
   const L = lightness(c);
   if (chroma(c) < 0.05) return { ...PAGE_DARK, l: PAGE_DARK.l + (1 - L) * 0.45 + (L < 0.97 ? 0.035 : 0) };
-  return { h, s: clamp(s * 0.55, 0.18, 0.5), l: clamp(0.1 + (1 - L) * 0.35, 0.1, 0.2) };
+  // warm tints (peach, cream, lemon) turn brown or olive when darkened, so they become a deep plum instead
+  const warm = h >= 15 && h <= 85;
+  return { h: warm ? 338 : h, s: warm ? 0.26 : clamp(s * 0.55, 0.18, 0.5), l: clamp(0.1 + (1 - L) * 0.35, 0.1, 0.2) };
 }
 /** Soft decorative glows (blurred blobs) become coloured light, not dark smudges. */
 function glow(c) {
@@ -145,6 +147,10 @@ function recolourGradient(img, textClip) {
   return changed ? out : null;
 }
 
+// small round text-free pieces (track dots, knobs, rings): darkening them leaves black dots
+const dot = (el, cs) => { const r = el.getBoundingClientRect(); const m = Math.min(r.width, r.height); if (!m || Math.max(r.width, r.height) > 64) return false; const rad = cs.borderTopLeftRadius; return rad.endsWith('%') ? parseFloat(rad) >= 45 : parseFloat(rad) >= m / 2 - 1; };
+const smallBox = (el) => { const r = el.getBoundingClientRect(); return r.width * r.height < window.innerWidth * window.innerHeight * 0.12; };
+
 /** Process an element and its subtree. `bg` = lightness of the surface behind it; `pc` = parent's context. */
 function processTree(root, bg, pc) {
   // Read everything first (no writes in between, so the browser computes styles once).
@@ -163,6 +169,13 @@ function processTree(root, bg, pc) {
     color: cs.color, bgc: cs.backgroundColor, bgi: cs.backgroundImage, clip: cs.backgroundClip === 'text' || cs.webkitBackgroundClip === 'text',
     bt: cs.borderTopColor, br: cs.borderRightColor, bb: cs.borderBottomColor, bl: cs.borderLeftColor, bw: cs.borderTopWidth !== '0px' || cs.borderBottomWidth !== '0px' || cs.borderLeftWidth !== '0px' || cs.borderRightWidth !== '0px',
     fill: cs.fill, stroke: cs.stroke, outline: cs.outlineColor, blur: /blur\(/.test(cs.filter),
+    // a text-free wrapper around a logo / badge image: its light plate is part of the picture, keep it
+    // small SVG dots and knobs keep their light fill (darkened they read as black holes)
+    svgDot: (el.tagName === 'circle' || el.tagName === 'ellipse') && (() => { const r = el.getBoundingClientRect(); return Math.max(r.width, r.height) <= 64; })(),
+    plate: !(el instanceof SVGElement) && !!el.querySelector('img, picture') && !el.textContent.trim(),
+    // a text-free shape inside a decorative illustration (jar glass, lid, coins, bars): darkening it turns the
+    // picture into a photo negative, so it keeps its colour, just a little dimmer
+    shape: !(el instanceof SVGElement) && !el.textContent.trim() && (el.closest('[aria-hidden="true"]') ? smallBox(el) : dot(el, cs)),
   }));
   // Then decide and write, walking the snapshot with a stack of parent contexts.
   const stack = [pc || { bg, color: null, out: null }];
@@ -176,7 +189,7 @@ function processTree(root, bg, pc) {
       if (!SVG_SHAPES.has(it.tag)) { stack[it.depth + 1] = parent; continue; }
       const f = parse(it.fill);
       if (f && f.a > 0) {
-        if (surface < 0.5 && it.tag !== 'text' && it.tag !== 'tspan' && isLightSurface(f) && chroma(f) < 0.15) set(el, 'fill', css(darkSurface(f), f.a));
+        if (surface < 0.5 && it.tag !== 'text' && it.tag !== 'tspan' && isLightSurface(f) && chroma(f) < 0.15 && !it.svgDot) set(el, 'fill', css(darkSurface(f), f.a));
         else if (surface < 0.5 && (it.tag === 'text' || it.tag === 'tspan') && isDarkText(f)) set(el, 'fill', css(lightText(f), f.a));
       }
       stack[it.depth + 1] = parent;
@@ -196,14 +209,20 @@ function processTree(root, bg, pc) {
     }
     // background
     const bgc = parse(it.bgc);
-    if (bgc && bgc.a > 0.35 && isLightSurface(bgc)) {
+    if (it.plate && bgc && bgc.a > 0.35) {
+      surface = lightness(bgc);
+    } else if (it.shape && bgc && bgc.a > 0.35 && isLightSurface(bgc)) {
+      const { h, s: sat, l } = toHsl(bgc);
+      set(el, 'background-color', css({ h, s: sat, l: l * 0.86 }, bgc.a));
+      surface = 0.8;
+    } else if (bgc && bgc.a > 0.35 && isLightSurface(bgc)) {
       const d = darkSurface(bgc);
       set(el, 'background-color', css(d, bgc.a));
       if (bgc.a > 0.6) surface = d.l;
     } else if (bgc && bgc.a > 0.6) {
       surface = lightness(bgc);
     }
-    if (it.bgi && it.bgi !== 'none' && it.bgi.includes('gradient')) {
+    if (it.bgi && it.bgi !== 'none' && it.bgi.includes('gradient') && !it.shape) {
       if (it.clip) {
         const g = surface < 0.5 ? recolourGradient(it.bgi, true) : null;
         if (g) set(el, 'background-image', g);
