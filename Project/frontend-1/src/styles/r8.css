@@ -674,36 +674,44 @@ html[data-mode='dark'] .rv-bloom { background: radial-gradient(50% 60% at 50% 50
 .aud-hcp .ac-band .text-link.light, .aud-patient .ac-band .text-link.light { color: #fff; border-color: rgba(255, 255, 255, .6); }
 
 /* ================================================================ 12. Floating buttons: one signature move each
-   Every move is transform/opacity on a tiny layer, with a long rest in each cycle (data-loop keeps it going). */
+   LiveChat.jsx sets data-fx on the help stack or the YouTube button so the buttons take turns: a ~2s one-shot
+   burst, then nothing runs until the next turn. Transform and opacity only. */
 /* WhatsApp: the icon rings like a phone and a typing bubble pops out */
-.fab-wa .fx-ring > svg { animation: fx-ring 5s ease-in-out infinite; transform-origin: 50% 60%; }
-@keyframes fx-ring { 0%, 62%, 100% { transform: none; } 66% { transform: rotate(-18deg) scale(1.08); } 70% { transform: rotate(16deg) scale(1.08); } 74% { transform: rotate(-12deg) scale(1.05); } 78% { transform: rotate(9deg); } 82% { transform: rotate(-4deg); } }
-.fx-wa { position: absolute; right: -16px; top: -14px; z-index: 3; display: flex; gap: 3px; padding: 6px 8px; border-radius: 12px 12px 12px 3px; background: #fff; box-shadow: 0 6px 14px -6px rgba(18, 140, 126, .7), 0 0 0 1.5px #25d366; pointer-events: none; transform-origin: 0 100%; animation: fx-pop 5s cubic-bezier(.34, 1.56, .64, 1) infinite; }
-.fx-wa i { width: 5px; height: 5px; border-radius: 50%; background: #128c7e; animation: fx-dot 5s ease-in-out infinite; }
-.fx-wa i:nth-child(2) { animation-delay: .15s; } .fx-wa i:nth-child(3) { animation-delay: .3s; }
-@keyframes fx-pop { 0%, 8%, 52%, 100% { transform: scale(0); opacity: 0; } 14%, 46% { transform: scale(1); opacity: 1; } }
-@keyframes fx-dot { 0%, 14%, 22%, 30%, 38%, 46%, 100% { transform: none; } 18%, 26%, 34%, 42% { transform: translateY(-3px); } }
+.fab-wa .fx-ring > svg { transform-origin: 50% 60%; }
+[data-fx='wa'] .fab-wa .fx-ring > svg { animation: fx-ring 1.1s ease-in-out; }
+@keyframes fx-ring { 0%, 100% { transform: none; } 12% { transform: rotate(-18deg) scale(1.1); } 26% { transform: rotate(16deg) scale(1.1); } 40% { transform: rotate(-12deg) scale(1.06); } 54% { transform: rotate(9deg); } 70% { transform: rotate(-4deg); } }
+.fx-wa, .fx-typing { position: absolute; z-index: 3; display: flex; gap: 3px; border-radius: 12px; pointer-events: none; opacity: 0; transform: scale(0); }
+.fx-wa { right: -16px; top: -14px; padding: 6px 8px; border-radius: 12px 12px 12px 3px; background: #fff; box-shadow: 0 6px 14px -6px rgba(18, 140, 126, .7), 0 0 0 1.5px #25d366; transform-origin: 0 100%; }
+.fx-wa i { width: 5px; height: 5px; border-radius: 50%; background: #128c7e; }
+[data-fx='wa'] .fx-wa, [data-fx='chat'] .fx-typing { animation: fx-pop 1.9s cubic-bezier(.34, 1.56, .64, 1) both; }
+[data-fx='wa'] .fx-wa i, [data-fx='chat'] .fx-typing i { animation: fx-dot .5s ease-in-out .25s 3 both; }
+.fx-wa i:nth-child(2), .fx-typing i:nth-child(2) { animation-delay: .38s !important; } .fx-wa i:nth-child(3), .fx-typing i:nth-child(3) { animation-delay: .51s !important; }
+@keyframes fx-pop { 0% { transform: scale(0); opacity: 0; } 14%, 82% { transform: scale(1); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
+@keyframes fx-dot { 50% { transform: translateY(-3px); } }
 /* Rate & reviews: the star flips over and throws a ring of sparks */
-.fx-flip { display: grid; place-items: center; position: relative; z-index: 1; animation: fx-flip 6s cubic-bezier(.34, 1.4, .64, 1) infinite; }
+.fx-flip { display: grid; place-items: center; position: relative; z-index: 1; }
 .fx-flip > svg { filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .25)); }
-@keyframes fx-flip { 0%, 55%, 100% { transform: none; } 70% { transform: perspective(200px) rotateY(360deg) scale(1.25); } 78% { transform: perspective(200px) rotateY(360deg) scale(1); } }
+[data-fx='rate'] .fx-flip { animation: fx-flip 1.2s cubic-bezier(.34, 1.4, .64, 1); }
+@keyframes fx-flip { 0% { transform: none; } 60% { transform: perspective(200px) rotateY(360deg) scale(1.28); } 100% { transform: perspective(200px) rotateY(360deg) scale(1); } }
 .fx-burst { position: absolute; left: 50%; top: 50%; width: 0; height: 0; z-index: 2; pointer-events: none; }
-.fx-burst i { position: absolute; left: -2px; top: -7px; width: 4px; height: 14px; border-radius: 4px; background: linear-gradient(#fff6cf, #ffb020); transform: rotate(calc(var(--i) * 45deg)) translateY(-26px) scaleY(0); opacity: 0; animation: fx-spark 6s ease-out infinite; }
+.fx-burst i { position: absolute; left: -2px; top: -7px; width: 4px; height: 14px; border-radius: 4px; background: linear-gradient(#fff6cf, #ffb020); opacity: 0; transform: rotate(calc(var(--i) * 45deg)) translateY(-24px) scaleY(0); }
 .fx-burst i:nth-child(odd) { background: linear-gradient(#ffe1e8, #ff4f6d); }
-@keyframes fx-spark { 0%, 66% { transform: rotate(calc(var(--i) * 45deg)) translateY(-24px) scaleY(0); opacity: 0; } 70% { transform: rotate(calc(var(--i) * 45deg)) translateY(-34px) scaleY(1); opacity: 1; } 82%, 100% { transform: rotate(calc(var(--i) * 45deg)) translateY(-48px) scaleY(.2); opacity: 0; } }
-/* Live chat: the bubble breathes and a typing indicator floats beside it */
-.dock .fab-face.fx-bob > svg { animation: fx-bob 4.4s ease-in-out infinite; }
-@keyframes fx-bob { 0%, 100% { transform: none; } 20% { transform: translateY(-3px) rotate(-6deg); } 40% { transform: translateY(1px) rotate(4deg) scale(1.05); } 60% { transform: none; } }
-.fx-typing { position: absolute; left: -22px; top: -12px; z-index: 3; display: flex; gap: 3px; padding: 7px 9px; border-radius: 14px 14px 3px 14px; background: linear-gradient(135deg, #8a4dff, #ff4f6d); box-shadow: 0 8px 16px -8px rgba(138, 77, 255, .8), 0 0 0 2px #fff; pointer-events: none; transform-origin: 100% 100%; animation: fx-pop 6.5s cubic-bezier(.34, 1.56, .64, 1) 1.2s infinite both; }
-.fx-typing i { width: 5px; height: 5px; border-radius: 50%; background: #fff; animation: fx-dot 6.5s ease-in-out 1.2s infinite; }
-.fx-typing i:nth-child(2) { animation-delay: 1.35s; } .fx-typing i:nth-child(3) { animation-delay: 1.5s; }
+[data-fx='rate'] .fx-burst i { animation: fx-spark .9s ease-out .45s both; }
+@keyframes fx-spark { 0% { transform: rotate(calc(var(--i) * 45deg)) translateY(-24px) scaleY(0); opacity: 0; } 25% { transform: rotate(calc(var(--i) * 45deg)) translateY(-34px) scaleY(1); opacity: 1; } 100% { transform: rotate(calc(var(--i) * 45deg)) translateY(-50px) scaleY(.2); opacity: 0; } }
+/* Live chat: the bubble wobbles and a typing indicator floats beside it */
+[data-fx='chat'] .fab-face.fx-bob > svg { animation: fx-bob 1.2s ease-in-out; }
+@keyframes fx-bob { 0%, 100% { transform: none; } 25% { transform: translateY(-4px) rotate(-8deg); } 55% { transform: translateY(1px) rotate(6deg) scale(1.06); } }
+.fx-typing { left: -22px; top: -12px; padding: 7px 9px; border-radius: 14px 14px 3px 14px; background: linear-gradient(135deg, #8a4dff, #ff4f6d); box-shadow: 0 8px 16px -8px rgba(138, 77, 255, .8), 0 0 0 2px #fff; transform-origin: 100% 100%; }
+.fx-typing i { width: 5px; height: 5px; border-radius: 50%; background: #fff; }
 /* YouTube: live reactions float up off the button */
 .fx-react { position: absolute; left: 50%; top: 0; width: 0; height: 0; z-index: 3; pointer-events: none; }
-.fx-react i { position: absolute; left: -11px; top: -4px; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: #ff0033; box-shadow: 0 0 0 2px #fff, 0 6px 12px -4px rgba(255, 0, 51, .7); opacity: 0; animation: fx-rise 5.5s ease-out infinite; animation-delay: calc(var(--i) * .35s); }
+.fx-react i { position: absolute; left: -11px; top: -4px; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: #ff0033; box-shadow: 0 0 0 2px #fff, 0 6px 12px -4px rgba(255, 0, 51, .7); opacity: 0; }
 .fx-react i:nth-child(2) { background: #2457f5; } .fx-react i:nth-child(3) { background: #ffb020; } .fx-react i:nth-child(4) { background: #ff4f6d; }
-@keyframes fx-rise { 0%, 50% { transform: translate(0, 0) scale(.3); opacity: 0; } 56% { transform: translate(calc((var(--i) - 1.5) * 6px), -14px) scale(1); opacity: 1; } 78% { opacity: 1; } 90%, 100% { transform: translate(calc((var(--i) - 1.5) * 16px), -64px) scale(.7) rotate(calc((var(--i) - 1.5) * 20deg)); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .fx-wa, .fx-burst, .fx-typing, .fx-react, .fx-flip, .fab-wa .fx-ring > svg, .fx-bob > svg, .fx-wa i, .fx-typing i { animation: none !important; } .fx-wa, .fx-typing, .fx-react, .fx-burst { display: none; } }
-html.chat-open .fx-typing, .dock.chat-open .fx-typing { display: none; }
+.ytfab[data-fx='yt'] .fx-react i { animation: fx-rise 1.4s ease-out both; animation-delay: calc(var(--i) * .15s); }
+.ytfab[data-fx='yt'] .ytb-plate { animation: fx-tap .6s cubic-bezier(.34, 1.56, .64, 1); }
+@keyframes fx-tap { 40% { transform: scale(.9); } 75% { transform: scale(1.08); } }
+@keyframes fx-rise { 0% { transform: translate(0, 0) scale(.3); opacity: 0; } 15% { transform: translate(calc((var(--i) - 1.5) * 6px), -14px) scale(1); opacity: 1; } 70% { opacity: 1; } 100% { transform: translate(calc((var(--i) - 1.5) * 16px), -64px) scale(.7) rotate(calc((var(--i) - 1.5) * 20deg)); opacity: 0; } }
+.dock.chat-open .fx-typing { display: none; }
 
 /* ================================================================ 13. Patient stories: a storybook that turns its pages */
 .rv-book { position: relative; padding: 34px 20px 26px; border-radius: 32px; background: radial-gradient(60% 70% at 100% 0%, rgba(18, 194, 233, .3), transparent 60%), radial-gradient(50% 60% at 0% 100%, rgba(0, 179, 134, .3), transparent 60%), linear-gradient(160deg, #e2fbf2, #e3f4ff); box-shadow: 0 40px 70px -46px #00b386, inset 0 0 0 1px rgba(0, 179, 134, .2); overflow: hidden; }

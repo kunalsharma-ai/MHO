@@ -98,6 +98,28 @@ export default function LiveChat({ quiet = false }) {
     return onSoundChange(setSound);
   }, []);
 
+  // Floating buttons take turns doing their signature move (styles/r8.css section 12): one button at a time,
+  // a short one-shot burst every few seconds, nothing while the tab is hidden. Between bursts no animation runs,
+  // so the page goes fully idle.
+  useEffect(() => {
+    if (typeof window === 'undefined' || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const order = [['.help-stack', 'wa'], ['.help-stack', 'rate'], ['.help-stack', 'chat'], ['.ytfab', 'yt']];
+    let k = 0;
+    let off = 0;
+    const tick = () => {
+      if (document.hidden) return;
+      const [sel, fx] = order[k++ % order.length];
+      const el = document.querySelector(sel);
+      if (!el) return;
+      el.setAttribute('data-fx', fx);
+      clearTimeout(off);
+      off = setTimeout(() => el.removeAttribute('data-fx'), 2000);
+    };
+    const first = setTimeout(tick, 3500);
+    const t = setInterval(tick, 4500);
+    return () => { clearTimeout(first); clearTimeout(off); clearInterval(t); };
+  }, []);
+
   useEffect(() => {
     // Friendly greeting bubble + soft pop on the visitor's first interaction (browsers block audio before it).
     if (visit.get('mho-greeted')) return;
@@ -262,8 +284,8 @@ export default function LiveChat({ quiet = false }) {
           its "Live help 24/7" pill. The page's video has its own round button on the left (VideoFab.jsx). */}
       <a className="fab-wa dock-sat ds-1" href={whatsappLink()} target="_blank" rel="noopener noreferrer" aria-label={`Chat on WhatsApp ${SITE.whatsappDisplay}`}>
         <span className="dock-halo" aria-hidden="true" />
-        <span className="dock-core fx-ring" data-loop=""><Icon name="whatsapp" size={26} /></span>
-        <span className="fx-wa" aria-hidden="true" data-loop=""><i /><i /><i /></span>
+        <span className="dock-core fx-ring"><Icon name="whatsapp" size={26} /></span>
+        <span className="fx-wa" aria-hidden="true"><i /><i /><i /></span>
         <span className="fab-tip">WhatsApp us</span>
       </a>
       {!quiet && (
@@ -271,9 +293,9 @@ export default function LiveChat({ quiet = false }) {
           <span className="dock-halo" aria-hidden="true" />
           <span className="dock-core">
             <span className="dock-rate-stars" aria-hidden="true">{[0, 1, 2, 3, 4].map((i) => <i key={i} style={{ '--i': i }} />)}</span>
-            <span className="fx-flip" data-loop=""><Icon name="star" size={24} fill="currentColor" stroke={0} /></span>
+            <span className="fx-flip"><Icon name="star" size={24} fill="currentColor" stroke={0} /></span>
           </span>
-          <span className="fx-burst" aria-hidden="true" data-loop="">{[0, 1, 2, 3, 4, 5, 6, 7].map((i) => <i key={i} style={{ '--i': i }} />)}</span>
+          <span className="fx-burst" aria-hidden="true">{[0, 1, 2, 3, 4, 5, 6, 7].map((i) => <i key={i} style={{ '--i': i }} />)}</span>
           <span className="fab-tip">Rate your experience</span>
         </button>
       )}
@@ -287,8 +309,8 @@ export default function LiveChat({ quiet = false }) {
       <button className="fab-chat" onClick={open ? () => { setOpen(false); sfx('playChatClose'); } : openChat} onPointerEnter={loadEngine} aria-expanded={open} aria-controls="mho-chat" aria-label={open ? 'Close live help' : 'Open live help, available 24/7'}>
         <span className="dock-halo" aria-hidden="true" />
         <span className="fab-orbit" aria-hidden="true"><i /><i /><i /></span>
-        <span className="fab-face fx-bob" data-loop="">{open ? <Icon name="x" size={24} /> : <ChatLogo size={34} />}</span>
-        {!open && <span className="fx-typing" aria-hidden="true" data-loop=""><i /><i /><i /></span>}
+        <span className="fab-face fx-bob">{open ? <Icon name="x" size={24} /> : <ChatLogo size={34} />}</span>
+        {!open && <span className="fx-typing" aria-hidden="true"><i /><i /><i /></span>}
         {!open && !msgs.length && <span className="dock-badge" aria-hidden="true">1</span>}
         <span className="fab-label"><i className="dot" />Live help 24/7</span>
       </button>
