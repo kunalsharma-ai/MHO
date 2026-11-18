@@ -228,11 +228,33 @@ export default function VideoFab() {
     setTip(false);
     // once per page per visit, and never again after the visitor closed it with ✕ (until a refresh)
     if (isOff('video-card') || visit.get(`vtip-${path}`, false)) return undefined;
-    const t1 = setTimeout(() => setTip(true), 3500);
-    autoHide.current = setTimeout(() => setTip(false), 15500);
-    return () => { clearTimeout(t1); clearTimeout(autoHide.current); };
+    // On phones the card would cover the hero's buttons, so there it waits until the visitor scrolls past the first screen.
+    let t1 = 0;
+    const show = () => {
+      setTip(true);
+      autoHide.current = setTimeout(() => setTip(false), 12000);
+    };
+    const narrow = window.matchMedia('(max-width: 640px)').matches;
+    const onScroll = () => {
+      if (window.scrollY < window.innerHeight * 0.8) return;
+      window.removeEventListener('scroll', onScroll);
+      t1 = setTimeout(show, 600);
+    };
+    if (narrow) window.addEventListener('scroll', onScroll, { passive: true });
+    else t1 = setTimeout(show, 3500);
+    return () => { clearTimeout(t1); clearTimeout(autoHide.current); window.removeEventListener('scroll', onScroll); };
   }, [path]);
   // The YouTube button first shows the "watch this page" card; Watch now (or a second press) opens the video.
+  // On phones the button would sit on the hero's buttons, so it slides in once the visitor scrolls a little.
+  const [atTop, setAtTop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)');
+    const check = () => setAtTop(mq.matches && window.scrollY < window.innerHeight * 0.35);
+    check();
+    window.addEventListener('scroll', check, { passive: true });
+    mq.addEventListener('change', check);
+    return () => { window.removeEventListener('scroll', check); mq.removeEventListener('change', check); };
+  }, [path]);
   const toggleTip = () => {
     if (tip) { setOpen(true); return; } // card already showing: a second press plays the video
     clearTimeout(autoHide.current);
@@ -290,7 +312,7 @@ export default function VideoFab() {
     <>
       {/* Round YouTube button, bottom-left, with "Watch our video" circling it, and a notification card beside it
           that pops up a few seconds into each page (styles/dock.css). */}
-      <button type="button" className={`ytfab ${seen ? 'is-seen' : ''} ${tip ? 'is-on' : ''}`} onClick={toggleTip} aria-expanded={tip} aria-controls="ytcard" aria-label="Watch this page's video" data-mode-skip="">
+      <button type="button" className={`ytfab ${seen ? 'is-seen' : ''} ${tip ? 'is-on' : ''} ${atTop && !tip ? 'is-tucked' : ''}`} onClick={toggleTip} aria-expanded={tip} aria-controls="ytcard" aria-label="Watch this page's video" data-mode-skip="">
         <span className="ytb" aria-hidden="true">
           <span className="ytb-wave" /><span className="ytb-wave w2" />
           <span className="ytb-plate">

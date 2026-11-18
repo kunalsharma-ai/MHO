@@ -334,6 +334,8 @@ html[data-mode='dark'] .ytb-plate { background: #fff; }
   .ytb-label { display: none; }
   .ytfab .ytfab-badge { left: 36px !important; }
   .ytcard { left: 12px !important; bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
+  .ytfab { transition: translate .35s cubic-bezier(.34, 1.56, .64, 1), opacity .25s; }
+  .ytfab.is-tucked { translate: calc(-100% - 24px) 0; opacity: 0 !important; pointer-events: none; }
 }
 @media (prefers-reduced-motion: reduce) { .ytb *, .ytb-plate { animation: none !important; } }
 
