@@ -291,15 +291,15 @@ export default function VideoFab() {
       {/* Round YouTube button, bottom-left, with "Watch our video" circling it, and a notification card beside it
           that pops up a few seconds into each page (styles/dock.css). */}
       <button type="button" className={`ytfab ${seen ? 'is-seen' : ''} ${tip ? 'is-on' : ''}`} onClick={toggleTip} aria-expanded={tip} aria-controls="ytcard" aria-label="Watch this page's video" data-mode-skip="">
-        <svg className="ytfab-text" viewBox="0 0 100 100" aria-hidden="true">
-          <defs><path id="ytfab-circle" d="M50 50 m-39 0 a39 39 0 1 1 78 0 a39 39 0 1 1 -78 0" /></defs>
-          <text><textPath href="#ytfab-circle" startOffset="0">WATCH OUR VIDEO • WATCH OUR VIDEO •</textPath></text>
-        </svg>
-        <span className="ytfab-ring" aria-hidden="true" />
-        <span className="ytfab-core" aria-hidden="true">
-          <svg viewBox="0 0 28 20" width="30" height="22"><rect width="28" height="20" rx="5.5" fill="#fff" /><path d="M11 5.6v8.8l7.6-4.4z" fill="#ff0033" /></svg>
+        <span className="ytp-tag" aria-hidden="true">Watch this page</span>
+        <span className="ytp" aria-hidden="true">
+          <span className="ytp-scene"><i /><i /><i /></span>
+          <span className="ytp-heart"><svg viewBox="0 0 24 22" width="18" height="16"><path d="M12 21 2.6 11.6A5.5 5.5 0 0 1 12 4.3a5.5 5.5 0 0 1 9.4 7.3z" fill="#fff" /></svg></span>
+          <span className="ytp-play"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M8 5.5v13l11-6.5z" fill="#fff" /></svg></span>
+          <span className="ytp-bar"><i /></span>
+          <span className="ytp-cap"><b>Video</b><span>MHO</span></span>
+          <span className="ytp-sheen" />
         </span>
-        <span className="ytfab-eq" aria-hidden="true"><i /><i /><i /></span>
         {!seen && !isOff('video-card') && <span className="ytfab-badge" aria-hidden="true">1</span>}
       </button>
       <div id="ytcard" className={`ytcard ${tip && !open ? 'is-in' : ''}`} role="status" aria-hidden={!tip || open} data-mode-skip="">

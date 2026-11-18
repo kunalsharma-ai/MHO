@@ -2,42 +2,14 @@
 // surveys, survey and get paid, take surveys for money, doing surveys for money, earn money through surveys.
 import { useState } from 'react';
 import PageHero from '../components/PageHero.jsx';
-import { SectionHead, Reveal, Eyebrow, useInView, Accordion } from '../components/ui.jsx';
+import { SectionHead, Eyebrow } from '../components/ui.jsx';
 import Icon from '../components/Icon.jsx';
 import { ConveyorArt, LoopTrack, DayDial } from '../components/HowV4.jsx';
 import TopicHub from '../components/TopicHub.jsx';
+import { ScreeningSieve, HabitDeck, FaqStage } from '../components/R8.jsx';
 import { Link } from '../router.jsx';
 import { STEPS } from '../data/surveys.js';
 import { HOW_FAQ } from '../data/faqs.js';
-
-const FUNNEL = [
-  { t: 'Invitation sent', d: 'Matched on your profile', w: 100, c: '#3d5afe' },
-  { t: 'Screening questions', d: 'Do you fit this exact study?', w: 78, c: '#14b8a6' },
-  { t: 'Quality checks', d: 'Attention & consistency', w: 60, c: '#f59e0b' },
-  { t: 'Survey completed', d: 'Reward credited after validation', w: 46, c: '#e8344e' },
-];
-
-function Funnel() {
-  const [ref, inView] = useInView({ threshold: 0.3 });
-  return (
-    <div ref={ref} className={`funnel ${inView ? 'is-in' : ''}`}>
-      {FUNNEL.map((f, i) => (
-        <div key={f.t} className="fn-row" style={{ '--w': f.w + '%', '--c': f.c, '--i': i }}>
-          <span className="fn-bar"><b>{f.t}</b><small>{f.d}</small></span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-const TIPS = [
-  { ic: 'clipboard', t: 'Complete every profile section', d: 'More detail = more matched invitations, fewer screen-outs.' },
-  { ic: 'bell', t: 'Open invitations early', d: 'Studies close once they reach their quota.' },
-  { ic: 'pen', t: 'Write real open-ended answers', d: 'Thoughtful answers protect your quality score.' },
-  { ic: 'phone', t: 'Use any device', d: 'Most surveys work on phone, tablet or laptop.' },
-  { ic: 'clock', t: 'Check the time estimate', d: 'Start when you can finish in one sitting.' },
-  { ic: 'shieldCheck', t: 'Answer consistently', d: 'Attention checks catch rushed or random answers.' },
-];
 
 const DAY = [
   { time: '08:10', ic: 'mail', t: 'Invitation lands', d: '“Heart health study · 15 min · reward shown”' },
@@ -84,7 +56,7 @@ export default function HowItWorks() {
       {/* Funnel */}
       <section className="section how-funnel">
         <div className="container split">
-          <Funnel />
+          <ScreeningSieve />
           <div className="split-copy">
             <Eyebrow color="#f59e0b">Why not every invite pays</Eyebrow>
             <h2>Screening is how paid surveys stay valuable</h2>
@@ -98,23 +70,13 @@ export default function HowItWorks() {
       <section className="section how-tips">
         <div className="container">
           <SectionHead eyebrow="Pro tips" title="Get paid to do surveys more often" lead="Six habits of members who receive the most invitations." color="#e8344e" />
-          <div className="tips-grid">
-            {TIPS.map((t, i) => (
-              <Reveal key={t.t} className="tip" delay={i * 70} effect={i % 2 ? 'up' : 'zoom'}>
-                <span className="tip-n">{String(i + 1).padStart(2, '0')}</span>
-                <Icon name={t.ic} size={22} />
-                <h3>{t.t}</h3>
-                <p>{t.d}</p>
-              </Reveal>
-            ))}
-          </div>
+          <HabitDeck />
         </div>
       </section>
 
       <section className="section how-faq">
-        <div className="container faq-split">
-          <SectionHead align="left" eyebrow="Paid to do surveys?" title="Common questions" color="#14b8a6" />
-          <Accordion items={HOW_FAQ} idPrefix="howfaq" defaultOpen={0} />
+        <div className="container">
+          <FaqStage items={HOW_FAQ} idPrefix="howfaq" theme="how" eyebrow="Paid to do surveys?" title="Common questions" />
         </div>
       </section>
 

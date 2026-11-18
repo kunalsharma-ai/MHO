@@ -10,6 +10,16 @@ import { API } from '../config/site.js';
 import { validateEmail, apiRequest, auth, resetLimit, track } from '../utils/helpers.js';
 import { syncPendingAnswers } from '../utils/pendingAnswers.js';
 import { useGuestOnly } from '../utils/session.js';
+import Persona from '../components/Persona.jsx';
+import { PanelPicker } from '../components/R8.jsx';
+import { visit } from '../utils/dismissed.js';
+
+// Each panel restyles the whole log-in page: its own palette, scene and floating details.
+const SCENES = {
+  hcp: { persona: ['doctor', 2, 0, 0], line: 'Specialist studies and honoraria, matched to your practice.', chips: [['shieldCheck', 'Licence verified'], ['wallet', 'Honorarium credited'], ['stethoscope', 'Cardiology study']] },
+  caregiver: { persona: ['caregiver', 1, 3, 1], line: 'Short surveys that fit around caring, with rewards that help at home.', chips: [['pill', '8 am meds ✓'], ['clock', '10-minute survey'], ['gift', 'Grocery voucher']] },
+  patient: { persona: ['patient', 3, 2, 0], line: 'Your experience shapes better care, and it pays you back.', chips: [['lock', 'Anonymous by design'], ['target', 'Matched to your health'], ['coins', 'Reward unlocked']] },
+};
 
 export default function Login() {
   useGuestOnly(); // already logged in -> straight to the dashboard
@@ -24,6 +34,13 @@ export default function Login() {
   const [notice, setNotice] = useState('');
   const [view, setView] = useState('login'); // login | forgot
   const [fpState, setFpState] = useState('form'); // form | sending | sent (forgot-password panel)
+  const [panel, setPanelState] = useState(() => visit.get('panel', ''));
+  const [wipe, setWipe] = useState(null);
+  const setPanel = (id) => {
+    visit.set('panel', id);
+    setPanelState(id);
+    setWipe({ k: Date.now() });
+  };
 
   const submit = async (e) => {
     e.preventDefault();
@@ -99,14 +116,26 @@ export default function Login() {
   };
 
   return (
-    <section className="login2">
+    <section className={`login2 ${panel ? `rgrade-${panel}` : ''}`} data-panel={panel || undefined}>
+      {wipe && <span className="p-wipe" key={wipe.k} aria-hidden="true" />}
       <div className="l2-bg" aria-hidden="true"><i /><i /><i /></div>
       <div className="container l2-grid">
         <LiveZone className="l2-visual" aria-hidden="true">
+          {Object.entries(SCENES).map(([id, sc]) => (
+            <div key={id} className={`l2-scene ls-${id} t-${id} ${panel === id ? 'on' : ''}`} data-mode-skip="">
+              <span className="ls-wash" />
+              <span className="ls-motif"><i /><i /><i /><i /><i /></span>
+              <div className="ls-art">
+                <span className="ls-halo" />
+                <span className="ls-persona"><Persona kind={sc.persona[0]} skin={sc.persona[1]} hair={sc.persona[2]} hairStyle={sc.persona[3]} size={150} /></span>
+                {sc.chips.map(([ic, t], i) => <span key={t} className={`ls-chip c${i}`}><Icon name={ic} size={15} />{t}</span>)}
+              </div>
+            </div>
+          ))}
           <div className="l2v-copy">
             <span className="l2v-pill"><span className="dot" /> Members area</span>
             <p className="l2v-big">Your next paid survey is <span>waiting</span>.</p>
-            <p className="l2v-small">Pick up where you left off — invitations, points and payouts in one place.</p>
+            <p className="l2v-small">{panel ? SCENES[panel].line : 'Pick up where you left off — invitations, points and payouts in one place.'}</p>
           </div>
           <div className="l2v-wallet">
             {[['paypal', 'PayPal', '#003087', '#009cde'], ['upi', 'UPI · India', '#5f259f', '#ff7909'], ['gift', 'Gift Card', '#232f3e', '#ff9900'], ['bank', 'Wire', '#0f766e', '#14b8a6']].map(([ic, l, c1, c2], i) => (
@@ -127,6 +156,7 @@ export default function Login() {
             <h1>{view === 'forgot' ? 'Reset your password' : 'Welcome back'}</h1>
             <p>{view === 'forgot' ? 'Enter your registered email and we will send you a link to create a new password.' : 'Log in with your email and password.'}</p>
           </div>
+          {view === 'login' && state !== 'done' && <PanelPicker value={panel} onChange={setPanel} label="I am logging in as" />}
           {state === 'done' ? (
             <div className="lc-done" role="status">
               <Icon name="check" size={30} stroke={3} />

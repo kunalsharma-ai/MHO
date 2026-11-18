@@ -146,6 +146,13 @@ export default function LiveChat({ quiet = false }) {
     }
     setTimeout(() => input.current?.focus(), 350);
   };
+  const openRef = useRef(openChat);
+  openRef.current = openChat;
+  useEffect(() => {
+    const onAsk = () => openRef.current();
+    window.addEventListener('mho-open-chat', onAsk);
+    return () => window.removeEventListener('mho-open-chat', onAsk);
+  }, []);
 
   /* ---------- details collection (for questions the assistant can't answer) ---------- */
   const startLead = async (q = '', intro) => {
