@@ -38,22 +38,19 @@ export default function AnimationGate() {
     if (typeof IntersectionObserver === 'undefined') return;
     const watched = new WeakSet();
     let lateTame = 0;
+    const smil = new WeakMap();
+    let replay = false;
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
           if (e.isIntersecting) {
-            // sections skipped by content-visibility only create their animations once they render
-            clearTimeout(lateTame); lateTame = setTimeout(tame, 300);
-            const was = e.target.hasAttribute('data-still');
-            e.target.removeAttribute('data-still');
-            // coming back into view: rested loops play their few seconds again
-            if (was) {
-              try { e.target.getAnimations({ subtree: true }).forEach((a) => a.playState === 'finished' && a.play()); } catch { /* ignore */ }
-            }
+            if (e.target.hasAttribute('data-still')) { e.target.removeAttribute('data-still'); replay = true; }
           } else e.target.setAttribute('data-still', '');
           // SVG SMIL animations (<animateMotion> dots, gradient drifts) ignore CSS — pause them too.
-          e.target.querySelectorAll('svg').forEach((svg) => {
-            if (!svg.querySelector('animate, animateMotion, animateTransform')) return;
+          // The list of animated SVGs per section is found once and cached.
+          let svgs = smil.get(e.target);
+          if (!svgs) { svgs = [...e.target.querySelectorAll('svg')].filter((svg) => svg.querySelector('animate, animateMotion, animateTransform')); smil.set(e.target, svgs); }
+          svgs.forEach((svg) => {
             try {
               if (e.isIntersecting) svg.unpauseAnimations();
               else svg.pauseAnimations();
@@ -62,6 +59,23 @@ export default function AnimationGate() {
             }
           });
         }
+        // Sections that render late (content-visibility) create their animations then, and a section that comes
+        // back into view replays its rested loops. Both happen once scrolling settles, so they never cost frames
+        // mid-scroll (asking for animations forces a style update).
+        clearTimeout(lateTame);
+        lateTame = setTimeout(() => {
+          tame();
+          if (!replay) return;
+          replay = false;
+          try {
+            for (const a of document.getAnimations()) {
+              if (a.playState !== 'finished' || !a.animationName) continue;
+              const el = a.effect && a.effect.target;
+              const sec = el && el.closest && el.closest(SELECTOR);
+              if (sec && !sec.hasAttribute('data-still')) a.play();
+            }
+          } catch { /* ignore */ }
+        }, 350);
       },
       { rootMargin: '120px 0px' }
     );
