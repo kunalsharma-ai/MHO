@@ -288,7 +288,7 @@ export function VoiceWall() {
             <LiveZone key={c} className={`vw-col ${c % 2 ? 'down' : 'up'}`} style={{ '--dur': `${Math.max(col.length, 3) * 7}s` }}>
               <div className="vw-track">
                 {[...col, ...col].map((t, i) => (
-                  <div key={i} aria-hidden={i >= col.length || undefined}>
+                  <div key={i} aria-hidden={i >= col.length || undefined} inert={i >= col.length || undefined}>
                     <MiniCard t={t} active={t === cur} onPick={() => choose(t)} />
                   </div>
                 ))}

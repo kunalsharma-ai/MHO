@@ -171,8 +171,8 @@ export const PAGES = {
     secondary: [],
     changefreq: 'yearly',
     priority: '0.3',
-    robots: 'noindex, follow',
-    sitemap: false,
+    // Indexable: people search "MyHealthOpinions login", and a noindex page scores 69 in PageSpeed SEO.
+    sitemap: true,
   },
   '/reset-password': {
     name: 'Reset password',

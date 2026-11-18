@@ -17,3 +17,22 @@ html:not([data-mode='dark']) .eyebrow i { background: var(--eb); }
 /* Footer social QR badges: 24px minimum tap target. */
 .sorb-qr { width: 24px; height: 24px; right: -8px; bottom: -8px; }
 .an-row.ok code { color: #007358; }
+
+/* Accent labels on white or tinted pills: same hue, darkened enough for WCAG AA (4.5:1) in light mode. */
+html:not([data-mode='dark']) :is(.mt-card small, .lp-steps small, .sh-head em, .rx-roles em, .psp-rn) { color: color-mix(in srgb, var(--c) 52%, #000); }
+html:not([data-mode='dark']) :is(.cb-paper header em, .aud-lock, .door-n) { color: color-mix(in srgb, var(--g1) 52%, #000); }
+html:not([data-mode='dark']) .bc-cat { color: color-mix(in srgb, var(--cc, var(--red)) 70%, #000); }
+html:not([data-mode='dark']) .tl-copy .bc-cat { color: var(--gold); }
+html:not([data-mode='dark']) .sc-kicker { color: color-mix(in srgb, var(--k) 50%, #000); }
+html:not([data-mode='dark']) .sc-tk-top small { color: #8a5a12; }
+html:not([data-mode='dark']) .sc-head .good { color: #007358; }
+html:not([data-mode='dark']) .sc-head .bad { color: #c8102e; }
+html:not([data-mode='dark']) .vm-credit b { color: #007358; }
+html:not([data-mode='dark']) .text-link { color: #c2410c; }
+.psp-reg button.on { background: color-mix(in srgb, var(--c) 80%, #000); }
+
+/* Carousel dots on About: 24px tap area around the same small dot. */
+.ab-cf-dots { gap: 0; }
+.ab-cf-dots button { position: relative; width: 10px; height: 10px; margin: 7px; background-clip: padding-box; }
+.ab-cf-dots button.on { width: 30px; }
+.ab-cf-dots button::after { content: ''; position: absolute; inset: -7px; }

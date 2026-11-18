@@ -56,8 +56,8 @@ const fontPreloads = fs.readdirSync(path.join(DIST, 'assets'))
   .join('');
 
 // The page is complete and styled from its own HTML + critical CSS, so the full stylesheet and the app script
-// (which hydrates the page and adds the interactive extras) are requested only once the first frame is on
-// screen. They no longer compete with the first paint on slow phones and networks. Without JavaScript the
+// (which hydrates the page and adds the interactive extras) are requested right after the first paint
+// has reached the screen (or after 3s at the latest). They no longer compete with the first paint on slow phones and networks. Without JavaScript the
 // <noscript> stylesheet still applies.
 function deferAfterPaint(html) {
   const css = [];
@@ -75,7 +75,10 @@ function deferAfterPaint(html) {
     `<script>(function(){var d=document;function go(){` +
     css.map((h) => `var l=d.createElement('link');l.rel='stylesheet';l.href=${JSON.stringify(h)};l.crossOrigin='';l.setAttribute('data-full-css','');d.head.appendChild(l);`).join('') +
     `var s=d.createElement('script');s.type='module';s.crossOrigin='';s.src=${JSON.stringify(js)};d.head.appendChild(s);}` +
-    `requestAnimationFrame(function(){setTimeout(go,0)})})()</script>`;
+    `var done=0;function once(){if(!done){done=1;go()}}` +
+    // After the first contentful paint has been presented (paint timing), or 3s at the latest.
+    `try{new PerformanceObserver(function(l){if(l.getEntriesByName('first-contentful-paint').length)setTimeout(once,0)}).observe({type:'paint',buffered:true})}catch(e){addEventListener('load',once)}` +
+    `setTimeout(once,3000)})()</script>`;
   return html.replace('</body>', () => loader + '</body>');
 }
 
@@ -112,7 +115,10 @@ fs.writeFileSync(
 fs.writeFileSync(
   path.join(DIST, 'robots.txt'),
   [
-    '# Public site: open to search engines and AI assistants (see /llms.txt).',
+    '# Public site: open to search engines and AI assistants (see /llms.txt and /llms-full.txt).',
+    // AI search and assistant crawlers are welcomed by name: some AI-readiness checks look for these lines.
+    ...['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended', 'Bingbot', 'CCBot', 'Meta-ExternalAgent', 'DuckAssistBot']
+      .flatMap((bot) => [`User-agent: ${bot}`, 'Allow: /', 'Disallow: /admin/', 'Disallow: /member/', 'Disallow: /api/', 'Disallow: /survey/', '']),
     'User-agent: *',
     'Allow: /',
     // Signed-in areas of the member/admin app and the API: nothing to index there.

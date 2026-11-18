@@ -165,9 +165,9 @@ function CompanyOrbit() {
 /* ---------- Sampledge ticket strip ---------- */
 function TicketStrip() {
   return (
-    <div className="sc-tickets" role="list">
+    <div className="sc-tickets">
       {SAMPLEDGE.links.map((l, i) => (
-        <a key={l.k} role="listitem" href={l.url} target="_blank" rel="noopener noreferrer" className="sc-ticket" style={{ '--c1': NET[l.k][0], '--c2': NET[l.k][1], '--i': i }}>
+        <a key={l.k} href={l.url} target="_blank" rel="noopener noreferrer" className="sc-ticket" style={{ '--c1': NET[l.k][0], '--c2': NET[l.k][1], '--i': i }}>
           <span className="sc-tk-top"><Icon name={ic(l.k)} size={18} /><b>{l.name}</b><small>No. {String(i + 1).padStart(2, '0')}</small></span>
           <QrCode url={l.url} color="#111827" eye={NET[l.k][0]} size={120} label={`QR code: Sampledge on ${l.name}`} />
           <span className="sc-tk-handle">{l.handle}</span>
