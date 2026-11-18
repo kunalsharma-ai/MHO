@@ -542,3 +542,9 @@ html.vx-lock, html.vx-lock body { overflow: hidden; }
   .vb-acts { grid-template-columns: repeat(3, 1fr); gap: 8px; } .vb-act { padding: 10px; } .vb-act small { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .vband *, .vband *::before { animation: none !important; } .vb-reacts { display: none; } .vb-bar i { transform: scaleX(.35); } .vb-bar b { left: 35%; } }
+/* YouTube tag sits on its own line above "Watch now" (it used to cover the text) */
+.vfab .vfab-label { height: auto; min-height: 58px; padding-top: 7px; padding-bottom: 7px; gap: 1px; }
+.vfab-yt { position: static; justify-self: start; margin: 0 0 2px; border-radius: 6px; padding: 2px 6px; }
+.vfab-label b { margin-top: 0; line-height: 1.1; }
+.vfab .vfab-label { transition: clip-path .5s var(--ease), transform .3s var(--ease); clip-path: inset(0 0 0 0 round 0 999px 999px 0); }
+.vfab:not(.is-peek):not(:hover):not(:focus-visible) .vfab-label { clip-path: inset(0 100% 0 0 round 0 999px 999px 0); }

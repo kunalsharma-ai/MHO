@@ -216,6 +216,14 @@ export default function VideoFab() {
   // "Show & watch" bubble: pops up beside the button a few seconds after each page loads, once per page per
   // visit, and tucks itself away after a while (or when closed / when the video is opened).
   const [tip, setTip] = useState(false);
+  // The "Watch now" label shows for a few seconds on each page, then tucks away so it never sits over the page
+  // (it slides out again on hover / focus, and whenever the Show & watch bubble is up).
+  const [peek, setPeek] = useState(true);
+  useEffect(() => {
+    setPeek(true);
+    const t = setTimeout(() => setPeek(false), 7000);
+    return () => clearTimeout(t);
+  }, [path]);
   useEffect(() => {
     setTip(false);
     let seen = false;
@@ -268,7 +276,7 @@ export default function VideoFab() {
 
   return (
     <>
-      <button ref={fabRef} type="button" className={`vfab vfab-${v.template}`} aria-haspopup="dialog" aria-label="Watch this page's video" onClick={() => setOpen(true)}>
+      <button ref={fabRef} type="button" className={`vfab vfab-${v.template} ${peek || tip ? 'is-peek' : ''}`} aria-haspopup="dialog" aria-label="Watch this page's video" onClick={() => setOpen(true)}>
         <span className="vfab-halo" aria-hidden="true" />
         <span className="vfab-halo vfab-halo2" aria-hidden="true" />
         <span className="vfab-ring" aria-hidden="true" />

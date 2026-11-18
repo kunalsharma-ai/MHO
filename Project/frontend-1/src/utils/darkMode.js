@@ -1,165 +1,303 @@
-// Site-wide dark mode (the footer switch).
+// Site-wide dark mode (header and footer switches).
 //
-// The site is designed in light colours across thousands of rules, so dark mode is done in one place:
-// `html[data-mode="dark"]` gets `filter: invert(1) hue-rotate(180deg)` (light pages turn dark, hues stay
-// close to the originals). This module then "counter-flips" everything that must not be inverted:
-//   • photos, videos, maps, canvases, illustrated people (Persona) and logos keep their real colours;
-//   • sections and cards that are already dark (footer, video band, dark heroes) stay dark;
-//   • light cards inside those dark areas turn dark too.
-// Each element's flip count (parity) is tracked, so nesting always resolves correctly. New content
-// (route changes, pop-ups) is processed as it appears via a MutationObserver.
+// The site's light design lives in thousands of rules with fixed colours, so dark mode is applied by a
+// recolouring pass rather than a second stylesheet, and nothing is inverted: photos, logos, videos and
+// illustrated people keep their real colours. For every element the pass reads its computed colours and:
+//   • light surfaces (white / near-white cards, panels, pages, pastel washes) become deep navy-violet
+//     surfaces of the same hue, so a soft-blue card becomes a deep-blue card;
+//   • dark text sitting on those surfaces becomes light text of the same hue (headings near-white,
+//     muted copy stays a softer grey), while brand-coloured text and buttons keep their colours;
+//   • light borders become faint light lines; light gradient stops darken stop by stop;
+//   • surfaces that are already dark (footer, video band, dark heroes) and everything on them stay as they are.
+// Each element remembers the effective background behind it, so text is only lightened where the
+// surface behind it is dark. New content (route changes, pop-ups) and class changes are handled as they
+// happen. Every change is an inline style that is undone exactly when switching back to light.
 // `data-mode` is separate from `data-theme`, which the language picker uses for its aurora grade.
 
 const KEY = 'mho.mode';
-const FLIP = 'invert(1) hue-rotate(180deg)';
-const ATTR = 'data-mflip';
-const MEDIA = new Set(['IMG', 'VIDEO', 'CANVAS', 'IFRAME', 'PICTURE', 'OBJECT', 'EMBED']);
-const SKIP = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'BR', 'META', 'LINK', 'HEAD']);
-const KEEP_SEL = '.persona, .flag, [data-keep-colors]';
-// Shapes painted in the page's own background colour (section dividers): they must always match the page.
-const PAGE_SEL = '.ab-hero-wave, .ch4-wave, [data-page-color]';
+const SKIP = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'BR', 'META', 'LINK', 'HEAD', 'IMG', 'VIDEO', 'CANVAS', 'IFRAME', 'PICTURE', 'OBJECT', 'EMBED', 'SOURCE']);
+const ART = '.persona, .flag, [data-keep-colors], [data-mode-skip]'; // keep real colours (and their insides)
+// Text that sits on a coloured shape drawn by a sibling (the menu's sliding pill): keep its own colour.
+const KEEP_TEXT = '.nav-link[aria-current], .nav-link.is-active, .nav-link.active';
+const SVG_SHAPES = new Set(['path', 'rect', 'circle', 'ellipse', 'polygon', 'polyline', 'line', 'text', 'tspan']);
+const PAGE_DARK = { h: 240, s: 0.32, l: 0.065 }; // page background in dark mode (#0c0d17-ish)
 
 export function getMode() {
   try { return localStorage.getItem(KEY) === 'dark' ? 'dark' : 'light'; } catch { return 'light'; }
 }
 
-let observer = null;
-let queued = new Set();
-let raf = 0;
-
-// Computed colours come back as rgb()/rgba(), or as color(srgb …), oklab(), oklch() or lab() when the
-// stylesheet used color-mix() or modern spaces. Returns { l: perceived lightness 0–1, a: alpha }.
-const COLOR_RE = /(rgba?|color|oklab|oklch|lab|lch)\(([^()]*)\)/g;
-function parseOne(fn, body) {
+/* ---------------- colour maths ---------------- */
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+function srgbFromOklab(L, a, b) {
+  const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
+  const m_ = L - 0.1055613458 * a - 0.0638541728 * b;
+  const s_ = L - 0.0894841775 * a - 1.291485548 * b;
+  const l = l_ ** 3; const m = m_ ** 3; const s = s_ ** 3;
+  const lin = [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s];
+  return lin.map((v) => clamp(v <= 0.0031308 ? 12.92 * v : 1.055 * v ** (1 / 2.4) - 0.055) * 255);
+}
+/** Parse one CSS colour function into { r, g, b, a } (0–255, alpha 0–1). */
+function parseFn(fn, body) {
   const [main, alphaPart] = body.split('/');
   const p = main.trim().split(/[\s,]+/).filter(Boolean);
-  let a = alphaPart !== undefined ? parseFloat(alphaPart) : 1;
-  if (String(alphaPart || '').includes('%')) a /= 100;
-  const n = (x) => parseFloat(x);
+  const num = (x) => parseFloat(x) / (String(x).includes('%') ? 100 : 1);
+  let a = alphaPart !== undefined ? num(alphaPart.trim()) : 1;
   if (fn === 'rgb' || fn === 'rgba') {
-    if (p.length > 3 && alphaPart === undefined) a = n(p[3]);
-    return { l: (0.2126 * n(p[0]) + 0.7152 * n(p[1]) + 0.0722 * n(p[2])) / 255, a };
+    if (p.length > 3 && alphaPart === undefined) a = parseFloat(p[3]);
+    return { r: +p[0], g: +p[1], b: +p[2], a };
   }
-  if (fn === 'color') {
-    const v = p.slice(1).map(n); // color(srgb r g b), 0–1
-    return { l: 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2], a };
-  }
-  if (fn === 'oklab' || fn === 'oklch') { const L = n(p[0]) / (p[0].includes('%') ? 100 : 1); return { l: L, a }; }
-  if (fn === 'lab' || fn === 'lch') { return { l: n(p[0]) / 100, a }; }
+  if (fn === 'color' && p[0] === 'srgb') return { r: num(p[1]) * 255, g: num(p[2]) * 255, b: num(p[3]) * 255, a };
+  if (fn === 'oklab') { const [r, g, b] = srgbFromOklab(num(p[0]), parseFloat(p[1]), parseFloat(p[2])); return { r, g, b, a }; }
+  if (fn === 'oklch') { const h = (parseFloat(p[2]) * Math.PI) / 180; const C = parseFloat(p[1]); const [r, g, b] = srgbFromOklab(num(p[0]), C * Math.cos(h), C * Math.sin(h)); return { r, g, b, a }; }
   return null;
 }
-function colorsIn(str) {
-  return [...String(str).matchAll(COLOR_RE)].map((m) => parseOne(m[1], m[2])).filter((c) => c && !Number.isNaN(c.l));
+const COLOR_RE = /(rgba?|color|oklab|oklch)\(([^()]*)\)/g;
+const parse = (str) => { const m = /(rgba?|color|oklab|oklch)\(([^()]*)\)/.exec(String(str)); return m ? parseFn(m[1], m[2]) : null; };
+
+function toHsl({ r, g, b }) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b); const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  if (max === min) return { h: 0, s: 0, l };
+  const d = max - min;
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  const h = max === r ? (g - b) / d + (g < b ? 6 : 0) : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return { h: h * 60, s, l };
+}
+function css({ h, s, l }, a = 1) {
+  const r = (n) => Math.round(n * 1000) / 10;
+  return a >= 1 ? `hsl(${Math.round(h)} ${r(s)}% ${r(l)}%)` : `hsl(${Math.round(h)} ${r(s)}% ${r(l)}% / ${Math.round(a * 1000) / 1000})`;
+}
+/** Colourfulness 0–1 (HSL saturation exaggerates near-whites, so neutrality is judged by chroma). */
+const chroma = ({ r, g, b }) => (Math.max(r, g, b) - Math.min(r, g, b)) / 255;
+/** Perceived lightness 0–1. */
+const lightness = ({ r, g, b }) => (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+/** Is this a light surface colour that should turn dark? (whites, near-whites, pastels) */
+const isLightSurface = (c) => { const L = lightness(c); return L > 0.86 || (L > 0.74 && chroma(c) < 0.3); };
+/** Dark-mode version of a light surface: same hue, deep and calm. */
+function darkSurface(c) {
+  const { h, s } = toHsl(c);
+  const L = lightness(c);
+  if (chroma(c) < 0.05) return { ...PAGE_DARK, l: PAGE_DARK.l + (1 - L) * 0.45 + (L < 0.97 ? 0.035 : 0) };
+  return { h, s: clamp(s * 0.55, 0.18, 0.5), l: clamp(0.1 + (1 - L) * 0.35, 0.1, 0.2) };
+}
+/** Should this text colour be lightened on a dark surface? */
+const isDarkText = (c) => { const L = lightness(c); return L < 0.42 || (L < 0.58 && chroma(c) < 0.25); };
+function lightText(c) {
+  const { h, s } = toHsl(c);
+  const L = lightness(c);
+  // ink → near-white, body text → light grey, muted → soft grey; keep a hint of the hue
+  const neutral = chroma(c) < 0.08;
+  return { h: neutral ? 235 : h, s: clamp(neutral ? 0.18 : s * 0.55, 0, 0.6), l: clamp(0.95 - L * 0.55, 0.66, 0.95) };
 }
 
-/** Luminance (0–1) of an element's own opaque background, or null when it has none worth judging. */
-function bgLuminance(cs) {
-  if (cs.backgroundClip === 'text' || cs.webkitBackgroundClip === 'text') return null;
-  const img = cs.backgroundImage;
-  if (img && img !== 'none' && img.includes('gradient')) {
-    const cols = colorsIn(img).filter((c) => c.a > 0.55);
-    if (cols.length >= 2) return cols.reduce((s, c) => s + c.l, 0) / cols.length;
-  }
-  const c = colorsIn(cs.backgroundColor)[0];
-  if (c && c.a > 0.55) return c.l;
-  return null;
-}
-
-function flipEl(el, cs) {
-  const own = cs.filter && cs.filter !== 'none' ? cs.filter : '';
-  el.style.setProperty('filter', own ? `${FLIP} ${own}` : FLIP);
-  el.setAttribute(ATTR, own ? own : '1');
-}
-// Removing the inline filter restores any filter the element had from a stylesheet.
-function unflip(el) {
-  el.removeAttribute(ATTR);
-  el.style.removeProperty('filter');
-}
-
-function parityOf(el) {
-  let n = 1; // the root inversion
-  for (let p = el.parentElement; p; p = p.parentElement) if (p.hasAttribute(ATTR)) n++;
-  return n;
-}
-
-const isMediaLike = (el, cs) => MEDIA.has(el.tagName) || el.matches(KEEP_SEL) || (cs.backgroundImage.includes('url(') && !cs.backgroundImage.includes('gradient'));
-
-/** Should this element be flipped, given whether it currently sits under an odd number of inversions? */
-function decide(el, cs, odd) {
-  // Pictures and illustrated people must show their real colours.
-  if (isMediaLike(el, cs)) return odd;
-  if (el.matches(PAGE_SEL)) return !odd;
-  if (/blur\(/.test(cs.filter) || el.tagName === 'HTML' || el.tagName === 'BODY') return false;
-  const L = bgLuminance(cs);
-  if (L === null) return false;
-  const shown = odd ? 1 - L : L; // how bright the background would look
-  return shown > 0.55;
-}
-
-function walk(el, parity) {
-  if (!(el instanceof Element) || SKIP.has(el.tagName)) return;
-  if (el.hasAttribute(ATTR)) unflip(el);
-  if (el.hasAttribute('data-mode-skip')) return; // designed for both modes (e.g. the switch itself)
-  const cs = getComputedStyle(el);
-  if (decide(el, cs, parity % 2 === 1)) { flipEl(el, cs); parity++; }
-  if (MEDIA.has(el.tagName)) return;
-  for (const c of el.children) walk(c, parity);
-}
-
+/* ---------------- the pass ---------------- */
+const writes = new Map(); // el → [{ prop, value, priority }] (original inline values, to undo)
+const ctx = new WeakMap(); // el → { bg: effective background lightness behind its content, color: orig computed color, out: final color }
+let observer = null;
+let queued = new Set();
 let checks = new Set();
+let raf = 0;
+let active = false;
+let settle = [];
+
+function set(el, prop, value) {
+  if (!writes.has(el)) writes.set(el, []);
+  const list = writes.get(el);
+  if (!list.some((w) => w.prop === prop)) list.push({ prop, value: el.style.getPropertyValue(prop), priority: el.style.getPropertyPriority(prop) });
+  el.style.setProperty(prop, value, 'important');
+}
+function undo(el) {
+  const list = writes.get(el);
+  if (!list) return;
+  for (const w of list) {
+    if (w.value) el.style.setProperty(w.prop, w.value, w.priority);
+    else el.style.removeProperty(w.prop);
+  }
+  writes.delete(el);
+}
+function undoTree(root) {
+  undo(root);
+  for (const el of root.querySelectorAll('*')) if (writes.has(el)) undo(el);
+}
+
+/** Recolour a gradient: light stops darken (surfaces) or, for gradient text, dark stops lighten. */
+function recolourGradient(img, textClip) {
+  let changed = false;
+  const out = img.replace(COLOR_RE, (m, fn, body) => {
+    const c = parseFn(fn, body);
+    if (!c) return m;
+    if (textClip ? isDarkText(c) : isLightSurface(c) && c.a > 0.3) { changed = true; return css(textClip ? lightText(c) : darkSurface(c), c.a); }
+    return m;
+  });
+  return changed ? out : null;
+}
+
+/** Process an element and its subtree. `bg` = lightness of the surface behind it; `pc` = parent's context. */
+function processTree(root, bg, pc) {
+  // Read everything first (no writes in between, so the browser computes styles once).
+  const items = [];
+  const collect = (el, depth) => {
+    if (!(el instanceof Element) || SKIP.has(el.tagName.toUpperCase())) return;
+    if (el.matches(ART)) return;
+    items.push({ el, cs: getComputedStyle(el), depth });
+    for (const c of el.children) collect(c, depth + 1);
+  };
+  collect(root, 0);
+  const snap = items.map(({ el, cs, depth }) => ({
+    el, depth,
+    svg: el instanceof SVGElement,
+    tag: el.tagName.toLowerCase(),
+    color: cs.color, bgc: cs.backgroundColor, bgi: cs.backgroundImage, clip: cs.backgroundClip === 'text' || cs.webkitBackgroundClip === 'text',
+    bt: cs.borderTopColor, br: cs.borderRightColor, bb: cs.borderBottomColor, bl: cs.borderLeftColor, bw: cs.borderTopWidth !== '0px' || cs.borderBottomWidth !== '0px' || cs.borderLeftWidth !== '0px' || cs.borderRightWidth !== '0px',
+    fill: cs.fill, stroke: cs.stroke, outline: cs.outlineColor,
+  }));
+  // Then decide and write, walking the snapshot with a stack of parent contexts.
+  const stack = [pc || { bg, color: null, out: null }];
+  for (const it of snap) {
+    stack.length = it.depth + 1;
+    const parent = stack[it.depth];
+    let surface = parent.bg;
+    const el = it.el;
+
+    if (it.svg && it.tag !== 'svg') {
+      if (!SVG_SHAPES.has(it.tag)) { stack[it.depth + 1] = parent; continue; }
+      const f = parse(it.fill);
+      if (f && f.a > 0) {
+        if (surface < 0.5 && it.tag !== 'text' && it.tag !== 'tspan' && isLightSurface(f) && chroma(f) < 0.15) set(el, 'fill', css(darkSurface(f), f.a));
+        else if (surface < 0.5 && (it.tag === 'text' || it.tag === 'tspan') && isDarkText(f)) set(el, 'fill', css(lightText(f), f.a));
+      }
+      stack[it.depth + 1] = parent;
+      continue;
+    }
+
+    // background
+    const bgc = parse(it.bgc);
+    if (bgc && bgc.a > 0.35 && isLightSurface(bgc)) {
+      const d = darkSurface(bgc);
+      set(el, 'background-color', css(d, bgc.a));
+      if (bgc.a > 0.6) surface = d.l;
+    } else if (bgc && bgc.a > 0.6) {
+      surface = lightness(bgc);
+    }
+    if (it.bgi && it.bgi !== 'none' && it.bgi.includes('gradient')) {
+      if (it.clip) {
+        const g = surface < 0.5 ? recolourGradient(it.bgi, true) : null;
+        if (g) set(el, 'background-image', g);
+      } else {
+        const stops = [...it.bgi.matchAll(COLOR_RE)].map((m) => parseFn(m[1], m[2])).filter((c) => c && c.a > 0.6);
+        const g = recolourGradient(it.bgi, false);
+        if (g) set(el, 'background-image', g);
+        if (stops.length) {
+          const avgLight = stops.reduce((s, c) => s + (isLightSurface(c) ? 0.12 : lightness(c)), 0) / stops.length;
+          surface = avgLight;
+        }
+      }
+    }
+    // text
+    const col = parse(it.color);
+    let out = it.color;
+    if (col && surface < 0.5 && isDarkText(col) && !el.matches(KEEP_TEXT)) out = css(lightText(col), col.a);
+    // (always written: buttons and many components set their own colour instead of inheriting it)
+    if (out !== it.color) set(el, 'color', out);
+    // borders and outlines
+    if (it.bw) {
+      for (const [side, v] of [['top', it.bt], ['right', it.br], ['bottom', it.bb], ['left', it.bl]]) {
+        const c = parse(v);
+        if (c && c.a > 0.2 && lightness(c) > 0.78 && surface < 0.5) set(el, `border-${side}-color`, `rgba(255, 255, 255, ${Math.min(0.14, c.a * 0.14).toFixed(3)})`);
+      }
+    }
+    const node = { bg: surface, color: it.color, out };
+    ctx.set(el, node);
+    stack[it.depth + 1] = node;
+  }
+}
+
+function contextFor(el) {
+  for (let p = el.parentElement; p; p = p.parentElement) {
+    if (p.matches(ART)) return null;
+    const c = ctx.get(p);
+    if (c) return c;
+  }
+  return { bg: PAGE_DARK.l, color: null, out: null };
+}
+
 function flush() {
   raf = 0;
-  const list = [...queued];
-  const cl = [...checks];
+  if (!active) { queued.clear(); checks.clear(); return; }
+  const list = [...queued, ...checks];
   queued = new Set();
   checks = new Set();
-  for (const el of list) if (el.isConnected && !el.parentElement?.closest('[data-mode-skip]')) walk(el, parityOf(el));
-  // An element whose class (or background transition) changed: re-walk it only if its decision flips.
-  for (const el of cl) {
-    if (!el.isConnected || SKIP.has(el.tagName) || el.closest('[data-mode-skip]')) continue;
-    const odd = parityOf(el) % 2 === 1;
-    if (decide(el, getComputedStyle(el), odd) !== el.hasAttribute(ATTR)) walk(el, parityOf(el));
+  // only the outermost changed nodes
+  const roots = list.filter((el) => el.isConnected && !list.some((o) => o !== el && o.isConnected && o.contains(el)));
+  observer?.disconnect();
+  for (const el of roots) {
+    const pc = contextFor(el);
+    if (!pc) continue;
+    undoTree(el);
+    processTree(el, pc.bg, pc);
   }
+  observe();
 }
 const schedule = () => { if (!raf) raf = requestAnimationFrame(flush); };
 const onTransitionEnd = (e) => {
-  if (/^background/.test(e.propertyName) && e.target instanceof Element) { checks.add(e.target); schedule(); }
+  // A colour finished transitioning (often from a value read mid-transition). Re-check, unless we wrote that
+  // property ourselves (our own writes animate too, and must not loop).
+  const prop = e.propertyName;
+  if (!/^(background|color|border)/.test(prop) || !(e.target instanceof Element)) return;
+  const mine = writes.get(e.target);
+  if (mine && mine.some((w) => w.prop.split('-')[0] === prop.split('-')[0])) return;
+  checks.add(e.target);
+  schedule();
 };
+function observe() {
+  if (!observer) {
+    observer = new MutationObserver((recs) => {
+      for (const r of recs) {
+        if (r.type === 'childList') { for (const n of r.addedNodes) if (n.nodeType === 1) queued.add(n); }
+        else if (r.target.nodeType === 1) checks.add(r.target);
+      }
+      if (queued.size || checks.size) schedule();
+    });
+  }
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+}
 
 export function applyMode(mode) {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
   if (mode === 'dark') {
     root.setAttribute('data-mode', 'dark');
-    walk(document.body, 1);
-    if (!observer) {
-      observer = new MutationObserver((recs) => {
-        for (const r of recs) {
-          if (r.type === 'childList') { for (const n of r.addedNodes) if (n.nodeType === 1) queued.add(n); }
-          else if (r.target.nodeType === 1) checks.add(r.target);
-        }
-        if (queued.size || checks.size) schedule();
-      });
-      observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
-      document.addEventListener('transitionend', onTransitionEnd, true);
-    }
+    active = true;
+    observer?.disconnect();
+    for (const el of [...writes.keys()]) undo(el);
+    processTree(document.body, PAGE_DARK.l, { bg: PAGE_DARK.l, color: null, out: null });
+    observe();
+    document.addEventListener('transitionend', onTransitionEnd, true);
+    // one more full pass once entrance animations and late-loading sections have settled
+    settle.forEach(clearTimeout);
+    const repass = () => {
+      if (!active) return;
+      observer?.disconnect();
+      for (const el of [...writes.keys()]) undo(el);
+      processTree(document.body, PAGE_DARK.l, { bg: PAGE_DARK.l, color: null, out: null });
+      observe();
+    };
+    settle = [setTimeout(repass, 700), setTimeout(repass, 2200)];
   } else {
+    active = false;
     root.removeAttribute('data-mode');
-    if (observer) { observer.disconnect(); observer = null; }
+    observer?.disconnect();
     document.removeEventListener('transitionend', onTransitionEnd, true);
-    document.querySelectorAll(`[${ATTR}]`).forEach(unflip);
+    for (const el of [...writes.keys()]) undo(el);
   }
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', mode === 'dark' ? '#05070f' : '#0B1E5B');
+  if (meta) meta.setAttribute('content', mode === 'dark' ? '#0c0d17' : '#0B1E5B');
 }
 
 export function setMode(mode) {
   try { localStorage.setItem(KEY, mode); } catch { /* storage blocked */ }
   applyMode(mode);
   window.dispatchEvent(new CustomEvent('mho-mode-change', { detail: mode }));
-}
-
-/** Re-run the pass (e.g. after a route change finished rendering). */
-export function refreshMode() {
-  if (document.documentElement.getAttribute('data-mode') === 'dark') walk(document.body, 1);
 }

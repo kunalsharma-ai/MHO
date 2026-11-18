@@ -7,6 +7,7 @@ import Icon from './Icon.jsx';
 import { useMounted } from './ui.jsx';
 import { LanguageButton } from './Language.jsx';
 import { useI18n } from '../i18n/I18nProvider.jsx';
+import ThemeSwitch from './ThemeSwitch.jsx';
 import { useSession, logout } from '../utils/session.js';
 
 const useIsoLayout = typeof window === 'undefined' ? useEffect : useLayoutEffect;
@@ -55,6 +56,38 @@ export default function Header() {
     window.addEventListener('resize', place);
     return () => window.removeEventListener('resize', place);
   }, [activeIdx, mounted]);
+
+  // Never let the menu bar overlap the buttons: when the links don't fit next to the logo and the buttons
+  // (narrow windows, larger system fonts, longer translations), switch to the menu button.
+  useIsoLayout(() => {
+    const nav = navRef.current;
+    const inner = nav?.parentElement;
+    const cta = inner?.querySelector('.header-cta');
+    if (!nav || !cta) return undefined;
+    // Two steps: first tighten the links (smaller padding, no "Trending" badge), then fall back to the menu button.
+    const over = () => {
+      if (getComputedStyle(nav).display === 'none') return false;
+      const last = nav.lastElementChild;
+      const navEnd = nav.getBoundingClientRect().right;
+      return nav.scrollWidth - 1 > nav.clientWidth && last && last.getBoundingClientRect().right > navEnd + 1
+        || navEnd > cta.getBoundingClientRect().left - 8
+        || cta.getBoundingClientRect().right > inner.getBoundingClientRect().right + 1;
+    };
+    const fit = () => {
+      inner.removeAttribute('data-tight');
+      inner.removeAttribute('data-snug');
+      if (!over()) return;
+      inner.setAttribute('data-snug', '');
+      if (over()) inner.setAttribute('data-tight', '');
+    };
+    fit();
+    const ro = new ResizeObserver(() => requestAnimationFrame(fit));
+    ro.observe(inner);
+    const mo = new MutationObserver(() => requestAnimationFrame(fit));
+    mo.observe(nav, { subtree: true, characterData: true, childList: true });
+    document.fonts?.ready.then(fit).catch(() => {});
+    return () => { ro.disconnect(); mo.disconnect(); };
+  }, [mounted]);
 
   useEffect(() => setOpen(false), [path]);
   // Dropdowns open on hover/focus. After a submenu link is clicked the pointer is still over the menu and the
@@ -122,6 +155,7 @@ export default function Header() {
             )}
           </nav>
           <div className="header-cta">
+            <ThemeSwitch compact />
             <SoundSwitch />
             {user ? (
               <div className="hd-user" ref={pmRef}>

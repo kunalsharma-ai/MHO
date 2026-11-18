@@ -657,11 +657,8 @@ html[lang='en'] .text-link { color: #ff6a2c; }
 @media (prefers-reduced-motion: reduce) { .rtoast.rt-pop, .rtoast.rt-pop.is-in { transition: opacity .3s; transform: translate(-50%, 0); animation: none; } .rt-pop *, .rt-pop *::before { animation: none !important; } .rtp-confetti, .rt-pop .rtt-coins { display: none; } }
 
 /* ===== Round 3: dark mode (see utils/darkMode.js) ===== */
-html[data-mode='dark'] { filter: invert(1) hue-rotate(180deg); background: #fff; }
-html[data-mode='dark'] img, html[data-mode='dark'] video, html[data-mode='dark'] iframe, html[data-mode='dark'] canvas, html[data-mode='dark'] .persona { filter: invert(1) hue-rotate(180deg); }
-/* before the script has run, the pass in darkMode.js replaces the rule above with exact per-element flips */
-html[data-mode='dark'] [data-mflip] img, html[data-mode='dark'] [data-mflip] video, html[data-mode='dark'] [data-mflip] .persona { filter: none; }
-html[data-mode='dark'] img[data-mflip], html[data-mode='dark'] .persona[data-mflip] { filter: invert(1) hue-rotate(180deg); }
+html[data-mode='dark'] { color-scheme: dark; background: #0c0d17; }
+html[data-mode='dark'] body { background: #0c0d17; }
 /* circular reveal from the switch */
 html.mode-vt::view-transition-old(root), html.mode-vt::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 html.mode-vt::view-transition-new(root) { animation: mode-reveal .9s cubic-bezier(.65, 0, .3, 1) both; }
@@ -692,3 +689,47 @@ html.mode-vt::view-transition-new(root) { animation: mode-reveal .9s cubic-bezie
 .tsw-tx b { font-size: .86rem; }
 .tsw-tx small { font-size: .68rem; opacity: .65; }
 @media (prefers-reduced-motion: reduce) { .tsw *, .tsw *::before { transition: none !important; animation: none !important; } }
+
+/* Header: when the links don't fit, use the menu button instead of overlapping (set by Header.jsx) */
+.header-inner[data-tight] .main-nav { display: none; }
+.header-inner[data-tight] .burger { display: block; }
+.header-inner[data-tight] .header-cta { margin-left: auto; }
+/* the sound switch stays compact on desktop widths where space is tight */
+@media (max-width: 1700px) { .hs-tx { display: none; } }
+.header-inner[data-snug] .nav-link { padding: 8px 9px; font-size: .86rem; }
+.header-inner[data-snug] .nav-badge { display: none; }
+.header-inner[data-snug] .main-nav { gap: 0; }
+.header-inner { max-width: 1760px; }
+/* Header light/dark button */
+.tsw-mini { position: relative; flex: none; width: 40px; height: 40px; border: 0; border-radius: 50%; overflow: hidden; cursor: pointer; isolation: isolate;
+  background: linear-gradient(180deg, #4fb5ff, #b9e3ff); box-shadow: 0 0 0 1.5px #fff, 0 0 0 3px #ffb020, 0 8px 18px -10px #2457f5; transition: background .6s, box-shadow .6s, transform .3s cubic-bezier(.34, 1.6, .64, 1); }
+.tsw-mini:hover { transform: rotate(-12deg) scale(1.06); }
+.tsw-mini.is-dark { background: linear-gradient(180deg, #0b1033, #2b2466); box-shadow: 0 0 0 1.5px #1b1035, 0 0 0 3px #8a4dff, 0 8px 18px -10px #8a4dff; }
+.tm-sun, .tm-moon { position: absolute; left: 50%; top: 50%; width: 20px; height: 20px; margin: -10px; border-radius: 50%; transition: transform .7s cubic-bezier(.68, -0.35, .27, 1.35), opacity .4s; }
+.tm-sun { background: radial-gradient(circle at 35% 35%, #fff7b0, #ffd23f 55%, #f59e0b); box-shadow: 0 0 10px 3px rgba(255, 200, 40, .7); }
+.tm-moon { background: radial-gradient(circle at 35% 35%, #fff, #e2e8f0 60%, #94a3b8); box-shadow: inset -5px -3px 0 rgba(100, 116, 139, .45), 0 0 10px 2px rgba(226, 232, 240, .5); transform: translateY(40px) rotate(-90deg); opacity: 0; }
+.tsw-mini.is-dark .tm-sun { transform: translateY(40px); opacity: 0; }
+.tsw-mini.is-dark .tm-moon { transform: none; opacity: 1; }
+.tm-sky i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; opacity: 0; transition: opacity .5s .2s; }
+.tm-sky i:nth-child(1) { left: 8px; top: 9px; } .tm-sky i:nth-child(2) { left: 29px; top: 7px; } .tm-sky i:nth-child(3) { left: 31px; top: 28px; }
+.tsw-mini.is-dark .tm-sky i { opacity: 1; animation: tsw-twinkle 2s ease-in-out infinite; }
+@media (max-width: 520px) { .tsw-mini { width: 36px; height: 36px; } }
+@media (prefers-reduced-motion: reduce) { .tsw-mini * { transition: none !important; animation: none !important; } }
+
+/* Reward pop-up, compact size (Kunal asked for smaller) */
+.rtoast.rt-pop { width: min(300px, calc(100vw - 200px)); min-width: 260px; gap: 9px; padding: 16px 28px 10px 10px; border-radius: 16px; }
+.rtp-ribbon { left: 56px; padding: 2px 8px 3px; font-size: .52rem; }
+.rt-pop .rtt-av { width: 38px; height: 38px; border-radius: 12px; font-size: .85rem; }
+.rt-pop .rtt-av svg { width: 16px; height: 16px; }
+.rtp-av-ring { inset: -4px; border-radius: 15px; }
+.rt-pop .rtt-l1 { font-size: .72rem; gap: 4px; }
+.rtp-amt strong { font-size: 1.1rem; }
+.rt-pop .rtt-m { font-size: .6rem; padding: 1px 5px; }
+.rt-pop .rtt-l2 { font-size: .64rem; }
+.rtp-go { font-size: .66rem; }
+.rt-pop .rtt-x { top: 6px; right: 6px; width: 18px; height: 18px; }
+.rt-pop .rtt-timer { left: 10px; right: 10px; bottom: 4px; height: 2px; }
+.rt-pop .rtt-coins i { width: 8px; height: 8px; margin: -4px; }
+@media (max-width: 640px) { .rtoast.rt-pop { width: min(300px, calc(100vw - 24px)); } }
+/* dark mode: small "ink" strokes drawn with backgrounds */
+html[data-mode='dark'] .burger span { background: #e8e6f5 !important; }

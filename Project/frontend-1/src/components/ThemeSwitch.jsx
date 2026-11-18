@@ -5,7 +5,7 @@
 import { useEffect, useState } from 'react';
 import { applyMode, getMode, setMode } from '../utils/darkMode.js';
 
-export default function ThemeSwitch() {
+export default function ThemeSwitch({ compact = false }) {
   const [mode, setM] = useState('light');
   useEffect(() => {
     const m = getMode();
@@ -31,6 +31,16 @@ export default function ThemeSwitch() {
   };
 
   const dark = mode === 'dark';
+  if (compact) {
+    // Header version: a round sky button; the sun sets and the moon rises.
+    return (
+      <button type="button" role="switch" aria-checked={dark} className={`tsw-mini ${dark ? 'is-dark' : ''}`} onClick={flip} aria-label="Dark mode" title={dark ? 'Switch to light mode' : 'Switch to dark mode'} data-mode-skip="">
+        <span className="tm-sky" aria-hidden="true"><i /><i /><i /></span>
+        <span className="tm-sun" aria-hidden="true" />
+        <span className="tm-moon" aria-hidden="true" />
+      </button>
+    );
+  }
   return (
     <button type="button" role="switch" aria-checked={dark} className={`tsw ${dark ? 'is-dark' : ''}`} onClick={flip} aria-label="Dark mode" data-mode-skip="">
       <span className="tsw-track" aria-hidden="true">
