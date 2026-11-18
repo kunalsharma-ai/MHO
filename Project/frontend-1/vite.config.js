@@ -1,4 +1,5 @@
 import { fileURLToPath } from 'node:url';
+import { readdirSync, readFileSync } from 'node:fs';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { viteSingleFile } from 'vite-plugin-singlefile';
@@ -16,7 +17,14 @@ export default defineConfig(({ mode }) => {
     process.env.VITE_ROUTER_MODE = 'hash';
     process.env.VITE_PREVIEW_FORMS = 'true';
   }
+  // Country flags live in public/flags/<iso2>.webp. The single-file preview has no public folder, so there the
+  // flags are embedded as data URIs (about 280 KB) and work offline; normal builds load the small files.
+  const flagDir = fileURLToPath(new URL('./public/flags/', import.meta.url));
+  const flagData = single
+    ? Object.fromEntries(readdirSync(flagDir).filter((f) => f.endsWith('.webp')).map((f) => [f.slice(0, -5), `data:image/webp;base64,${readFileSync(flagDir + f).toString('base64')}`]))
+    : null;
   return {
+    define: { __FLAG_DATA__: JSON.stringify(flagData) },
     // "mho-jsx" = React's JSX runtime plus style-prop → CSS class (src/jsx/atomic.js), so pages ship
     // without inline style attributes.
     plugins: [react({ jsxImportSource: 'mho-jsx' }), ...(single ? [viteSingleFile(), singleFilePreview(root)] : [])],

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Icon from './Icon.jsx';
+import { flagUrl } from '../data/countries.js';
 
 let regionNames;
 function regionName(iso) {
@@ -11,7 +12,7 @@ function regionName(iso) {
   }
 }
 
-// Flag image by ISO code (flagcdn.com — free CDN, 20–40px PNGs). Falls back to the ISO letters if blocked.
+// Flag image by ISO code (self-hosted / embedded, see flagUrl in data/countries.js). Falls back to the ISO letters.
 export function Flag({ iso, size = 22 }) {
   const [err, setErr] = useState(false);
   const ref = useRef(null);
@@ -27,8 +28,7 @@ export function Flag({ iso, size = 22 }) {
     <img
       ref={ref}
       className="flag"
-      src={`https://flagcdn.com/w40/${code}.png`}
-      srcSet={`https://flagcdn.com/w80/${code}.png 2x`}
+      src={flagUrl(code)}
       width={Math.round(size * 1.4)}
       height={size}
       alt={`${label} flag`}

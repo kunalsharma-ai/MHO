@@ -4,7 +4,7 @@
 // Every section has its own visual: 3D DNA helix hero · bento of live counters · study-journey flow ·
 // 3D tilt doors · vitals-monitor promises · scroll-drawn timeline · certificate plaque · coverflow voices.
 import { useEffect, useRef, useState } from 'react';
-import { Breadcrumbs, Button, LiveZone, useInView, Stars } from '../components/ui.jsx';
+import { Breadcrumbs, Button, LiveZone, useInView, Stars, Flag } from '../components/ui.jsx';
 import Icon from '../components/Icon.jsx';
 import Persona from '../components/Persona.jsx';
 import { HeartMark } from '../components/Brand.jsx';
@@ -291,7 +291,7 @@ function Coverflow() {
               <figcaption>
                 <span className="ab-cf-av">{t.name.replace(/^Dr\.\s*/, '').split(' ').map((w) => w[0]).slice(0, 2).join('')}</span>
                 <span><b>{t.name}</b><small>{t.role} · {t.country}</small></span>
-                <span className="cc-tag" title={t.country}>{t.cc.toUpperCase()}</span>
+                <Flag code={t.cc} name={t.country} size={26} />
               </figcaption>
               <Stars value={t.rating} size={15} />
             </figure>

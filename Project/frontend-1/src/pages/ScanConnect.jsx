@@ -3,7 +3,7 @@
 // Sections, each with its own visual: 3D QR cube hero · channel "signal cards" · panel switcher with a
 // big code per panel · company orbit · Sampledge ticket strip · how-to-scan phone flow · member voice ticker.
 import { useEffect, useState } from 'react';
-import { Breadcrumbs, useInView, LiveZone, Button } from '../components/ui.jsx';
+import { Breadcrumbs, useInView, LiveZone, Button, Flag } from '../components/ui.jsx';
 import Icon from '../components/Icon.jsx';
 import QrCode from '../components/QrCode.jsx';
 import { HeartMark } from '../components/Brand.jsx';
@@ -225,7 +225,7 @@ function VoiceTicker() {
         {row.map((t, i) => (
           <figure key={i} aria-hidden={i >= picks.length ? 'true' : undefined}>
             <blockquote>“{t.quote.split('. ')[0].replace(/\.$/, '')}.”</blockquote>
-            <figcaption><b>{t.name}</b> · {t.role}, {t.country}</figcaption>
+            <figcaption><b>{t.name}</b>{t.cc && <Flag code={t.cc} name={t.country} size={16} className="rv-flag" />} {t.role}, {t.country}</figcaption>
           </figure>
         ))}
       </div>

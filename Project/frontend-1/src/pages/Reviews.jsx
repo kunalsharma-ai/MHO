@@ -10,7 +10,7 @@
 //   Patients             → message thread (chat bubbles, read receipts)
 // then a scoreboard (star equaliser, panel race, country stamps) and the "your turn on the mic" call to review.
 import { useEffect, useMemo, useState } from 'react';
-import { Breadcrumbs, Button, LiveZone, useInView, Stars } from '../components/ui.jsx';
+import { Breadcrumbs, Button, LiveZone, useInView, Stars, Flag } from '../components/ui.jsx';
 import Icon from '../components/Icon.jsx';
 import { openRateExperience } from '../components/RateExperience.jsx';
 import { AUDIENCES, TESTIMONIALS, RATING } from '../data/testimonials.js';
@@ -23,6 +23,8 @@ const firstSentence = (q) => (String(q).match(/^.*?[.!?](\s|$)/) || [q])[0].trim
 const audLabel = (id) => AUDIENCES.find((a) => a.id === id)?.label || id;
 const avgOf = (list) => (list.length ? list.reduce((a, t) => a + (t.rating || 0), 0) / list.length : 0);
 const cc = (t) => String(t.cc || '').toUpperCase();
+// The reviewer's country flag, sized to sit inline with their name.
+const F = (t, size = 16) => (t.cc ? <Flag code={t.cc} name={t.country} size={size} className="rv-flag" /> : null);
 
 const ROOMS = [
   { id: 'doctors', icon: 'stethoscope', no: '01', kicker: 'Chart 01 · Clinical opinions', title: 'Doctors &', em: 'specialists', line: 'Signed, dated and on the record, like every good chart note.' },
@@ -90,9 +92,9 @@ function Gauge() {
 function WallCard({ t }) {
   return (
     <li className={`rx-wc a-${t.audience}`}>
-      <span className="rx-wc-top"><Stars value={t.rating} size={12} /><span className="cc-tag">{cc(t)}</span></span>
+      <span className="rx-wc-top"><Stars value={t.rating} size={12} />{F(t, 20)}</span>
       <q>{firstSentence(t.quote)}</q>
-      <span className="rx-wc-who"><i>{initials(t.name)}</i><span><b>{t.name}</b><small>{t.role}</small></span></span>
+      <span className="rx-wc-who"><i>{initials(t.name)}</i><span><b>{t.name}{F(t)}</b><small>{t.role}{t.country ? ` · ${t.country}` : ''}</small></span></span>
     </li>
   );
 }
@@ -211,8 +213,8 @@ function ChartRoom({ room, list }) {
             <span className="rx-clip" aria-hidden="true" />
             <div className="rx-pad-head">
               <span className="rx-rxsym" aria-hidden="true">℞</span>
-              <span><b>{t.name}</b><small>{t.role}</small></span>
-              <span className="cc-tag">{cc(t)}</span>
+              <span><b>{t.name}{F(t)}</b><small>{t.role}{t.country ? ` · ${t.country}` : ''}</small></span>
+              {F(t, 20)}
             </div>
             <p>{t.quote}</p>
             <div className="rx-pad-foot"><Stars value={t.rating} size={13} /><MemberTag t={t} /><span className="rx-sign" aria-hidden="true">{t.name.replace(/^Dr\.\s*/, '').split(' ')[0]}</span></div>
@@ -235,7 +237,7 @@ function ShiftRoom({ room, list }) {
             <span className="rx-pin" aria-hidden="true" />
             <span className="rx-note-shift"><Icon name={i % 2 ? 'moon' : 'clock'} size={12} />{i % 2 ? 'Night shift' : 'Day shift'}</span>
             <p>{t.quote}</p>
-            <span className="rx-note-who"><b>{t.name}</b><small>{t.role} · {t.country}</small></span>
+            <span className="rx-note-who"><b>{t.name}{F(t)}</b><small>{t.role} · {t.country}</small></span>
             <span className="rx-note-foot"><Stars value={t.rating} size={13} /><MemberTag t={t} /></span>
           </li>
         ))}
@@ -255,7 +257,7 @@ function LabRoom({ room, list }) {
             <div className="rx-slide-glass">
               <span className="rx-cell" aria-hidden="true"><i /><i /><i /></span>
               <p>{t.quote}</p>
-              <span className="rx-slide-who"><b>{t.name}</b><span className="cc-tag">{cc(t)}</span><Stars value={t.rating} size={12} /><MemberTag t={t} /></span>
+              <span className="rx-slide-who"><b>{t.name}</b>{F(t, 20)}<Stars value={t.rating} size={12} /><MemberTag t={t} /></span>
             </div>
           </li>
         ))}
@@ -274,7 +276,7 @@ function AlbumRoom({ room, list }) {
             <span className="rx-tape" aria-hidden="true" />
             <div className="rx-photo" aria-hidden="true"><span>{initials(t.name)}</span><Icon name="home" size={18} /></div>
             <p>{t.quote}</p>
-            <span className="rx-caption"><b>{t.name}</b> · {t.role}, {t.country}</span>
+            <span className="rx-caption"><b>{t.name}</b>{F(t)} {t.role}, {t.country}</span>
             <span className="rx-pol-foot"><Stars value={t.rating} size={13} /><MemberTag t={t} /></span>
           </li>
         ))}
@@ -298,7 +300,7 @@ function ChatRoom({ room, list }) {
             <li key={`${t.name}-${i}`} className={`rx-msg ${i % 2 ? 'r' : 'l'}`} style={{ '--i': i }}>
               <i className="rx-msg-av" aria-hidden="true">{initials(t.name)}</i>
               <div className="rx-bubble">
-                <span className="rx-msg-who"><b>{t.name}</b> · {t.country}</span>
+                <span className="rx-msg-who"><b>{t.name}</b>{F(t, 15)} {t.country}</span>
                 <p>{t.quote}</p>
                 <span className="rx-msg-foot"><Stars value={t.rating} size={11} /><small>{t.role}</small><MemberTag t={t} /><span className="rx-read" aria-hidden="true">✓✓</span></span>
               </div>
@@ -363,7 +365,7 @@ function Scoreboard({ panels }) {
             <ul>
               {countries.map((c, i) => (
                 <li key={c.cc} className={`st${i % 4}`} style={{ '--i': i }} title={`${c.country}: ${c.n} review${c.n > 1 ? 's' : ''}`}>
-                  <b>{c.cc.toUpperCase()}</b><small>{c.country}</small>{c.n > 1 && <i>×{c.n}</i>}
+                  <b><Flag code={c.cc} name={c.country} size={34} className="rx-stamp-flag" /></b><small>{c.country}</small>{c.n > 1 && <i>×{c.n}</i>}
                 </li>
               ))}
             </ul>

@@ -7,6 +7,7 @@ import { getJSON, postJSON } from '../utils/api.js';
 import { session, store } from '../utils/storage.js';
 import { EMAIL_RE } from '../utils/validate.js';
 import { normalizeReview, rememberOwnReview } from '../utils/reviews.js';
+import { Flag } from './ui.jsx';
 
 // "Reward Ticket" rates & reviews experience.
 // • A "Rate your experience" tab lives on the RIGHT edge of every page (slides in a few seconds after entry),
@@ -290,7 +291,7 @@ export default function ReviewPopup() {
                   {r ? (
                     <figure className="rt-quote" key={ri}>
                       <blockquote>“{r.text}”</blockquote>
-                      <figcaption>— {r.name}{r.country ? `, ${r.country}` : ''}</figcaption>
+                      <figcaption>— {r.name}{r.iso && <Flag code={r.iso} name={r.country} size={16} className="rv-flag" />}{r.country ? ` ${r.country}` : ''}</figcaption>
                     </figure>
                   ) : null}
                   <button type="button" className="rt-later" onClick={close}>Maybe later</button>

@@ -16,7 +16,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { API, PREVIEW_FORMS } from '../config/site.js';
 import { COVERAGE } from '../data/countries.js';
 import { methodsFor, isMethodAllowed } from '../data/rewards.js';
-import { useMounted } from './ui.jsx';
+import { useMounted, Flag } from './ui.jsx';
 import Icon from './Icon.jsx';
 import { shuffle, sfx } from '../utils/helpers.js';
 import { Link } from '../router.jsx';
@@ -99,7 +99,7 @@ export default function RewardToasts() {
   const ini = current.live ? `${current.firstName[0]}${current.lastInitial || ''}`.toUpperCase() : '';
 
   const m = METHOD[current.method] || METHOD.paypal;
-  const cc = <span className="rtx-cc" title={current.country}>{String(current.cc || '').toUpperCase()}</span>;
+  const cc = current.cc ? <Flag code={current.cc} name={current.country} size={18} className="rtx-flag" /> : null;
   return (
     <aside
       className={`rtx ${visible ? 'is-in' : ''} ${current.live ? 'is-live' : 'is-open'}`}

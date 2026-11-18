@@ -87,3 +87,9 @@ html[data-mode='dark'] .rtx-sheen { background: linear-gradient(105deg, transpar
   .rtx *, .rtx *::before { animation: none !important; }
   .rtx-coins, .rtx-sheen { display: none; }
 }
+
+/* review flags (Reviews, About, Scan & connect, review pop-up) and the reward ticket's flag */
+.rv-flag { display: inline-block; vertical-align: -2px; margin: 0 5px 0 6px; border-radius: 3px; }
+.rx-stamp-flag { display: block; margin: 0 auto 4px; border-radius: 5px; box-shadow: 0 4px 10px -4px rgba(0, 0, 0, .35); }
+.rtx-flag { flex: none; border-radius: 3px; }
+html[data-mode='dark'] .flag { box-shadow: 0 0 0 1px rgba(255, 255, 255, .16); }
