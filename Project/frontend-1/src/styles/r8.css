@@ -249,8 +249,8 @@
 .rj-glass i.c { background: radial-gradient(circle at 35% 30%, #fff3b0, #f5b72a 55%, #c98a12); box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .35); }
 .rj-glass i.h { color: #fff; background: linear-gradient(140deg, #ff7a8e, #ff4f6d); }
 @keyframes rj-bob { to { transform: translateY(-6px) rotate(8deg); } }
-.rj-glass b { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%) rotate(-6deg); padding: 6px 14px; border-radius: 6px; background: #fffaf0; color: #d93a57; font: italic 800 1rem/1 Georgia, serif; box-shadow: 0 6px 14px -8px #7a2a1a; white-space: nowrap; }
-.rj-tags { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px 14px; }
+.rj-glass b { position: absolute; left: 50%; top: 24%; transform: translate(-50%, -50%) rotate(-6deg); padding: 6px 14px; border-radius: 6px; background: #fffaf0; color: #d93a57; font: italic 800 1rem/1 Georgia, serif; box-shadow: 0 6px 14px -8px #7a2a1a; white-space: nowrap; }
+.rj-tags { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px 14px; }
 .rj-tags li { transform-origin: 50% 0; animation: rj-hang .8s cubic-bezier(.22, 1.5, .36, 1) calc(var(--i) * 80ms) both; }
 .rj-tags li:nth-child(odd) { rotate: -3deg; } .rj-tags li:nth-child(even) { rotate: 2.5deg; }
 @keyframes rj-hang { from { opacity: 0; transform: translateY(-16px) rotate(-14deg); } }
@@ -259,7 +259,8 @@
 .rj-tags button svg { color: #ff4f6d; }
 .rj-tags button b { font-size: .85rem; line-height: 1.2; }
 .rj-tags button small { font-size: .76rem; line-height: 1.35; opacity: .9; }
-.rj-tags li:has(button.on) { grid-column: span 2; }
+.rj-tags li:has(button.on) { grid-column: span 2; rotate: 0deg; }
+.rj-tags button.on:hover { transform: none; }
 .rj-tags button.on { background: linear-gradient(160deg, #ff9f1c, #ff4f6d); color: #fff; }
 .rj-tags button.on svg { color: #fff; }
 .rj-hole { position: absolute; top: 9px; left: 50%; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; background: #ffe2dc; box-shadow: inset 0 0 0 2px rgba(122, 42, 26, .3); }
@@ -298,11 +299,12 @@
   .rl-rows button { grid-template-columns: 1fr auto; row-gap: 4px; }
   .rl-a { grid-column: 1 / -1; order: 3; padding-left: 42px; font-size: .74rem; }
   .rl-s { font-size: 0; gap: 0; } .rl-s i { width: 10px; height: 10px; }
-  .rb2-flower { --R: 128px; --p: 70px; --c: 160px; }
+  .rb2-flower { --R: 116px; --p: 64px; --c: 150px; }
+  .rbloom { padding: 24px 8px; }
   .rb2-petal > span b { display: none; }
   .rb2-core { padding: 14px; gap: 4px; } .rb2-core b { font-size: .88rem; } .rb2-core small { font-size: .68rem; }
 }
-@media (max-width: 360px) { .rb2-flower { --R: 112px; --p: 62px; --c: 142px; } }
+@media (max-width: 360px) { .rb2-flower { --R: 104px; --p: 58px; --c: 136px; } }
 
 /* ================================================================ 6. Passport stamps */
 .cs-regions { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin-bottom: 22px; }
