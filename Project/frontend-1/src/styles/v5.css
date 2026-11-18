@@ -511,3 +511,25 @@ html[lang='en'] .btn-join { background: linear-gradient(120deg, #ff6a2c, #ffb020
 html[lang='en'] .btn-primary { background: linear-gradient(120deg, #ef2d56 0%, #ff6a2c 50%, #ffb020 100%) !important; box-shadow: 0 12px 26px -12px rgba(255, 106, 44, .85) !important; }
 html[lang='en'] .btn-ghost:hover { border-color: #ff6a2c; color: #ff6a2c; }
 html[lang='en'] .text-link { color: #ff6a2c; }
+
+/* ---------- Footer wordmark transition (plays when the footer scrolls into view) ----------
+   1. every letter outline draws itself in, 2. the brand colours wipe in from left to right with a soft
+   glow, 3. the letters rise into place, then a heartbeat line keeps running through the name. */
+.fr-wordmark .frw-outline { stroke-dasharray: 700 700; stroke-dashoffset: 700; transition: stroke-dashoffset 2.4s cubic-bezier(.65, 0, .35, 1), stroke .3s; }
+.fr-wordmark.is-in .frw-outline { stroke-dashoffset: 0; }
+.fr-wordmark .frw-fill { clip-path: inset(0 100% 0 0); filter: drop-shadow(0 0 0 rgba(247, 147, 30, 0)); transition: clip-path 2s cubic-bezier(.77, 0, .18, 1) .9s, filter 1.2s ease 2.4s; }
+.fr-wordmark.is-in .frw-fill { clip-path: inset(0 0 0 0); filter: drop-shadow(0 0 18px rgba(247, 147, 30, .35)); }
+.fr-wordmark svg { transform: translateY(26px) scale(.97); opacity: .4; transition: transform 1.6s cubic-bezier(.22, 1, .36, 1), opacity 1s ease; }
+.fr-wordmark.is-in svg { transform: none; opacity: 1; }
+.frw-pulse, .frw-pulse-ghost { fill: none; stroke-linejoin: round; stroke-linecap: round; }
+.frw-pulse { stroke: #fff; stroke-width: 6; stroke-dasharray: 18 82; stroke-dashoffset: 100; opacity: 0; filter: drop-shadow(0 0 8px #fff); }
+.frw-pulse-ghost { stroke: rgba(232, 68, 78, .22); stroke-width: 2; stroke-dasharray: 18 82; stroke-dashoffset: 100; opacity: 0; }
+.fr-wordmark.is-in .frw-pulse { opacity: .85; animation: frw-pulse 3.6s linear 3s infinite; }
+.fr-wordmark.is-in .frw-pulse-ghost { opacity: 1; animation: frw-pulse 3.6s linear 3s infinite; }
+@keyframes frw-pulse { to { stroke-dashoffset: 0; } }
+.fr-wordmark.is-in .frw-sweep { opacity: .4; }
+.fr-wordmark:hover .frw-fill { filter: drop-shadow(0 0 26px rgba(232, 68, 78, .5)) saturate(1.2); }
+@media (prefers-reduced-motion: reduce) {
+  .fr-wordmark .frw-outline, .fr-wordmark .frw-fill, .fr-wordmark svg { transition: none !important; stroke-dashoffset: 0; clip-path: none; transform: none; opacity: 1; }
+  .frw-pulse, .frw-pulse-ghost { display: none; }
+}

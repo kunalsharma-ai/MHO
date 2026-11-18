@@ -3,7 +3,7 @@ import { Link } from '../router.jsx';
 import { SITE, whatsappLink } from '../config/site.js';
 import { Logo } from './Brand.jsx';
 import Icon from './Icon.jsx';
-import { LiveZone } from './ui.jsx';
+import { LiveZone, useInView } from './ui.jsx';
 import { LanguageButton } from './Language.jsx';
 import frLogo from '../assets/brand/frequent-research-logo.webp';
 import iso9001 from '../assets/brand/aff-iso-9001.webp';
@@ -92,13 +92,14 @@ const WORDMARK_GRADES = {
 };
 
 export function BrandWordmark({ text, grade = 'mho', id = grade, size = 'lg' }) {
+  const [ref, inView] = useInView({ threshold: 0.25 });
   const W = 1600;
   const fontSize = size === 'lg' ? 200 : 120;
   const H = size === 'lg' ? 230 : 150;
   const base = size === 'lg' ? 182 : 116;
   const cap = base - fontSize * 0.6;
   return (
-    <div className={`fr-wordmark wm-${size} notranslate`} translate="no" aria-hidden="true">
+    <div ref={ref} className={`fr-wordmark wm-${size} notranslate ${inView ? 'is-in' : ''}`} translate="no" aria-hidden="true">
       <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id={`${id}-fill`} x1="0" y1="0" x2={W} y2="0" gradientUnits="userSpaceOnUse">
@@ -122,7 +123,9 @@ export function BrandWordmark({ text, grade = 'mho', id = grade, size = 'lg' }) 
         <text x={W / 2} y={base} textAnchor="middle" className="frw-glyphs frw-fill" fontSize={fontSize} fill={`url(#${id}-fill)`} textLength={W - 80} lengthAdjust="spacingAndGlyphs">{text}</text>
         <g mask={`url(#${id}-mask)`}>
           <rect className="frw-sweep" x="-420" y="0" width="420" height={H} fill={`url(#${id}-sweep)`} />
+          <path className="frw-pulse" pathLength="100" d={`M0 ${cap + 40}h300l18-40 22 74 26-110 22 92 14-16h260l18-40 22 74 26-110 22 92 14-16h260l18-40 22 74 26-110 22 92 14-16h300`} />
         </g>
+        <path className="frw-pulse-ghost" pathLength="100" d={`M0 ${cap + 40}h300l18-40 22 74 26-110 22 92 14-16h260l18-40 22 74 26-110 22 92 14-16h260l18-40 22 74 26-110 22 92 14-16h300`} />
         <text x={W / 2} y={base} textAnchor="middle" className="frw-glyphs frw-outline" fontSize={fontSize} textLength={W - 80} lengthAdjust="spacingAndGlyphs">{text}</text>
         <g className="frw-spark" transform={`translate(${W - 28} ${H * 0.22})`}>
           <path d="M0 -14 L3.5 -3.5 L14 0 L3.5 3.5 L0 14 L-3.5 3.5 L-14 0 L-3.5 -3.5 Z" />
