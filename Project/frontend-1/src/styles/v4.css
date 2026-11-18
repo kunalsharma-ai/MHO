@@ -1603,3 +1603,12 @@
 .lead-card small { display: flex; align-items: center; gap: 4px; margin-top: 8px; font-size: .7rem; color: var(--muted, #5b5675); }
 .lead-card small a { color: #6a3df5; }
 .chat-quick.is-lead button { border-color: #c9bdf8; color: #4b2bbf; background: #faf8ff; }
+
+/* Round 3 fixes: the % sits inside the ring (no overlap at any width); the lanyard is a clean SVG cord */
+.gp-dial { position: relative; display: grid; place-items: center; width: 82%; margin-top: 2cqw; }
+.gp-dial .gp-ring { width: 100%; margin: 0; }
+.gp-dial .gp-pct { position: absolute; inset: 0; top: auto; display: grid; place-items: center; grid-auto-flow: column; justify-content: center; align-items: center; gap: 1px; font-size: clamp(.8rem, 4.6cqw, 1.45rem); line-height: 1; height: 100%; }
+.gp-dial .gp-pct small { align-self: center; }
+svg.vl-string { width: 9cqw; height: auto; min-width: 34px; max-width: 54px; margin-bottom: -2px; clip-path: none; border: 0; overflow: visible; }
+svg.vl-string path { fill: none; stroke: var(--g1); stroke-width: 4; stroke-linecap: round; }
+svg.vl-string rect { fill: #94a3b8; }
