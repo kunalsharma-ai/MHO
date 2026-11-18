@@ -331,6 +331,7 @@ export default function VideoFab() {
       <button type="button" className={`ytfab ytfab-${v.template} ${seen ? 'is-seen' : ''} ${tip ? 'is-on' : ''} ${atTop && !tip ? 'is-tucked' : ''}`} onClick={toggleTip} aria-label="Watch this page's video" data-mode-skip="">
         <span className="ytb" aria-hidden="true">
           <span className="ytb-wave" /><span className="ytb-wave w2" />
+          <span className="fx-react" data-loop="">{['heart', 'thumb', 'play', 'heart'].map((k, i) => <i key={i} style={{ '--i': i }}><Icon name={k} size={12} fill="currentColor" stroke={0} /></i>)}</span>
           <span className="ytb-plate">
             <svg className="ytb-logo" viewBox="0 0 68 48" width="40" height="28"><path d="M66.5 7.5A8.6 8.6 0 0 0 60.5 1.4C55.2 0 34 0 34 0S12.8 0 7.5 1.4A8.6 8.6 0 0 0 1.5 7.5C0 12.8 0 24 0 24s0 11.2 1.5 16.5a8.6 8.6 0 0 0 6 6.1C12.8 48 34 48 34 48s21.2 0 26.5-1.4a8.6 8.6 0 0 0 6-6.1C68 35.2 68 24 68 24s0-11.2-1.5-16.5z" fill="#ff0033" /><path d="M27 34.3 45 24 27 13.7z" fill="#fff" /></svg>
             <span className="ytb-shine" />

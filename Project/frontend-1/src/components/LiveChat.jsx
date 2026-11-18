@@ -262,7 +262,8 @@ export default function LiveChat({ quiet = false }) {
           its "Live help 24/7" pill. The page's video has its own round button on the left (VideoFab.jsx). */}
       <a className="fab-wa dock-sat ds-1" href={whatsappLink()} target="_blank" rel="noopener noreferrer" aria-label={`Chat on WhatsApp ${SITE.whatsappDisplay}`}>
         <span className="dock-halo" aria-hidden="true" />
-        <span className="dock-core"><Icon name="whatsapp" size={26} /></span>
+        <span className="dock-core fx-ring" data-loop=""><Icon name="whatsapp" size={26} /></span>
+        <span className="fx-wa" aria-hidden="true" data-loop=""><i /><i /><i /></span>
         <span className="fab-tip">WhatsApp us</span>
       </a>
       {!quiet && (
@@ -270,8 +271,9 @@ export default function LiveChat({ quiet = false }) {
           <span className="dock-halo" aria-hidden="true" />
           <span className="dock-core">
             <span className="dock-rate-stars" aria-hidden="true">{[0, 1, 2, 3, 4].map((i) => <i key={i} style={{ '--i': i }} />)}</span>
-            <Icon name="star" size={24} fill="currentColor" stroke={0} />
+            <span className="fx-flip" data-loop=""><Icon name="star" size={24} fill="currentColor" stroke={0} /></span>
           </span>
+          <span className="fx-burst" aria-hidden="true" data-loop="">{[0, 1, 2, 3, 4, 5, 6, 7].map((i) => <i key={i} style={{ '--i': i }} />)}</span>
           <span className="fab-tip">Rate your experience</span>
         </button>
       )}
@@ -285,7 +287,8 @@ export default function LiveChat({ quiet = false }) {
       <button className="fab-chat" onClick={open ? () => { setOpen(false); sfx('playChatClose'); } : openChat} onPointerEnter={loadEngine} aria-expanded={open} aria-controls="mho-chat" aria-label={open ? 'Close live help' : 'Open live help, available 24/7'}>
         <span className="dock-halo" aria-hidden="true" />
         <span className="fab-orbit" aria-hidden="true"><i /><i /><i /></span>
-        <span className="fab-face">{open ? <Icon name="x" size={24} /> : <ChatLogo size={34} />}</span>
+        <span className="fab-face fx-bob" data-loop="">{open ? <Icon name="x" size={24} /> : <ChatLogo size={34} />}</span>
+        {!open && <span className="fx-typing" aria-hidden="true" data-loop=""><i /><i /><i /></span>}
         {!open && !msgs.length && <span className="dock-badge" aria-hidden="true">1</span>}
         <span className="fab-label"><i className="dot" />Live help 24/7</span>
       </button>

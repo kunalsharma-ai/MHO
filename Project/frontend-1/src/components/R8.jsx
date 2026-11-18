@@ -196,27 +196,40 @@ export function RewardWallet({ role }) {
 
   if (role === 'hcp') {
     return (
-      <LiveZone className="rwal rled" style={style}>
-        <div className="rl-sheet">
-          <div className="rl-top">
-            <span className="rl-logo"><Icon name="stethoscope" size={18} /></span>
-            <span><b>Honorarium statement</b><small>Professional panel · paid for your clinical time</small></span>
-            <span className="rl-seal" aria-hidden="true"><i>VERIFIED</i></span>
+      <LiveZone className="rwal rcon" style={style}>
+        <span className="rc-grid" aria-hidden="true" />
+        <div className="rc-main">
+          <div className="rc-cardwrap">
+            <div className="rc-card" key={cur}>
+              <span className="rc-holo" aria-hidden="true" />
+              <span className="rc-top"><span className="rc-brand"><Icon name="stethoscope" size={16} />Professional panel</span><span className="rc-chip" aria-hidden="true" /></span>
+              <span className="rc-ic" aria-hidden="true"><Icon name={it.icon} size={34} /></span>
+              <b className="rc-name">{it.t}</b>
+              <small className="rc-desc">{it.d}</small>
+              <span className="rc-bottom"><span className="rc-scope">{scopeOf(it)}</span><span className="rc-wave" aria-hidden="true"><i /><i /></span></span>
+            </div>
+            <span className="rc-shadow" aria-hidden="true" />
           </div>
-          <div className="rl-cols" aria-hidden="true"><span>Method</span><span>Availability</span><span>Status</span></div>
-          <ul className="rl-rows">
+          <ol className="rc-flow" aria-label="How an honorarium is paid">
+            {[['check', 'Study complete'], ['shield', 'Quality checks'], ['coins', 'Credited']].map(([ic, t], i) => (
+              <li key={t} style={{ '--i': i }}><span><Icon name={ic} size={16} /></span>{t}</li>
+            ))}
+            <i className="rc-coin" aria-hidden="true" />
+          </ol>
+        </div>
+        <div className="rc-side">
+          <span className="rc-label">Choose a payout method</span>
+          <ul className="rc-keys">
             {r.items.map((x, i) => (
               <li key={x.id} style={{ '--i': i }}>
                 <button type="button" className={i === cur ? 'on' : ''} aria-pressed={i === cur} onClick={() => setCur(i)}>
-                  <span className="rl-m"><span className="rl-ic"><Icon name={x.icon} size={18} /></span><b>{x.t}</b></span>
-                  <span className="rl-a">{scopeOf(x)}</span>
-                  <span className="rl-s"><i />Credited after quality checks</span>
+                  <span className="rc-k"><Icon name={x.icon} size={20} /></span>
+                  <b>{x.t}</b>
                 </button>
               </li>
             ))}
           </ul>
-          <p className="rl-detail" key={cur}><Icon name={it.icon} size={16} /> <b>{it.t}:</b> {it.d}</p>
-          <p className="rl-foot"><Icon name="info" size={14} /> {w.note}.</p>
+          <p className="rc-foot"><Icon name="info" size={14} /> {w.note}.</p>
         </div>
       </LiveZone>
     );
@@ -253,21 +266,26 @@ export function RewardWallet({ role }) {
 
   const n = r.items.length;
   return (
-    <LiveZone className="rwal rbloom" style={style}>
-      <div className="rb2-flower">
-        {r.items.map((x, i) => (
-          <button key={x.id} type="button" className={`rb2-petal ${i === cur ? 'on' : ''}`} style={{ '--a': `${(360 / n) * i}deg` }} aria-pressed={i === cur} onClick={() => setCur(i)} aria-label={x.t}>
-            <span><Icon name={x.icon} size={20} /><b>{x.t}</b></span>
-          </button>
-        ))}
-        <div className="rb2-core" key={cur}>
-          <Icon name={it.icon} size={26} />
-          <b>{it.t}</b>
-          <small>{it.d}</small>
-          <i>{scopeOf(it)}</i>
+    <LiveZone className="rwal rlotus" style={style}>
+      <span className="rlo-pollen" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <i key={i} style={{ '--i': i }} />)}</span>
+      <div className="rlo-stage">
+        <div className="rlo-flower">
+          <span className="rlo-under" aria-hidden="true">{r.items.map((x, i) => <i key={x.id} style={{ '--a': `${(360 / n) * (i + 0.5)}deg` }} />)}</span>
+          {r.items.map((x, i) => (
+            <button key={x.id} type="button" className={`rlo-petal ${i === cur ? 'on' : ''}`} style={{ '--a': `${(360 / n) * i}deg`, '--i': i }} aria-pressed={i === cur} onClick={() => setCur(i)} aria-label={x.t}>
+              <span className="rlo-in"><Icon name={x.icon} size={22} /><b>{x.t}</b></span>
+            </button>
+          ))}
+          <div className="rlo-core" key={cur}>
+            <span className="rlo-ripple" aria-hidden="true"><i /><i /></span>
+            <Icon name={it.icon} size={28} />
+            <b>{it.t}</b>
+            <small>{it.d}</small>
+            <i>{scopeOf(it)}</i>
+          </div>
         </div>
       </div>
-      <p className="rb2-note"><Icon name="sparkle" size={14} /> {w.note}.</p>
+      <p className="rlo-note"><Icon name="sparkle" size={14} /> {w.note}.</p>
     </LiveZone>
   );
 }
@@ -403,17 +421,29 @@ export function RoleVoices({ role }) {
   }
 
   return (
-    <div ref={ref} className="rv rv-bloom" data-mode-skip="" onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)}>
-      <div className="rv-centre" key={cur}>
-        <span className="rv-q" aria-hidden="true">“</span>
-        <blockquote>{t.quote}</blockquote>
-        <span className="rv-who"><span className="rv-ava">{initials(t.name)}</span><span><b>{t.name}</b><small><Flag code={t.cc} name={t.country} size={16} />{t.role}</small></span><Stars n={t.rating} /></span>
+    <div ref={ref} className="rv rv-book" data-mode-skip="" onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)}>
+      <span className="rv-leaves" aria-hidden="true">{[0, 1, 2, 3, 4, 5].map((i) => <i key={i} style={{ '--i': i }}><Icon name="heart" size={14} fill="currentColor" stroke={0} /></i>)}</span>
+      <div className="rv-spread">
+        <div className="rv-page l" key={`l${cur}`}>
+          <span className="rv-chap">Story {String(cur + 1).padStart(2, '0')} of {String(list.length).padStart(2, '0')}</span>
+          <span className="rv-portrait"><span className="rv-ava">{initials(t.name)}</span><span className="rv-flag"><Flag code={t.cc} name={t.country} size={26} /></span></span>
+          <b className="rv-name">{t.name}</b>
+          <small className="rv-meta">{t.role} · {t.country}</small>
+          <Stars n={t.rating} />
+        </div>
+        <div className="rv-page r" key={`r${cur}`}>
+          <span className="rv-q" aria-hidden="true">“</span>
+          <blockquote>{t.quote}</blockquote>
+          <span className="rv-heal" aria-hidden="true"><svg viewBox="0 0 200 24" preserveAspectRatio="none"><path d="M0 14h60l8-10 9 18 8-14 6 6h40c8 0 10-10 18-10s10 10 18 10h33" /></svg></span>
+        </div>
+        <span className="rv-turn" key={`t${cur}`} aria-hidden="true" />
+        <span className="rv-spine" aria-hidden="true" />
       </div>
-      <ul className="rv-orbit" aria-label="More patient stories">
+      <ul className="rv-tabs" aria-label="More patient stories">
         {list.map((v, i) => (
-          <li key={v.name} className={i % 2 ? 'r' : 'l'} style={{ '--i': i, '--y': `${10 + Math.floor(i / 2) * (66 / Math.max(1, Math.ceil(list.length / 2) - 1))}%` }}>
+          <li key={v.name} style={{ '--i': i }}>
             <button type="button" className={i === cur ? 'on' : ''} aria-pressed={i === cur} onClick={() => { setCur(i); setHold(true); }} aria-label={`Read ${v.name}`}>
-              <span className="rv-ava">{initials(v.name)}</span><small>{v.country}</small>
+              <span className="rv-ava">{initials(v.name)}</span>
             </button>
           </li>
         ))}
