@@ -17,7 +17,7 @@ export const ROLES = [
   {
     id: 'hcp',
     tab: 'Healthcare Professional',
-    tabSub: 'Doctors, nurses & allied',
+    tabSub: 'Doctors & nurses',
     icon: 'stethoscope',
     persona: ['doctor', 2, 0, 0],
     motto: 'Your expertise, rewarded',
@@ -223,21 +223,24 @@ function Stage({ role }) {
   );
 }
 
+const ROLE_MS = 5500; // keep in step with the .rht-timer animation in v3.css
+
 export default function RoleHero() {
   // English keeps the original colour grading; other languages show the same hero over their language grade.
   const { lang } = useI18n();
   const graded = lang !== 'en';
   const [idx, setIdx] = useState(0);
-  const touched = useRef(false);
   const role = ROLES[idx];
 
+  // The three audiences rotate on their own, all the time (Kunal asked for this). Picking a tab shows it and
+  // restarts the countdown, so the visitor gets a full turn before it moves on; a hidden tab pauses it.
+  const [cycle, setCycle] = useState(0);
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const t = setInterval(() => { if (!touched.current && !document.hidden) setIdx((i) => (i + 1) % ROLES.length); }, 5500);
-    return () => clearInterval(t);
-  }, []);
+    const t = setTimeout(() => { if (!document.hidden) setIdx((i) => (i + 1) % ROLES.length); else setCycle((c) => c + 1); }, ROLE_MS);
+    return () => clearTimeout(t);
+  }, [idx, cycle]);
 
-  const pick = (i) => { touched.current = true; setIdx(i); };
+  const pick = (i) => { setIdx(i); setCycle((c) => c + 1); };
 
   return (
     <section className={`role-hero rgrade-${role.id} ${graded ? 'aurora-hero' : ''}`}>
@@ -257,7 +260,7 @@ export default function RoleHero() {
               <button key={r.id} role="tab" id={`rh-tab-${r.id}`} aria-selected={i === idx} aria-controls="rh-panel" className={`rh-tab t-${r.id} ${i === idx ? 'on' : ''}`} onClick={() => pick(i)}>
                 <span className="rht-ic"><Icon name={r.icon} size={18} /></span>
                 <span className="rht-txt"><b>{r.tab}</b><small>{r.tabSub}</small></span>
-                {i === idx && !touched.current && <span className="rht-timer" key={idx} aria-hidden="true" />}
+                {i === idx && <span className="rht-timer" key={`${idx}-${cycle}`} aria-hidden="true" />}
               </button>
             ))}
           </div>

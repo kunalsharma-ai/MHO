@@ -54,7 +54,13 @@ export default function Header() {
     };
     place();
     window.addEventListener('resize', place);
-    return () => window.removeEventListener('resize', place);
+    // The links change size when the header tightens to fit (and when fonts or translations load), so the
+    // pill behind the active link (Home etc.) is re-placed whenever the menu itself changes size.
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => requestAnimationFrame(place)) : null;
+    ro?.observe(nav);
+    nav.querySelectorAll('a.nav-link').forEach((a) => ro?.observe(a));
+    document.fonts?.ready.then(place).catch(() => {});
+    return () => { window.removeEventListener('resize', place); ro?.disconnect(); };
   }, [activeIdx, mounted]);
 
   // Never let the menu bar overlap the buttons: when the links don't fit next to the logo and the buttons

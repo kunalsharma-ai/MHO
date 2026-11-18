@@ -82,6 +82,11 @@ function darkSurface(c) {
   if (chroma(c) < 0.05) return { ...PAGE_DARK, l: PAGE_DARK.l + (1 - L) * 0.45 + (L < 0.97 ? 0.035 : 0) };
   return { h, s: clamp(s * 0.55, 0.18, 0.5), l: clamp(0.1 + (1 - L) * 0.35, 0.1, 0.2) };
 }
+/** Soft decorative glows (blurred blobs) become coloured light, not dark smudges. */
+function glow(c) {
+  const { h, s } = toHsl(c);
+  return chroma(c) < 0.05 ? { h: 250, s: 0.6, l: 0.32 } : { h, s: clamp(s, 0.55, 0.9), l: 0.4 };
+}
 /** Should this text colour be lightened on a dark surface? */
 const isDarkText = (c) => { const L = lightness(c); return L < 0.42 || (L < 0.58 && chroma(c) < 0.25); };
 function lightText(c) {
@@ -102,8 +107,14 @@ let raf = 0;
 let active = false;
 let settle = [];
 
+// Recoloured elements must not animate their colours: a paused or restarted colour transition (the animation
+// gate pauses off-screen motion) would leave a card stuck on its light colour. Movement transitions stay.
+const KEEP_TRANSITIONS = 'transform, opacity, box-shadow, filter, translate, scale, rotate, clip-path, width, height, left, top, right, bottom';
 function set(el, prop, value) {
-  if (!writes.has(el)) writes.set(el, []);
+  if (!writes.has(el)) {
+    writes.set(el, [{ prop: 'transition-property', value: el.style.getPropertyValue('transition-property'), priority: el.style.getPropertyPriority('transition-property') }]);
+    el.style.setProperty('transition-property', KEEP_TRANSITIONS, 'important');
+  }
   const list = writes.get(el);
   if (!list.some((w) => w.prop === prop)) list.push({ prop, value: el.style.getPropertyValue(prop), priority: el.style.getPropertyPriority(prop) });
   el.style.setProperty(prop, value, 'important');
@@ -151,7 +162,7 @@ function processTree(root, bg, pc) {
     tag: el.tagName.toLowerCase(),
     color: cs.color, bgc: cs.backgroundColor, bgi: cs.backgroundImage, clip: cs.backgroundClip === 'text' || cs.webkitBackgroundClip === 'text',
     bt: cs.borderTopColor, br: cs.borderRightColor, bb: cs.borderBottomColor, bl: cs.borderLeftColor, bw: cs.borderTopWidth !== '0px' || cs.borderBottomWidth !== '0px' || cs.borderLeftWidth !== '0px' || cs.borderRightWidth !== '0px',
-    fill: cs.fill, stroke: cs.stroke, outline: cs.outlineColor,
+    fill: cs.fill, stroke: cs.stroke, outline: cs.outlineColor, blur: /blur\(/.test(cs.filter),
   }));
   // Then decide and write, walking the snapshot with a stack of parent contexts.
   const stack = [pc || { bg, color: null, out: null }];
@@ -172,6 +183,17 @@ function processTree(root, bg, pc) {
       continue;
     }
 
+    // blurred decorative blobs: turn pale glows into deeper coloured glows instead of dark patches
+    if (it.blur) {
+      const bc = parse(it.bgc);
+      if (bc && bc.a > 0 && isLightSurface(bc)) set(el, 'background-color', css(glow(bc), bc.a * 0.55));
+      if (it.bgi && it.bgi.includes('gradient')) {
+        const g = it.bgi.replace(COLOR_RE, (m, fn, body) => { const c = parseFn(fn, body); return c && c.a > 0 && isLightSurface(c) ? css(glow(c), c.a * 0.55) : m; });
+        if (g !== it.bgi) set(el, 'background-image', g);
+      }
+      stack[it.depth + 1] = parent;
+      continue;
+    }
     // background
     const bgc = parse(it.bgc);
     if (bgc && bgc.a > 0.35 && isLightSurface(bgc)) {
@@ -214,6 +236,20 @@ function processTree(root, bg, pc) {
   }
 }
 
+// While undoing and re-reading colours, CSS transitions must not run: otherwise the browser reports a colour
+// half-way back to the light value, and cards and buttons end up stuck light or patchy.
+function frozen(fn) {
+  const root = document.documentElement;
+  root.classList.add('dm-measure');
+  try { fn(); } finally {
+    void root.offsetWidth; // apply the final colours with transitions still off
+    root.classList.remove('dm-measure');
+    try {
+      for (const a of document.getAnimations()) if (a.transitionProperty && /^(background|color|border)/.test(a.transitionProperty)) a.finish();
+    } catch { /* older browsers */ }
+  }
+}
+
 function contextFor(el) {
   for (let p = el.parentElement; p; p = p.parentElement) {
     if (p.matches(ART)) return null;
@@ -232,12 +268,14 @@ function flush() {
   // only the outermost changed nodes
   const roots = list.filter((el) => el.isConnected && !list.some((o) => o !== el && o.isConnected && o.contains(el)));
   observer?.disconnect();
-  for (const el of roots) {
-    const pc = contextFor(el);
-    if (!pc) continue;
-    undoTree(el);
-    processTree(el, pc.bg, pc);
-  }
+  frozen(() => {
+    for (const el of roots) {
+      const pc = contextFor(el);
+      if (!pc) continue;
+      undoTree(el);
+      processTree(el, pc.bg, pc);
+    }
+  });
   observe();
 }
 const schedule = () => { if (!raf) raf = requestAnimationFrame(flush); };
@@ -271,8 +309,10 @@ export function applyMode(mode) {
     root.setAttribute('data-mode', 'dark');
     active = true;
     observer?.disconnect();
-    for (const el of [...writes.keys()]) undo(el);
-    processTree(document.body, PAGE_DARK.l, { bg: PAGE_DARK.l, color: null, out: null });
+    frozen(() => {
+      for (const el of [...writes.keys()]) undo(el);
+      processTree(document.body, PAGE_DARK.l, { bg: PAGE_DARK.l, color: null, out: null });
+    });
     observe();
     document.addEventListener('transitionend', onTransitionEnd, true);
     // one more full pass once entrance animations and late-loading sections have settled
@@ -280,8 +320,10 @@ export function applyMode(mode) {
     const repass = () => {
       if (!active) return;
       observer?.disconnect();
-      for (const el of [...writes.keys()]) undo(el);
-      processTree(document.body, PAGE_DARK.l, { bg: PAGE_DARK.l, color: null, out: null });
+      frozen(() => {
+        for (const el of [...writes.keys()]) undo(el);
+        processTree(document.body, PAGE_DARK.l, { bg: PAGE_DARK.l, color: null, out: null });
+      });
       observe();
     };
     settle = [setTimeout(repass, 700), setTimeout(repass, 2200)];
@@ -290,7 +332,8 @@ export function applyMode(mode) {
     root.removeAttribute('data-mode');
     observer?.disconnect();
     document.removeEventListener('transitionend', onTransitionEnd, true);
-    for (const el of [...writes.keys()]) undo(el);
+    settle.forEach(clearTimeout);
+    frozen(() => { for (const el of [...writes.keys()]) undo(el); });
   }
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.setAttribute('content', mode === 'dark' ? '#0c0d17' : '#0B1E5B');
