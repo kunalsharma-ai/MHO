@@ -216,6 +216,12 @@ export default function VideoFab() {
   // "Show & watch" bubble: pops up beside the button a few seconds after each page loads, once per page per
   // visit, and tucks itself away after a while (or when closed / when the video is opened).
   const [tip, setTip] = useState(false);
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    let v = false;
+    try { v = sessionStorage.getItem(`mho-vseen-${path}`) === '1'; } catch { /* storage blocked */ }
+    setSeen(v);
+  }, [path]);
   useEffect(() => {
     setTip(false);
     let seen = false;
@@ -229,7 +235,13 @@ export default function VideoFab() {
     setTip(false);
     try { sessionStorage.setItem(`mho-vtip-${path}`, '1'); } catch { /* storage blocked */ }
   }, [path]);
-  useEffect(() => { if (open) { hideTip(); sfx('playVideoOpen'); } }, [open, hideTip]);
+  useEffect(() => {
+    if (!open) return;
+    hideTip();
+    sfx('playVideoOpen');
+    setSeen(true);
+    try { sessionStorage.setItem(`mho-vseen-${path}`, '1'); } catch { /* storage blocked */ }
+  }, [open, hideTip, path]);
 
   useEffect(() => {
     const onOpen = () => setOpen(true);
@@ -260,7 +272,7 @@ export default function VideoFab() {
     return () => {
       document.documentElement.classList.remove('vx-lock');
       document.removeEventListener('keydown', onKey);
-      (prev && prev.focus ? prev : document.querySelector('.dock-video'))?.focus?.();
+      (prev && prev.focus ? prev : document.querySelector('.ytfab'))?.focus?.();
     };
   }, [open]);
 
@@ -268,14 +280,29 @@ export default function VideoFab() {
 
   return (
     <>
-      {/* The round video launcher sits in the help dock (LiveChat.jsx) and opens this window via openPageVideo(). */}
-      <div className={`vtip vtip-${v.template} ${tip && !open ? 'is-in' : ''}`} role="status" aria-hidden={!tip || open}>
-        <button type="button" className="vtip-body" onClick={() => setOpen(true)} tabIndex={tip && !open ? 0 : -1}>
-          <span className="vtip-live"><i />Show &amp; watch</span>
-          <b>{v.title} <em>{v.em}</em></b>
-          <small><Icon name="play" size={11} fill="currentColor" stroke={0} />Watch this page&rsquo;s video</small>
-        </button>
-        <button type="button" className="vtip-x" onClick={hideTip} aria-label="Hide video tip" tabIndex={tip && !open ? 0 : -1}><Icon name="x" size={12} /></button>
+      {/* Round YouTube button, bottom-left, with "Watch our video" circling it, and a notification card beside it
+          that pops up a few seconds into each page (styles/dock.css). */}
+      <button type="button" className={`ytfab ${seen ? 'is-seen' : ''}`} onClick={() => setOpen(true)} aria-haspopup="dialog" aria-label="Watch this page's video" data-mode-skip="">
+        <svg className="ytfab-text" viewBox="0 0 100 100" aria-hidden="true">
+          <defs><path id="ytfab-circle" d="M50 50 m-39 0 a39 39 0 1 1 78 0 a39 39 0 1 1 -78 0" /></defs>
+          <text><textPath href="#ytfab-circle" startOffset="0">WATCH OUR VIDEO • WATCH OUR VIDEO •</textPath></text>
+        </svg>
+        <span className="ytfab-ring" aria-hidden="true" />
+        <span className="ytfab-core" aria-hidden="true">
+          <svg viewBox="0 0 28 20" width="30" height="22"><rect width="28" height="20" rx="5.5" fill="#fff" /><path d="M11 5.6v8.8l7.6-4.4z" fill="#ff0033" /></svg>
+        </span>
+        <span className="ytfab-eq" aria-hidden="true"><i /><i /><i /></span>
+        {!seen && <span className="ytfab-badge" aria-hidden="true">1</span>}
+      </button>
+      <div className={`ytcard ${tip && !open ? 'is-in' : ''}`} role="status" aria-hidden={!tip || open} data-mode-skip="">
+        <div className="ytcard-head">
+          <span className="ytcard-logo" aria-hidden="true"><svg viewBox="0 0 28 20" width="16" height="12"><rect width="28" height="20" rx="5.5" fill="currentColor" /><path d="M11 5.6v8.8l7.6-4.4z" fill="#fff" /></svg></span>
+          <b>MyHealthOpinions</b><span className="ytcard-now"><i />now</span>
+          <button type="button" className="ytcard-x" onClick={hideTip} aria-label="Hide video tip" tabIndex={tip && !open ? 0 : -1}><Icon name="x" size={13} /></button>
+        </div>
+        <span className="ytcard-kicker"><Icon name="bell" size={12} />New video for this page</span>
+        <p className="ytcard-title">{v.title} <em>{v.em}</em></p>
+        <button type="button" className="ytcard-go" onClick={() => setOpen(true)} tabIndex={tip && !open ? 0 : -1}><Icon name="play" size={12} fill="currentColor" stroke={0} />Watch now</button>
       </div>
       {open &&
         createPortal(

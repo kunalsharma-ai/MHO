@@ -1,4 +1,4 @@
-// Reward payout notifications: a rectangular ticket in the bottom-left corner (top of the screen on phones). Styles: styles/rewardpop.css.
+// Reward payout notifications: a rectangular ticket centred at the bottom (top of the screen on phones). Styles: styles/rewardpop.css.
 //
 // PRODUCTION — shows REAL recent payouts from PUBLIC_REWARD_FEED_URL (your backend, or a JSON file you
 // keep updated, e.g. /reward-feed.json). Expected JSON array:

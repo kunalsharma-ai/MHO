@@ -1,18 +1,18 @@
-/* Reward notification (RewardToasts.jsx): a compact rectangular ticket. Left: a role-coloured panel with the
+/* Reward notification (RewardToasts.jsx): a compact rectangular ticket, centred at the bottom between the video button and the help stack. Left: a role-coloured panel with the
    member's initials and a burst of coins; middle: who, where, when; right: the amount. It wipes in from the left,
    a sheen runs across it, the amount bumps, and a bar along the top counts down the 7 seconds it stays. */
 .rtx {
   --bg: #ffffff; --ink2: #12102a; --mut: #5d5a78; --line: rgba(27, 16, 53, .1);
-  position: fixed; left: calc(20px + env(safe-area-inset-left)); bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 180;
+  position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom)); z-index: 180;
   display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: stretch;
-  width: min(392px, calc(100vw - 230px)); min-height: 74px; border-radius: 12px; overflow: hidden; isolation: isolate;
+  width: min(420px, calc(100vw - 32px)); min-height: 74px; border-radius: 12px; overflow: hidden; isolation: isolate;
   background: var(--bg); color: var(--ink2); font-family: var(--font-ui, inherit);
   box-shadow: 0 22px 44px -18px rgba(11, 27, 63, .55), 0 0 0 1px var(--line);
-  clip-path: inset(0 100% 0 0 round 12px); opacity: 0; transform: translateX(-24px);
+  clip-path: inset(0 100% 0 0 round 12px); opacity: 0; transform: translate(-50%, 18px);
   transition: clip-path .7s cubic-bezier(.65, 0, .35, 1), opacity .3s ease, transform .7s cubic-bezier(.22, 1, .36, 1);
   pointer-events: none;
 }
-.rtx.is-in { clip-path: inset(0 0 0 0 round 12px); opacity: 1; transform: none; pointer-events: auto; }
+.rtx.is-in { clip-path: inset(0 0 0 0 round 12px); opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
 .rtx:not(.is-in) { transition-duration: .45s, .45s, .45s; }
 
 /* countdown along the top */
@@ -74,14 +74,16 @@ html[data-mode='dark'] .rtx-m { background: rgba(255, 255, 255, .08); }
 html[data-mode='dark'] .rtx-x { background: rgba(255, 255, 255, .08); }
 html[data-mode='dark'] .rtx-sheen { background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .14) 50%, transparent 65%); }
 
-/* phones: the corners belong to the help dock, so the ticket drops in under the header instead */
+/* below 1240px the bottom corners need the room (video card, help stack), so the ticket drops in under the header */
+@media (max-width: 1240px) {
+  .rtx { bottom: auto; top: calc(80px + env(safe-area-inset-top)); transform: translate(-50%, -16px); }
+}
 @media (max-width: 640px) {
-  .rtx { left: 12px; right: 12px; bottom: auto; top: calc(72px + env(safe-area-inset-top)); width: auto; grid-template-columns: 54px minmax(0, 1fr) auto; min-height: 66px; transform: translateY(-16px); }
-  .rtx.is-in { transform: none; }
+  .rtx { top: calc(72px + env(safe-area-inset-top)); width: calc(100vw - 24px); grid-template-columns: 54px minmax(0, 1fr) auto; min-height: 66px; }
   .rtx-amt strong { font-size: 1.1rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rtx { transition: opacity .3s; clip-path: none; transform: none; }
+  .rtx, .rtx.is-in { transition: opacity .3s; clip-path: none; transform: translate(-50%, 0); }
   .rtx *, .rtx *::before { animation: none !important; }
   .rtx-coins, .rtx-sheen { display: none; }
 }

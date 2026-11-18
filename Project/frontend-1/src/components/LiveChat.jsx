@@ -249,26 +249,24 @@ export default function LiveChat({ quiet = false }) {
   const quick = chips || QUICK;
 
   return (
-    <div className={`help-stack dock ${open ? 'chat-open' : ''}`}>
-      {/* The help dock: live chat is the big button in the corner, and WhatsApp, rate-us and the page's video sit
-          around it on a quarter circle (styles/dock.css). */}
-      <span className="dock-arc" aria-hidden="true"><i /><i /></span>
+    <div className={`help-stack dock ${open ? 'chat-open' : ''}`} data-mode-skip="">
+      {/* The help stack (styles/dock.css): WhatsApp on top, rate-us in the middle, live chat at the bottom with
+          its "Live help 24/7" pill. The page's video has its own round button on the left (VideoFab.jsx). */}
       <a className="fab-wa dock-sat ds-1" href={whatsappLink()} target="_blank" rel="noopener noreferrer" aria-label={`Chat on WhatsApp ${SITE.whatsappDisplay}`}>
-        <span className="fab-wa-ping" aria-hidden="true" />
-        <Icon name="whatsapp" size={24} />
+        <span className="dock-halo" aria-hidden="true" />
+        <span className="dock-core"><Icon name="whatsapp" size={26} /></span>
         <span className="fab-tip">WhatsApp us</span>
       </a>
       {!quiet && (
         <button type="button" className="dock-sat dock-rate ds-2" onClick={() => window.dispatchEvent(new Event('mho-open-rate'))} aria-haspopup="dialog" aria-label="Rate your experience">
-          <span className="dock-rate-stars" aria-hidden="true">{[0, 1, 2, 3, 4].map((i) => <i key={i} style={{ '--i': i }} />)}</span>
-          <Icon name="star" size={22} fill="currentColor" stroke={0} />
+          <span className="dock-halo" aria-hidden="true" />
+          <span className="dock-core">
+            <span className="dock-rate-stars" aria-hidden="true">{[0, 1, 2, 3, 4].map((i) => <i key={i} style={{ '--i': i }} />)}</span>
+            <Icon name="star" size={24} fill="currentColor" stroke={0} />
+          </span>
           <span className="fab-tip">Rate your experience</span>
         </button>
       )}
-      <button type="button" className="dock-sat dock-video ds-3" onClick={() => window.dispatchEvent(new Event('mho-open-video'))} aria-haspopup="dialog" aria-label="Watch this page's video">
-        <svg viewBox="0 0 28 20" width="24" height="17" aria-hidden="true"><rect width="28" height="20" rx="5.5" fill="#fff" /><path d="M11 5.6v8.8l7.6-4.4z" fill="#e8344e" /></svg>
-        <span className="fab-tip">Watch this page&rsquo;s video</span>
-      </button>
 
       {hello && !open && (
         <button className="hello-bubble" onClick={openChat}>
@@ -277,8 +275,10 @@ export default function LiveChat({ quiet = false }) {
       )}
 
       <button className="fab-chat" onClick={open ? () => { setOpen(false); sfx('playChatClose'); } : openChat} onPointerEnter={loadEngine} aria-expanded={open} aria-controls="mho-chat" aria-label={open ? 'Close live help' : 'Open live help, available 24/7'}>
+        <span className="dock-halo" aria-hidden="true" />
         <span className="fab-orbit" aria-hidden="true"><i /><i /><i /></span>
-        <span className="fab-face">{open ? <Icon name="x" size={24} /> : <ChatLogo size={32} />}</span>
+        <span className="fab-face">{open ? <Icon name="x" size={24} /> : <ChatLogo size={34} />}</span>
+        {!open && !msgs.length && <span className="dock-badge" aria-hidden="true">1</span>}
         <span className="fab-label"><i className="dot" />Live help 24/7</span>
       </button>
 
