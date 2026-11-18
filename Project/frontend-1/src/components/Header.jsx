@@ -7,62 +7,6 @@ import Icon from './Icon.jsx';
 import { useMounted } from './ui.jsx';
 import { LanguageButton } from './Language.jsx';
 import { useSession, logout } from '../utils/session.js';
-import { RATING } from '../data/testimonials.js';
-
-/** About Us mega menu: three animated cards (story, score, scan) side by side. */
-function MegaArt({ grade }) {
-  if (grade === 'reviews') {
-    return (
-      <span className="dm-art dm-score" aria-hidden="true">
-        <svg viewBox="0 0 100 56"><path d="M8 52a42 42 0 0 1 84 0" className="t" /><path d="M8 52a42 42 0 0 1 84 0" className="a" pathLength="100" strokeDasharray={`${((RATING.exact / 5) * 100).toFixed(0)} 100`} /></svg>
-        <b>{RATING.average.toFixed(1)}</b>
-        <span className="dm-stars">{[0, 1, 2, 3, 4].map((k) => <Icon key={k} name="star" size={11} fill="currentColor" stroke={0} className={`s${k}`} />)}</span>
-      </span>
-    );
-  }
-  if (grade === 'scan') {
-    return (
-      <span className="dm-art dm-qr" aria-hidden="true">
-        <span className="dm-qr-grid"><i /><i /><i /></span>
-        <span className="dm-qr-beam" />
-        <span className="dm-qr-chips"><Icon name="youtube" size={12} /><Icon name="instagram" size={12} /><Icon name="linkedin" size={12} /></span>
-      </span>
-    );
-  }
-  return (
-    <span className="dm-art dm-story" aria-hidden="true">
-      <span className="dm-ring r1" /><span className="dm-ring r2" />
-      <span className="dm-core"><Icon name="heart" size={20} fill="currentColor" stroke={0} /></span>
-      <span className="dm-sat s0"><Icon name="stethoscope" size={11} /></span>
-      <span className="dm-sat s1"><Icon name="hands" size={11} /></span>
-      <span className="dm-sat s2"><Icon name="user" size={11} /></span>
-    </span>
-  );
-}
-
-function AboutMega({ items }) {
-  return (
-    <div className="dd-panel dd-mega">
-      <div className="dm-grid">
-        {items.map((c, i) => (
-          <Link key={c.to} to={c.to} className={`dm-card g-${c.grade} m${i}`}>
-            <MegaArt grade={c.grade} />
-            <span className="dm-tx">
-              <span className="dm-k"><Icon name={c.icon} size={12} />{c.grade === 'reviews' ? `${RATING.count} reviews` : c.grade === 'scan' ? 'QR codes' : 'Our story'}</span>
-              <b>{c.label}</b>
-              <small>{c.sub}</small>
-            </span>
-            <span className="dm-go">Explore<Icon name="arrow" size={14} /></span>
-          </Link>
-        ))}
-      </div>
-      <div className="dm-foot">
-        <span><Icon name="star" size={12} fill="currentColor" stroke={0} />Rated {RATING.average.toFixed(1)} by members in {RATING.countries} countries</span>
-        <Link to="/join" className="dm-join">Join the community<Icon name="arrow" size={13} /></Link>
-      </div>
-    </div>
-  );
-}
 
 const useIsoLayout = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
@@ -146,7 +90,6 @@ export default function Header() {
                   <Link to={n.to} className="nav-link" aria-haspopup="true">
                     {n.label}<Icon name="plus" size={12} className="dd-caret" />
                   </Link>
-                  {n.children.some((c) => c.grade === 'about') ? <AboutMega items={n.children} /> : (
                   <div className="dd-panel">
                     {n.children.map((c) => (
                       <Link key={c.to} to={c.to} className={`dd-item g-${c.grade}`}>
@@ -156,7 +99,6 @@ export default function Header() {
                       </Link>
                     ))}
                   </div>
-                  )}
                 </div>
               ) : (
                 <Link key={n.to} to={n.to} className="nav-link">
@@ -220,7 +162,7 @@ export default function Header() {
                           <span className="mm-num">{String(i + 1).padStart(2, '0')}</span>
                           <span className="mm-label">{n.label}</span>
                         </span>
-                        <div className={`mm-sub ${n.children.some((c) => c.grade === 'about') ? 'mm-sub-rich' : ''}`}>
+                        <div className="mm-sub">
                           {n.children.map((c) => (
                             <Link key={c.to} to={c.to} className={`mm-sublink g-${c.grade}`}>
                               <span className="mm-sub-ic"><Icon name={c.icon} size={16} /></span>
