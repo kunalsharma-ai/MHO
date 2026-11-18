@@ -1,4 +1,4 @@
-// Reward payout notifications (bottom-left).
+// Reward payout notifications (bottom centre).
 //
 // PRODUCTION — shows REAL recent payouts from PUBLIC_REWARD_FEED_URL (your backend, or a JSON file you
 // keep updated, e.g. /reward-feed.json). Expected JSON array:

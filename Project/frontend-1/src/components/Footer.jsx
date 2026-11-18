@@ -192,7 +192,6 @@ export default function Footer({ onCookieSettings }) {
 
         <div className="container footer-wordmarks">
           <BrandWordmark text="MyHealthOpinions" grade="mho" />
-          <BrandWordmark text="Frequent Research" grade="fr" size="sm" />
         </div>
 
         <div className="container footer-bottom">

@@ -1,292 +1,413 @@
-// Ratings & Reviews — the place member testimonials live. Every number on this page is computed from the
-// published reviews in src/data/testimonials.js (RATING), never typed in by hand.
-// Palette: "golden hour" (night plum, amber gold, rose). Sections, each with its own visual: 3D star and
-// live score hero · score bars + audience donut · spotlight stage per audience · flag constellation ·
-// theme bubbles · the full review wall · ticket-style call to review.
+// Ratings & Reviews: where member testimonials live. Every number on this page is computed from the
+// published reviews in src/data/testimonials.js (RATING) plus live member reviews; nothing is typed in by hand.
+//
+// Layout: "The verdict is in" hero (score gauge + 3D wall of scrolling reviews) · a sticky panel dock ·
+// five panel "rooms", each with its own look so no two panels feel the same:
+//   Doctors & specialists → clinical chart (Rx pads on graph paper, ECG trace)
+//   Nurses               → shift board (pinned sticky notes, day/night clock)
+//   Allied health        → under the microscope (glass slides on a light table, scan beam)
+//   Caregivers           → family album (taped polaroids)
+//   Patients             → message thread (chat bubbles, read receipts)
+// then a scoreboard (star equaliser, panel race, country stamps) and the "your turn on the mic" call to review.
 import { useEffect, useMemo, useState } from 'react';
 import { Breadcrumbs, Button, LiveZone, useInView, Stars } from '../components/ui.jsx';
 import Icon from '../components/Icon.jsx';
-import { VoicesWall } from '../components/Testimonials.jsx';
 import { openRateExperience } from '../components/RateExperience.jsx';
 import { AUDIENCES, TESTIMONIALS, RATING } from '../data/testimonials.js';
 import { openPageVideo } from '../data/pageVideos.js';
+import { useMemberReviews } from '../utils/reviews.js';
 
-const initials = (name) => name.replace(/^Dr\.\s*/, '').split(' ').map((w) => w[0]).slice(0, 2).join('');
-const audColor = (id) => AUDIENCES.find((a) => a.id === id)?.color || '#f59e0b';
+const ROLE_TO_AUD = { hcp: 'doctors', caregiver: 'caregivers', patient: 'patients' };
+const initials = (name) => String(name || '?').replace(/^Dr\.\s*/, '').split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+const firstSentence = (q) => (String(q).match(/^.*?[.!?](\s|$)/) || [q])[0].trim();
+const audLabel = (id) => AUDIENCES.find((a) => a.id === id)?.label || id;
+const avgOf = (list) => (list.length ? list.reduce((a, t) => a + (t.rating || 0), 0) / list.length : 0);
+const cc = (t) => String(t.cc || '').toUpperCase();
 
-/* ---------- Hero ---------- */
-function ScoreCounter() {
-  const [v, setV] = useState(RATING.average);
-  useEffect(() => {
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return undefined;
-    const t0 = performance.now();
-    let raf;
-    const tick = (t) => {
-      const p = Math.min(1, (t - t0) / 1600);
-      setV(RATING.average * (1 - Math.pow(1 - p, 3)));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    setV(0);
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, []);
-  return <b className="rv-score-num">{v.toFixed(1)}</b>;
-}
-
-function StarStage() {
-  const orbit = TESTIMONIALS.filter((_, i) => i % 4 === 1).slice(0, 7);
-  return (
-    <LiveZone className="rv-star-stage" aria-hidden="true">
-      <span className="rv-rays" />
-      <div className="rv-star3d">
-        {[0, 1, 2, 3, 4, 5].map((k) => (
-          <svg key={k} viewBox="0 0 100 100" style={{ '--k': k }}>
-            <defs>
-              <linearGradient id={`rvg${k}`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#fff3c4" /><stop offset=".45" stopColor="#ffc94d" /><stop offset="1" stopColor="#f2542d" /></linearGradient>
-            </defs>
-            <path d="M50 4 63 36l34 3-26 22 8 34-29-18-29 18 8-34L3 39l34-3z" fill={`url(#rvg${k})`} />
-          </svg>
-        ))}
-      </div>
-      <div className="rv-orbit">
-        {orbit.map((t, i) => (
-          <span key={t.name} className="rv-orb" style={{ '--i': i, '--n': orbit.length, '--c': audColor(t.audience) }}>
-            <i>{initials(t.name)}</i><b>{t.rating}<Icon name="star" size={10} fill="currentColor" stroke={0} /></b>
-          </span>
-        ))}
-      </div>
-      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => <i key={i} className="rv-spark" style={{ '--i': i }} />)}
-    </LiveZone>
-  );
-}
-
-/* ---------- Score breakdown ---------- */
-function Breakdown() {
-  const [ref, on] = useInView({ threshold: 0.3 });
-  const max = Math.max(...RATING.dist.map((d) => d.n), 1);
-  const counts = AUDIENCES.map((a) => ({ ...a, n: TESTIMONIALS.filter((t) => t.audience === a.id).length, avg: 0 })).map((a) => {
-    const list = TESTIMONIALS.filter((t) => t.audience === a.id);
-    return { ...a, avg: list.length ? list.reduce((s, t) => s + t.rating, 0) / list.length : 0 };
-  });
-  let acc = 0;
-  const segs = counts.map((c) => {
-    const from = acc;
-    acc += (c.n / RATING.count) * 100;
-    return { ...c, from, len: (c.n / RATING.count) * 100 };
-  });
-  return (
-    <div ref={ref} className={`rv-break ${on ? 'is-in' : ''}`}>
-      <div className="rv-bars">
-        <div className="rv-bars-head">
-          <b>{RATING.average.toFixed(1)}</b>
-          <span><Stars value={Math.round(RATING.average)} size={18} /><small>{RATING.count} published reviews</small></span>
-        </div>
-        <ul>
-          {RATING.dist.map((d, i) => (
-            <li key={d.stars} style={{ '--v': `${(d.n / max) * 100}%`, '--i': i }}>
-              <span>{d.stars}<Icon name="star" size={13} fill="currentColor" stroke={0} /></span>
-              <i aria-hidden="true"><em /></i>
-              <b>{d.n}</b>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="rv-donut-card">
-        <svg className="rv-donut" viewBox="0 0 120 120" role="img" aria-label={`Reviews by group: ${counts.map((c) => `${c.label} ${c.n}`).join(', ')}`}>
-          <circle cx="60" cy="60" r="46" className="rv-donut-bg" />
-          {segs.map((s, i) => (
-            <circle key={s.id} cx="60" cy="60" r="46" pathLength="100" stroke={s.color} style={{ '--from': -s.from, '--len': s.len, '--i': i }} className="rv-seg" />
-          ))}
-          <text x="60" y="58" textAnchor="middle" className="rv-donut-n">{RATING.count}</text>
-          <text x="60" y="74" textAnchor="middle" className="rv-donut-l">voices</text>
-        </svg>
-        <ul className="rv-legend">
-          {counts.map((c) => (
-            <li key={c.id} style={{ '--c': c.color }}><i /><span>{c.label}</span><b>{c.avg.toFixed(1)}<Icon name="star" size={11} fill="currentColor" stroke={0} /></b></li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-/* ---------- Spotlight stage: one audience at a time ---------- */
-function Spotlight() {
-  const [aud, setAud] = useState(AUDIENCES[0].id);
-  const [k, setK] = useState(0);
-  const list = TESTIMONIALS.filter((t) => t.audience === aud);
-  const t = list[k % list.length];
-  const a = AUDIENCES.find((x) => x.id === aud);
-  useEffect(() => setK(0), [aud]);
-  return (
-    <div className="rv-spot" style={{ '--c': a.color }}>
-      <div className="rv-spot-tabs" role="tablist" aria-label="Choose a group">
-        {AUDIENCES.map((x) => (
-          <button key={x.id} role="tab" aria-selected={x.id === aud} className={x.id === aud ? 'on' : ''} style={{ '--c': x.color }} onClick={() => setAud(x.id)}>{x.label}</button>
-        ))}
-      </div>
-      <div className="rv-spot-stage">
-        <span className="rv-spot-light" aria-hidden="true" />
-        <figure className="rv-spot-card" key={t.name}>
-          <span className="rv-spot-av" aria-hidden="true">{initials(t.name)}</span>
-          <Stars value={t.rating} size={20} />
-          <blockquote><p>“{t.quote}”</p></blockquote>
-          <figcaption><b>{t.name}</b><span>{t.role} · {t.country}</span><span className="cc-tag" title={t.country}>{t.cc.toUpperCase()}</span></figcaption>
-        </figure>
-        <div className="rv-spot-nav">
-          <button type="button" onClick={() => setK((x) => (x - 1 + list.length) % list.length)} aria-label="Previous review"><Icon name="arrowLeft" size={18} /></button>
-          <span>{(k % list.length) + 1} / {list.length}</span>
-          <button type="button" onClick={() => setK((x) => (x + 1) % list.length)} aria-label="Next review"><Icon name="arrow" size={18} /></button>
-        </div>
-        <ul className="rv-spot-thumbs" aria-hidden="true">
-          {list.map((x, i) => <li key={x.name} className={i === k % list.length ? 'on' : ''}>{initials(x.name)}</li>)}
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-/* ---------- Country constellation ---------- */
-function Constellation() {
-  const byCountry = useMemo(() => {
-    const m = new Map();
-    TESTIMONIALS.forEach((t) => m.set(t.country, { cc: t.cc, country: t.country, n: (m.get(t.country)?.n || 0) + 1 }));
-    return [...m.values()].sort((a, b) => b.n - a.n);
-  }, []);
-  const inner = byCountry.slice(0, 7);
-  const outer = byCountry.slice(7);
-  return (
-    <LiveZone className="rv-const">
-      <span className="rv-const-core"><b>{RATING.countries}</b><small>countries</small></span>
-      <div className="rv-ring r1">
-        {inner.map((c, i) => (
-          <span key={c.country} className="rv-flag" style={{ '--i': i, '--n': inner.length }} title={`${c.country}: ${c.n} review${c.n > 1 ? 's' : ''}`}>
-            <span className="rv-flag-in"><span className="cc-tag">{c.cc.toUpperCase()}</span><small>{c.country}</small><b>{c.n}</b></span>
-          </span>
-        ))}
-      </div>
-      <div className="rv-ring r2">
-        {outer.map((c, i) => (
-          <span key={c.country} className="rv-flag" style={{ '--i': i, '--n': outer.length }} title={`${c.country}: ${c.n} review${c.n > 1 ? 's' : ''}`}>
-            <span className="rv-flag-in"><span className="cc-tag">{c.cc.toUpperCase()}</span><small>{c.country}</small><b>{c.n}</b></span>
-          </span>
-        ))}
-      </div>
-    </LiveZone>
-  );
-}
-
-/* ---------- Theme bubbles: what members mention ---------- */
-const THEMES = [
-  ['Research', /research/i, '#7c3aed'],
-  ['Patients', /patient/i, '#00a88a'],
-  ['Perspectives', /perspective/i, '#2457f5'],
-  ['Experience', /experience/i, '#f2542d'],
-  ['Care', /\bcare\b|caregiv/i, '#ff6a2c'],
-  ['Opportunity', /opportunit/i, '#e11d74'],
-  ['Clear & transparent', /clear|transparen/i, '#0891b2'],
-  ['Privacy', /privacy/i, '#475569'],
-  ['Flexible', /flexib|time/i, '#d97706'],
+const ROOMS = [
+  { id: 'doctors', icon: 'stethoscope', no: '01', kicker: 'Chart 01 · Clinical opinions', title: 'Doctors &', em: 'specialists', line: 'Signed, dated and on the record, like every good chart note.' },
+  { id: 'nurses', icon: 'nurse', no: '02', kicker: 'Board 02 · Shift handover', title: 'Notes from', em: 'the shift', line: 'Pinned to the board between rounds, day shift and night shift.' },
+  { id: 'allied', icon: 'microscope', no: '03', kicker: 'Slide 03 · Allied health', title: 'Under the', em: 'microscope', line: 'Pharmacy, therapy, lab, imaging and nutrition, each one a sample worth a closer look.' },
+  { id: 'caregivers', icon: 'hands', no: '04', kicker: 'Album 04 · Caregivers', title: 'From the', em: 'family album', line: 'The people who keep care going at home, at the kitchen table and beyond.' },
+  { id: 'patients', icon: 'chat', no: '05', kicker: 'Thread 05 · Patients', title: 'In their', em: 'own words', line: 'Straight from the people who use healthcare every day.' },
 ];
 
-function Bubbles() {
-  const [ref, on] = useInView({ threshold: 0.3 });
-  const data = THEMES.map(([t, re, c]) => ({ t, c, n: TESTIMONIALS.filter((x) => re.test(x.quote)).length })).filter((d) => d.n).sort((a, b) => b.n - a.n);
-  const max = data[0]?.n || 1;
+/** Published reviews + approved live member reviews, grouped by panel. */
+function usePanels() {
+  const member = useMemberReviews();
+  return useMemo(() => {
+    const all = [
+      ...member.map((m) => ({ ...m, role: m.designation || 'Member', audience: ROLE_TO_AUD[m.roleType] || 'patients', member: true })),
+      ...TESTIMONIALS,
+    ];
+    const by = {};
+    AUDIENCES.forEach((a) => { by[a.id] = all.filter((t) => t.audience === a.id); });
+    return by;
+  }, [member]);
+}
+
+/* =================== Hero =================== */
+const CYCLE = ['clinics', 'wards', 'labs', 'living rooms', 'waiting rooms'];
+function CycleWord() {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const t = setInterval(() => setI((x) => (x + 1) % CYCLE.length), 2200);
+    return () => clearInterval(t);
+  }, []);
   return (
-    <div ref={ref} className={`rv-bubbles ${on ? 'is-in' : ''}`}>
-      {data.map((d, i) => (
-        <span key={d.t} className="rv-bub" style={{ '--s': (0.45 + 0.55 * (d.n / max)).toFixed(2), '--c': d.c, '--i': i }}>
-          <b>{d.n}</b><small>{d.t}</small>
-        </span>
-      ))}
+    <span className="rx-cycle" aria-hidden="true">
+      <span key={i} className="rx-cycle-w">{CYCLE[i]}</span>
+    </span>
+  );
+}
+
+function Gauge() {
+  const [ref, on] = useInView({ threshold: 0.3 });
+  const pct = RATING.exact / 5;
+  const deg = -90 + 180 * pct;
+  return (
+    <div ref={ref} className={`rx-gauge ${on ? 'is-in' : ''}`} role="img" aria-label={`Average rating ${RATING.average} out of 5 from ${RATING.count} reviews`}>
+      <svg viewBox="0 0 220 124" aria-hidden="true">
+        <defs>
+          <linearGradient id="rxg" x1="0" x2="1">
+            <stop offset="0" stopColor="#5ab0ff" /><stop offset=".5" stopColor="#a78bfa" /><stop offset="1" stopColor="#ffc94d" />
+          </linearGradient>
+        </defs>
+        <path d="M14 112a96 96 0 0 1 192 0" className="rx-g-track" />
+        <path d="M14 112a96 96 0 0 1 192 0" className="rx-g-arc" pathLength="100" strokeDasharray={`${(pct * 100).toFixed(1)} 100`} />
+        {[0, 1, 2, 3, 4, 5].map((k) => {
+          const a = Math.PI - (Math.PI * k) / 5;
+          return <text key={k} x={(110 + 74 * Math.cos(a)).toFixed(1)} y={(116 - 74 * Math.sin(a)).toFixed(1)} className="rx-g-tick">{k}</text>;
+        })}
+      </svg>
+      <span className="rx-needle" style={{ '--deg': `${deg.toFixed(1)}deg` }} aria-hidden="true"><i /></span>
+      <span className="rx-g-val"><b>{RATING.average.toFixed(1)}</b><small>out of 5</small></span>
     </div>
+  );
+}
+
+function WallCard({ t }) {
+  return (
+    <li className={`rx-wc a-${t.audience}`}>
+      <span className="rx-wc-top"><Stars value={t.rating} size={12} /><span className="cc-tag">{cc(t)}</span></span>
+      <q>{firstSentence(t.quote)}</q>
+      <span className="rx-wc-who"><i>{initials(t.name)}</i><span><b>{t.name}</b><small>{t.role}</small></span></span>
+    </li>
+  );
+}
+
+function HeroWall() {
+  const cols = [0, 1, 2].map((c) => TESTIMONIALS.filter((_, i) => i % 3 === c));
+  return (
+    <LiveZone className="rx-wall" aria-hidden="true">
+      <div className="rx-wall-tilt">
+        {cols.map((list, c) => (
+          <ul key={c} className={`rx-wcol c${c}`}>
+            {[...list, ...list].map((t, i) => <WallCard key={`${t.name}-${i}`} t={t} />)}
+          </ul>
+        ))}
+      </div>
+    </LiveZone>
+  );
+}
+
+function Hero() {
+  return (
+    <section className="rx-hero">
+      <div className="rx-aurora" aria-hidden="true"><i /><i /><i /></div>
+      <div className="container rx-hero-in">
+        <div className="rx-hero-copy">
+          <Breadcrumbs items={[{ to: '/', label: 'Home' }, { to: '/about-us', label: 'About Us' }, { label: 'Ratings & Reviews' }]} />
+          <span className="rx-eyebrow"><span className="rx-live" />Ratings & Reviews · {RATING.count} member voices</span>
+          <h1 className="rx-title">
+            <span className="rx-t1">The verdict</span>
+            <span className="rx-t2">is in.</span>
+          </h1>
+          <p className="rx-lead">
+            MyHealthOpinions reviews, straight from the <CycleWord /><span className="sr-only">clinics, wards, labs and living rooms</span> where
+            our doctors, nurses, allied health pros, caregivers and patients work and live.
+          </p>
+          <div className="rx-hero-score">
+            <Gauge />
+            <ul className="rx-hero-facts">
+              <li><b>{RATING.count}</b><small>reviews</small></li>
+              <li><b>{AUDIENCES.length}</b><small>panels</small></li>
+              <li><b>{RATING.countries}</b><small>countries</small></li>
+            </ul>
+          </div>
+          <div className="rx-ctas">
+            <Button onClick={openRateExperience} icon="star">Rate your experience</Button>
+            <button type="button" className="btn btn-ghost" onClick={openPageVideo}><span className="btn-label">Watch members</span><Icon name="play" size={16} fill="currentColor" stroke={0} className="btn-icon" /></button>
+          </div>
+        </div>
+        <HeroWall />
+      </div>
+    </section>
+  );
+}
+
+/* =================== Panel dock =================== */
+function Dock({ panels }) {
+  return (
+    <nav className="rx-dock" aria-label="Reviews by panel">
+      <div className="container rx-dock-in">
+        {ROOMS.map((r) => (
+          <a key={r.id} href={`#panel-${r.id}`} className={`rx-dock-a a-${r.id}`}>
+            <span className="rx-dock-ic"><Icon name={r.icon} size={18} /></span>
+            <span><b>{audLabel(r.id)}</b><small>{panels[r.id].length} reviews · {avgOf(panels[r.id]).toFixed(1)}★</small></span>
+          </a>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+function RoomHead({ room, list }) {
+  const avg = avgOf(list);
+  return (
+    <header className="rx-rhead">
+      <span className="rx-rno" aria-hidden="true">{room.no}</span>
+      <div className="rx-rtext">
+        <span className="rx-rkicker"><Icon name={room.icon} size={14} />{room.kicker}</span>
+        <h2>{room.title} <em>{room.em}</em></h2>
+        <p>{room.line}</p>
+      </div>
+      <div className="rx-rstat" aria-label={`${audLabel(room.id)}: average ${avg.toFixed(1)} out of 5 from ${list.length} reviews`}>
+        <b>{avg.toFixed(1)}</b>
+        <Stars value={Math.round(avg)} size={14} />
+        <small>{list.length} reviews</small>
+      </div>
+    </header>
+  );
+}
+
+function Room({ room, list, children, deco }) {
+  const [ref, on] = useInView({ threshold: 0.05 });
+  return (
+    <section id={`panel-${room.id}`} ref={ref} className={`rx-room room-${room.id} ${on ? 'is-in' : ''}`}>
+      <LiveZone className="rx-deco" aria-hidden="true">{deco}</LiveZone>
+      <div className="container rx-room-in">
+        <RoomHead room={room} list={list} />
+        {children}
+      </div>
+    </section>
+  );
+}
+
+const MemberTag = ({ t }) => (t.member ? <span className="rx-member">Member review</span> : null);
+
+/* ---- 01 Doctors: clinical chart ---- */
+function ChartRoom({ room, list }) {
+  return (
+    <Room room={room} list={list} deco={(
+      <svg className="rx-ecg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path pathLength="100" d="M0 60h220l14-24 16 56 20-90 18 74 12-16h180l14-24 16 56 20-90 18 74 12-16h180l14-24 16 56 20-90 18 74 12-16h180l14-24 16 56 20-90 18 74 12-16h120" />
+      </svg>
+    )}>
+      <ul className="rx-rx-grid">
+        {list.map((t, i) => (
+          <li key={`${t.name}-${i}`} className="rx-rxpad" style={{ '--i': i }}>
+            <span className="rx-clip" aria-hidden="true" />
+            <div className="rx-pad-head">
+              <span className="rx-rxsym" aria-hidden="true">℞</span>
+              <span><b>{t.name}</b><small>{t.role}</small></span>
+              <span className="cc-tag">{cc(t)}</span>
+            </div>
+            <p>{t.quote}</p>
+            <div className="rx-pad-foot"><Stars value={t.rating} size={13} /><MemberTag t={t} /><span className="rx-sign" aria-hidden="true">{t.name.replace(/^Dr\.\s*/, '').split(' ')[0]}</span></div>
+          </li>
+        ))}
+      </ul>
+    </Room>
+  );
+}
+
+/* ---- 02 Nurses: shift board ---- */
+function ShiftRoom({ room, list }) {
+  return (
+    <Room room={room} list={list} deco={(
+      <span className="rx-shiftclock"><span className="rx-sun" /><span className="rx-moon" /><i /></span>
+    )}>
+      <ul className="rx-board">
+        {list.map((t, i) => (
+          <li key={`${t.name}-${i}`} className={`rx-note n${i % 5}`} style={{ '--i': i }}>
+            <span className="rx-pin" aria-hidden="true" />
+            <span className="rx-note-shift"><Icon name={i % 2 ? 'moon' : 'clock'} size={12} />{i % 2 ? 'Night shift' : 'Day shift'}</span>
+            <p>{t.quote}</p>
+            <span className="rx-note-who"><b>{t.name}</b><small>{t.role} · {t.country}</small></span>
+            <span className="rx-note-foot"><Stars value={t.rating} size={13} /><MemberTag t={t} /></span>
+          </li>
+        ))}
+      </ul>
+    </Room>
+  );
+}
+
+/* ---- 03 Allied health: microscope slides ---- */
+function LabRoom({ room, list }) {
+  return (
+    <Room room={room} list={list} deco={(<><span className="rx-beam" />{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <span key={k} className={`rx-bub b${k}`} />)}</>)}>
+      <ul className="rx-slides">
+        {list.map((t, i) => (
+          <li key={`${t.name}-${i}`} className="rx-slide" style={{ '--i': i }}>
+            <span className="rx-slide-label"><b>{String(i + 1).padStart(2, '0')}</b><small>{t.role}</small></span>
+            <div className="rx-slide-glass">
+              <span className="rx-cell" aria-hidden="true"><i /><i /><i /></span>
+              <p>{t.quote}</p>
+              <span className="rx-slide-who"><b>{t.name}</b><span className="cc-tag">{cc(t)}</span><Stars value={t.rating} size={12} /><MemberTag t={t} /></span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </Room>
+  );
+}
+
+/* ---- 04 Caregivers: family album ---- */
+function AlbumRoom({ room, list }) {
+  return (
+    <Room room={room} list={list} deco={[0, 1, 2, 3, 4, 5].map((k) => <span key={k} className={`rx-heart h${k}`}><Icon name="heart" size={22} fill="currentColor" stroke={0} /></span>)}>
+      <ul className="rx-album">
+        {list.map((t, i) => (
+          <li key={`${t.name}-${i}`} className={`rx-polaroid p${i % 4}`} style={{ '--i': i }}>
+            <span className="rx-tape" aria-hidden="true" />
+            <div className="rx-photo" aria-hidden="true"><span>{initials(t.name)}</span><Icon name="home" size={18} /></div>
+            <p>{t.quote}</p>
+            <span className="rx-caption"><b>{t.name}</b> · {t.role}, {t.country}</span>
+            <span className="rx-pol-foot"><Stars value={t.rating} size={13} /><MemberTag t={t} /></span>
+          </li>
+        ))}
+      </ul>
+    </Room>
+  );
+}
+
+/* ---- 05 Patients: message thread ---- */
+function ChatRoom({ room, list }) {
+  return (
+    <Room room={room} list={list} deco={<><span className="rx-orb o1" /><span className="rx-orb o2" /></>}>
+      <div className="rx-chat">
+        <div className="rx-chat-bar" aria-hidden="true">
+          <span className="rx-chat-av"><Icon name="users" size={18} /></span>
+          <span><b>Patient voices</b><small>{list.length} members · online</small></span>
+          <Icon name="call" size={18} />
+        </div>
+        <ol className="rx-thread">
+          {list.map((t, i) => (
+            <li key={`${t.name}-${i}`} className={`rx-msg ${i % 2 ? 'r' : 'l'}`} style={{ '--i': i }}>
+              <i className="rx-msg-av" aria-hidden="true">{initials(t.name)}</i>
+              <div className="rx-bubble">
+                <span className="rx-msg-who"><b>{t.name}</b> · {t.country}</span>
+                <p>{t.quote}</p>
+                <span className="rx-msg-foot"><Stars value={t.rating} size={11} /><small>{t.role}</small><MemberTag t={t} /><span className="rx-read" aria-hidden="true">✓✓</span></span>
+              </div>
+            </li>
+          ))}
+          <li className="rx-msg l rx-typing" aria-hidden="true"><i className="rx-msg-av">+</i><div className="rx-bubble"><span /><span /><span /></div></li>
+        </ol>
+        <p className="rx-consent"><Icon name="shield" size={14} />Patient reviews are published only with the member's informed consent.</p>
+      </div>
+    </Room>
+  );
+}
+
+/* =================== Scoreboard =================== */
+function Scoreboard({ panels }) {
+  const [ref, on] = useInView({ threshold: 0.2 });
+  const max = Math.max(...RATING.dist.map((d) => d.n), 1);
+  const countries = useMemo(() => {
+    const m = new Map();
+    TESTIMONIALS.forEach((t) => m.set(t.cc, { cc: t.cc, country: t.country, n: (m.get(t.cc)?.n || 0) + 1 }));
+    return [...m.values()].sort((a, b) => b.n - a.n);
+  }, []);
+  return (
+    <section ref={ref} className={`rx-score ${on ? 'is-in' : ''}`}>
+      <div className="container">
+        <header className="rx-score-head">
+          <span className="rx-rkicker">The scoreboard</span>
+          <h2>Every star, <em>counted in the open.</em></h2>
+        </header>
+        <div className="rx-score-grid">
+          <div className="rx-sb rx-eq">
+            <h3>Star split</h3>
+            <div className="rx-eq-bars">
+              {RATING.dist.map((d, i) => (
+                <div key={d.stars} className="rx-eq-col" style={{ '--h': `${Math.max(4, (d.n / max) * 100).toFixed(0)}%`, '--i': i }}>
+                  <b>{d.n}</b>
+                  <span className="rx-eq-bar"><i /></span>
+                  <small>{d.stars}★</small>
+                </div>
+              ))}
+            </div>
+            <p className="rx-sb-note">{RATING.count} published reviews · exact average {RATING.exact.toFixed(2)}</p>
+          </div>
+          <div className="rx-sb rx-race">
+            <h3>Average by panel</h3>
+            <ul>
+              {ROOMS.map((r, i) => {
+                const a = avgOf(panels[r.id]);
+                return (
+                  <li key={r.id} className={`a-${r.id}`} style={{ '--w': `${((a / 5) * 100).toFixed(0)}%`, '--i': i }}>
+                    <span className="rx-race-ic"><Icon name={r.icon} size={15} /></span>
+                    <span className="rx-race-lbl">{audLabel(r.id)}</span>
+                    <span className="rx-race-track"><i /></span>
+                    <b>{a.toFixed(1)}</b>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <div className="rx-sb rx-stamps">
+            <h3>Stamped in {RATING.countries} countries</h3>
+            <ul>
+              {countries.map((c, i) => (
+                <li key={c.cc} className={`st${i % 4}`} style={{ '--i': i }} title={`${c.country}: ${c.n} review${c.n > 1 ? 's' : ''}`}>
+                  <b>{c.cc.toUpperCase()}</b><small>{c.country}</small>{c.n > 1 && <i>×{c.n}</i>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MicCta() {
+  return (
+    <section className="rx-mic">
+      <LiveZone className="rx-mic-in container">
+        <button type="button" className="rx-mic-btn" onClick={openRateExperience} aria-label="Rate your experience">
+          <span className="rx-mic-ring r1" /><span className="rx-mic-ring r2" /><span className="rx-mic-ring r3" />
+          <Icon name="mic" size={40} />
+        </button>
+        <div className="rx-mic-copy">
+          <span className="rx-rkicker">Your turn on the mic</span>
+          <h2>Been part of a study? <em>Tell us how it went.</em></h2>
+          <p>Your review shows on your device right away, and goes public after a quick moderation check.</p>
+          <span className="rx-eqline" aria-hidden="true">{Array.from({ length: 18 }, (_, k) => <i key={k} className={`k${k % 6}`} />)}</span>
+        </div>
+        <Button onClick={openRateExperience} icon="star">Write a review</Button>
+      </LiveZone>
+    </section>
   );
 }
 
 export default function Reviews() {
+  const panels = usePanels();
+  const R = Object.fromEntries(ROOMS.map((r) => [r.id, r]));
   return (
     <>
-      <section className="rv-hero">
-        <div className="rv-hero-bg" aria-hidden="true"><i /><i /></div>
-        <div className="container rv-hero-in">
-          <div className="rv-hero-copy">
-            <Breadcrumbs items={[{ to: '/', label: 'Home' }, { to: '/about-us', label: 'About Us' }, { label: 'Ratings & Reviews' }]} />
-            <span className="rv-eyebrow"><Icon name="star" size={13} fill="currentColor" stroke={0} />Ratings & Reviews</span>
-            <h1 className="rv-title">Rated by the people who <span>power healthcare.</span></h1>
-            <div className="rv-score" aria-label={`Average rating ${RATING.average} out of 5 from ${RATING.count} reviews`}>
-              <ScoreCounter />
-              <span className="rv-score-side">
-                <span className="rv-stars-fill" style={{ '--pct': `${(RATING.exact / 5) * 100}%` }} aria-hidden="true"><i>★★★★★</i><i>★★★★★</i></span>
-                <small>out of 5 · {RATING.count} reviews · {RATING.countries} countries</small>
-              </span>
-            </div>
-            <p className="rv-lead">Real MyHealthOpinions reviews: doctors, nurses, allied health professionals, caregivers and patients tell you what taking part is like. Then add your own voice in under a minute.</p>
-            <div className="rv-ctas">
-              <Button onClick={openRateExperience} icon="star">Rate your experience</Button>
-              <button type="button" className="btn btn-ghost" onClick={openPageVideo}><span className="btn-label">Watch members</span><Icon name="play" size={16} fill="currentColor" stroke={0} className="btn-icon" /></button>
-            </div>
-          </div>
-          <StarStage />
-        </div>
-      </section>
-
-      <section className="section rv-sec-break">
-        <div className="container">
-          <header className="rv-head">
-            <span className="rv-kicker">The score, broken down</span>
-            <h2>Every star, <span className="rv-t-gold">counted in the open</span></h2>
-          </header>
-          <Breakdown />
-        </div>
-      </section>
-
-      <section className="section rv-sec-spot">
-        <div className="container">
-          <header className="rv-head rv-head-center">
-            <span className="rv-kicker k-light">In the spotlight</span>
-            <h2>Pick a group. <span className="rv-t-rose">Hear their story.</span></h2>
-          </header>
-          <Spotlight />
-        </div>
-      </section>
-
-      <section className="section rv-sec-world">
-        <div className="container rv-world">
-          <header className="rv-head">
-            <span className="rv-kicker k-teal">Where voices come from</span>
-            <h2>{RATING.count} reviews, <span className="rv-t-teal">{RATING.countries} countries</span></h2>
-            <p className="rv-sub">Each tag shows a country and how many of its members have reviewed us.</p>
-          </header>
-          <Constellation />
-        </div>
-      </section>
-
-      <section className="section rv-sec-themes">
-        <div className="container">
-          <header className="rv-head rv-head-center">
-            <span className="rv-kicker k-violet">What members talk about</span>
-            <h2>The words that <span className="rv-t-violet">keep coming up</span></h2>
-            <p className="rv-sub">Bubble size = number of reviews that mention the theme.</p>
-          </header>
-          <Bubbles />
-        </div>
-      </section>
-
-      <section className="section rv-wall">
-        <div className="container">
-          <header className="rv-head rv-head-center">
-            <span className="rv-kicker">The wall</span>
-            <h2>All member reviews</h2>
-          </header>
-          <VoicesWall />
-          <div className="rv-ticket">
-            <span className="rv-ticket-stub" aria-hidden="true"><Icon name="pen" size={26} /><small>Admit one</small></span>
-            <div><b>Been part of a study?</b><span>Your review appears here instantly on your device, and publicly after a quick moderation check.</span></div>
-            <Button onClick={openRateExperience} icon="star">Write a review</Button>
-          </div>
-        </div>
-      </section>
+      <Hero />
+      <Dock panels={panels} />
+      <ChartRoom room={R.doctors} list={panels.doctors} />
+      <ShiftRoom room={R.nurses} list={panels.nurses} />
+      <LabRoom room={R.allied} list={panels.allied} />
+      <AlbumRoom room={R.caregivers} list={panels.caregivers} />
+      <ChatRoom room={R.patients} list={panels.patients} />
+      <Scoreboard panels={panels} />
+      <MicCta />
     </>
   );
 }
