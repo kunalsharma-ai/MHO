@@ -228,11 +228,33 @@ export default function VideoFab() {
     setTip(false);
     // once per page per visit, and never again after the visitor closed it with ✕ (until a refresh)
     if (isOff('video-card') || visit.get(`vtip-${path}`, false)) return undefined;
-    const t1 = setTimeout(() => setTip(true), 3500);
-    autoHide.current = setTimeout(() => setTip(false), 15500);
-    return () => { clearTimeout(t1); clearTimeout(autoHide.current); };
+    // On phones the card would cover the hero's buttons, so there it waits until the visitor scrolls past the first screen.
+    let t1 = 0;
+    const show = () => {
+      setTip(true);
+      autoHide.current = setTimeout(() => setTip(false), 12000);
+    };
+    const narrow = window.matchMedia('(max-width: 640px)').matches;
+    const onScroll = () => {
+      if (window.scrollY < window.innerHeight * 0.8) return;
+      window.removeEventListener('scroll', onScroll);
+      t1 = setTimeout(show, 600);
+    };
+    if (narrow) window.addEventListener('scroll', onScroll, { passive: true });
+    else t1 = setTimeout(show, 3500);
+    return () => { clearTimeout(t1); clearTimeout(autoHide.current); window.removeEventListener('scroll', onScroll); };
   }, [path]);
   // The YouTube button first shows the "watch this page" card; Watch now (or a second press) opens the video.
+  // On phones the button would sit on the hero's buttons, so it slides in once the visitor scrolls a little.
+  const [atTop, setAtTop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)');
+    const check = () => setAtTop(mq.matches && window.scrollY < window.innerHeight * 0.35);
+    check();
+    window.addEventListener('scroll', check, { passive: true });
+    mq.addEventListener('change', check);
+    return () => { window.removeEventListener('scroll', check); mq.removeEventListener('change', check); };
+  }, [path]);
   const toggleTip = () => {
     if (tip) { setOpen(true); return; } // card already showing: a second press plays the video
     clearTimeout(autoHide.current);
@@ -290,16 +312,15 @@ export default function VideoFab() {
     <>
       {/* Round YouTube button, bottom-left, with "Watch our video" circling it, and a notification card beside it
           that pops up a few seconds into each page (styles/dock.css). */}
-      <button type="button" className={`ytfab ${seen ? 'is-seen' : ''} ${tip ? 'is-on' : ''}`} onClick={toggleTip} aria-expanded={tip} aria-controls="ytcard" aria-label="Watch this page's video" data-mode-skip="">
-        <span className="ytp-tag" aria-hidden="true">Watch this page</span>
-        <span className="ytp" aria-hidden="true">
-          <span className="ytp-scene"><i /><i /><i /></span>
-          <span className="ytp-heart"><svg viewBox="0 0 24 22" width="18" height="16"><path d="M12 21 2.6 11.6A5.5 5.5 0 0 1 12 4.3a5.5 5.5 0 0 1 9.4 7.3z" fill="#fff" /></svg></span>
-          <span className="ytp-play"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M8 5.5v13l11-6.5z" fill="#fff" /></svg></span>
-          <span className="ytp-bar"><i /></span>
-          <span className="ytp-cap"><b>Video</b><span>MHO</span></span>
-          <span className="ytp-sheen" />
+      <button type="button" className={`ytfab ${seen ? 'is-seen' : ''} ${tip ? 'is-on' : ''} ${atTop && !tip ? 'is-tucked' : ''}`} onClick={toggleTip} aria-expanded={tip} aria-controls="ytcard" aria-label="Watch this page's video" data-mode-skip="">
+        <span className="ytb" aria-hidden="true">
+          <span className="ytb-wave" /><span className="ytb-wave w2" />
+          <span className="ytb-plate">
+            <svg className="ytb-logo" viewBox="0 0 68 48" width="40" height="28"><path d="M66.5 7.5A8.6 8.6 0 0 0 60.5 1.4C55.2 0 34 0 34 0S12.8 0 7.5 1.4A8.6 8.6 0 0 0 1.5 7.5C0 12.8 0 24 0 24s0 11.2 1.5 16.5a8.6 8.6 0 0 0 6 6.1C12.8 48 34 48 34 48s21.2 0 26.5-1.4a8.6 8.6 0 0 0 6-6.1C68 35.2 68 24 68 24s0-11.2-1.5-16.5z" fill="#ff0033" /><path d="M27 34.3 45 24 27 13.7z" fill="#fff" /></svg>
+            <span className="ytb-shine" />
+          </span>
         </span>
+        <span className="ytb-label" aria-hidden="true">Watch video</span>
         {!seen && !isOff('video-card') && <span className="ytfab-badge" aria-hidden="true">1</span>}
       </button>
       <div id="ytcard" className={`ytcard ${tip && !open ? 'is-in' : ''}`} role="status" aria-hidden={!tip || open} data-mode-skip="">
