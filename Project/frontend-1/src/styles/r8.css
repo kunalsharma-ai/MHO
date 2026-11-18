@@ -200,8 +200,8 @@
 
 /* ================================================================ 5. Reward wallets */
 .rwal { border-radius: 30px; padding: 26px; isolation: isolate; position: relative; overflow: hidden; }
-.rwal button { all: unset; box-sizing: border-box; cursor: pointer; }
-.rwal button:focus-visible { outline: 3px solid var(--g1); outline-offset: 3px; }
+.rwal :where(button) { all: unset; box-sizing: border-box; cursor: pointer; }
+.rwal :where(button):focus-visible { outline: 3px solid var(--g1); outline-offset: 3px; }
 
 /* --- professionals: an honorarium statement on a midnight desk */
 .rled { color: #0c1440; background: radial-gradient(80% 70% at 100% 0%, rgba(138, 77, 255, .5), transparent 60%), radial-gradient(60% 60% at 0% 100%, rgba(36, 87, 245, .45), transparent 60%), #0b1030; padding: 34px; box-shadow: 0 40px 70px -40px #1c1260; }
