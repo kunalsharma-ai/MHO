@@ -11,7 +11,7 @@ import { isOff, turnOff } from '../utils/dismissed.js';
 export function LanguageButton({ compact = false }) {
   const { meta, openPicker } = useI18n();
   return (
-    <button type="button" className={`lang-btn ${compact ? 'is-compact' : ''}`} onClick={openPicker} aria-haspopup="dialog" aria-label={`Language: ${meta.name}. Change language`}>
+    <button type="button" className={`lang-btn ${compact ? 'is-compact' : ''}`} onClick={openPicker} aria-haspopup="dialog" aria-label={`${meta.glyph} ${meta.native}: change language (${meta.name})`}>
       <span className="lb-orb" aria-hidden="true">
         <span className="lb-glyph notranslate" translate="no">{meta.glyph}</span>
       </span>
