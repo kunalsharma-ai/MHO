@@ -312,7 +312,7 @@ export default function VideoFab() {
     <>
       {/* Round YouTube button, bottom-left, with "Watch our video" circling it, and a notification card beside it
           that pops up a few seconds into each page (styles/dock.css). */}
-      <button type="button" className={`ytfab ${seen ? 'is-seen' : ''} ${tip ? 'is-on' : ''} ${atTop && !tip ? 'is-tucked' : ''}`} onClick={toggleTip} aria-expanded={tip} aria-controls="ytcard" aria-label="Watch this page's video" data-mode-skip="">
+      <button type="button" className={`ytfab ytfab-${v.template} ${seen ? 'is-seen' : ''} ${tip ? 'is-on' : ''} ${atTop && !tip ? 'is-tucked' : ''}`} onClick={toggleTip} aria-expanded={tip} aria-controls="ytcard" aria-label="Watch this page's video" data-mode-skip="">
         <span className="ytb" aria-hidden="true">
           <span className="ytb-wave" /><span className="ytb-wave w2" />
           <span className="ytb-plate">
@@ -320,7 +320,7 @@ export default function VideoFab() {
             <span className="ytb-shine" />
           </span>
         </span>
-        <span className="ytb-label" aria-hidden="true">Watch video</span>
+        <span className="ytb-label" aria-hidden="true"><small>Watch</small>{v.fab}</span>
         {!seen && !isOff('video-card') && <span className="ytfab-badge" aria-hidden="true">1</span>}
       </button>
       <div id="ytcard" className={`ytcard ${tip && !open ? 'is-in' : ''}`} role="status" aria-hidden={!tip || open} data-mode-skip="">

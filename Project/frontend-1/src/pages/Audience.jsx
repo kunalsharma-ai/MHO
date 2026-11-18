@@ -10,7 +10,7 @@ import PageHero from '../components/PageHero.jsx';
 import Icon from '../components/Icon.jsx';
 import Persona from '../components/Persona.jsx';
 import { SectionHead, Button, LiveZone } from '../components/ui.jsx';
-import { StepRail, RewardWallet, FaqStage } from '../components/R8.jsx';
+import { StepRail, RewardWallet, FaqStage, RoleVoices } from '../components/R8.jsx';
 import { Link, useRouter } from '../router.jsx';
 import { AUDIENCE, AUDIENCE_FAQ } from '../data/audiences.js';
 import { ROLES as HCP_ROLES, jobCount, allJobs } from '../data/hcpProfile.js';
@@ -308,6 +308,16 @@ export default function Audience() {
             <p className="lead">These answers decide which invitations reach you, so every study you open is one you qualify for. You can update them any time from your dashboard.</p>
             <p className="aud-lock"><Icon name="lock" size={16} /> Your details are secured with us. We don’t share your personal details.</p>
           </div>
+        </div>
+      </section>
+
+      <section className={`section aud-voices aud-voices-${role}`} aria-labelledby={`voices-${role}`}>
+        <div className="container">
+          <div className="section-head">
+            <span className="eyebrow">Member voices</span>
+            <h2 id={`voices-${role}`}>{role === 'hcp' ? 'Grand rounds: what professionals tell us' : role === 'caregiver' ? 'Notes from the people who care' : 'Stories that help others heal'}</h2>
+          </div>
+          <RoleVoices role={role} />
         </div>
       </section>
 

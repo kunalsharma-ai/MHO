@@ -8,6 +8,7 @@ import { useInView, LiveZone, Flag } from './ui.jsx';
 import { Link } from '../router.jsx';
 import { REWARD_ROLES } from '../data/community.js';
 import { REGIONS, COVERAGE_COUNT } from '../data/countries.js';
+import { TESTIMONIALS } from '../data/testimonials.js';
 
 const reduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -273,6 +274,99 @@ export function PanelPicker({ value, onChange, label = 'I am a' }) {
           <span className="pp-tick" aria-hidden="true"><Icon name="check" size={12} stroke={3.5} /></span>
         </button>
       ))}
+    </div>
+  );
+}
+
+
+/* ---------- Member voices on each product page, a different presentation per role ----------
+   hcp: "grand rounds" case-note clipboard with a specialty rail
+   caregiver: handwritten notes pinned to a warm fridge door
+   patient: story bubbles, one in the centre, the rest floating around it */
+const ROLE_AUD = { hcp: ['doctors', 'nurses', 'allied'], caregiver: ['caregivers'], patient: ['patients'] };
+const initials = (n) => n.replace(/^Dr\.\s*/, '').split(/\s+/).map((w) => w[0]).slice(0, 2).join('');
+const Stars = ({ n }) => <span className="rv-stars" aria-label={`${n} out of 5 stars`}>{[0, 1, 2, 3, 4].map((i) => <Icon key={i} name="star" size={13} fill={i < n ? 'currentColor' : 'none'} stroke={i < n ? 0 : 1.6} />)}</span>;
+
+function pickVoices(role) {
+  const auds = ROLE_AUD[role] || ROLE_AUD.patient;
+  if (role !== 'hcp') return TESTIMONIALS.filter((t) => auds.includes(t.audience));
+  // two per professional group, so doctors, nurses and allied health all appear
+  return auds.flatMap((a) => TESTIMONIALS.filter((t) => t.audience === a).slice(0, 2));
+}
+
+export function RoleVoices({ role }) {
+  const list = pickVoices(role);
+  const [ref, inView] = useInView({ threshold: 0.25 }, false);
+  const [cur, setCur] = useState(0);
+  const [hold, setHold] = useState(false);
+  useEffect(() => {
+    if (!inView || hold || role === 'caregiver') return undefined;
+    const t = setInterval(() => setCur((c) => (c + 1) % list.length), 5200);
+    return () => clearInterval(t);
+  }, [inView, hold, role, list.length]);
+  const t = list[cur];
+
+  if (role === 'caregiver') {
+    return (
+      <div ref={ref} className="rv rv-fridge" data-mode-skip="">
+        <span className="rv-magnet m1" aria-hidden="true"><Icon name="heart" size={18} fill="currentColor" stroke={0} /></span>
+        <span className="rv-magnet m2" aria-hidden="true"><Icon name="home" size={16} /></span>
+        <ul className="rv-notes">
+          {list.map((v, i) => (
+            <li key={v.name} className={`rv-note n${i % 5}`} style={{ '--i': i }}>
+              <span className="rv-pin" aria-hidden="true" />
+              <Stars n={v.rating} />
+              <blockquote>“{v.quote}”</blockquote>
+              <span className="rv-sign"><Flag code={v.cc} name={v.country} size={20} /><b>{v.name}</b><small>{v.role} · {v.country}</small></span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  if (role === 'hcp') {
+    return (
+      <div ref={ref} className="rv rv-rounds" data-mode-skip="" onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)}>
+        <div className="rv-board">
+          <span className="rv-clip" aria-hidden="true" />
+          <div className="rv-chart" key={cur}>
+            <span className="rv-chead"><span>Case note · {String(cur + 1).padStart(2, '0')}</span><span>{t.role}</span></span>
+            <blockquote>“{t.quote}”</blockquote>
+            <svg className="rv-ecg" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path d="M0 18h70l8-14 9 26 8-20 6 8h199" /></svg>
+            <span className="rv-who"><span className="rv-ava">{initials(t.name)}</span><span><b>{t.name}</b><small><Flag code={t.cc} name={t.country} size={16} />{t.country}</small></span><Stars n={t.rating} /></span>
+          </div>
+        </div>
+        <ul className="rv-rail" aria-label="Choose a professional">
+          {list.map((v, i) => (
+            <li key={v.name}>
+              <button type="button" className={i === cur ? 'on' : ''} aria-pressed={i === cur} onClick={() => { setCur(i); setHold(true); }}>
+                <span className="rv-ava">{initials(v.name)}</span><span><b>{v.name}</b><small>{v.role}</small></span>
+                <i className="rv-bar" aria-hidden="true" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  return (
+    <div ref={ref} className="rv rv-bloom" data-mode-skip="" onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)}>
+      <div className="rv-centre" key={cur}>
+        <span className="rv-q" aria-hidden="true">“</span>
+        <blockquote>{t.quote}</blockquote>
+        <span className="rv-who"><span className="rv-ava">{initials(t.name)}</span><span><b>{t.name}</b><small><Flag code={t.cc} name={t.country} size={16} />{t.role}</small></span><Stars n={t.rating} /></span>
+      </div>
+      <ul className="rv-orbit" aria-label="More patient stories">
+        {list.map((v, i) => (
+          <li key={v.name} className={i % 2 ? 'r' : 'l'} style={{ '--i': i, '--y': `${10 + Math.floor(i / 2) * (66 / Math.max(1, Math.ceil(list.length / 2) - 1))}%` }}>
+            <button type="button" className={i === cur ? 'on' : ''} aria-pressed={i === cur} onClick={() => { setCur(i); setHold(true); }} aria-label={`Read ${v.name}`}>
+              <span className="rv-ava">{initials(v.name)}</span><small>{v.country}</small>
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

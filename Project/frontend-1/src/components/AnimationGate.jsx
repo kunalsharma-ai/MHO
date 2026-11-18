@@ -30,7 +30,8 @@ function tame(main) {
     if (el.closest(KEEP)) continue;
     let heavy = el instanceof SVGElement && el.tagName.toLowerCase() !== 'svg';
     if (!heavy) heavy = fx.getKeyframes().some((k) => Object.keys(k).some((p) => !GPU.has(p)));
-    const outside = !main || !main.contains(el);
+    // the per-page video band sits after <main> but is page content, so its smooth loops keep running too
+    const outside = !main || !(main.contains(el) || el.closest('.vband'));
     if (!heavy && !outside) continue;
     const dur = Number(t.duration) || 1000;
     try { fx.updateTiming({ iterations: Math.max(2, Math.ceil(BUDGET_MS / dur)) }); } catch { /* ignore */ }
