@@ -240,9 +240,9 @@ export function VoiceWall() {
   const n = list.length;
   const go = (k) => { held.current = true; setPick((p) => (p + k + n) % n); };
   const down = useRef(null);
-  // Cover-flow: the current voice faces you, three on each side lean away in 3D. Only those seven are rendered.
+  // Cover-flow: the current voice faces you, two on each side lean away in 3D. Only those five are rendered.
   const near = [];
-  for (let d = -3; d <= 3; d++) if (n > Math.abs(d) * 2 || d >= 0) { const i = (pick + d + n * 4) % n; if (!near.some((x) => x.i === i)) near.push({ i, d }); }
+  for (let d = -2; d <= 2; d++) if (n > Math.abs(d) * 2 || d >= 0) { const i = (pick + d + n * 4) % n; if (!near.some((x) => x.i === i)) near.push({ i, d }); }
 
   return (
     <div className="vwall vw-air" ref={ref}>

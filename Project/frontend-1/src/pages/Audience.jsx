@@ -289,7 +289,7 @@ export default function Audience() {
     rewards: (
     <section className="section aud-rewards">
             <div className="container">
-              <SectionHead eyebrow="Rewards" title={role === 'hcp' ? 'Honoraria and rewards for professionals' : role === 'caregiver' ? 'Rewards that help at home' : 'Rewards for sharing your story'} lead={role === 'hcp' ? 'Pick a line on the statement to see how that method pays. Exact options for each study are listed in its invitation.' : role === 'caregiver' ? 'Tap a gift tag to open it. Exact options for each study are listed in its invitation, and UPI is for members in India.' : 'Tap a petal to bring it to the centre. Exact options for each study are listed in its invitation, and UPI is for members in India.'} color={role === 'hcp' ? '#2457f5' : role === 'caregiver' ? '#ff4f6d' : '#00b386'} />
+              <SectionHead eyebrow="Rewards" title={role === 'hcp' ? 'Honoraria and rewards for professionals' : role === 'caregiver' ? 'Rewards that help at home' : 'Rewards for sharing your story'} lead={role === 'hcp' ? 'Press a key to load that payout method onto the card. Exact options for each study are listed in its invitation.' : role === 'caregiver' ? 'Tap a gift tag to open it. Exact options for each study are listed in its invitation, and UPI is for members in India.' : 'Tap a petal to bring it to the centre. Exact options for each study are listed in its invitation, and UPI is for members in India.'} color={role === 'hcp' ? '#2457f5' : role === 'caregiver' ? '#ff4f6d' : '#00b386'} />
               <RewardWallet role={role} />
             </div>
           </section>

@@ -270,9 +270,9 @@ export function RewardWallet({ role }) {
       <span className="rlo-pollen" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <i key={i} style={{ '--i': i }} />)}</span>
       <div className="rlo-stage">
         <div className="rlo-flower">
-          <span className="rlo-under" aria-hidden="true">{r.items.map((x, i) => <i key={x.id} style={{ '--a': `${(360 / n) * (i + 0.5)}deg` }} />)}</span>
+          <span className="rlo-under" aria-hidden="true">{r.items.map((x, i) => <i key={x.id} style={{ '--ra': `${(360 / n) * (i + 0.5)}deg` }} />)}</span>
           {r.items.map((x, i) => (
-            <button key={x.id} type="button" className={`rlo-petal ${i === cur ? 'on' : ''}`} style={{ '--a': `${(360 / n) * i}deg`, '--i': i }} aria-pressed={i === cur} onClick={() => setCur(i)} aria-label={x.t}>
+            <button key={x.id} type="button" className={`rlo-petal ${i === cur ? 'on' : ''}`} style={{ '--ra': `${(360 / n) * i}deg`, '--i': i }} aria-pressed={i === cur} onClick={() => setCur(i)} aria-label={x.t}>
               <span className="rlo-in"><Icon name={x.icon} size={22} /><b>{x.t}</b></span>
             </button>
           ))}
