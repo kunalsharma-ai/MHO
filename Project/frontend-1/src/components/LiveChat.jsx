@@ -12,6 +12,7 @@ import { Link } from '../router.jsx';
 import { SITE, API, whatsappLink } from '../config/site.js';
 import Icon from './Icon.jsx';
 import { sfx, store, session, validateEmail, validateName, postJSON, track } from '../utils/helpers.js';
+import { visit } from '../utils/dismissed.js';
 import { ALL_COUNTRIES } from '../data/countries.js';
 import { isSoundEnabled, setSoundEnabled, onSoundChange } from '../i18n/soundPrefs.js';
 
@@ -99,9 +100,9 @@ export default function LiveChat({ quiet = false }) {
 
   useEffect(() => {
     // Friendly greeting bubble + soft pop on the visitor's first interaction (browsers block audio before it).
-    if (session.get('mho-greeted')) return;
+    if (visit.get('mho-greeted')) return;
     const greet = () => {
-      session.set('mho-greeted', true);
+      visit.set('mho-greeted', true);
       sfx('playChatHello');
       setHello(true);
       setTimeout(() => setHello(false), 7000);

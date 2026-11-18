@@ -60,7 +60,6 @@ export function Logo({ size = 40, className = '', onDark = false }) {
             <stop offset="0" stopColor="#e3631c" />
             <stop offset=".5" stopColor="#f7931e" />
             <stop offset="1" stopColor="#d96a26" />
-            <animateTransform attributeName="gradientTransform" type="translate" values="-0.3 0;0.3 0;-0.3 0" dur="6s" repeatCount="indefinite" />
           </linearGradient>
           <linearGradient id={id('g')} x1="0" y1="0" x2="1" y2="0">
             <stop offset="0" stopColor="#fff" stopOpacity="0" />

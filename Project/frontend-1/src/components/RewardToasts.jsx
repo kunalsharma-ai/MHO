@@ -19,6 +19,7 @@ import { methodsFor, isMethodAllowed } from '../data/rewards.js';
 import { useMounted, Flag } from './ui.jsx';
 import Icon from './Icon.jsx';
 import { shuffle, sfx } from '../utils/helpers.js';
+import { isOff, turnOff } from '../utils/dismissed.js';
 import { Link } from '../router.jsx';
 import { useI18n } from '../i18n/I18nProvider.jsx';
 import { tr, countryLabel } from '../i18n/engine.js';
@@ -63,7 +64,7 @@ export default function RewardToasts() {
   const [feed, setFeed] = useState(PREVIEW_FORMS ? clean(PREVIEW_PAYOUTS) : null);
   const [current, setCurrent] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(() => isOff('reward'));
   const hover = useRef(false);
   const idx = useRef(0);
 
@@ -133,7 +134,7 @@ export default function RewardToasts() {
         <Link to="/rewards" className="rtx-amt rtx-go" tabIndex={-1} aria-hidden="true"><Icon name="arrow" size={18} /><small>Payouts</small></Link>
       )}
       <span className="rtx-sheen" aria-hidden="true" />
-      <button className="rtx-x" onClick={() => setMuted(true)} aria-label="Hide reward notifications"><Icon name="x" size={11} /></button>
+      <button className="rtx-x" onClick={() => { turnOff('reward'); setMuted(true); }} aria-label="Hide reward notifications"><Icon name="x" size={11} /></button>
     </aside>
   );
 }

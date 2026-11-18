@@ -9,6 +9,7 @@ import { useRouter, Link } from '../router.jsx';
 import Icon from './Icon.jsx';
 import { CHANNEL_URL, parseYouTube, videoFor } from '../data/pageVideos.js';
 import { sfx } from '../utils/helpers.js';
+import { isOff, turnOff, visit } from '../utils/dismissed.js';
 import { openRateExperience } from './RateExperience.jsx';
 
 function Cover({ v }) {
@@ -220,14 +221,13 @@ export default function VideoFab() {
   const [seen, setSeen] = useState(false);
   useEffect(() => {
     let v = false;
-    try { v = sessionStorage.getItem(`mho-vseen-${path}`) === '1'; } catch { /* storage blocked */ }
+    v = visit.get(`vseen-${path}`, false);
     setSeen(v);
   }, [path]);
   useEffect(() => {
     setTip(false);
-    let seen = false;
-    try { seen = sessionStorage.getItem(`mho-vtip-${path}`) === '1'; } catch { /* storage blocked */ }
-    if (seen) return undefined;
+    // once per page per visit, and never again after the visitor closed it with ✕ (until a refresh)
+    if (isOff('video-card') || visit.get(`vtip-${path}`, false)) return undefined;
     const t1 = setTimeout(() => setTip(true), 3500);
     autoHide.current = setTimeout(() => setTip(false), 15500);
     return () => { clearTimeout(t1); clearTimeout(autoHide.current); };
@@ -241,14 +241,14 @@ export default function VideoFab() {
   };
   const hideTip = useCallback(() => {
     setTip(false);
-    try { sessionStorage.setItem(`mho-vtip-${path}`, '1'); } catch { /* storage blocked */ }
+    visit.set(`vtip-${path}`, true);
   }, [path]);
   useEffect(() => {
     if (!open) return;
     hideTip();
     sfx('playVideoOpen');
     setSeen(true);
-    try { sessionStorage.setItem(`mho-vseen-${path}`, '1'); } catch { /* storage blocked */ }
+    visit.set(`vseen-${path}`, true);
   }, [open, hideTip, path]);
 
   useEffect(() => {
@@ -300,13 +300,13 @@ export default function VideoFab() {
           <svg viewBox="0 0 28 20" width="30" height="22"><rect width="28" height="20" rx="5.5" fill="#fff" /><path d="M11 5.6v8.8l7.6-4.4z" fill="#ff0033" /></svg>
         </span>
         <span className="ytfab-eq" aria-hidden="true"><i /><i /><i /></span>
-        {!seen && <span className="ytfab-badge" aria-hidden="true">1</span>}
+        {!seen && !isOff('video-card') && <span className="ytfab-badge" aria-hidden="true">1</span>}
       </button>
       <div id="ytcard" className={`ytcard ${tip && !open ? 'is-in' : ''}`} role="status" aria-hidden={!tip || open} data-mode-skip="">
         <div className="ytcard-head">
           <span className="ytcard-logo" aria-hidden="true"><svg viewBox="0 0 28 20" width="16" height="12"><rect width="28" height="20" rx="5.5" fill="currentColor" /><path d="M11 5.6v8.8l7.6-4.4z" fill="#fff" /></svg></span>
           <b>MyHealthOpinions</b><span className="ytcard-now"><i />now</span>
-          <button type="button" className="ytcard-x" onClick={hideTip} aria-label="Hide video tip" tabIndex={tip && !open ? 0 : -1}><Icon name="x" size={13} /></button>
+          <button type="button" className="ytcard-x" onClick={() => { turnOff('video-card'); hideTip(); }} aria-label="Hide video tip" tabIndex={tip && !open ? 0 : -1}><Icon name="x" size={13} /></button>
         </div>
         <span className="ytcard-kicker"><Icon name="bell" size={12} />Watch this page&rsquo;s video</span>
         <p className="ytcard-title">{v.title} <em>{v.em}</em></p>

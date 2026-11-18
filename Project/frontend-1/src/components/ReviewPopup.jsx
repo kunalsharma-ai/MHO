@@ -4,7 +4,8 @@ import Icon from './Icon.jsx';
 import { COUNTRIES } from '../data/countries.js';
 import { SOCIALS } from '../data/site.js';
 import { getJSON, postJSON } from '../utils/api.js';
-import { session, store } from '../utils/storage.js';
+import { store } from '../utils/storage.js';
+import { isOff, turnOff, visit as session } from '../utils/dismissed.js';
 import { EMAIL_RE } from '../utils/validate.js';
 import { normalizeReview, rememberOwnReview } from '../utils/reviews.js';
 import { Flag } from './ui.jsx';
@@ -87,7 +88,7 @@ export default function ReviewPopup() {
   const done = () => Boolean(store.get('mfr_reviewed'));
 
   const canAuto = () => {
-    if (done() || BLOCKED.includes(pathRef.current)) return false;
+    if (done() || isOff('review-prompt') || BLOCKED.includes(pathRef.current)) return false;
     const log = store.get('mfr_rt_log', { n: 0, last: 0 });
     const inVisit = session.get('mfr_rt_n', 0);
     const visitLast = session.get('mfr_rt_last', 0);
@@ -164,7 +165,7 @@ export default function ReviewPopup() {
     if (open || done()) return undefined;
     let hide;
     const t = setInterval(() => {
-      if (busy() || BLOCKED.includes(pathRef.current)) return;
+      if (busy() || isOff('review-prompt') || BLOCKED.includes(pathRef.current)) return;
       setBubble(true);
       hide = setTimeout(() => setBubble(false), 6000);
     }, AUTO.bubbleEverySeconds * 1000);
@@ -192,6 +193,7 @@ export default function ReviewPopup() {
 
   function close() {
     setOpen(false);
+    turnOff('review-prompt'); // closed with ✕: no more automatic prompts or bubbles this visit
     if (session.get('mfr_rt_n', 0) > 0) session.set('mfr_rt_last', Date.now());
     if (lastFocus.current && lastFocus.current.focus) lastFocus.current.focus();
   }

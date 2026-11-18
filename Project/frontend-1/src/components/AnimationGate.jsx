@@ -8,6 +8,35 @@ import { useEffect } from 'react';
 
 const SELECTOR = 'main > *, main section, .site-footer, .footer-stage, .vband';
 
+// Motion budget. Looping effects that the browser cannot hand to the GPU (box-shadow, colours, background
+// position, stroke, `left`, anything on an SVG shape) repaint on every frame, and the always-visible extras
+// (header logo, floating buttons, cookie card) loop on every page. Those now play for a few seconds and then
+// rest; hovering a floating button or the logo plays its animation again. Smooth GPU loops inside the page
+// (transform / opacity) keep running while their section is on screen.
+const GPU = new Set(['transform', 'opacity', 'translate', 'scale', 'rotate', 'offset', 'easing', 'composite', 'computedOffset']);
+const BUDGET_MS = 8000;
+const KEEP = '.dock-halo, .fab-label, .rtx';
+const REPLAY = '.help-stack, .ytfab, .ytcard, .site-header .brand, .site-footer .brand';
+function tame(main) {
+  if (typeof document.getAnimations !== 'function') return;
+  for (const a of document.getAnimations()) {
+    if (a.__tamed || !a.animationName) continue;
+    a.__tamed = true;
+    const fx = a.effect;
+    const el = fx && fx.target;
+    if (!el || !el.closest) continue;
+    const t = fx.getTiming();
+    if (t.iterations !== Infinity) continue;
+    if (el.closest(KEEP)) continue;
+    let heavy = el instanceof SVGElement && el.tagName.toLowerCase() !== 'svg';
+    if (!heavy) heavy = fx.getKeyframes().some((k) => Object.keys(k).some((p) => !GPU.has(p)));
+    const outside = !main || !main.contains(el);
+    if (!heavy && !outside) continue;
+    const dur = Number(t.duration) || 1000;
+    try { fx.updateTiming({ iterations: Math.max(2, Math.ceil(BUDGET_MS / dur)) }); } catch { /* ignore */ }
+  }
+}
+
 export default function AnimationGate() {
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') return;
@@ -38,12 +67,24 @@ export default function AnimationGate() {
         io.observe(el);
       });
     };
+    const budget = () => tame(document.getElementById('main'));
     scan();
+    budget();
+    const late = [setTimeout(budget, 1500), setTimeout(budget, 4000)];
     let t = 0;
     const mo = new MutationObserver(() => {
       clearTimeout(t);
-      t = setTimeout(scan, 120);
+      t = setTimeout(() => { scan(); budget(); }, 200);
     });
+    // Hovering a floating button or the logo plays its (rested) animations again.
+    let lastReplay = 0;
+    const onOver = (e) => {
+      const host = e.target instanceof Element && e.target.closest(REPLAY);
+      if (!host || Date.now() - lastReplay < 1200) return;
+      lastReplay = Date.now();
+      try { host.getAnimations({ subtree: true }).forEach((a) => a.playState === 'finished' && a.play()); } catch { /* ignore */ }
+    };
+    document.addEventListener('pointerover', onOver, { passive: true });
     const main = document.getElementById('main');
     if (main) mo.observe(main.parentElement || main, { childList: true, subtree: true });
     // Hidden tab: stop everything (browsers throttle rAF, but CSS animations still cost on some devices).
@@ -53,6 +94,8 @@ export default function AnimationGate() {
       io.disconnect();
       mo.disconnect();
       clearTimeout(t);
+      late.forEach(clearTimeout);
+      document.removeEventListener('pointerover', onOver);
       document.removeEventListener('visibilitychange', onVis);
     };
   }, []);

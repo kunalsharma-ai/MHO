@@ -5,6 +5,7 @@ import { useI18n } from '../i18n/I18nProvider.jsx';
 import { BY_CODE, LANGUAGES } from '../i18n/languages.js';
 import { SOUND_NAMES } from '../i18n/soundPrefs.js';
 import Icon from './Icon.jsx';
+import { isOff, turnOff } from '../utils/dismissed.js';
 
 /** Header button — always visible, desktop and mobile. */
 export function LanguageButton({ compact = false }) {
@@ -241,7 +242,7 @@ export function LanguagePicker() {
 /** Small pill while the rest of the page is being machine-translated (or a button when a click is needed). */
 export function TranslateStatus() {
   const { lang, status, translateRest } = useI18n();
-  const [hideInfo, setHideInfo] = useState(false);
+  const [hideInfo, setHideInfo] = useState(() => isOff('translate-note'));
   useEffect(() => setHideInfo(false), [lang]);
   useEffect(() => {
     if (!status.pending || status.hasProvider || status.needsClick) return;
@@ -265,7 +266,7 @@ export function TranslateStatus() {
     return (
       <div className="tx-pill is-info" role="status">
         Menus and key sections are translated. Some longer text is still in English.
-        <button type="button" onClick={() => setHideInfo(true)} aria-label="Dismiss"><Icon name="x" size={14} /></button>
+        <button type="button" onClick={() => { turnOff('translate-note'); setHideInfo(true); }} aria-label="Dismiss"><Icon name="x" size={14} /></button>
       </div>
     );
   return null;

@@ -4,7 +4,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Icon from './Icon.jsx';
 import { Field } from './FormKit.jsx';
-import { store, session, sfx, track } from '../utils/helpers.js';
+import { store, sfx, track } from '../utils/helpers.js';
+import { isOff, turnOff, visit as session } from '../utils/dismissed.js';
 import { submitReview, isKid, roleOf, reviewedKey, countryOf } from '../utils/reviews.js';
 import { getSession } from '../utils/session.js';
 import { Link } from '../router.jsx';
@@ -132,7 +133,7 @@ export default function RateExperience({ suppressed = false }) {
       const last = session.get('mho-rate-last', 0);
       const elapsed = (Date.now() - start) / 1000;
       const busy = document.documentElement.classList.contains('menu-open') || document.querySelector('.chat-win.is-open') || document.querySelector('.modal.is-open');
-      if (store.get(rvKey) || shown >= 3 || busy || suppressedRef.current) return;
+      if (store.get(rvKey) || isOff('rate-prompt') || shown >= 3 || busy || suppressedRef.current) return;
       const ready = shown === 0 ? (elapsed > 45 && maxScroll > 0.4) || elapsed > 80 : Date.now() - last > 4 * 60 * 1000;
       if (ready) {
         session.set('mho-rate-shown', shown + 1);
@@ -163,6 +164,7 @@ export default function RateExperience({ suppressed = false }) {
   };
   const close = () => {
     setOpen(false);
+    turnOff('rate-prompt'); // closed: it won't pop up by itself again this visit (the Rate button still opens it)
     session.set('mho-rate-last', Date.now());
     setTimeout(() => lastFocus.current?.focus?.(), 50);
   };
