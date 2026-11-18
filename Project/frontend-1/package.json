@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.0",
+    "beasties": "^0.5.5",
     "qrcode": "^1.5.4",
     "vite": "^7.1.0",
     "vite-plugin-singlefile": "^2.3.0"

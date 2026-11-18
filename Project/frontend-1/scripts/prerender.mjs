@@ -13,6 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { writeLlms } from './llms.mjs';
+import Beasties from 'beasties';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.resolve(ROOT, process.env.PRERENDER_DIST || 'dist');
@@ -39,12 +40,28 @@ if (!entry) {
 const server = await import(pathToFileURL(entry).href);
 const SITE_URL = String(server.SITE_URL || 'https://www.myhealthopinions.com').replace(/\/+$/, '');
 
+// Critical CSS: the full stylesheet is ~580 KB, and loading it before the first paint cost about a second on
+// phones. Each page gets only the rules its own prerendered markup uses inlined in <head>; the full sheet then
+// loads without blocking the paint. src/main.jsx waits for it before hydrating, so elements that only appear
+// once React runs (pop-ups, dock, menus) are never shown unstyled. Set PRERENDER_CRITICAL=0 to turn this off.
+const critical = process.env.PRERENDER_CRITICAL !== '0'
+  ? new Beasties({ path: DIST, publicPath: '/', preload: 'swap-high', pruneSource: false, inlineFonts: true, preloadFonts: false, keyframes: 'critical', compress: true, mergeStylesheets: true, reduceInlineStyles: false, logLevel: 'warn' })
+  : null;
+
+// The two Latin font files every English page uses are preloaded, so text gets its final font before or right
+// at the first paint instead of re-flowing a second later. Other scripts still load on demand (unicode-range).
+const fontPreloads = fs.readdirSync(path.join(DIST, 'assets'))
+  .filter((f) => /^(inter|manrope)-latin-wght-normal-[\w-]+\.woff2$/.test(f))
+  .map((f) => `<link rel="preload" href="/assets/${f}" as="font" type="font/woff2" crossorigin>`)
+  .join('');
+
 // 1. Pages
 const routes = server.getPrerenderRoutes();
 let count = 0;
 for (const route of routes) {
   const { html, head } = await server.render(route);
-  const page = template.replace('<!--app-head-->', () => head).replace('<!--app-html-->', () => html);
+  let page = template.replace('<!--app-head-->', () => fontPreloads + head).replace('<!--app-html-->', () => html);
+  if (critical) page = await critical.process(page);
   const file = route === '/404' ? path.join(DIST, '404.html') : path.join(DIST, route, 'index.html');
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, page);

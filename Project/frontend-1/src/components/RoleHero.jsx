@@ -241,6 +241,11 @@ export default function RoleHero() {
   }, [idx, cycle]);
 
   const pick = (i) => { setIdx(i); setCycle((c) => c + 1); };
+  // The first panel is already painted from the prerendered HTML: animating it in again would hide the
+  // headline (the page's LCP) for a moment. Only later role changes slide in.
+  const movedRef = useRef(false);
+  if (idx !== 0 || cycle !== 0) movedRef.current = true;
+  const moved = movedRef.current;
 
   return (
     <section className={`role-hero rgrade-${role.id} ${graded ? 'aurora-hero' : ''}`}>
@@ -264,7 +269,7 @@ export default function RoleHero() {
               </button>
             ))}
           </div>
-          <div className="rh-panel" id="rh-panel" role="tabpanel" aria-labelledby={`rh-tab-${role.id}`} key={role.id}>
+          <div className={`rh-panel${moved ? ' rh-anim' : ''}`} id="rh-panel" role="tabpanel" aria-labelledby={`rh-tab-${role.id}`} key={role.id}>
             <p className="rh-motto"><span className="rm-av"><Persona kind={role.persona[0]} skin={role.persona[1]} hair={role.persona[2]} hairStyle={role.persona[3]} size={30} /></span>{role.motto}</p>
             <HeroTitle parts={role.title} />
             <p className="rh-lead">{role.lead}</p>
@@ -275,7 +280,7 @@ export default function RoleHero() {
             </div>
           </div>
         </div>
-        <div className="rh-art" key={role.id + '-art'}><Stage role={role} /></div>
+        <div className={`rh-art${moved ? ' rh-anim' : ''}`} key={role.id + '-art'}><Stage role={role} /></div>
       </div>
     </section>
   );

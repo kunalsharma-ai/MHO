@@ -34,7 +34,13 @@ export function clearSession() {
 export async function getSession() {
   if (PREVIEW_ACCOUNT) return null;
   if (cache && Date.now() - cache.at < 60000) return cache.user;
-  const authz = bearer(); // '' when the cookie cannot be read by JavaScript (HttpOnly): the cookie is still sent by the browser
+  const authz = bearer();
+  // No login token in this browser (the member area keeps it in localStorage "token", like web-1): the visitor
+  // is a guest, so skip the request. Asking anyway made every guest page view log a failed /api/v1/me call.
+  if (!authz) {
+    cache = { at: Date.now(), user: null };
+    return null;
+  }
   let user = null;
   try {
     const res = await fetch(API.me, { method: 'GET', headers: { Accept: 'application/json', ...(authz ? { Authorization: authz } : {}) }, credentials: 'same-origin' });

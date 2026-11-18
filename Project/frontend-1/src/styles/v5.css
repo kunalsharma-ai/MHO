@@ -327,7 +327,7 @@ html.lp-open body { overflow: hidden; }
 html[data-hidden] *, html[data-hidden] *::before, html[data-hidden] *::after { animation-play-state: paused !important; }
 
 /* 2. Skip rendering work for sections far below the fold until they are near the viewport. */
-main > .section:not(:first-child), main > section.section ~ section, .site-footer { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+main > .section:not(:first-child), main > section.section ~ section, main > section:not(:first-child):not(.rx-score), .site-footer { content-visibility: auto; contain-intrinsic-size: auto 900px; }
 
 /* 3. Big blurred blobs: a radial mask instead of filter: blur(80–90px) — same soft look, a fraction of the GPU cost. */
 .ph-bg i, .l2-bg i, .footer-aurora i, .c3-bg i, .join-bg i, .mm-orbs i, .rh-bg > i, .pc-glow {
