@@ -111,7 +111,7 @@ export default function Header() {
             {user ? (
               <div className="hd-user" ref={pmRef}>
                 <button type="button" className="hd-user-btn" aria-haspopup="menu" aria-expanded={pmenu} onClick={() => setPmenu((o) => !o)}>
-                  {user.profilePicture ? <img src={user.profilePicture} alt="" /> : <span className="hd-av">{(user.name?.first || 'U').charAt(0).toUpperCase()}</span>}
+                  {user.profilePicture ? <img src={user.profilePicture} alt="Your profile photo" /> : <span className="hd-av">{(user.name?.first || 'U').charAt(0).toUpperCase()}</span>}
                   <b>{user.name?.first || 'User'}</b>
                 </button>
                 {pmenu && (

@@ -10,7 +10,13 @@ import { ALL_POSTS } from './data/blogs/posts/all.js';
 import { seedPosts, postCache } from './data/blogs/postStore.js';
 import { loaded } from './pages/registry.js';
 import ALL_PAGES from './pages/all.js';
-export { SITE_URL } from './config/site.js';
+import { beginStyleCollection, endStyleCollection } from './jsx/atomic.js';
+export { SITE_URL, SITE } from './config/site.js';
+// Data the build scripts read (scripts/llms.mjs writes llms.txt / llms-full.txt from it).
+export { PAGES, BLOGS, postCache };
+export { FAQ_GROUPS } from './data/faqs.js';
+export { PAYMENT_METHODS } from './data/rewards.js';
+export { COVERAGE } from './data/countries.js';
 
 Object.assign(loaded, ALL_PAGES);
 seedPosts(ALL_POSTS);
@@ -30,6 +36,8 @@ export function getSitemapEntries() {
 export async function render(route) {
   const slug = route.startsWith('/blog/') ? route.slice(6) : null;
   const meta = getMeta(route, { post: slug ? postCache[slug] : null });
+  beginStyleCollection();
   const html = renderToString(<App initialPath={route} />);
-  return { html, head: headString(meta), status: meta.status };
+  const styles = endStyleCollection(); // style props rendered as classes (src/jsx/atomic.js)
+  return { html, head: headString(meta) + (styles ? '\n    ' + styles : ''), status: meta.status };
 }

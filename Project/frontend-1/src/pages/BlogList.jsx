@@ -85,7 +85,7 @@ export default function BlogList() {
         <section className="section bx-featured" aria-labelledby="bx-feat-title">
           <div className="container bx-feat-row">
             <Link to={`/blog/${featured.slug}`} className="bx-feat-img reveal" aria-hidden="true" tabIndex={-1}>
-              <img src={featured.cover} alt="" width="1200" height="675" />
+              <img src={featured.cover} alt={featured.title} width="1200" height="675" />
               <span className="bx-feat-badge"><Icon name="trend" size={14} /> Editor’s pick</span>
             </Link>
             <div className="bx-feat-copy reveal">
@@ -97,7 +97,7 @@ export default function BlogList() {
               <ul className="bx-also">
                 {trending.slice(1, 4).map((b) => (
                   <li key={b.slug}>
-                    <Link to={`/blog/${b.slug}`}><img src={b.cover} alt="" width="96" height="54" loading="lazy" /><span>{b.title}</span></Link>
+                    <Link to={`/blog/${b.slug}`}><img src={b.cover} alt={b.title} width="96" height="54" loading="lazy" /><span>{b.title}</span></Link>
                   </li>
                 ))}
               </ul>

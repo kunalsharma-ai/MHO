@@ -1,6 +1,6 @@
 // Small shared UI primitives.
 import { useEffect, useRef, useState } from 'react';
-import { flagUrl } from '../data/countries.js';
+import { flagUrl, countryByCode } from '../data/countries.js';
 import { Link } from '../router.jsx';
 import Icon from './Icon.jsx';
 
@@ -67,12 +67,14 @@ export function LiveZone({ as: Tag = 'div', className = '', children, ...rest })
 
 export function Flag({ code, name, size = 24, className = '' }) {
   if (!code) return null;
+  // Every flag gets a text alternative (search engines and screen readers): the given name, else the country list.
+  const label = name || countryByCode(code)?.name || String(code).toUpperCase();
   const w = size <= 20 ? 20 : size <= 40 ? 40 : 80;
   return (
     <img
       className={`flag ${className}`}
       src={flagUrl(code, w)}
-      alt={name ? `${name} flag` : ''}
+      alt={`${label} flag`}
       width={size}
       height={Math.round(size * 0.75)}
       loading="lazy"

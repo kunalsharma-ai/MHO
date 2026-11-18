@@ -26,6 +26,34 @@ const ORG = {
   contactPoint: [{ '@type': 'ContactPoint', contactType: 'customer support', email: SITE.email, telephone: SITE.phoneHref, availableLanguage: ['English'] }],
 };
 
+// LocalBusiness: the registered office in New Delhi (Local SEO / Google Business Profile match).
+const LOCAL_BUSINESS = {
+  '@type': 'LocalBusiness',
+  '@id': SITE_URL + '/#localbusiness',
+  name: SITE.name,
+  legalName: SITE.legalName,
+  description:
+    'MyHealthOpinions is a free paid-survey community where healthcare professionals, caregivers, patients and consumers earn rewards for sharing opinions in market research.',
+  url: SITE_URL + '/',
+  logo: ORG.logo,
+  image: SITE_URL + OG_IMAGE,
+  email: SITE.email,
+  telephone: SITE.phoneHref,
+  priceRange: 'Free to join',
+  foundingDate: String(SITE.foundingYear),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: SITE.address[0],
+    addressLocality: 'New Delhi',
+    addressRegion: 'Delhi',
+    postalCode: '110085',
+    addressCountry: 'IN',
+  },
+  areaServed: 'Worldwide',
+  parentOrganization: { '@id': ORG['@id'] },
+  sameAs: ORG.sameAs,
+};
+
 function breadcrumb(items) {
   return {
     '@type': 'BreadcrumbList',
@@ -87,7 +115,7 @@ export function getMeta(rawPath, opts = {}) {
   const page = PAGES[key];
   const jsonLd = [];
   if (key === '/') {
-    jsonLd.push(ORG, {
+    jsonLd.push(ORG, LOCAL_BUSINESS, {
       '@type': 'WebSite',
       '@id': SITE_URL + '/#website',
       name: SITE.name,
@@ -96,7 +124,7 @@ export function getMeta(rawPath, opts = {}) {
       inLanguage: 'en',
     });
   } else if (key !== '/404') {
-    if (key === '/about-us' || key === '/contact') jsonLd.push(ORG);
+    if (key === '/about-us' || key === '/contact') jsonLd.push(ORG, LOCAL_BUSINESS);
     jsonLd.push(breadcrumb([{ name: 'Home', path: '/' }, { name: page.name, path: key }]));
     if (page.schema === 'FAQPage') jsonLd.push(faqSchema(FAQ_GROUPS.flatMap((g) => g.items)));
     if (page.faqKey && AUDIENCE_FAQ[page.faqKey]) jsonLd.push(faqSchema(AUDIENCE_FAQ[page.faqKey]));
@@ -137,6 +165,9 @@ export function headString(meta) {
     `<meta name="description" content="${esc(meta.description)}" />`,
     `<meta name="robots" content="${meta.robots}" />`,
     meta.canonical ? `<link rel="canonical" href="${meta.canonical}" />` : '',
+    // One English URL per page; other languages are an on-page switcher, not separate URLs.
+    meta.canonical ? `<link rel="alternate" hreflang="en" href="${meta.canonical}" />` : '',
+    meta.canonical ? `<link rel="alternate" hreflang="x-default" href="${meta.canonical}" />` : '',
     `<meta property="og:site_name" content="${SITE.name}" />`,
     `<meta property="og:type" content="${meta.ogType}" />`,
     `<meta property="og:title" content="${esc(meta.title)}" />`,
@@ -145,7 +176,10 @@ export function headString(meta) {
     `<meta property="og:image" content="${img}" />`,
     `<meta property="og:image:width" content="1200" />`,
     `<meta property="og:image:height" content="630" />`,
+    `<meta property="og:image:alt" content="${esc(SITE.name + ' paid surveys community')}" />`,
+    `<meta property="og:locale" content="en_US" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
+    SITE.xHandle ? `<meta name="twitter:site" content="${esc(SITE.xHandle)}" />` : '',
     `<meta name="twitter:title" content="${esc(meta.title)}" />`,
     `<meta name="twitter:description" content="${esc(meta.description)}" />`,
     `<meta name="twitter:image" content="${img}" />`,
@@ -174,6 +208,8 @@ export function applyHead(meta) {
   metaName('description', meta.description);
   metaName('robots', meta.robots);
   set('link[rel="canonical"]', 'href', { tag: 'link', attrs: { rel: 'canonical' } }, meta.canonical);
+  set('link[rel="alternate"][hreflang="en"]', 'href', { tag: 'link', attrs: { rel: 'alternate', hreflang: 'en' } }, meta.canonical);
+  set('link[rel="alternate"][hreflang="x-default"]', 'href', { tag: 'link', attrs: { rel: 'alternate', hreflang: 'x-default' } }, meta.canonical);
   metaProp('og:title', meta.title);
   metaProp('og:description', meta.description);
   metaProp('og:type', meta.ogType);

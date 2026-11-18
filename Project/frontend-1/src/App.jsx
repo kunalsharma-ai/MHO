@@ -1,15 +1,10 @@
 // Application shell: router, header/footer, page switching, per-route <head> updates and the
 // site-wide widgets (live help, rate-your-experience, reward toasts, cookie consent, cursor), the language
 // system (picker, page translation, colour grades, sounds) and the off-screen animation gate.
-import { useEffect, useReducer, useRef } from 'react';
+import { lazy, Suspense, useEffect, useReducer, useRef } from 'react';
 import { Router, useRouter } from './router.jsx';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
-import Cursor from './components/Cursor.jsx';
-import LiveChat from './components/LiveChat.jsx';
-import RateExperience from './components/RateExperience.jsx';
-import RewardToasts from './components/RewardToasts.jsx';
-import CookieBanner, { openCookieSettings } from './components/CookieBanner.jsx';
 import { useMounted } from './components/ui.jsx';
 import { loaded, loadPage, pageKeyFor } from './pages/registry.js';
 import { postCache } from './data/blogs/postStore.js';
@@ -19,6 +14,16 @@ import { syncPendingAnswersSoon } from './utils/pendingAnswers.js';
 import AnimationGate from './components/AnimationGate.jsx';
 import { I18nProvider } from './i18n/I18nProvider.jsx';
 import { LanguagePicker, TranslateStatus } from './components/Language.jsx';
+
+// Widgets that only appear after the page is interactive are separate chunks, so the first load ships less
+// JavaScript (they never render during prerender/hydration, see `mounted` below).
+const Cursor = lazy(() => import('./components/Cursor.jsx'));
+const LiveChat = lazy(() => import('./components/LiveChat.jsx'));
+const RateExperience = lazy(() => import('./components/RateExperience.jsx'));
+const RewardToasts = lazy(() => import('./components/RewardToasts.jsx'));
+const CookieBanner = lazy(() => import('./components/CookieBanner.jsx'));
+// Same event as openCookieSettings() in CookieBanner.jsx (kept here so the banner can load lazily).
+const openCookieSettings = () => window.dispatchEvent(new Event('mho-cookie-settings'));
 
 // Forms where review prompts and reward pop-ups would distract (no reviews on sign-up / log-in).
 const QUIET_ROUTES = ['/join', '/login'];
@@ -64,7 +69,11 @@ function Shell() {
 
   return (
     <>
-      {mounted && <Cursor />}
+      {mounted && (
+        <Suspense fallback={null}>
+          <Cursor />
+        </Suspense>
+      )}
       {mounted && <AnimationGate />}
       <Header />
       <main id="main" tabIndex={-1} className={`page page-${key.toLowerCase()} ${Page ? '' : 'is-loading'}`} key={shownPath}>
@@ -72,14 +81,14 @@ function Shell() {
       </main>
       <Footer onCookieSettings={openCookieSettings} />
       {mounted && (
-        <>
+        <Suspense fallback={null}>
           <LiveChat />
           <RateExperience suppressed={quiet} />
           {!quiet && <RewardToasts />}
           <CookieBanner />
           <LanguagePicker />
           <TranslateStatus />
-        </>
+        </Suspense>
       )}
     </>
   );

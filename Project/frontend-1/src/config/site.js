@@ -4,6 +4,10 @@ import { env, PREVIEW_FORMS as PREVIEW, PREVIEW_ACCOUNT as PREVIEW_ACC } from '.
 
 export const SITE_URL = env('SITE_URL', 'https://www.myhealthopinions.com').replace(/\/+$/, '');
 
+// X (Twitter) profile: footer link, schema sameAs and twitter:site. Override with VITE_X_URL ("off" hides it).
+const X_URL = env('X_URL', 'https://x.com/MHO_Community').replace(/^off$/i, '').replace(/\/+$/, '');
+const X_HANDLE = X_URL ? '@' + X_URL.split('/').pop() : '';
+
 export const SITE = {
   name: 'MyHealthOpinions',
   legalName: 'Frequent Research Fieldwork Solutions Pvt. Ltd.',
@@ -20,7 +24,9 @@ export const SITE = {
     { id: 'linkedin', label: 'LinkedIn', handle: 'MyHealthOpinions', url: 'https://www.linkedin.com/company/myhealthopinions/' },
     { id: 'youtube', label: 'YouTube', handle: '@MyHealthOpinions', url: 'https://www.youtube.com/@MyHealthOpinions' },
     { id: 'instagram', label: 'Instagram', handle: '@myhealthopinions', url: 'https://www.instagram.com/myhealthopinions/' },
+    ...(X_URL ? [{ id: 'xsocial', label: 'X', handle: X_HANDLE, url: X_URL }] : []),
   ],
+  xHandle: X_HANDLE,
 };
 
 export const whatsappLink = (text = 'Hi MyHealthOpinions team, I have a question.') =>
@@ -50,6 +56,9 @@ export const API = {
 
 export const ANALYTICS = {
   ga4: env('GA4_ID', ''),
+  // Meta (Facebook) Pixel. Loaded only after the visitor allows analytics cookies, like GA4.
+  // Override with VITE_FB_PIXEL_ID, or set it to "off" to disable.
+  fbPixel: env('FB_PIXEL_ID', '2241850863212660').replace(/^off$/i, ''),
 };
 
 // Minimum participant age enforced in the sign-up form (server must enforce it too).

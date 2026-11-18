@@ -317,7 +317,7 @@ function DetailsCard({ me }) {
               <span className="dc-ic" aria-hidden="true"><Icon name={t.icon} size={16} /></span>
               <span className="dc-txt">
                 <small>{t.label}</small>
-                <b>{t.flag && <img src={t.flag} alt="" width="20" height="15" loading="lazy" />}{t.value}</b>
+                <b>{t.flag && <img src={t.flag} alt={`${t.value} flag`} width="20" height="15" loading="lazy" />}{t.value}</b>
                 {t.sub && <em>{t.sub}</em>}
               </span>
             </li>

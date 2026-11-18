@@ -12,11 +12,11 @@ export function OriginScene() {
     <div className="sc sc-origin">
       <span className="og-beam"><i /></span>
       <div className="og-card c1">
-        <img src="/images/brand/frequent-research-monogram.webp" alt="" width="46" height="48" />
+        <img src="/images/brand/frequent-research-monogram.webp" alt="Frequent Research monogram" width="46" height="48" />
         <div><b>Frequent Research</b><small>ISO 20252 · 9001 · 27001</small></div>
       </div>
       <div className="og-card c2">
-        <img src={BRAND.monogram} alt="" width="46" height="46" />
+        <img src={BRAND.monogram} alt="MyHealthOpinions monogram" width="46" height="46" />
         <div><b>MyFrequentRewards</b><small>Global opinion community</small></div>
       </div>
       <div className="og-card c3">
@@ -220,7 +220,7 @@ export function CoverWall({ posts = [] }) {
       {cols.map((col, c) => (
         <div className={`cw-col c${c}`} key={c}>
           <div className="cw-track">
-            {[...col, ...col].map((b, i) => <img key={b.slug + i} src={b.cover} alt="" width="200" height="113" loading="lazy" />)}
+            {[...col, ...col].map((b, i) => <img key={b.slug + i} src={b.cover} alt={b.title} width="200" height="113" loading="lazy" />)}
           </div>
         </div>
       ))}

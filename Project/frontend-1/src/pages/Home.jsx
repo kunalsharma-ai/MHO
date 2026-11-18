@@ -22,7 +22,7 @@ export default function Home() {
         <div className="container">
           <SectionHead
             eyebrow="Rewards"
-            title={<>Get rewarded <span className="ink-grad">your way</span></>}
+            title={<>Digital gift cards &amp; cash, <span className="ink-grad">your way</span></>}
             lead="Cash, vouchers, gift cards or a personal health report. Pull the lever and see what the paid surveys you complete can turn into."
             color="#ff6a2c"
           />
@@ -32,14 +32,14 @@ export default function Home() {
 
       <section className="section surveys-belt s-inbox">
         <div className="container">
-          <SectionHead eyebrow="Online surveys for money" title="Browse a few of our paid surveys" lead="The kind of studies landing in members’ inboxes right now: patients earn $15–$20, caregivers $15–$25 and doctors & specialists $20–$50 per survey. Every invitation tells you the topic, the time it takes and the reward before you click a thing." color="#f97316" />
+          <SectionHead eyebrow="Online surveys for money" title="Browse paid surveys for money" lead="The kind of studies landing in members’ inboxes right now: patients earn $15–$20, caregivers $15–$25 and doctors & specialists $20–$50 per survey. Every invitation tells you the topic, the time it takes and the reward before you click a thing." color="#f97316" />
           <SurveyInbox />
         </div>
       </section>
 
       <section className="section s-metro">
         <div className="container">
-          <SectionHead eyebrow="Get paid for surveys in four steps" title="Four stops to your first payout" lead="No investment, no selling, no gimmicks. Hop on, tell us about yourself once, answer the surveys that fit, and collect at the last stop." color="#00a88a" />
+          <SectionHead eyebrow="Get paid for surveys in four steps" title="Make money with health surveys in four steps" lead="No investment, no selling, no gimmicks. Hop on, tell us about yourself once, answer the surveys that fit, and collect at the last stop." color="#00a88a" />
           <MetroSteps />
           <div className="center-cta"><Button to="/how-it-works" variant="ghost">See the full journey</Button></div>
         </div>
