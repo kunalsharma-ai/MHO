@@ -121,15 +121,16 @@ body { background: var(--bg); }
 .rh-tab.on b, .rh-tab.on small { color: #fff; }
 .rht-timer { position: absolute; left: 12px; right: 12px; bottom: 4px; height: 3px; border-radius: 3px; background: rgba(255, 255, 255, .85); transform-origin: left; animation: timer-up 5.5s linear forwards; }
 @keyframes timer-up { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-.rh-panel { animation: rh-in .6s var(--ease); }
-@keyframes rh-in { from { opacity: 0; transform: translateY(14px); filter: blur(3px); } }
+.rh-panel.rh-anim { animation: rh-in .6s var(--ease); }
+@keyframes rh-in { from { opacity: 0; transform: translateY(14px); } }
 .rh-motto { display: inline-flex; align-items: center; gap: 10px; padding: 5px 16px 5px 5px; margin-bottom: 14px; border-radius: 999px; font-family: var(--font-head); font-weight: 700; color: var(--g1); background: #fff; box-shadow: 0 8px 20px -14px var(--g1), inset 0 0 0 1px color-mix(in srgb, var(--g1) 25%, white); text-align: left; }
 .rm-av { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 2px var(--g1); }
 .role-hero .hero-title { font-size: clamp(2.1rem, 4.3vw, 3.5rem); }
 .role-hero .hl-grad .hw { background-image: linear-gradient(120deg, var(--g1), var(--g2)); }
 .rh-lead { font-size: clamp(1rem, 1.3vw, 1.1rem); max-width: 60ch; margin: 16px 0 20px; }
 .role-hero .ph-badges li::before { color: var(--g1); }
-.rh-art { min-width: 0; animation: rh-in .7s var(--ease); }
+.rh-art { min-width: 0; }
+.rh-art.rh-anim { animation: rh-in .7s var(--ease); }
 @media (max-width: 960px) { .rh-inner { grid-template-columns: 1fr; } .rh-art { max-width: 460px; margin: 0 auto; width: 100%; } }
 @media (max-width: 560px) { .rh-tab { flex-direction: column; text-align: center; gap: 4px; padding: 8px 4px; } .rht-txt small { display: none; } .rht-txt b { font-size: .72rem; } .rht-ic { width: 32px; height: 32px; } }
 

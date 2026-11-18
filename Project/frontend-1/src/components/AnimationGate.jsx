@@ -8,16 +8,13 @@ import { useEffect } from 'react';
 
 const SELECTOR = 'main > *, main section, .site-footer, .footer-stage, .vband';
 
-// Motion budget. Looping effects that the browser cannot hand to the GPU (box-shadow, colours, background
-// position, stroke, `left`, anything on an SVG shape) repaint on every frame, and the always-visible extras
-// (header logo, floating buttons, cookie card) loop on every page. Those now play for a few seconds and then
-// rest; hovering a floating button or the logo plays its animation again. Smooth GPU loops inside the page
-// (transform / opacity) keep running while their section is on screen.
-const GPU = new Set(['transform', 'opacity', 'translate', 'scale', 'rotate', 'offset', 'easing', 'composite', 'computedOffset']);
-const BUDGET_MS = 8000;
-const KEEP = '.dock-halo, .fab-label, .rtx';
+// Motion budget. Every looping effect (inside the page, in the floating buttons, the header logo or the video
+// band) plays for a few seconds of on-screen time and then rests. Hovering a floating button or the logo plays
+// its animation again, and a section replays its loops each time it scrolls back into view.
+const BUDGET_MS = 7000;
+const KEEP = '[data-loop]'; // opt-in for a loop that must never rest
 const REPLAY = '.help-stack, .ytfab, .ytcard, .site-header .brand, .site-footer .brand';
-function tame(main) {
+function tame() {
   if (typeof document.getAnimations !== 'function') return;
   for (const a of document.getAnimations()) {
     if (a.__tamed || !a.animationName) continue;
@@ -28,12 +25,11 @@ function tame(main) {
     const t = fx.getTiming();
     if (t.iterations !== Infinity) continue;
     if (el.closest(KEEP)) continue;
-    let heavy = el instanceof SVGElement && el.tagName.toLowerCase() !== 'svg';
-    if (!heavy) heavy = fx.getKeyframes().some((k) => Object.keys(k).some((p) => !GPU.has(p)));
-    const outside = !main || !main.contains(el);
-    if (!heavy && !outside) continue;
+    // Every looping effect plays for a few seconds of on-screen time, then rests. Even GPU-friendly loops keep
+    // the browser producing frames, and dozens of them at once is what made slower laptops and phones lag.
+    // A section replays its motion each time it scrolls back into view (see the observer below).
     const dur = Number(t.duration) || 1000;
-    try { fx.updateTiming({ iterations: Math.max(2, Math.ceil(BUDGET_MS / dur)) }); } catch { /* ignore */ }
+    try { fx.updateTiming({ iterations: Math.max(1, Math.round(BUDGET_MS / dur)) }); a.__capped = true; } catch { /* ignore */ }
   }
 }
 
@@ -41,14 +37,20 @@ export default function AnimationGate() {
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') return;
     const watched = new WeakSet();
+    let lateTame = 0;
+    const smil = new WeakMap();
+    let replay = false;
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
-          if (e.isIntersecting) e.target.removeAttribute('data-still');
-          else e.target.setAttribute('data-still', '');
+          if (e.isIntersecting) {
+            if (e.target.hasAttribute('data-still')) { e.target.removeAttribute('data-still'); replay = true; }
+          } else e.target.setAttribute('data-still', '');
           // SVG SMIL animations (<animateMotion> dots, gradient drifts) ignore CSS — pause them too.
-          e.target.querySelectorAll('svg').forEach((svg) => {
-            if (!svg.querySelector('animate, animateMotion, animateTransform')) return;
+          // The list of animated SVGs per section is found once and cached.
+          let svgs = smil.get(e.target);
+          if (!svgs) { svgs = [...e.target.querySelectorAll('svg')].filter((svg) => svg.querySelector('animate, animateMotion, animateTransform')); smil.set(e.target, svgs); }
+          svgs.forEach((svg) => {
             try {
               if (e.isIntersecting) svg.unpauseAnimations();
               else svg.pauseAnimations();
@@ -57,6 +59,23 @@ export default function AnimationGate() {
             }
           });
         }
+        // Sections that render late (content-visibility) create their animations then, and a section that comes
+        // back into view replays its rested loops. Both happen once scrolling settles, so they never cost frames
+        // mid-scroll (asking for animations forces a style update).
+        clearTimeout(lateTame);
+        lateTame = setTimeout(() => {
+          tame();
+          if (!replay) return;
+          replay = false;
+          try {
+            for (const a of document.getAnimations()) {
+              if (a.playState !== 'finished' || !a.__capped) continue;
+              const el = a.effect && a.effect.target;
+              const sec = el && el.closest && el.closest(SELECTOR);
+              if (sec && !sec.hasAttribute('data-still')) a.play();
+            }
+          } catch { /* ignore */ }
+        }, 350);
       },
       { rootMargin: '120px 0px' }
     );
@@ -67,7 +86,7 @@ export default function AnimationGate() {
         io.observe(el);
       });
     };
-    const budget = () => tame(document.getElementById('main'));
+    const budget = () => tame();
     scan();
     budget();
     const late = [setTimeout(budget, 1500), setTimeout(budget, 4000)];
@@ -82,7 +101,7 @@ export default function AnimationGate() {
       const host = e.target instanceof Element && e.target.closest(REPLAY);
       if (!host || Date.now() - lastReplay < 1200) return;
       lastReplay = Date.now();
-      try { host.getAnimations({ subtree: true }).forEach((a) => a.playState === 'finished' && a.play()); } catch { /* ignore */ }
+      try { host.getAnimations({ subtree: true }).forEach((a) => a.__capped && a.playState === 'finished' && a.play()); } catch { /* ignore */ }
     };
     document.addEventListener('pointerover', onOver, { passive: true });
     const main = document.getElementById('main');
@@ -94,6 +113,7 @@ export default function AnimationGate() {
       io.disconnect();
       mo.disconnect();
       clearTimeout(t);
+      clearTimeout(lateTame);
       late.forEach(clearTimeout);
       document.removeEventListener('pointerover', onOver);
       document.removeEventListener('visibilitychange', onVis);

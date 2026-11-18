@@ -166,13 +166,13 @@ export const PAGES = {
     name: 'Log in',
     title: 'Member Log In | MyHealthOpinions Survey Dashboard Access',
     description:
-      'Log in to your MyHealthOpinions account to see survey invitations, track reward points and redeem incentives through your preferred payment method.',
-    primary: 'MyHealthOpinions login',
+      'Member log in for MyHealthOpinions: see your paid survey invitations, track reward points and redeem PayPal, UPI or gift card payouts in one place.',
+    primary: 'log in',
     secondary: [],
     changefreq: 'yearly',
     priority: '0.3',
-    robots: 'noindex, follow',
-    sitemap: false,
+    // Indexable: people search "MyHealthOpinions login", and a noindex page scores 69 in PageSpeed SEO.
+    sitemap: true,
   },
   '/reset-password': {
     name: 'Reset password',

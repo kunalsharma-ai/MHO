@@ -13,6 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { writeLlms } from './llms.mjs';
+import Beasties from 'beasties';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.resolve(ROOT, process.env.PRERENDER_DIST || 'dist');
@@ -39,12 +40,56 @@ if (!entry) {
 const server = await import(pathToFileURL(entry).href);
 const SITE_URL = String(server.SITE_URL || 'https://www.myhealthopinions.com').replace(/\/+$/, '');
 
+// Critical CSS: the full stylesheet is ~580 KB, and loading it before the first paint cost about a second on
+// phones. Each page gets only the rules its own prerendered markup uses inlined in <head>; the full sheet then
+// loads without blocking the paint. src/main.jsx waits for it before hydrating, so elements that only appear
+// once React runs (pop-ups, dock, menus) are never shown unstyled. Set PRERENDER_CRITICAL=0 to turn this off.
+const critical = process.env.PRERENDER_CRITICAL !== '0'
+  ? new Beasties({ path: DIST, publicPath: '/', preload: 'media', pruneSource: false, inlineFonts: true, preloadFonts: false, keyframes: 'critical', compress: true, mergeStylesheets: true, reduceInlineStyles: false, logLevel: 'warn' })
+  : null;
+
+// The two Latin font files every English page uses are preloaded, so text gets its final font before or right
+// at the first paint instead of re-flowing a second later. Other scripts still load on demand (unicode-range).
+const fontPreloads = fs.readdirSync(path.join(DIST, 'assets'))
+  .filter((f) => /^(inter|manrope)-latin-wght-normal-[\w-]+\.woff2$/.test(f))
+  .map((f) => `<link rel="preload" href="/assets/${f}" as="font" type="font/woff2" crossorigin>`)
+  .join('');
+
+// The page is complete and styled from its own HTML + critical CSS, so the full stylesheet and the app script
+// (which hydrates the page and adds the interactive extras) are requested right after the first paint
+// has reached the screen (or after 3s at the latest). They no longer compete with the first paint on slow phones and networks. Without JavaScript the
+// <noscript> stylesheet still applies.
+function deferAfterPaint(html) {
+  const css = [];
+  html = html.replace(/<link rel="stylesheet" crossorigin href="([^"]+\.css)" media="print" onload="this.media='all'">/g, (_, href) => {
+    css.push(href);
+    return '';
+  });
+  let js = '';
+  html = html.replace(/<script type="module" crossorigin src="([^"]+)"><\/script>/, (_, src) => {
+    js = src;
+    return '';
+  });
+  if (!js) return html;
+  const loader =
+    `<script>(function(){var d=document;function go(){` +
+    css.map((h) => `var l=d.createElement('link');l.rel='stylesheet';l.href=${JSON.stringify(h)};l.crossOrigin='';l.setAttribute('data-full-css','');d.head.appendChild(l);`).join('') +
+    `var s=d.createElement('script');s.type='module';s.crossOrigin='';s.src=${JSON.stringify(js)};d.head.appendChild(s);}` +
+    `var done=0;function once(){if(!done){done=1;go()}}` +
+    // After the first contentful paint has been presented (paint timing), or 3s at the latest.
+    `try{new PerformanceObserver(function(l){if(l.getEntriesByName('first-contentful-paint').length)setTimeout(once,0)}).observe({type:'paint',buffered:true})}catch(e){addEventListener('load',once)}` +
+    `setTimeout(once,3000)})()</script>`;
+  return html.replace('</body>', () => loader + '</body>');
+}
+
 // 1. Pages
 const routes = server.getPrerenderRoutes();
 let count = 0;
 for (const route of routes) {
   const { html, head } = await server.render(route);
-  const page = template.replace('<!--app-head-->', () => head).replace('<!--app-html-->', () => html);
+  let page = template.replace('<!--app-head-->', () => fontPreloads + head).replace('<!--app-html-->', () => html);
+  if (critical) page = await critical.process(page);
+  page = deferAfterPaint(page);
   const file = route === '/404' ? path.join(DIST, '404.html') : path.join(DIST, route, 'index.html');
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, page);
@@ -70,7 +115,10 @@ fs.writeFileSync(
 fs.writeFileSync(
   path.join(DIST, 'robots.txt'),
   [
-    '# Public site: open to search engines and AI assistants (see /llms.txt).',
+    '# Public site: open to search engines and AI assistants (see /llms.txt and /llms-full.txt).',
+    // AI search and assistant crawlers are welcomed by name: some AI-readiness checks look for these lines.
+    ...['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended', 'Bingbot', 'CCBot', 'Meta-ExternalAgent', 'DuckAssistBot']
+      .flatMap((bot) => [`User-agent: ${bot}`, 'Allow: /', 'Disallow: /admin/', 'Disallow: /member/', 'Disallow: /api/', 'Disallow: /survey/', '']),
     'User-agent: *',
     'Allow: /',
     // Signed-in areas of the member/admin app and the API: nothing to index there.

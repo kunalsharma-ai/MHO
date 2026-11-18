@@ -42,11 +42,17 @@ function readAnchor() {
   return window.location.hash.slice(1);
 }
 
+// The page fade-in (.page in base.css) plays only when moving between pages inside the site. On the first
+// load the prerendered page is already on screen, and fading it in again hid the content and delayed paint.
+function markNav() {
+  try { document.documentElement.classList.add('spa-nav'); } catch { /* not in a browser */ }
+}
+
 export function Router({ initialPath = '/', children }) {
   const [path, setPath] = useState(() => (typeof window === 'undefined' ? normalize(initialPath) : readLocation()));
 
   useEffect(() => {
-    const onChange = () => setPath(readLocation());
+    const onChange = () => { markNav(); setPath(readLocation()); };
     window.addEventListener(MODE === 'hash' ? 'hashchange' : 'popstate', onChange);
     return () => window.removeEventListener(MODE === 'hash' ? 'hashchange' : 'popstate', onChange);
   }, []);
@@ -55,6 +61,7 @@ export function Router({ initialPath = '/', children }) {
     const href = toHref(to);
     if (MODE === 'hash') window.location.hash = href.slice(1);
     else window.history.pushState({}, '', href);
+    markNav();
     setPath(readLocation());
     const anchor = to.split('#')[1];
     requestAnimationFrame(() => {

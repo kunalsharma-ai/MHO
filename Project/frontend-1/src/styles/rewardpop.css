@@ -23,9 +23,9 @@
 
 /* left panel */
 .rtx-side { position: relative; display: grid; place-items: center; background: linear-gradient(160deg, var(--g1), var(--g2)); overflow: visible; }
-.rtx-side::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .14) 0 6px, transparent 6px 14px); animation: rtx-stripes 2.4s linear infinite; }
+.rtx-side::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .14) 0 6px, transparent 6px 14px); }
 .rtx-side::after { content: ''; position: absolute; right: -7px; top: 50%; width: 14px; height: 14px; margin-top: -7px; border-radius: 50%; background: var(--bg); } /* ticket notch */
-@keyframes rtx-stripes { to { background-position: 28px 0; } }
+@keyframes rtx-stripes { from { transform: translateX(-28px); } to { transform: none; } }
 .rtx-av { position: relative; z-index: 1; width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center; color: #fff; background: rgba(255, 255, 255, .2); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .55); font: 800 1rem/1 var(--font-head, inherit); letter-spacing: .02em; }
 .rtx.is-in .rtx-av { animation: rtx-pop .8s cubic-bezier(.34, 1.8, .64, 1) .35s both; }
 @keyframes rtx-pop { from { transform: scale(.3) rotate(-25deg); } to { transform: none; } }
@@ -39,8 +39,8 @@
 /* middle */
 .rtx-main { min-width: 0; display: grid; align-content: center; gap: 2px; padding: 11px 8px 9px 16px; color: inherit; text-decoration: none; }
 .rtx-tag { display: inline-flex; align-items: center; gap: 6px; font-size: .62rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--g1); }
-.rtx-tag i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 0 currentColor; animation: rtx-live 1.6s ease-out infinite; }
-@keyframes rtx-live { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--g1) 60%, transparent); } 100% { box-shadow: 0 0 0 7px transparent; } }
+.rtx-tag i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: rtx-live 1.6s ease-in-out infinite; }
+@keyframes rtx-live { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.6); opacity: .45; } }
 .rtx-tag em { font-style: normal; letter-spacing: 0; text-transform: none; padding: 1px 5px; border-radius: 4px; background: #fde68a; color: #92400e; font-size: .58rem; }
 .rtx-l1 { display: flex; align-items: center; gap: 6px; font-size: .84rem; color: var(--mut); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rtx-l1 b { color: var(--ink2); font-weight: 750; overflow: hidden; text-overflow: ellipsis; }
@@ -52,7 +52,7 @@
 /* right: amount */
 .rtx-amt { position: relative; display: grid; align-content: center; justify-items: end; gap: 3px; padding: 10px 30px 8px 12px; border-left: 1.5px dashed var(--line); text-decoration: none; color: inherit; }
 .rtx-amt strong { font: 800 1.28rem/1 var(--font-head, inherit); letter-spacing: -.01em; background: linear-gradient(100deg, var(--g1), var(--g2) 45%, #ffb020 55%, var(--g1)); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
-.rtx.is-in .rtx-amt strong { animation: rtx-bump .7s cubic-bezier(.34, 1.8, .64, 1) .6s both, rtx-shim 2.6s linear 1.2s infinite; }
+.rtx.is-in .rtx-amt strong { animation: rtx-bump .7s cubic-bezier(.34, 1.8, .64, 1) .6s both, rtx-shim 2.6s linear 1.2s 1; }
 @keyframes rtx-bump { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes rtx-shim { to { background-position: -220% 0; } }
 .rtx-amt small { display: inline-flex; align-items: center; gap: 3px; font-size: .62rem; font-weight: 700; color: var(--mut); white-space: nowrap; }

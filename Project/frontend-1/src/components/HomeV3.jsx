@@ -218,19 +218,6 @@ const audColor = (id) => AUDIENCES.find((a) => a.id === id)?.color || '#2457f5';
 const audLabel = (id) => AUDIENCES.find((a) => a.id === id)?.label || '';
 const initials = (n) => n.replace(/^Dr\.?\s+/i, '').split(/\s+/).map((p) => p[0]).slice(0, 2).join('').toUpperCase();
 
-function MiniCard({ t, onPick, active }) {
-  return (
-    <button className={`vw-mini ${active ? 'on' : ''}`} style={{ '--c': audColor(t.audience) }} onClick={onPick}>
-      <span className="vm-top">
-        <span className="vm-av">{initials(t.name)}</span>
-        <span className="vm-who"><b>{t.name}</b><small>{t.role}</small></span>
-        <Flag code={t.cc} name={t.country} size={22} />
-      </span>
-      <Stars value={t.rating} size={12} />
-      <span className="vm-q">{t.quote}</span>
-    </button>
-  );
-}
 
 export function VoiceWall() {
   const member = useMemberReviews();
@@ -250,11 +237,15 @@ export function VoiceWall() {
     return () => clearInterval(t);
   }, [inView, list.length]);
   const cur = list[Math.min(pick, list.length - 1)];
-  const cols = [0, 1, 2].map((c) => list.filter((_, i) => i % 3 === c));
-  const choose = (t) => { held.current = true; setPick(list.indexOf(t)); };
+  const n = list.length;
+  const go = (k) => { held.current = true; setPick((p) => (p + k + n) % n); };
+  const down = useRef(null);
+  // Cover-flow: the current voice faces you, two on each side lean away in 3D. Only those five are rendered.
+  const near = [];
+  for (let d = -2; d <= 2; d++) if (n > Math.abs(d) * 2 || d >= 0) { const i = (pick + d + n * 4) % n; if (!near.some((x) => x.i === i)) near.push({ i, d }); }
 
   return (
-    <div className="vwall" ref={ref}>
+    <div className="vwall vw-air" ref={ref}>
       <div className="hb-filters" role="tablist" aria-label="Filter member voices">
         <button role="tab" aria-selected={aud === 'all'} className={aud === 'all' ? 'on' : ''} onClick={() => setAud('all')}>Everyone <em>{all.length}</em></button>
         {AUDIENCES.map((a) => (
@@ -263,40 +254,41 @@ export function VoiceWall() {
           </button>
         ))}
       </div>
-      <div className="vw-grid2">
-        {cur && (
-          <figure className="vw-spot" key={(cur.id || cur.name) + aud} style={{ '--c': audColor(cur.audience) }}>
-            <span className="vs-glow" aria-hidden="true" />
-            <span className="vs-tag">{audLabel(cur.audience)}{cur.member && <em>New review</em>}</span>
-            <svg className="vs-quote" viewBox="0 0 40 32" aria-hidden="true"><path d="M0 32V18C0 8 6 1 16 0l2 5c-6 2-9 6-9 12h8v15zm22 0V18c0-10 6-17 16-18l2 5c-6 2-9 6-9 12h8v15z" /></svg>
-            <blockquote><p>{cur.quote}</p></blockquote>
-            <Stars value={cur.rating} size={20} className="vs-stars" />
-            <figcaption>
-              <span className="vs-av">{initials(cur.name)}</span>
-              <span className="vs-who"><b>{cur.name}</b><small>{cur.role}{cur.company ? `, ${cur.company}` : ''}</small></span>
-              <span className="vs-place"><Flag code={cur.cc} name={cur.country} size={30} />{cur.country}</span>
-            </figcaption>
-            <div className="vs-nav">
-              <button onClick={() => { held.current = true; setPick((pick - 1 + list.length) % list.length); }} aria-label="Previous review"><Icon name="arrowLeft" size={18} /></button>
-              <span>{pick + 1} of {list.length}</span>
-              <button onClick={() => { held.current = true; setPick((pick + 1) % list.length); }} aria-label="Next review"><Icon name="arrow" size={18} /></button>
-            </div>
-          </figure>
-        )}
-        <div className="vw-cols" aria-label="More member reviews">
-          {cols.map((col, c) => (
-            <LiveZone key={c} className={`vw-col ${c % 2 ? 'down' : 'up'}`} style={{ '--dur': `${Math.max(col.length, 3) * 7}s` }}>
-              <div className="vw-track">
-                {[...col, ...col].map((t, i) => (
-                  <div key={i} aria-hidden={i >= col.length || undefined}>
-                    <MiniCard t={t} active={t === cur} onPick={() => choose(t)} />
-                  </div>
-                ))}
-              </div>
-            </LiveZone>
-          ))}
+      {cur && (
+        <div className="air-stage" style={{ '--c': audColor(cur.audience) }}>
+          <span className="air-beams" aria-hidden="true"><i /><i /></span>
+          <span className="air-sign" aria-hidden="true"><i />Member voices · on air</span>
+          <div
+            className="air-flow"
+            onPointerDown={(e) => { down.current = e.clientX; }}
+            onPointerUp={(e) => { if (down.current == null) return; const dx = e.clientX - down.current; down.current = null; if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); }}
+          >
+            {near.map(({ i, d }) => {
+              const t = list[i];
+              return (
+                <figure key={(t.id || t.name) + aud} className={`air-card ${d === 0 ? 'on' : ''}`} style={{ '--d': d, '--ad': Math.abs(d), '--c': audColor(t.audience) }} aria-hidden={d !== 0 || undefined}>
+                  <span className="air-tag">{audLabel(t.audience)}{t.member && <em>New review</em>}</span>
+                  <svg className="air-q" viewBox="0 0 40 32" aria-hidden="true"><path d="M0 32V18C0 8 6 1 16 0l2 5c-6 2-9 6-9 12h8v15zm22 0V18c0-10 6-17 16-18l2 5c-6 2-9 6-9 12h8v15z" /></svg>
+                  <blockquote><p>{t.quote}</p></blockquote>
+                  <Stars value={t.rating} size={18} className="air-stars" />
+                  <figcaption>
+                    <span className="air-av">{initials(t.name)}</span>
+                    <span className="air-who"><b>{t.name}</b><small>{t.role}{t.company ? `, ${t.company}` : ''}</small></span>
+                    <span className="air-place"><Flag code={t.cc} name={t.country} size={26} />{t.country}</span>
+                  </figcaption>
+                  {d !== 0 && <button type="button" className="air-hit" tabIndex={-1} onClick={() => go(d)} aria-label={`Show review from ${t.name}`} />}
+                </figure>
+              );
+            })}
+          </div>
+          <div className="air-wave" aria-hidden="true" key={pick}>{Array.from({ length: 32 }, (_, k) => <i key={k} style={{ '--k': k, '--h': ((k * 37) % 10) / 10 }} />)}</div>
+          <div className="air-nav">
+            <button type="button" onClick={() => go(-1)} aria-label="Previous review"><Icon name="arrowLeft" size={18} /></button>
+            <span aria-live="polite">{pick + 1} of {n}</span>
+            <button type="button" onClick={() => go(1)} aria-label="Next review"><Icon name="arrow" size={18} /></button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

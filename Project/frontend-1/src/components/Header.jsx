@@ -52,11 +52,12 @@ export default function Header() {
       if (!a) return setPill((p) => ({ ...p, show: false }));
       setPill({ x: a.getBoundingClientRect().left - nav.getBoundingClientRect().left, w: a.offsetWidth, show: true });
     };
-    place();
+    // No synchronous first call: the ResizeObserver below reports right after the browser's own layout, so the
+    // pill is placed before paint without forcing an extra full-page layout in the middle of hydration.
     window.addEventListener('resize', place);
     // The links change size when the header tightens to fit (and when fonts or translations load), so the
     // pill behind the active link (Home etc.) is re-placed whenever the menu itself changes size.
-    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => requestAnimationFrame(place)) : null;
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(place) : null;
     ro?.observe(nav);
     nav.querySelectorAll('a.nav-link').forEach((a) => ro?.observe(a));
     document.fonts?.ready.then(place).catch(() => {});
@@ -86,13 +87,15 @@ export default function Header() {
       inner.setAttribute('data-snug', '');
       if (over()) inner.setAttribute('data-tight', '');
     };
-    fit();
+    // Measured in the next frame (still before it is painted) rather than inside hydration, which forced a
+    // full-page layout in the middle of the longest start-up task.
+    const first = requestAnimationFrame(fit);
     const ro = new ResizeObserver(() => requestAnimationFrame(fit));
     ro.observe(inner);
     const mo = new MutationObserver(() => requestAnimationFrame(fit));
     mo.observe(nav, { subtree: true, characterData: true, childList: true });
     document.fonts?.ready.then(fit).catch(() => {});
-    return () => { ro.disconnect(); mo.disconnect(); };
+    return () => { cancelAnimationFrame(first); ro.disconnect(); mo.disconnect(); };
   }, [mounted]);
 
   useEffect(() => setOpen(false), [path]);

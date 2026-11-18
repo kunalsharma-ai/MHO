@@ -186,13 +186,13 @@ export default function Footer({ onCookieSettings }) {
 
         <LiveZone className="container trust2">
           <span className="t2-aurora" aria-hidden="true"><i /><i /></span>
-          <a className="t2-fr" href="https://www.frequentresearch.com/" target="_blank" rel="noopener noreferrer" aria-label="Powered by Frequent Research (opens frequentresearch.com in a new tab)">
+          <a className="t2-fr" href="https://www.frequentresearch.com/" target="_blank" rel="noopener noreferrer">
             <span className="t2-label"><i />Powered by</span>
             <span className="t2-logo">
-              <img src={frLogo} alt="Frequent Research Fieldwork Solutions Private Limited: Insights, Analytics, Growth" width="613" height="248" loading="lazy" />
+              <img src={frLogo} alt="Frequent Research" width="613" height="248" loading="lazy" />
               <span className="fr-shine" aria-hidden="true" />
             </span>
-            <span className="t2-since"><b>Since 2017</b> · Insights · Analytics · Growth <Icon name="external" size={12} /></span>
+            <span className="t2-since"><b>Since 2017</b> · Insights · Analytics · Growth <Icon name="external" size={12} /><span className="sr-only"> (opens in a new tab)</span></span>
           </a>
           <div className="t2-certs">
             <span className="t2-label"><i />Certified &amp; accredited</span>

@@ -1,0 +1,60 @@
+/* ───────────── Final polish layer (imported last) ─────────────
+   Legibility, contrast and tap-target fixes found in the Lighthouse / PageSpeed audit, plus small layout
+   glitches. Kept in one place so the older layers stay untouched. */
+
+/* Legible text: nothing a visitor is meant to read goes below 12px (PageSpeed "legible font sizes"). */
+.vm-q { font-size: .78rem; }
+.vm-who b { font-size: .8rem; }
+.vm-who small, .vm-av { font-size: .75rem; }
+.reel-item small { font-size: .75rem; line-height: 1.1; }
+@media (max-width: 520px) { .reel-item small { font-size: .75rem; letter-spacing: -.01em; } }
+
+/* Eyebrow pills: the text was the raw accent colour on a 9% tint of itself (yellow on cream measured 1.5:1).
+   Same hue, darkened to pass WCAG AA on the light pill. Dark mode keeps its own palette. */
+html:not([data-mode='dark']) .eyebrow { color: color-mix(in srgb, var(--eb) 50%, #000); }
+html:not([data-mode='dark']) .eyebrow i { background: var(--eb); }
+
+/* Footer social QR badges: 24px minimum tap target. */
+.sorb-qr { width: 24px; height: 24px; right: -8px; bottom: -8px; }
+.an-row.ok code { color: #007358; }
+
+/* Accent labels on white or tinted pills: same hue, darkened enough for WCAG AA (4.5:1) in light mode. */
+html:not([data-mode='dark']) :is(.mt-card small, .lp-steps small, .sh-head em, .rx-roles em, .psp-rn) { color: color-mix(in srgb, var(--c) 52%, #000); }
+html:not([data-mode='dark']) :is(.cb-paper header em, .aud-lock, .door-n) { color: color-mix(in srgb, var(--g1) 52%, #000); }
+html:not([data-mode='dark']) .bc-cat { color: color-mix(in srgb, var(--cc, var(--red)) 70%, #000); }
+html:not([data-mode='dark']) .tl-copy .bc-cat { color: var(--gold); }
+html:not([data-mode='dark']) .scx-head > div > .sc-kicker { color: color-mix(in srgb, var(--k) 50%, #000); }
+html:not([data-mode='dark']) .sc-tk-top small { color: #8a5a12; }
+html:not([data-mode='dark']) .sc-head .good { color: #007358; }
+html:not([data-mode='dark']) .sc-head .bad { color: #c8102e; }
+html:not([data-mode='dark']) .vm-credit b { color: #007358; }
+html:not([data-mode='dark']) .text-link { color: #c2410c; }
+.psp-reg button.on { background: color-mix(in srgb, var(--c) 80%, #000); }
+
+/* Carousel dots on About: 24px tap area around the same small dot. */
+.ab-cf-dots { gap: 0; }
+.ab-cf-dots button { position: relative; width: 10px; height: 10px; margin: 7px; background-clip: padding-box; }
+.ab-cf-dots button.on { width: 30px; }
+.ab-cf-dots button::after { content: ''; position: absolute; inset: -7px; }
+html:not([data-mode='dark']) .ab-head .k-coral { color: #c2381a; }
+html:not([data-mode='dark']) .ab-head .k-amber { color: #a15c04; }
+/* Round 8 FAQ numbers and country stamps (r8.css loads later, hence the extra specificity). */
+html:not([data-mode='dark']) .fqs-item:not(.is-open) .fq-n { color: color-mix(in srgb, var(--c1) 50%, #000); }
+html:not([data-mode='dark']) .cstamps .cs-reg b { color: color-mix(in srgb, var(--c) 60%, #000); }
+
+/* Phones: the header logo was squeezed to ~60px by the five buttons beside it. The language button drops its
+   caret, the controls sit closer, and the logo keeps a readable width. */
+@media (max-width: 520px) {
+  .site-header .header-inner { gap: 6px; }
+  .site-header .header-logo { flex: 1 1 auto; min-width: min(104px, calc(100vw - 292px)); }
+  .site-header .header-logo .vlogo svg { width: 100%; max-width: 150px; height: auto; }
+  .site-header .lang-btn { padding-right: 4px; padding-left: 4px; gap: 0; }
+  .site-header .lang-btn .lb-caret, .site-header .lang-btn .lb-txt { display: none; }
+  .site-header .header-cta { gap: 4px; }
+  .site-header .hd-sound { width: 34px; padding: 0; justify-content: center; }
+  .site-header .btn-join { padding-left: 12px; padding-right: 12px; }
+}
+
+/* The cookie card and the floating video card / reward ticket no longer stack on top of each other:
+   the extras wait until the cookie choice is made. */
+body:has(.cookie[role='dialog']) :is(.ytcard, .rtx) { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }

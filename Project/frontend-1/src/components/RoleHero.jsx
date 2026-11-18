@@ -235,15 +235,42 @@ export default function RoleHero() {
   // The three audiences rotate on their own, all the time (Kunal asked for this). Picking a tab shows it and
   // restarts the countdown, so the visitor gets a full turn before it moves on; a hidden tab pauses it.
   const [cycle, setCycle] = useState(0);
+  // Rotation only runs while the hero is on screen and the tab is visible: each switch re-mounts the panel and
+  // its illustration, which kept the main thread busy even when the visitor had scrolled away.
+  const heroRef = useRef(null);
+  const [live, setLive] = useState(true);
   useEffect(() => {
-    const t = setTimeout(() => { if (!document.hidden) setIdx((i) => (i + 1) % ROLES.length); else setCycle((c) => c + 1); }, ROLE_MS);
+    const el = heroRef.current;
+    let onScreen = true;
+    const update = () => setLive(onScreen && !document.hidden);
+    const io = typeof IntersectionObserver !== 'undefined' && el
+      ? new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; update(); })
+      : null;
+    io?.observe(el);
+    document.addEventListener('visibilitychange', update);
+    return () => { io?.disconnect(); document.removeEventListener('visibilitychange', update); };
+  }, []);
+  // Coming back into view restarts the countdown bar with a fresh full turn.
+  const wasLive = useRef(true);
+  useEffect(() => {
+    if (live && !wasLive.current) setCycle((c) => c + 1);
+    wasLive.current = live;
+  }, [live]);
+  useEffect(() => {
+    if (!live) return undefined;
+    const t = setTimeout(() => setIdx((i) => (i + 1) % ROLES.length), ROLE_MS);
     return () => clearTimeout(t);
-  }, [idx, cycle]);
+  }, [idx, cycle, live]);
 
   const pick = (i) => { setIdx(i); setCycle((c) => c + 1); };
+  // The first panel is already painted from the prerendered HTML: animating it in again would hide the
+  // headline (the page's LCP) for a moment. Only later role changes slide in.
+  const movedRef = useRef(false);
+  if (idx !== 0 || cycle !== 0) movedRef.current = true;
+  const moved = movedRef.current;
 
   return (
-    <section className={`role-hero rgrade-${role.id} ${graded ? 'aurora-hero' : ''}`}>
+    <section ref={heroRef} className={`role-hero rgrade-${role.id} ${graded ? 'aurora-hero' : ''}`}>
       {graded && (
         <div className="ah-bg" aria-hidden="true">
           <AuroraCanvas />
@@ -264,7 +291,7 @@ export default function RoleHero() {
               </button>
             ))}
           </div>
-          <div className="rh-panel" id="rh-panel" role="tabpanel" aria-labelledby={`rh-tab-${role.id}`} key={role.id}>
+          <div className={`rh-panel${moved ? ' rh-anim' : ''}`} id="rh-panel" role="tabpanel" aria-labelledby={`rh-tab-${role.id}`} key={role.id}>
             <p className="rh-motto"><span className="rm-av"><Persona kind={role.persona[0]} skin={role.persona[1]} hair={role.persona[2]} hairStyle={role.persona[3]} size={30} /></span>{role.motto}</p>
             <HeroTitle parts={role.title} />
             <p className="rh-lead">{role.lead}</p>
@@ -275,7 +302,7 @@ export default function RoleHero() {
             </div>
           </div>
         </div>
-        <div className="rh-art" key={role.id + '-art'}><Stage role={role} /></div>
+        <div className={`rh-art${moved ? ' rh-anim' : ''}`} key={role.id + '-art'}><Stage role={role} /></div>
       </div>
     </section>
   );

@@ -1,7 +1,7 @@
 // Application shell: router, header/footer, page switching, per-route <head> updates and the
 // site-wide widgets (live help, rate-your-experience, reward toasts, cookie consent, cursor), the language
 // system (picker, page translation, colour grades, sounds) and the off-screen animation gate.
-import { lazy, Suspense, useEffect, useReducer, useRef } from 'react';
+import { lazy, Suspense, useEffect, useReducer, useRef, useState } from 'react';
 import { Router, useRouter } from './router.jsx';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
@@ -18,7 +18,6 @@ import { LanguagePicker, TranslateStatus } from './components/Language.jsx';
 
 // Widgets that only appear after the page is interactive are separate chunks, so the first load ships less
 // JavaScript (they never render during prerender/hydration, see `mounted` below).
-const Cursor = lazy(() => import('./components/Cursor.jsx'));
 const LiveChat = lazy(() => import('./components/LiveChat.jsx'));
 const RateExperience = lazy(() => import('./components/RateExperience.jsx'));
 const RewardToasts = lazy(() => import('./components/RewardToasts.jsx'));
@@ -30,9 +29,39 @@ const openCookieSettings = () => window.dispatchEvent(new Event('mho-cookie-sett
 // Forms where review prompts and reward pop-ups would distract (no reviews on sign-up / log-in).
 const QUIET_ROUTES = ['/join', '/login'];
 
+// The floating extras (help dock, YouTube button, rate prompt, reward tickets, cookie card, custom cursor) wait
+// until the visitor first scrolls, taps, moves the mouse or types, or until the page has been idle for a moment.
+// Mounting them in the same breath as hydration made start-up the longest stretch of blocked time on phones.
+const EXTRA_EVENTS = ['pointerdown', 'pointermove', 'scroll', 'keydown', 'touchstart', 'wheel'];
+function useExtrasReady() {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (ready) return undefined;
+    let done = false;
+    let idle = 0;
+    const go = () => {
+      if (done) return;
+      done = true;
+      setReady(true);
+    };
+    EXTRA_EVENTS.forEach((e) => window.addEventListener(e, go, { once: true, passive: true }));
+    const timer = setTimeout(() => {
+      idle = 'requestIdleCallback' in window ? window.requestIdleCallback(go, { timeout: 2000 }) : setTimeout(go, 0);
+    }, 4000);
+    return () => {
+      done = true;
+      clearTimeout(timer);
+      if (idle && 'cancelIdleCallback' in window) window.cancelIdleCallback(idle);
+      EXTRA_EVENTS.forEach((e) => window.removeEventListener(e, go));
+    };
+  }, [ready]);
+  return ready;
+}
+
 function Shell() {
   const { path } = useRouter();
   const mounted = useMounted();
+  const extras = useExtrasReady();
   const key = pageKeyFor(path);
   const [, rerender] = useReducer((x) => x + 1, 0);
   const last = useRef(null);
@@ -71,11 +100,6 @@ function Shell() {
 
   return (
     <>
-      {mounted && (
-        <Suspense fallback={null}>
-          <Cursor />
-        </Suspense>
-      )}
       {mounted && <AnimationGate />}
       <Header />
       <main id="main" tabIndex={-1} className={`page page-${key.toLowerCase()} ${Page ? '' : 'is-loading'}`} key={shownPath}>
@@ -83,16 +107,20 @@ function Shell() {
       </main>
       {Page && key !== 'NotFound' && <PageVideoBand />}
       <Footer onCookieSettings={openCookieSettings} />
-      {mounted && (
+      {extras && (
         <Suspense fallback={null}>
           <LiveChat quiet={quiet} />
           <RateExperience suppressed={quiet} />
           {!quiet && <RewardToasts />}
           <CookieBanner />
           <VideoFab />
+        </Suspense>
+      )}
+      {mounted && (
+        <>
           <LanguagePicker />
           <TranslateStatus />
-        </Suspense>
+        </>
       )}
     </>
   );

@@ -13,6 +13,19 @@ import { loadPost } from './data/blogs/postStore.js';
 import './styles/index.css';
 
 
+// Prerendered pages inline only their critical CSS and load the full stylesheet without blocking the first
+// paint (scripts/prerender.mjs). Hydration waits for it, so nothing React adds later appears unstyled.
+function fullCss() {
+  const links = [...document.querySelectorAll('link[data-full-css]')];
+  return Promise.all(
+    links.map((l) => (l.sheet ? null : new Promise((ok) => {
+      l.addEventListener('load', ok, { once: true });
+      l.addEventListener('error', ok, { once: true });
+      setTimeout(ok, 4000);
+    })))
+  );
+}
+
 async function start() {
   const path = currentPath();
   const key = pageKeyFor(path);
@@ -22,6 +35,7 @@ async function start() {
   } catch {
     /* network hiccup: App retries the page load itself */
   }
+  await fullCss();
   const root = document.getElementById('root');
   const app = (
     <StrictMode>

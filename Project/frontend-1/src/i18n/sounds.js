@@ -787,7 +787,8 @@ export function playVideoOpen() {
     drum(t, { f0: 300, f1: 120, sweep: 0.03, dur: 0.06, vol: 0.3, slap: 0.2, slapFreq: 2400 });
     let x = t + 0.08;
     let gap = 0.06;
-    while (x < t + 0.7) { noise(x, { dur: 0.01, vol: 0.06, freq: 4200, q: 6, verb: 0.15 }); x += gap; gap *= 0.88; }
+    // a projector speeding up: ticks get closer together (bounded count; the gaps alone never reach t + 0.7)
+    for (let k = 0; k < 10 && x < t + 0.7; k++) { noise(x, { dur: 0.01, vol: 0.06, freq: 4200, q: 6, verb: 0.15 }); x += gap; gap *= 0.88; }
     tone(t + 0.1, 57, { from: 45, glide: 0.5, dur: 0.6, vol: 0.06, a: 0.1, r: 0.2, type: 'sawtooth', filter: 900, verb: 0.3 });
     mallet(t + 0.72, 84, { partials: [1, 2.76], dur: 0.6, vol: 0.06 });
   });

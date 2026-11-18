@@ -100,7 +100,9 @@ function WallCard({ t }) {
 }
 
 function HeroWall() {
-  const cols = [0, 1, 2].map((c) => TESTIMONIALS.filter((_, i) => i % 3 === c));
+  // Five cards per column (doubled for the seamless loop) fill the 600px window; the full 30 made a 7,000px
+// 3D-tilted wall that took a third of a second to lay out and paint on phones.
+  const cols = [0, 1, 2].map((c) => TESTIMONIALS.filter((_, i) => i % 3 === c).slice(0, 5));
   return (
     <LiveZone className="rx-wall" aria-hidden="true">
       <div className="rx-wall-tilt">
