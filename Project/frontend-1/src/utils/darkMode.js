@@ -155,28 +155,60 @@ const smallBox = (el) => { const r = el.getBoundingClientRect(); return r.width 
 function processTree(root, bg, pc) {
   // Read everything first (no writes in between, so the browser computes styles once).
   const items = [];
-  const collect = (el, depth) => {
+  const rootHidden = !!root.closest?.('[aria-hidden="true"]');
+  const collect = (el, depth, hidden) => {
     if (!(el instanceof Element) || SKIP.has(el.tagName.toUpperCase())) return;
     if (el.matches(ART)) return;
-    items.push({ el, cs: getComputedStyle(el), depth });
-    for (const c of el.children) collect(c, depth + 1);
+    const h = hidden || el.getAttribute('aria-hidden') === 'true';
+    items.push({ el, cs: getComputedStyle(el), depth, hidden: h });
+    for (const c of el.children) collect(c, depth + 1, h);
   };
-  collect(root, 0);
-  const snap = items.map(({ el, cs, depth }) => ({
-    el, depth,
-    svg: el instanceof SVGElement,
-    tag: el.tagName.toLowerCase(),
-    color: cs.color, bgc: cs.backgroundColor, bgi: cs.backgroundImage, clip: cs.backgroundClip === 'text' || cs.webkitBackgroundClip === 'text',
-    bt: cs.borderTopColor, br: cs.borderRightColor, bb: cs.borderBottomColor, bl: cs.borderLeftColor, bw: cs.borderTopWidth !== '0px' || cs.borderBottomWidth !== '0px' || cs.borderLeftWidth !== '0px' || cs.borderRightWidth !== '0px',
-    fill: cs.fill, stroke: cs.stroke, outline: cs.outlineColor, blur: /blur\(/.test(cs.filter),
-    // a text-free wrapper around a logo / badge image: its light plate is part of the picture, keep it
-    // small SVG dots and knobs keep their light fill (darkened they read as black holes)
-    svgDot: (el.tagName === 'circle' || el.tagName === 'ellipse') && (() => { const r = el.getBoundingClientRect(); return Math.max(r.width, r.height) <= 64; })(),
-    plate: !(el instanceof SVGElement) && !!el.querySelector('img, picture') && !el.textContent.trim(),
-    // a text-free shape inside a decorative illustration (jar glass, lid, coins, bars): darkening it turns the
-    // picture into a photo negative, so it keeps its colour, just a little dimmer
-    shape: !(el instanceof SVGElement) && !el.textContent.trim() && (el.closest('[aria-hidden="true"]') ? smallBox(el) : dot(el, cs)),
-  }));
+  collect(root, 0, rootHidden);
+  // Text / image presence, bottom-up in one pass (el.textContent per element was quadratic on big pages).
+  const info = new Map();
+  for (let i = items.length - 1; i >= 0; i--) {
+    const el = items[i].el;
+    let text = false;
+    let img = false;
+    for (const n of el.childNodes) {
+      if (n.nodeType === 3) { if (!text && n.data.trim()) text = true; continue; }
+      if (n.nodeType !== 1) continue;
+      const t = n.tagName;
+      if (t === 'IMG' || t === 'PICTURE') { img = true; continue; }
+      const ci = info.get(n);
+      if (ci) { text = text || ci.text; img = img || ci.img; } else if (!text && n.textContent.trim()) text = true;
+    }
+    info.set(el, { text, img });
+  }
+  const snap = items.map(({ el, cs, depth, hidden }) => {
+    const svg = el instanceof SVGElement;
+    const bgc = cs.backgroundColor;
+    const it = {
+      el, depth, svg,
+      tag: el.tagName.toLowerCase(),
+      color: cs.color, bgc, bgi: cs.backgroundImage, clip: cs.backgroundClip === 'text' || cs.webkitBackgroundClip === 'text',
+      bt: cs.borderTopColor, br: cs.borderRightColor, bb: cs.borderBottomColor, bl: cs.borderLeftColor, bw: cs.borderTopWidth !== '0px' || cs.borderBottomWidth !== '0px' || cs.borderLeftWidth !== '0px' || cs.borderRightWidth !== '0px',
+      fill: cs.fill, stroke: cs.stroke, outline: cs.outlineColor, blur: cs.filter !== 'none' && /blur\(/.test(cs.filter),
+      svgDot: false, plate: false, shape: false,
+    };
+    const { text, img } = info.get(el);
+    if (svg) {
+      // small SVG dots and knobs keep their light fill (darkened they read as black holes)
+      if (it.tag === 'circle' || it.tag === 'ellipse') { const f = parse(it.fill); if (f && f.a > 0 && isLightSurface(f)) { const r = el.getBoundingClientRect(); it.svgDot = Math.max(r.width, r.height) <= 64; } }
+    } else if (!text) {
+      // only text-free elements with a light background need the (layout-reading) checks below
+      const c = parse(bgc);
+      const lightGrad = it.bgi !== 'none' && it.bgi.includes('gradient') && [...it.bgi.matchAll(COLOR_RE)].some((m) => { const g = parseFn(m[1], m[2]); return g && g.a > 0.3 && isLightSurface(g); });
+      if ((c && c.a > 0.35 && isLightSurface(c)) || lightGrad) {
+        // a text-free wrapper around a logo / badge image: its light plate is part of the picture, keep it
+        it.plate = img;
+        // a text-free shape inside a decorative illustration (jar glass, lid, coins, bars) or a small round dot:
+        // darkening it turns the picture into a photo negative, so it keeps its colour, just a little dimmer
+        if (!img) it.shape = hidden ? smallBox(el) : dot(el, cs);
+      }
+    }
+    return it;
+  });
   // Then decide and write, walking the snapshot with a stack of parent contexts.
   const stack = [pc || { bg, color: null, out: null }];
   for (const it of snap) {
@@ -257,15 +289,19 @@ function processTree(root, bg, pc) {
 
 // While undoing and re-reading colours, CSS transitions must not run: otherwise the browser reports a colour
 // half-way back to the light value, and cards and buttons end up stuck light or patchy.
-function frozen(fn) {
-  const root = document.documentElement;
-  root.classList.add('dm-measure');
+function frozen(fn, roots) {
+  // Transitions are switched off only on the subtrees being measured (a class on <html> would restyle the
+  // whole page on every small update, which is what made dark mode lag while scrolling).
+  const els = roots || [document.documentElement];
+  for (const r of els) r.classList.add('dm-measure');
   try { fn(); } finally {
-    void root.offsetWidth; // apply the final colours with transitions still off
-    root.classList.remove('dm-measure');
-    try {
-      for (const a of document.getAnimations()) if (a.transitionProperty && /^(background|color|border)/.test(a.transitionProperty)) a.finish();
-    } catch { /* older browsers */ }
+    void document.documentElement.offsetWidth; // apply the final colours with transitions still off
+    for (const r of els) {
+      r.classList.remove('dm-measure');
+      try {
+        for (const a of r.getAnimations({ subtree: true })) if (a.transitionProperty && /^(background|color|border)/.test(a.transitionProperty)) a.finish();
+      } catch { /* older browsers */ }
+    }
   }
 }
 
@@ -286,18 +322,19 @@ function flush() {
   checks = new Set();
   // only the outermost changed nodes
   const roots = list.filter((el) => el.isConnected && !list.some((o) => o !== el && o.isConnected && o.contains(el)));
+  const work = roots.map((el) => [el, contextFor(el)]).filter(([, pc]) => pc);
+  if (!work.length) return;
   observer?.disconnect();
   frozen(() => {
-    for (const el of roots) {
-      const pc = contextFor(el);
-      if (!pc) continue;
+    for (const [el, pc] of work) {
       undoTree(el);
       processTree(el, pc.bg, pc);
     }
-  });
+  }, work.map(([el]) => el));
   observe();
 }
-const schedule = () => { if (!raf) raf = requestAnimationFrame(flush); };
+// Batched: class flips from carousels, timers and scroll reveals arrive in bursts, so wait for a quiet moment.
+const schedule = () => { if (!raf) raf = setTimeout(flush, 160); };
 const onTransitionEnd = (e) => {
   // A colour finished transitioning (often from a value read mid-transition). Re-check, unless we wrote that
   // property ourselves (our own writes animate too, and must not loop).

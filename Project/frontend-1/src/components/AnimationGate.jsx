@@ -6,7 +6,7 @@
 // the page for new sections (route changes, tabs) with a MutationObserver.
 import { useEffect } from 'react';
 
-const SELECTOR = 'main > *, main section, .site-footer, .footer-stage';
+const SELECTOR = 'main > *, main section, .site-footer, .footer-stage, .vband';
 
 export default function AnimationGate() {
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function AnimationGate() {
       t = setTimeout(scan, 120);
     });
     const main = document.getElementById('main');
-    if (main) mo.observe(main, { childList: true, subtree: true });
+    if (main) mo.observe(main.parentElement || main, { childList: true, subtree: true });
     // Hidden tab: stop everything (browsers throttle rAF, but CSS animations still cost on some devices).
     const onVis = () => document.documentElement.toggleAttribute('data-hidden', document.hidden);
     document.addEventListener('visibilitychange', onVis);

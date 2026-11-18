@@ -216,6 +216,7 @@ export default function VideoFab() {
   // "Show & watch" bubble: pops up beside the button a few seconds after each page loads, once per page per
   // visit, and tucks itself away after a while (or when closed / when the video is opened).
   const [tip, setTip] = useState(false);
+  const autoHide = useRef(0);
   const [seen, setSeen] = useState(false);
   useEffect(() => {
     let v = false;
@@ -228,9 +229,16 @@ export default function VideoFab() {
     try { seen = sessionStorage.getItem(`mho-vtip-${path}`) === '1'; } catch { /* storage blocked */ }
     if (seen) return undefined;
     const t1 = setTimeout(() => setTip(true), 3500);
-    const t2 = setTimeout(() => setTip(false), 15500);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    autoHide.current = setTimeout(() => setTip(false), 15500);
+    return () => { clearTimeout(t1); clearTimeout(autoHide.current); };
   }, [path]);
+  // The YouTube button first shows the "watch this page" card; Watch now (or a second press) opens the video.
+  const toggleTip = () => {
+    if (tip) { setOpen(true); return; } // card already showing: a second press plays the video
+    clearTimeout(autoHide.current);
+    setTip(true);
+    sfx('playChatHello');
+  };
   const hideTip = useCallback(() => {
     setTip(false);
     try { sessionStorage.setItem(`mho-vtip-${path}`, '1'); } catch { /* storage blocked */ }
@@ -282,7 +290,7 @@ export default function VideoFab() {
     <>
       {/* Round YouTube button, bottom-left, with "Watch our video" circling it, and a notification card beside it
           that pops up a few seconds into each page (styles/dock.css). */}
-      <button type="button" className={`ytfab ${seen ? 'is-seen' : ''}`} onClick={() => setOpen(true)} aria-haspopup="dialog" aria-label="Watch this page's video" data-mode-skip="">
+      <button type="button" className={`ytfab ${seen ? 'is-seen' : ''} ${tip ? 'is-on' : ''}`} onClick={toggleTip} aria-expanded={tip} aria-controls="ytcard" aria-label="Watch this page's video" data-mode-skip="">
         <svg className="ytfab-text" viewBox="0 0 100 100" aria-hidden="true">
           <defs><path id="ytfab-circle" d="M50 50 m-39 0 a39 39 0 1 1 78 0 a39 39 0 1 1 -78 0" /></defs>
           <text><textPath href="#ytfab-circle" startOffset="0">WATCH OUR VIDEO • WATCH OUR VIDEO •</textPath></text>
@@ -294,13 +302,13 @@ export default function VideoFab() {
         <span className="ytfab-eq" aria-hidden="true"><i /><i /><i /></span>
         {!seen && <span className="ytfab-badge" aria-hidden="true">1</span>}
       </button>
-      <div className={`ytcard ${tip && !open ? 'is-in' : ''}`} role="status" aria-hidden={!tip || open} data-mode-skip="">
+      <div id="ytcard" className={`ytcard ${tip && !open ? 'is-in' : ''}`} role="status" aria-hidden={!tip || open} data-mode-skip="">
         <div className="ytcard-head">
           <span className="ytcard-logo" aria-hidden="true"><svg viewBox="0 0 28 20" width="16" height="12"><rect width="28" height="20" rx="5.5" fill="currentColor" /><path d="M11 5.6v8.8l7.6-4.4z" fill="#fff" /></svg></span>
           <b>MyHealthOpinions</b><span className="ytcard-now"><i />now</span>
           <button type="button" className="ytcard-x" onClick={hideTip} aria-label="Hide video tip" tabIndex={tip && !open ? 0 : -1}><Icon name="x" size={13} /></button>
         </div>
-        <span className="ytcard-kicker"><Icon name="bell" size={12} />New video for this page</span>
+        <span className="ytcard-kicker"><Icon name="bell" size={12} />Watch this page&rsquo;s video</span>
         <p className="ytcard-title">{v.title} <em>{v.em}</em></p>
         <button type="button" className="ytcard-go" onClick={() => setOpen(true)} tabIndex={tip && !open ? 0 : -1}><Icon name="play" size={12} fill="currentColor" stroke={0} />Watch now</button>
       </div>
