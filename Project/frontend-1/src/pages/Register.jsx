@@ -71,7 +71,7 @@ export default function Register() {
     const q = new URLSearchParams(window.location.search).get('panel') || visit.get('panel', '');
     if (SEGMENTS.some((s) => s.id === q)) setF((s) => ({ ...s, segment: q }));
   }, []);
-  useEffect(() => { if (step) head.current?.focus(); }, [step]);
+  useEffect(() => { if (step) { try { window.scrollTo(0, 0); } catch { /* ignore */ } head.current?.focus({ preventScroll: true }); } }, [step]);
 
   const countryItems = useMemo(() => countries.map((c) => ({ value: c.code, label: c.name, flag: c.code, emoji: c.flag, sub: c.code.toLowerCase() })), [countries]);
   const stateItems = useMemo(() => states.map((s) => ({ value: s.code, label: s.name })), [states]);
@@ -336,6 +336,7 @@ function YesNo({ name, q, value, onChange, error }) {
 
 /** "Check your inbox": the link in the email confirms the address and opens the create-password page. */
 function Sent({ email, tone, aside }) {
+  useEffect(() => { try { window.scrollTo(0, 0); } catch { /* ignore */ } }, []);
   const [cap, setCap] = useState({ id: '', answer: '' });
   const [capKey, setCapKey] = useState(0);
   const [st, setSt] = useState(''); // '' | open | sending | sent
@@ -356,7 +357,8 @@ function Sent({ email, tone, aside }) {
       <div className="acx-done" role="status">
         <span className="acx-done-ic"><Icon name="mail" size={28} /></span>
         <h1>Check your inbox</h1>
-        <p>If <strong>{email}</strong> can be registered, we’ve sent it a link to confirm the address and create your password. The link works once and expires in 24 hours.</p>
+        <p>We’ve sent a link to <strong>{email}</strong> to confirm the address and create your password. The link works once and expires in 24 hours.</p>
+        <p className="acx-small">Already have an account with this address? <Link to="/login">Log in</Link> or use “Forgot password?” there.</p>
         <p className="acx-small">It can take a minute to arrive. Check your spam or promotions folder too.</p>
       </div>
       {st === 'sent' ? (

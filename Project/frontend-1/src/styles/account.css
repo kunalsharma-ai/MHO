@@ -1,6 +1,8 @@
 /* Redesigned account screens (Register, ServerCaptcha / AccountKit). Every class is prefixed acx- so nothing here
    collides with the site's older global classes. Tone follows the chosen panel: hcp blue, caregiver teal, patient violet. */
 .acx {
+  overflow-x: clip;
+  hyphens: manual; -webkit-hyphens: manual;
   --acx-a: #e8344e; --acx-b: #f7931e; --acx-soft: #fff1ec; --acx-ink: var(--ink);
   min-height: calc(100vh - var(--header-h));
   background: radial-gradient(1200px 500px at 10% -10%, var(--acx-soft), transparent 60%), var(--bg);
@@ -165,7 +167,7 @@
 
 @media (max-width: 900px) {
   .acx-grid { grid-template-columns: 1fr; }
-  .acx-aside { position: static; min-height: 0; padding: 22px; }
+  .acx-aside { position: relative; top: auto; min-height: 0; padding: 22px; }
   .acx-aside-in { gap: 14px; }
   .acx-aside ul { display: none; }
   .acx-aside h2 { font-size: 22px; margin: 0; }

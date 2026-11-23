@@ -25,7 +25,7 @@ export async function journeyFor(user) {
     };
     if (isAdmin) return { ...out, next: "admin", nextUrl: "/admin/dashboard" };
     if (!segment) return { ...out, next: "support", nextUrl: "/member/support" };
-    if (!emailVerified) return { ...out, next: "verify-email", nextUrl: `/?verifyemail=1` };
+    if (!emailVerified) return { ...out, next: "verify-email", nextUrl: "/login?verify=1" };
 
     const last = await latestConsent(user._id);
     const lastAccept = last?.action === "accept" ? last : await ConsentRecord.findOne({ user: user._id, action: "accept" }).sort({ acceptedAt: -1 }).lean();

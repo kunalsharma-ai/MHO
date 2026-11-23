@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import { HeartMark } from '../components/Brand.jsx';
 import { Field, PasswordField } from '../components/FormKit.jsx';
@@ -28,6 +28,15 @@ export default function Login() {
   const [remember, setRemember] = useState(false);
   const [cap, setCap] = useState({ id: '', answer: '' });
   const [unverified, setUnverified] = useState(false); // the account exists but the email was never confirmed
+  // Sent here from the member area (?verify=1) or after a declined consent (?consent=declined on the home page is separate).
+  useEffect(() => {
+    try {
+      if (new URLSearchParams(window.location.search).get('verify') === '1') {
+        setUnverified(true);
+        setAlert('Please confirm your email address first. Open the link we emailed you, or enter your email and ask for a new one below.');
+      }
+    } catch { /* ignore */ }
+  }, []);
   const [capKey, setCapKey] = useState(0);
   const [err, setErr] = useState({});
   const [state, setState] = useState('form');
@@ -69,7 +78,7 @@ export default function Login() {
       else setAlert(res.code === 'BAD_CREDENTIALS' ? 'That email and password do not match. Please try again.' : res.message || 'We could not log you in right now. Please try again shortly.');
       return;
     }
-    const token = res.data?.token || '';
+    const token = res.body?.token || res.data?.token || '';
     if (token) auth.setToken(token);
     track('login', { method: 'email' });
     setState('done');

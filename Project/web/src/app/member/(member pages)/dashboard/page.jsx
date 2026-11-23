@@ -21,6 +21,7 @@ import LoadingOverlay from "@/componentsMHO/LoadingOverlay";
 import { api, loadData, Page } from "@/util";
 import { useToast } from "@/hooks";
 import { SurveyPoints, CurrentUser } from "../../components";
+import SegmentDashboard from "./SegmentDashboard";
 
 import {
   Poll as PollIcon,
@@ -139,50 +140,10 @@ export default function page() {
         gap: 2.5,
       }}
     >
-      <MotionBox
-        variants={fadeUp}
-        initial="hidden"
-        animate="visible"
-        data-tour="greeting"
-      >
-        <Box
-          sx={{
-            my: 1.5,
-            px: { xs: 2.5, md: 0 },
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: 28,
-              fontWeight: 800,
-              color: "text.primary",
-              lineHeight: 1.1,
-              letterSpacing: "-0.5px",
-            }}
-          >
-            {greeting},{" "}
-            <Box
-              component="span"
-              sx={{
-                color: "primary.main",
-              }}
-            >
-              {member?.name.first}
-            </Box>
-          </Typography>
-
-          <Typography
-            sx={{
-              mt: 0.5,
-              fontSize: 15,
-              color: "text.secondary",
-              fontWeight: 500,
-            }}
-          >
-            Here's an overview of your surveys, rewards, and recent activity.
-          </Typography>
-        </Box>
-      </MotionBox>
+      {/* Panel-specific dashboard (HCP, caregiver or patient), from GET /api/v1/me/dashboard */}
+      <div data-tour="greeting">
+        <SegmentDashboard member={member} />
+      </div>
       <Grid
         size={12}
         container
