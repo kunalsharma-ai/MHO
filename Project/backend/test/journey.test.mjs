@@ -433,3 +433,12 @@ test("rate limiting: the CAPTCHA endpoint answers 429 past its limit", async () 
     assert.equal(last.status, 429);
     assert.equal(last.body.code, "RATE_LIMITED");
 });
+
+test("dashboard: each profile section is counted once, even where the bank holds older copies of it", async () => {
+    const { token } = await activeMember({ segment: "hcp", screening: { worksInHealthcare: "yes", clinician: "yes" } });
+    assert.equal((await sign(token, "hcp")).status, 200);
+    const d = (await call("GET", "/me/dashboard", null, token)).body.data;
+    const names = d.profile.sections.map((s) => s.name.toLowerCase());
+    assert.ok(names.length > 0);
+    assert.equal(new Set(names).size, names.length, `duplicate sections: ${names.join(", ")}`);
+});

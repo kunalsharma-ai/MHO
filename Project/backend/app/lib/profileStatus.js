@@ -21,6 +21,14 @@ export async function profileStatus(user) {
         if (seg) profiles = await Profile.find({ ...base, category: seg.category }).sort({ sortOrder: 1, _id: 1 }).lean();
     }
     profiles = profiles.filter((p) => !/not in use/i.test(p.name || ""));
+    // The profile collection holds older copies of some sections (same name, no slug). Count each section once,
+    // preferring the copy that has a slug.
+    const byName = new Map();
+    for (const p of [...profiles].sort((x, y) => Number(!x.slug) - Number(!y.slug))) {
+        const key = String(p.name || p.slug || "").trim().toLowerCase();
+        if (!byName.has(key)) byName.set(key, p);
+    }
+    profiles = profiles.filter((p) => byName.get(String(p.name || p.slug || "").trim().toLowerCase()) === p);
     if (!profiles.length) return { overall: 0, sections: [], completed: 0, total: 0, configured: false };
 
     const namesOf = (p) => [...new Set((p.pages || []).flatMap((page) => (Array.isArray(page) ? page.slice(1) : [])))];
