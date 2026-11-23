@@ -68,12 +68,24 @@ export function useSession() {
   return user;
 }
 
-/** Log-in / sign-up / create-password pages: someone who is already logged in goes straight to the profiles page. */
+/** Where a logged-in member goes next (verify email → consent → dashboard), from GET /api/v1/me/journey. */
+export async function nextUrl() {
+  const authz = bearer();
+  if (!authz) return '';
+  try {
+    const res = await fetch(API.journey, { headers: { Accept: 'application/json', Authorization: authz }, cache: 'no-store' });
+    const j = await res.json().catch(() => ({}));
+    if (res.ok && j.data && j.data.nextUrl) return j.data.nextUrl;
+  } catch { /* fall through */ }
+  return '/member/dashboard';
+}
+
+/** Log-in / sign-up / create-password pages: someone who is already logged in goes to their next step (consent or dashboard). */
 export function useGuestOnly(active = true) {
   useEffect(() => {
     if (!active) return undefined;
     let live = true;
-    const check = () => getSession().then((u) => { if (live && u) window.location.replace('/member/profiles'); });
+    const check = () => getSession().then((u) => { if (live && u) nextUrl().then((to) => live && to && window.location.replace(to)); });
     check();
     const onShow = (e) => { if (e.persisted) { cache = null; check(); } };
     window.addEventListener('pageshow', onShow);

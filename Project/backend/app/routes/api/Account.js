@@ -108,6 +108,7 @@ router.post("/register", limits.register, wrap(async (req, res) => {
         timezone: v.timezone,
         address: [{ tag: "home", country: v.country.toLowerCase(), state: v.state.toLowerCase(), city: v.city, zipcode: v.postalCode }],
         postalCodeApplicable: !v.postalCodeNotApplicable,
+        referredBy: /^[\w-]{1,64}$/.test(String(req.body.referredBy || "")) ? String(req.body.referredBy) : null,
         accountStatus: "pending",
         origin: req.origin,
         created: { From: clientIp(req) },

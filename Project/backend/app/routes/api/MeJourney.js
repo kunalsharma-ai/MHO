@@ -58,7 +58,7 @@ router.post("/consent", limits.consent, wrap(async (req, res) => {
     if (!segment) return fail(res, 409, "NO_SEGMENT", "Your account has no member category. Please contact support.");
     const b = req.body || {};
     if (b.termsVersion !== segment.termsVersion) return fail(res, 409, "VERSION_CHANGED", "The terms were updated while you were reading. Please reload the page.", { data: { termsVersion: segment.termsVersion } });
-    const a = b.approvals || {};
+    const a = b.approvals || b.consents || {}; // the supplied consent pages send `consents`
     const missing = REQUIRED_APPROVALS.filter((k) => a[k] !== true);
     if (missing.length) return fail(res, 422, "APPROVALS_MISSING", "Please switch on every required approval before signing.", { data: { missing } });
     const approvals = Object.fromEntries([...REQUIRED_APPROVALS.map((k) => [k, true]), ...OPTIONAL_APPROVALS.map((k) => [k, a[k] === true])]);
@@ -71,7 +71,7 @@ router.post("/consent", limits.consent, wrap(async (req, res) => {
         language: short(b.language, 10) || "en",
         approvals,
         clausesReviewed: Array.isArray(b.clausesReviewed) ? b.clausesReviewed.map(Number).filter((n) => Number.isInteger(n) && n > 0 && n < 100).slice(0, 60) : [],
-        clientTime: short(b.clientTime, 40),
+        clientTime: short(b.clientTime || b.acceptedAt, 40),
         timezone: short(b.timezone, 60),
         ipHash: ipHash(clientIp(req)),
         userAgent: short(req.headers["user-agent"], 300),
@@ -82,13 +82,9 @@ router.post("/consent", limits.consent, wrap(async (req, res) => {
     await sendSegmentMail(req.user, "consent-signed", {
         consent: { version: segment.termsVersion, signedAt: record.acceptedAt.toISOString(), optionalCount: OPTIONAL_APPROVALS.filter((k) => approvals[k]).length },
     });
-    ok(res, "Your consent has been recorded.", {
-        consentId: record.consentId,
-        termsVersion: record.termsVersion,
-        acceptedAt: record.acceptedAt,
-        approvals,
-        next: segment.dashboard,
-    });
+    const data = { consentId: record.consentId, termsVersion: record.termsVersion, acceptedAt: record.acceptedAt, approvals, next: segment.dashboard };
+    // consentId also at the top level: the supplied consent pages read it there for the certificate
+    res.json({ status: "success", message: "Your consent has been recorded.", ok: true, consentId: record.consentId, data });
 }));
 
 router.post("/consent/decline", limits.consent, wrap(async (req, res) => {

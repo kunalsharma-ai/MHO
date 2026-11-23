@@ -2,12 +2,12 @@
 import { useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import { HeartMark } from '../components/Brand.jsx';
-import { Field, PasswordField, Captcha } from '../components/FormKit.jsx';
+import { Field, PasswordField } from '../components/FormKit.jsx';
+import { ServerCaptcha, accountCall, NETWORK_ERROR } from '../components/AccountKit.jsx';
 import { LiveZone } from '../components/ui.jsx';
 import SocialLogin from '../components/SocialLogin.jsx';
 import { Link } from '../router.jsx';
-import { API } from '../config/site.js';
-import { validateEmail, apiRequest, auth, resetLimit, track } from '../utils/helpers.js';
+import { validateEmail, auth, track } from '../utils/helpers.js';
 import { syncPendingAnswers } from '../utils/pendingAnswers.js';
 import { useGuestOnly } from '../utils/session.js';
 import Persona from '../components/Persona.jsx';
@@ -26,7 +26,8 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
   const [remember, setRemember] = useState(false);
-  const [human, setHuman] = useState(false);
+  const [cap, setCap] = useState({ id: '', answer: '' });
+  const [unverified, setUnverified] = useState(false); // the account exists but the email was never confirmed
   const [capKey, setCapKey] = useState(0);
   const [err, setErr] = useState({});
   const [state, setState] = useState('form');
@@ -47,35 +48,48 @@ export default function Login() {
     const x = {};
     const em = validateEmail(email); if (em) x.email = em;
     if (!pw) x.password = 'Please enter your password.';
-    if (!human) x.captcha = 'Please complete the human check.';
+    if (!cap.answer.trim()) x.captcha = 'Please type the security code.';
     setErr(x);
     if (Object.keys(x).length) return;
     setState('sending');
     setAlert('');
     setNotice('');
-    const res = await apiRequest('POST', API.login, { mail: email.trim().toLowerCase(), password: pw, remember });
+    setUnverified(false);
+    // POST /api/v1/account/login checks the CAPTCHA, the password and that the email is verified. Unknown email and
+    // wrong password give the same answer, so the form never reveals who has an account.
+    const res = await accountCall('POST', '/login', { email: email.trim().toLowerCase(), password: pw, remember, captcha: cap });
     if (!res.ok) {
       setState('form');
-      const msg = res.data?.message || '';
-      setAlert(res.status === 0 ? 'We could not reach the server. Check your connection and try again.' : /invalid|password/i.test(msg) ? 'That email and password do not match. Please try again.' : msg || 'We could not log you in right now. Please try again shortly.');
       setCapKey((k) => k + 1);
-      setHuman(false);
+      if (res.status === 0) setAlert(NETWORK_ERROR);
+      else if (res.code === 'CAPTCHA_FAILED') setErr({ captcha: 'That security code was not right. Try the new one.' });
+      else if (res.code === 'EMAIL_UNVERIFIED') { setUnverified(true); setAlert('Please confirm your email address first. Open the link we emailed you, or ask for a new one below.'); }
+      else if (res.code === 'RATE_LIMITED') setAlert('Too many attempts. Please wait a few minutes and try again.');
+      else if (res.code === 'ACCOUNT_INACTIVE') setAlert('This account is not active. Please contact support.');
+      else setAlert(res.code === 'BAD_CREDENTIALS' ? 'That email and password do not match. Please try again.' : res.message || 'We could not log you in right now. Please try again shortly.');
       return;
     }
-    // Login worked (status "success"). Same as web-1: go straight to the member area. If the backend also sent a token,
-    // keep it under "token" (the member area sends it as "Authorization: Bearer"); it is not required to continue.
-    const token = res.data?.token || res.data?.data?.token || '';
+    const token = res.data?.token || '';
     if (token) auth.setToken(token);
     track('login', { method: 'email' });
     setState('done');
-    if (!res.preview) {
-      // Answers given at sign-up wait in this browser: save them to the account now that it is logged in — with the token, or with the
-      // login cookie when the back-end gives no token (never blocks the login for long).
-      await Promise.race([syncPendingAnswers({ email: email.trim().toLowerCase() }), new Promise((r) => setTimeout(r, 6000))]);
-      // replace(), not assign(): the log-in page must not stay in the browser history, otherwise the Back arrow of a logged-in person
-      // (or of the next person using this computer) leads straight back to the log-in form.
-      window.location.replace('/member/profiles');
-    }
+    // Answers given at sign-up wait in this browser: save them to the account now that it is logged in (never blocks for long).
+    await Promise.race([syncPendingAnswers({ email: email.trim().toLowerCase() }), new Promise((r) => setTimeout(r, 6000))]);
+    // The journey decides the next page: consent form for this member's segment, or the dashboard.
+    // replace(), not assign(): the log-in page must not stay in the browser history.
+    window.location.replace(res.data?.journey?.nextUrl || '/member/dashboard');
+  };
+
+  const [resendState, setResendState] = useState('');
+  const resend = async () => {
+    if (!cap.answer.trim()) { setErr({ captcha: 'Type the new security code first, then ask for the link.' }); return; }
+    setErr({});
+    setResendState('sending');
+    const r = await accountCall('POST', '/resend-verification', { email: email.trim().toLowerCase(), captcha: cap });
+    setCapKey((k) => k + 1);
+    if (r.code === 'CAPTCHA_FAILED') { setResendState(''); setErr({ captcha: 'That security code was not right. Try the new one.' }); return; }
+    setResendState(r.ok ? 'sent' : ''); // same answer whatever the account state, so nobody can probe which emails exist
+    if (!r.ok) setAlert(r.status === 0 ? NETWORK_ERROR : r.code === 'RATE_LIMITED' ? 'Too many requests. Please try again in an hour.' : r.message);
   };
 
   // "Forgot password?" only OPENS the reset panel — nothing is sent until the person presses "Send reset link".
@@ -102,16 +116,15 @@ export default function Login() {
     const em = validateEmail(email);
     if (em) { setErr({ email: em }); return; }
     setErr({});
-    if (!resetLimit.canSend()) { setAlert('Maximum requests reached for today. Please try again after 24 hours.'); return; }
     setFpState('sending');
-    const res = await apiRequest('POST', API.forgot, { user: email.trim().toLowerCase() });
+    const res = await accountCall('POST', '/forgot-password', { email: email.trim().toLowerCase() });
     if (!res.ok) {
       setFpState('form');
-      setAlert(res.status === 0 ? 'We could not reach the server. Check your connection and try again.' : res.data?.message || 'We could not send the reset link right now. Please try again shortly.');
+      setAlert(res.status === 0 ? NETWORK_ERROR : res.code === 'RATE_LIMITED' ? 'Too many requests. Please try again in an hour.' : res.message || 'We could not send the reset link right now. Please try again shortly.');
       return;
     }
-    resetLimit.record();
-    setNotice(res.data?.message || 'A password reset link has been sent to your mailbox. Please check your email and proceed.');
+    // The API answers the same for every address (no account enumeration).
+    setNotice('If that email is registered, a link to create a new password is on its way. It works once and expires in 24 hours.');
     setFpState('sent');
   };
 
@@ -196,9 +209,14 @@ export default function Login() {
                 <label className="lc-remember"><input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} /><span aria-hidden="true" />Keep me signed in</label>
                 <a href="/login" onClick={openForgot}>Forgot password?</a>
               </div>
-              <Captcha onChange={setHuman} invalid={!!err.captcha} resetKey={capKey} />
-              {err.captcha && <p className="field-error" role="alert"><Icon name="info" size={14} /> {err.captcha}</p>}
+              <ServerCaptcha value={cap} onChange={setCap} error={err.captcha} resetKey={capKey} />
               {alert && <p className="form-alert" role="alert">{alert}</p>}
+              {unverified && (
+                <button type="button" className="btn btn-ghost btn-block" onClick={resend} disabled={resendState !== ''}>
+                  <span className="btn-label">{resendState === 'sent' ? 'If the account needs it, a new link is on its way' : resendState === 'sending' ? 'Sending…' : 'Email me a new confirmation link'}</span>
+                  <Icon name="mail" size={18} />
+                </button>
+              )}
               <button className="btn btn-primary btn-block" type="submit" disabled={state === 'sending'}>
                 <span className="btn-label">{state === 'sending' ? 'Checking…' : 'Log in securely'}</span>
                 <Icon name="lock" size={18} />

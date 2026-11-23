@@ -39,6 +39,9 @@ export const API = {
   // Account endpoints of the working backend (same ones web-1 uses). They are same-origin: the backend
   // identifies the site by the Host header, so this site and /api/v1 must be served from one domain.
   register: env('REGISTER_URL', '/api/v1/user'), // PUT = create account (+ verification email); PATCH = set password; POST /:id = verify link
+  // Secure account flow (backend routes/api/Account.js): register, verify link, set/reset password, login, CAPTCHA, location.
+  account: env('ACCOUNT_URL', '/api/v1/account'),
+  journey: env('JOURNEY_URL', '/api/v1/me/journey'), // GET → { next, nextUrl, consent, emailVerified } where the member goes next
   login: env('LOGIN_URL', '/api/v1/user/login'), // POST { mail, password, remember } → { status, token }
   resend: env('RESEND_URL', '/api/v1/user'), // POST { mail } → re-sends the verification email
   forgot: env('FORGOT_URL', '/api/v1/forgot-password'), // POST { user: <email> } → reset link by email
@@ -62,7 +65,7 @@ export const ANALYTICS = {
 };
 
 // Minimum participant age enforced in the sign-up form (server must enforce it too).
-export const MIN_AGE = Number(env('MIN_AGE', 14));
+export const MIN_AGE = Number(env('MIN_AGE', 18)) // Kunal 2026-11-23: new sign-ups are 18+ only;
 
 // true only for `npm run dev` and the single-file review preview: forms simulate a successful
 // submission locally instead of calling the backend. Always false in production builds.

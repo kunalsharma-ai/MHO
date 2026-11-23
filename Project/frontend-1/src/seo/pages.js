@@ -210,6 +210,30 @@ export const PAGES = {
     robots: 'noindex, nofollow',
     sitemap: false,
   },
+  '/set-password': {
+    name: 'Create password',
+    title: 'Create Your Password | MyHealthOpinions',
+    description:
+      'Confirm your email and create or reset your MyHealthOpinions password to finish setting up your account securely.',
+    primary: 'MyHealthOpinions password',
+    secondary: [],
+    changefreq: 'yearly',
+    priority: '0.1',
+    robots: 'noindex, nofollow',
+    sitemap: false,
+  },
+  '/forgot-password': {
+    name: 'Reset password',
+    title: 'Reset Your Password | MyHealthOpinions',
+    description:
+      'Confirm your email and create or reset your MyHealthOpinions password to finish setting up your account securely.',
+    primary: 'MyHealthOpinions password',
+    secondary: [],
+    changefreq: 'yearly',
+    priority: '0.1',
+    robots: 'noindex, nofollow',
+    sitemap: false,
+  },
   '/auth/password': {
     name: 'Create password',
     title: 'Create Your Password | MyHealthOpinions',
