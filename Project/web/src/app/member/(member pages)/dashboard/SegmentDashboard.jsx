@@ -46,6 +46,7 @@ const LOOK = {
   },
 };
 
+const SHOWN = 7; // profile sections listed before "Show all"
 const fmt = (n) => Number(n || 0).toLocaleString();
 const day = (d) => (d ? new Date(d).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : "");
 const greeting = () => {
@@ -152,6 +153,7 @@ function nextStep(d) {
 export default function SegmentDashboard({ member }) {
   const [d, setD] = React.useState(null);
   const [error, setError] = React.useState("");
+  const [allSections, setAllSections] = React.useState(false);
   React.useEffect(() => {
     let live = true;
     api
@@ -241,8 +243,8 @@ export default function SegmentDashboard({ member }) {
           {d.profile.sections.length ? (
             <div className={s.profileBody}>
               <Ring value={d.profile.overall} />
-              <ul className={s.sections}>
-                {d.profile.sections.map((x) => (
+              <ul className={s.sections} id="mho-profile-sections">
+                {(allSections ? d.profile.sections : d.profile.sections.slice(0, SHOWN)).map((x) => (
                   <li key={x.slug || x.name}>
                     <span>{x.name}</span>
                     <span className={s.bar} aria-hidden="true"><i style={{ width: `${x.percent}%` }} /></span>
@@ -250,6 +252,11 @@ export default function SegmentDashboard({ member }) {
                   </li>
                 ))}
               </ul>
+              {d.profile.sections.length > SHOWN && (
+                <button type="button" className={s.more} aria-expanded={allSections} aria-controls="mho-profile-sections" onClick={() => setAllSections((v) => !v)}>
+                  {allSections ? "Show fewer" : `Show all ${d.profile.sections.length} sections`}
+                </button>
+              )}
             </div>
           ) : (
             <p className={s.empty}>No profile sections are set up for your panel yet.</p>
