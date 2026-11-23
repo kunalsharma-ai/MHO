@@ -30,13 +30,15 @@ class ProfileController extends CrudController {
 
     const QuestionModel = mongoose.model("Question");
     const OptionModel = mongoose.model("Option");
-    const ValidationModel = mongoose.model("Validation");
+    // No "Validation" model is defined in this codebase; without this guard every POST /api/v1/profile failed with
+    // "Schema hasn't been registered for model Validation". When the model exists, its parent values are used as before.
+    const ValidationModel = mongoose.modelNames().includes("Validation") ? mongoose.model("Validation") : null;
     const AnswerModel = mongoose.model("Answer");
 
     const [questionDefs, optionDocs, validationDocs, userAnswers] = await Promise.all([
       QuestionModel.find({ name: { $in: allNamesArr } }).select("_id name parent").lean(),
       OptionModel.find({ question: { $in: allNamesArr } }).select("question parentValue").lean(),
-      ValidationModel.find({ question: { $in: allNamesArr } }).select("question parentValue").lean(),
+      ValidationModel ? ValidationModel.find({ question: { $in: allNamesArr } }).select("question parentValue").lean() : [],
       AnswerModel.find({ user: userId, question: { $in: allNamesArr } }).select("question answer").lean(),
     ]);
 

@@ -1,0 +1,896 @@
+"use client";
+
+import React from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  Stack,
+  Typography,
+  IconButton,
+  Avatar,
+  Button,
+  Chip,
+  Divider,
+  CircularProgress,
+  Collapse,
+} from "@mui/material";
+import { motion } from "framer-motion";
+
+import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
+import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import CardGiftcardOutlinedIcon from "@mui/icons-material/CardGiftcardOutlined";
+
+import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
+import DataCards from "@/components/DataCards";
+
+import { loadData, api } from "@/util";
+import { useQuery, useMember } from "@/Context";
+import { SurveyPoints } from "../../components";
+import ProfileSection from "../../components/ProfileSection";
+import SectionCard from "../../components/SectionCard";
+import { SurveyHistory } from "../dashboard/page_legacy";
+import {useTourActive} from "@/Context/tourStore";
+import mockSurveys from "@/mockData/surveys";
+
+const permittedStatus = ["invited", "dropout"];
+
+const norm = (v) => String(v ?? "").trim().toLowerCase();
+const toList = (v) => {
+  if (v === null || v === undefined) return [];
+  if (Array.isArray(v)) return v.flatMap(toList);
+  if (typeof v === "object") return toList(v.answer ?? v.Answer ?? v.value);
+  return [norm(v)];
+};
+const isEligible = (survey, answers) =>
+  Object.entries(survey.filters || {}).every(([key, allowed]) => {
+    const list = [].concat(allowed).map(norm);
+    return toList(answers?.[key]).some((a) => list.includes(a));
+  });
+
+const MotionBox = motion.create(Box);
+const MotionGrid = motion.create(Grid);
+const MotionCard = motion.create(Card);
+const containerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const fadeUp = {
+  hidden: {
+    opacity: 0,
+    y: 24,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.45,
+      ease: "easeOut",
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: {
+    opacity: 0,
+    y: 30,
+    scale: 0.96,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.45,
+      ease: "easeOut",
+    },
+  },
+};
+
+export default function SurveyDashboard() {
+  const member = useMember();
+  const sectionUser = ["patient", "care giver", "healthcare professional"].includes(member?.category?.trim().toLowerCase());
+  const stepHandle = React.useRef(null);
+  const [stepItems, setStepItems] = React.useState([]);
+  const [query] = [useQuery()];
+  const [surveys, setSurveys] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const tourActive = useTourActive();
+  React.useEffect(() => {
+  setIsLoading(true);
+  if (tourActive) {
+    setIsLoading(false);
+    return;
+  }
+  loadData(
+    (async () => {
+      const resp = await api.post(`/api/v1/me/survey`, {
+        source: query.source,
+        status: "active",
+      });
+      const list = resp?.data || [];
+      const keys = [...new Set(list.flatMap((s) => Object.keys(s.filters || {})))];
+      console.log("1) surveys:", list.length, "| filter keys:", keys);
+      if (!keys.length) return resp;
+
+      let answers = {};
+      try {
+        const me = await api.post(`/api/v1/me`, { questions: keys });
+        answers = me?.data || {};
+        console.log("2) answers:", answers);
+      } catch (e) {
+        console.log("2) me call failed:", e);
+      }
+
+      const filtered = list.filter((s) =>
+        Object.keys(s.filters || {}).length === 0 ? true : isEligible(s, answers)
+      );
+      console.log("3) after filter:", filtered.length);
+      return { ...resp, data: filtered };
+    })(),
+    (resp) => setSurveys(Array.isArray(resp?.data) ? resp.data : []), // an error answer has no list: show none instead of crashing
+    () => setIsLoading(false),
+  );
+}, [query, tourActive]);
+
+  // const dummySurveys = [
+  //   {
+  //     id: 1,
+  //     name: "Healthcare Habits Survey",
+  //     slug: "healthcare-habits-survey",
+  //     points: 350,
+  //     loi: 8,
+  //     surveyCategory: "health",
+  //     participationStatus: "invited",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Daily Shopping Preferences",
+  //     slug: "daily-shopping-preferences",
+  //     points: 500,
+  //     loi: 12,
+  //     surveyCategory: "shopping",
+  //     participationStatus: "invited",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Travel & Vacation Planning",
+  //     slug: "travel-vacation-planning",
+  //     points: 700,
+  //     loi: 18,
+  //     surveyCategory: "travel",
+  //     participationStatus: "dropout",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Fitness & Sports Lifestyle",
+  //     slug: "fitness-sports-lifestyle",
+  //     points: 450,
+  //     loi: 10,
+  //     surveyCategory: "sports",
+  //     participationStatus: "invited",
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Mobile Technology Usage",
+  //     slug: "mobile-technology-usage",
+  //     points: 800,
+  //     loi: 20,
+  //     surveyCategory: "media, electronics, mobile & technology",
+  //     participationStatus: "invited",
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Financial Planning Study",
+  //     slug: "financial-planning-study",
+  //     points: 900,
+  //     loi: 25,
+  //     surveyCategory: "financial",
+  //     participationStatus: "invited",
+  //   },
+  //   {
+  //     id: 7,
+  //     name: "Beauty & Fashion Trends",
+  //     slug: "beauty-fashion-trends",
+  //     points: 400,
+  //     loi: 7,
+  //     surveyCategory: "beauty & fashion",
+  //     participationStatus: "dropout",
+  //   },
+  //   {
+  //     id: 8,
+  //     name: "Food & Lifestyle Choices",
+  //     slug: "food-lifestyle-choices",
+  //     points: 550,
+  //     loi: 15,
+  //     surveyCategory: "Lifestyle and food",
+  //     participationStatus: "invited",
+  //   },
+  // ];
+ const displayedSurveys = tourActive ? mockSurveys.data: surveys;
+  const stepRows = stepItems.map((item) => ({
+    kind: "profile",
+    slug: `step-${item.id}`,
+    name: item.name,
+    surveyCategory: "health",
+    points: item.points,
+    loi: Math.max(1, Math.round((item.questions * 8) / 60)),
+    participationStatus: item.done ? "complete" : "invited",
+    locked: item.locked,
+    done: item.done,
+    started: item.pct > 0,
+    item,
+  }));
+  const availableSurveys = [...stepRows, ...(displayedSurveys || [])].filter((s) =>
+    permittedStatus.includes(s.participationStatus),
+  );
+  // const availableSurveys = dummySurveys?.filter((s) =>
+  //   permittedStatus.includes(s.participationStatus),
+  // );
+
+
+
+
+  const stats = [
+    {
+      title: "Available Surveys",
+      value: availableSurveys?.length,
+      subtitle: "Surveys",
+      icon: <AssignmentOutlinedIcon />,
+      color: "#3B82F6",
+      bg: "#EFF6FF",
+    },
+    {
+      title: "Total Earning Opportunity",
+      value:
+        availableSurveys.length === 0
+          ? `-`
+          : `${availableSurveys?.reduce((sum, survey) => sum + survey.points, 0)} pts`,
+      subtitle: "Across all surveys",
+      icon: <AccountBalanceWalletOutlinedIcon />,
+      color: "#16A34A",
+      bg: "#ECFDF3",
+    },
+    {
+      title: "Estimated Time",
+      value:
+        availableSurveys.length === 0
+          ? `-`
+          : `${Math.round(availableSurveys?.reduce((sum, survey) => sum + survey.loi, 0) / availableSurveys?.length)} min`,
+      subtitle: "On average",
+      icon: <AccessTimeOutlinedIcon />,
+      color: "#7C3AED",
+      bg: "#F5F3FF",
+    },
+    {
+      title: "Average Reward",
+      value:
+        availableSurveys.length === 0
+          ? `-`
+          : `${Math.round(availableSurveys?.reduce((sum, survey) => sum + survey.points, 0) / availableSurveys?.length)} pts`,
+      subtitle: "Per survey",
+      icon: <CardGiftcardOutlinedIcon />,
+      color: "#F59E0B",
+      bg: "#FFFBEB",
+    },
+  ];
+
+  return (
+    <MotionBox
+      initial="hidden"
+      animate="show"
+      variants={containerVariants}
+      sx={{
+        p: { xs: 1, md: 2.5 },
+        bgcolor: "#eff3f5",
+      }}
+    >
+      <MotionGrid
+        variants={fadeUp}
+        container
+        justifyContent="space-between"
+        alignItems="flex-start"
+        mb={3}
+        spacing={{ xs: 3, md: 0 }}
+      >
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Typography
+            fontSize={{ xs: 20, md: 26 }}
+            fontWeight={700}
+            color="text.primary"
+          >
+            Available Surveys
+          </Typography>
+
+          <Typography variant="body1" color="text.secondary">
+            Complete surveys, share your opinion and earn rewards.
+          </Typography>
+        </Grid>
+
+        <SurveyPoints onUpdate={() => {}} />
+      </MotionGrid>
+      {availableSurveys.length !== 0 && !isLoading && (
+        <Box data-tour="surveys-stats">
+        <SurveyStat stats={stats} isLoading={isLoading} />
+        </Box>
+      )}
+      <MotionBox variants={fadeUp}>
+        <Divider sx={{ my: 2, bgcolor: "#ffe" }} />
+      </MotionBox>
+      <ProfileSection view="headless" categories={["patient", "care giver", "healthcare professional"]} handleRef={stepHandle} onItems={setStepItems} />
+      <Box 
+       data-tour="surveys-list">
+      <SurveyList surveys={[...stepRows, ...displayedSurveys]} query={query} isLoading={isLoading} sectionUser={sectionUser} handle={stepHandle.current} />
+      </Box>
+      {/* <SurveyList surveys={dummySurveys} query={query} isLoading={isLoading} /> */}
+      <Divider sx={{ my: 2, bgcolor: "#ffe" }} />
+      <MotionBox  data-tour="surveys-historys" variants={fadeUp}>
+        <SurveyHistory />
+      </MotionBox>
+    </MotionBox>
+  );
+}
+
+function SurveyStat({ stats, isLoading }) {
+  return (
+    <>
+      <MotionGrid container spacing={3} variants={containerVariants}>
+        {stats.map((item, index) => (
+          <MotionGrid
+            key={index}
+            variants={cardVariants}
+            whileHover={{
+              y: -6,
+              transition: { duration: 0.2 },
+            }}
+            size={{
+              xs: 12,
+              sm: 6,
+              md: 4,
+              lg: 3,
+            }}
+          >
+            <MotionCard
+              whileHover={{
+                scale: 1.02,
+              }}
+              elevation={0}
+              sx={{
+                height: "100%",
+                borderRadius: 4,
+                border: "1px solid",
+                borderColor: "divider",
+              }}
+            >
+              <CardContent sx={{ p: 2.5 }}>
+                {isLoading ? (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      display: "inline-flex",
+                      zIndex: 10,
+                    }}
+                  >
+                    <CircularProgress
+                      sx={{ color: "primary.main" }}
+                      thickness={2}
+                    />
+                  </Box>
+                ) : (
+                  <Stack direction="row" spacing={2} alignItems="flex-start">
+                    <Avatar
+                      sx={{
+                        width: 56,
+                        height: 56,
+                        bgcolor: item.bg,
+                        color: item.color,
+                      }}
+                    >
+                      {item.icon}
+                    </Avatar>
+
+                    <Box>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        fontWeight={600}
+                        mb={1}
+                      >
+                        {item.title}
+                      </Typography>
+
+                      <Typography variant="h5" fontWeight={700}>
+                        {item.value}
+                      </Typography>
+
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        mt={0.5}
+                      >
+                        {item.subtitle}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                )}
+              </CardContent>
+            </MotionCard>
+          </MotionGrid>
+        ))}
+      </MotionGrid>
+    </>
+  );
+}
+
+function SurveyList({ surveys, query, isLoading, sectionUser, handle }) {
+  const pageSize = Math.max(4, surveys.filter((row) => row.kind === "profile").length + 4);
+  const [activeFilter, setActiveFilter] = React.useState(
+    !query.filter || query.filter === "null" || query.filter === "undefined"
+      ? "All New Surveys"
+      : query.filter,
+  );
+  console.log(activeFilter);
+  const filters = [
+    {
+      label: "All New Surveys",
+      badge: "New",
+    },
+    {
+      label: "High Reward Surveys",
+      filter: (survey) => (survey.kind === "profile" ? survey.points > 50 : survey.points > 500),
+    },
+    {
+      label: "Short Surveys",
+      filter: (survey) => (survey.kind === "profile" ? survey.points <= 50 : survey.loi <= 5),
+    },
+    // {
+    //   label: "New Surveys",
+    //   badge: "New",
+    //   filter: (survey) => survey.participationStatus === "invited",
+    // },
+  ];
+
+  return (
+    <Box sx={{ mt: 2 }}>
+      <DataCards
+        key={pageSize}
+        data={surveys}
+        isLoading={isLoading}
+        filter={filters.find((filter) => filter.label === activeFilter)}
+        pageSize={pageSize}
+        pagination={[...new Set([pageSize, 4, 8, 12, 20])].sort((a, b) => a - b)}
+        getSearchText={(row) => row.name}
+        emptyMessage="No surveys available."
+        renderToolbar={() => (
+          <MotionBox
+            variants={fadeUp}
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 1.5,
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
+            {filters.map((filter) => {
+              const active = activeFilter === filter.label;
+
+              return (
+                <Button
+                  key={filter.label}
+                  variant={active ? "contained" : "outlined"}
+                  color={active ? "primary" : "inherit"}
+                  onClick={() => setActiveFilter(filter.label)}
+                  sx={{
+                    height: 34,
+                    px: 1.5,
+                    borderRadius: 2,
+                    textTransform: "none",
+                    fontWeight: 700,
+                    borderColor: "divider",
+                    bgcolor: active ? "secondary.main" : "#fff",
+                    color: active ? "#fff" : "text.primary",
+                    boxShadow: "none",
+                    "&:hover": {
+                      boxShadow: 1,
+                    },
+                  }}
+                >
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Typography variant="body2" fontWeight={700}>
+                      {filter.label}
+                    </Typography>
+
+                    {filter.badge && (
+                      <Chip
+                        label={filter.badge}
+                        size="small"
+                        color="success"
+                        sx={{
+                          height: 20,
+                          fontSize: 10,
+                          fontWeight: 600,
+                          color: "#fff",
+                          background:
+                            "linear-gradient(45deg, #00c853, #64dd17)",
+                        }}
+                      />
+                    )}
+                  </Stack>
+                </Button>
+              );
+            })}
+          </MotionBox>
+        )}
+        card={(row) =>
+          sectionUser ? (
+            <SurveyCell row={row} n={surveys.indexOf(row) + 1} handle={handle} />
+          ) : (
+            <SurveyCard survey={row} />
+          )
+        }
+        cardProps={{
+          elevation: 0,
+          sx: {
+            mt: 1,
+            borderRadius: 4,
+            border: "1px solid",
+            borderColor: "divider",
+          },
+        }}
+      />
+    </Box>
+  );
+}
+
+const getCategoryData = (survey) => {
+  const categories = [
+    { name: "basic", icon: "fa-id-card-clip", color: "#1E40AF" },
+    { name: "professional", icon: "fa-user-tie", color: "#1F2937" },
+    { name: "educational", icon: "fa-graduation-cap", color: "#7C3AED" },
+    {
+      name: "Survey and Rewards",
+      icon: "fa-clipboard-list",
+      color: "#16A34A",
+    },
+    { name: "financial", icon: "fa-circle-dollar-to-slot", color: "#CA8A04" },
+    { name: "parenting", icon: "fa-people-roof", color: "#DB2777" },
+    {
+      name: "Home and Pet Ownership",
+      icon: "fa-house-chimney",
+      color: "#EA580C",
+    },
+    { name: "shopping", icon: "fa-cart-shopping", color: "#E11D48" },
+    { name: "Lifestyle and food", icon: "fa-utensils", color: "#B45309" },
+    { name: "travel", icon: "fa-plane-departure", color: "#0E7490" },
+    { name: "automobile", icon: "fa-car-side", color: "#334155" },
+    { name: "health", icon: "fa-heart-pulse", color: "#DC2626" },
+    { name: "beauty & fashion", icon: "fa-hand-dots", color: "#C026D3" },
+    {
+      name: "media, electronics, mobile & technology",
+      icon: "fa-microchip",
+      color: "#4338CA",
+    },
+    { name: "sports", icon: "fa-basketball", color: "#F59E0B" },
+    { name: "gaming", icon: "fa-gamepad", color: "#7C3AED" },
+  ];
+
+  const surveyCategory = survey.surveyCategory || "";
+
+  return (
+    categories.find(
+      (cat) =>
+        surveyCategory.toLowerCase().includes(cat.name.toLowerCase()) ||
+        cat.name.toLowerCase().includes(surveyCategory.toLowerCase()),
+    ) || { icon: "fa-clipboard-list", color: "#64748B" }
+  );
+};
+
+function externalItem(row, n) {
+  const status = row.participationStatus;
+  const startable = permittedStatus.includes(status);
+  const done = status === "complete";
+  const color = getCategoryData(row).color;
+  return {
+    n,
+    p: {
+      id: `ext-${row.slug}`,
+      icon: "survey.svg",
+      pattern: "dots",
+      emoji: "\u{1F4DD}",
+      palette: [color, `${color}cc`, `${color}22`],
+      flavor: row.surveyCategory || "Survey",
+      title: row.name,
+      blurb: "Share your opinion by completing this survey and earn rewards.",
+      questions: [],
+      external: { minutes: row.loi, points: row.points ?? 0 },
+      badge: status === "invited" ? "New" : undefined,
+      cta: startable ? (status === "dropout" ? "Continue" : undefined) : done ? "Completed" : String(status || ""),
+      disabled: !startable,
+    },
+    st: { status: done ? "done" : "todo", pct: 0, total: 0 },
+    ac: { locked: false },
+    lock: null,
+    onOpen: () => {
+      if (startable) window.location.href = `/survey?name=${row.slug}`;
+    },
+  };
+}
+
+function SurveyCell({ row, n, handle }) {
+  const item = React.useMemo(
+    () => (row.kind === "profile" ? { ...row.item, n } : externalItem(row, n)),
+    [row, n],
+  );
+  if (!handle) return <Box sx={{ minHeight: 260 }} />;
+  return <SectionCard handle={handle} item={item} />;
+}
+
+function SurveyCard({ survey }) {
+  const category = getCategoryData(survey);
+  const darkColor = category.color;
+  const lightBg = darkColor + "20";
+
+  const descriptionMap = {
+    health: "Share your healthcare habits and help improve health awareness.",
+    shopping: "Tell us about your shopping preferences and purchasing habits.",
+    travel: "Share your travel experiences and vacation planning preferences.",
+    sports: "Help us understand your fitness and sports lifestyle.",
+    financial: "Share your financial planning and spending habits.",
+    "beauty & fashion":
+      "Tell us about your beauty routines and fashion preferences.",
+    "Lifestyle and food": "Share your food choices and lifestyle preferences.",
+    "media, electronics, mobile & technology":
+      "Help us understand your technology and mobile device usage.",
+  };
+  const lightenColor = (hex, amount = 45) => {
+    const num = parseInt(hex.replace("#", ""), 16);
+    let r = (num >> 16) + amount;
+    let g = ((num >> 8) & 0x00ff) + amount;
+    let b = (num & 0x0000ff) + amount;
+
+    r = Math.min(255, r);
+    g = Math.min(255, g);
+    b = Math.min(255, b);
+
+    return `rgb(${r}, ${g}, ${b})`;
+  };
+
+  const gradientColor = lightenColor(darkColor, 45);
+
+  return (
+    <Box
+      sx={(theme) => ({
+        p: { xs: 1, md: 3 },
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        borderRadius: 5,
+        color: "#fff",
+        position: "relative",
+        overflow: "hidden",
+        background: `linear-gradient(145deg, ${gradientColor} 0%, ${darkColor} 100%)`,
+        boxShadow: `0 15px 35px ${darkColor}30`,
+        transition: ".35s ease",
+
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          width: 180,
+          height: 180,
+          borderRadius: "50%",
+          background: "rgba(255,255,255,.08)",
+          top: -90,
+          right: -70,
+        },
+
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          width: 120,
+          height: 120,
+          borderRadius: "50%",
+          background: "rgba(255,255,255,.05)",
+          bottom: -60,
+          left: -40,
+        },
+
+        "& > *": {
+          position: "relative",
+          zIndex: 2,
+        },
+
+        "& .survey-icon": {
+          width: 95,
+          height: 95,
+          mb: 2,
+          bgcolor: "rgba(255,255,255,.18)",
+          backdropFilter: "blur(8px)",
+          color: "#fff",
+          border: "2px solid rgba(255,255,255,.25)",
+          boxShadow: "0 10px 30px rgba(0,0,0,.18)",
+          transition: ".35s",
+        },
+
+        "& .category": {
+          color: "rgba(255,255,255,.85)",
+          fontWeight: 600,
+          fontSize: 15,
+          mt: 0.5,
+          textTransform: "capitalize",
+        },
+
+        "& .desc": {
+          color: "rgba(255,255,255,.82)",
+          fontSize: 14,
+          lineHeight: 1.7,
+          mt: 2,
+          minHeight: 68,
+        },
+
+        "& .metric": {
+          display: "flex",
+          alignItems: "center",
+          gap: 0.75,
+          color: "#fff",
+          fontWeight: 600,
+        },
+
+        "& .survey-button": {
+          mt: "auto",
+          borderRadius: 2.5,
+          py: 1.2,
+          fontWeight: 700,
+          textTransform: "none",
+          bgcolor: "#fff",
+          color: darkColor,
+          boxShadow: "none",
+
+          "&:hover": {
+            bgcolor: "rgba(255,255,255,.92)",
+            boxShadow: 4,
+          },
+        },
+
+        "&:hover": {
+          transform: "translateY(-8px) scale(1.02)",
+          boxShadow: `0 22px 45px ${darkColor}50`,
+
+          "& .survey-icon": {
+            transform: "scale(1.1) rotate(-6deg)",
+          },
+        },
+      })}
+    >
+      {/* Status */}
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "flex-end",
+          mb: 1,
+        }}
+      >
+        {survey.participationStatus === "invited" ? (
+          <Chip
+            size="small"
+            label="New"
+            sx={{
+              bgcolor: "rgba(255,255,255,.18)",
+              color: "#fff",
+              fontWeight: 700,
+              backdropFilter: "blur(6px)",
+              border: "1px solid rgba(255,255,255,.2)",
+            }}
+          />
+        ) : (
+          <Chip
+            size="small"
+            label={survey.participationStatus}
+            color={
+              survey.participationStatus === "complete"
+                ? "success"
+                : survey.participationStatus === "dropout"
+                  ? "error"
+                  : "primary"
+            }
+            sx={{
+              textTransform: "capitalize",
+              color: "#fff",
+              fontWeight: 600,
+            }}
+          />
+        )}
+      </Box>
+
+      {/* Icon */}
+      <Avatar className="survey-icon">
+        <i className={`fa-solid ${category.icon}`} style={{ fontSize: 38 }} />
+      </Avatar>
+
+      {/* Title */}
+      <Typography
+        variant="h6"
+        fontWeight={700}
+        sx={{
+          color: "#fff",
+          lineHeight: 1.35,
+        }}
+      >
+        {survey.name}
+      </Typography>
+      {/* Category */}
+      <Typography className="category">{survey.surveyCategory}</Typography>
+
+      {/* Description */}
+      <Typography className="desc">
+        {descriptionMap[survey.surveyCategory] ??
+          "Share your opinion by completing this survey and earn rewards."}
+      </Typography>
+
+      {/* Time & Points */}
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        width="100%"
+        sx={{
+          mt: 2,
+          mb: 3,
+        }}
+      >
+        <Box className="metric">
+          <AccessTimeRoundedIcon sx={{ color: "#fff" }} />
+          <Typography fontWeight={600}>{survey.loi} mins</Typography>
+        </Box>
+
+        <Box className="metric">
+          <AccountBalanceWalletOutlinedIcon sx={{ color: "#fff" }} />
+          <Typography fontWeight={700}>{survey.points} pts</Typography>
+        </Box>
+      </Stack>
+
+      {survey.kind === "profile" ? (
+        <Button
+          className="survey-button"
+          fullWidth
+          variant="contained"
+          color="secondary"
+          onClick={survey.onOpen}
+        >
+          {survey.locked
+            ? "Locked"
+            : survey.done
+              ? "View Answers"
+              : survey.started
+                ? "Continue"
+                : "Start Survey"}
+        </Button>
+      ) : (
+        permittedStatus.includes(survey.participationStatus) && (
+          <Button
+            className="survey-button"
+            fullWidth
+            variant="contained"
+            color="secondary"
+            href={`/survey?name=${survey.slug}`}
+          >
+            Start Survey
+          </Button>
+        )
+      )}
+    </Box>
+  );
+}
