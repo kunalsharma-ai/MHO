@@ -11,7 +11,12 @@ import MemberNotification from "../components/MemberNotification";
 import OnboardingTour from "../components/OnboardingTour";
 import Icon from "./Icon";
 import { LANGS } from "./i18n";
-import { StudioProvider, useStudio, PALETTES, SIGNATURE, segFromCategory } from "./StudioContext";
+import { LOGO, LOGO_MARK } from "./art";
+import PageHero from "./PageHero";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import baseTheme from "@/theme/theme.js";
+import { StudioProvider, useStudio, PALETTES, SIGNATURE, segFromCategory, BalanceCtx, PANEL_ICON, greetingKey } from "./StudioContext";
+export { BalanceCtx, PANEL_ICON, greetingKey };
 import "./studio.css";
 
 const NAV = [
@@ -24,12 +29,8 @@ const NAV = [
   ["settings", "/member/settings", "settings", "nav-settings"],
   ["help", "/member/support", "help", "nav-support"],
 ];
-export const PANEL_ICON = { hcp: "stethoscope", caregiver: "hands", patient: "heart" };
 const initials = (m) => `${m?.name?.first?.[0] || ""}${m?.name?.last?.[0] || ""}`.toUpperCase() || "M";
-export const greetingKey = () => { const h = new Date().getHours(); return h < 12 ? "morning" : h < 17 ? "afternoon" : "evening"; };
 
-/** Reward balance shared by the header pill, the sidebar card and the dashboard. */
-export const BalanceCtx = React.createContext({ points: 0, threshold: 15000, rate: 0.001, ready: false });
 function useBalance(member) {
   const tick = useRewardsTick();
   const [b, setB] = React.useState({ points: 0, threshold: 15000, rate: 0.001, ready: false });
@@ -58,20 +59,10 @@ function usePopover() {
 }
 
 function Logo() {
-  const [broken, setBroken] = React.useState(false);
   return (
     <Link href="/member/dashboard" className="ms-logo" aria-label="My Health Opinions, dashboard">
-      {broken ? (
-        <span style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 800, fontSize: 17 }}>
-          <span style={{ width: 36, height: 36, borderRadius: 12, display: "grid", placeItems: "center", color: "#fff", background: "var(--grad)" }}><Icon name="heart" size={20} /></span>
-          <span className="full" style={{ height: "auto" }}>My Health Opinions</span>
-        </span>
-      ) : (
-        <>
-          <img className="full" src="/images/logo/My-Health-Opinions.png" alt="" onError={() => setBroken(true)} />
-          <img className="mark" src="/images/logo/logo.png" alt="" onError={() => setBroken(true)} />
-        </>
-      )}
+      <img className="full" src={LOGO} alt="My Health Opinions" width="396" height="110" />
+      <img className="mark" src={LOGO_MARK} alt="My Health Opinions" width="104" height="106" />
     </Link>
   );
 }
@@ -245,9 +236,20 @@ function Sidebar({ member }) {
   );
 }
 
+/** MUI theme of the member pages, recoloured with the chosen panel look or colour pattern. */
+function useMuiTheme(segment, palette) {
+  return React.useMemo(() => {
+    const [a, b] = PALETTES.find((p) => p.id === palette)?.swatch || SIGNATURE[segment] || SIGNATURE.patient;
+    return createTheme(baseTheme, { palette: { primary: { main: a, contrastText: "#fff" }, secondary: { main: b, contrastText: "#fff" } } });
+  }, [segment, palette]);
+}
+
 function Frame({ member, children }) {
   const { segment, palette, mode, dir, t } = useStudio();
   const balance = useBalance(member);
+  const muiTheme = useMuiTheme(segment, palette);
+  const path = usePathname() || "";
+  const isDash = /^\/member\/?(dashboard)?\/?$/.test(path);
   return (
     <BalanceCtx.Provider value={balance}>
       <div className="ms-root" data-seg={segment} data-palette={palette} data-mode={mode} dir={dir}>
@@ -256,7 +258,14 @@ function Frame({ member, children }) {
         <Header member={member} />
         <div className="ms-body">
           <Sidebar member={member} />
-          <main className="ms-main">{children}</main>
+          <main className="ms-main">
+            {isDash ? children : (
+              <div className="ms-dash">
+                <PageHero path={path} member={member} />
+                <ThemeProvider theme={muiTheme}><div className="ms-page">{children}</div></ThemeProvider>
+              </div>
+            )}
+          </main>
         </div>
       </div>
     </BalanceCtx.Provider>

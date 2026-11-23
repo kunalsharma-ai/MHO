@@ -12,16 +12,15 @@ import Link from "next/link";
 import { api } from "@/util";
 import Icon from "./Icon";
 import Scene from "./Scene";
-import { useStudio, useCountUp, PALETTES, SIGNATURE } from "./StudioContext";
+import { useStudio, useCountUp, PALETTES, SIGNATURE, BalanceCtx, PANEL_ICON, greetingKey } from "./StudioContext";
+import { art } from "./art";
 import { useCelebrations, CelebrationCard } from "./Celebrate";
-import { BalanceCtx, PANEL_ICON, greetingKey } from "./Shell";
 
 const SHOWN = 6; // profile sections listed before "Show all"
 const fmt = (n) => Number(n || 0).toLocaleString();
 const day = (d) => (d ? new Date(d).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : "");
 const ST = { "in-progress": "inProgress", completed: "completed", "not-qualified": "disqualified", "quota-full": "disqualified" };
 const PROFILE_NAME = { hcp: "Professional profile", caregiver: "Caring profile", patient: "Health profile" };
-const SURVEY_ICON = { hcp: "microscope", caregiver: "calendar", patient: "chat" };
 
 async function get(url) {
   try { const r = await api.get(url); return r && r.status !== "error" ? r.data ?? null : null; } catch { return null; }
@@ -53,7 +52,7 @@ function Ring({ pct, size = 46, stroke, children, className = "ring" }) {
   );
 }
 
-function Stat({ label, value, icon, tone, note, i }) {
+function Stat({ label, value, img, tone, note, i }) {
   const [v, ref] = useCountUp(value);
   const tilt = (e) => {
     const el = e.currentTarget, r = el.getBoundingClientRect();
@@ -63,7 +62,7 @@ function Stat({ label, value, icon, tone, note, i }) {
   const reset = (e) => { e.currentTarget.style.setProperty("--tx", "0deg"); e.currentTarget.style.setProperty("--ty", "0deg"); };
   return (
     <div className="ms-stat ms-reveal" ref={ref} style={{ "--tone": tone, "--i": i }} onPointerMove={tilt} onPointerLeave={reset}>
-      <span className="ic"><Icon name={icon} size={22} /></span>
+      <span className="ic3d"><img src={img} alt="" width="64" height="64" decoding="async" /></span>
       {note && <em>{note}</em>}
       <b>{fmt(v)}</b>
       <span>{label}</span>
@@ -90,6 +89,7 @@ function Hero({ d, member }) {
   const Cta = step.external ? "a" : Link;
   return (
     <section className="ms-hero" data-tour="greeting" aria-label={t(`${segment}Panel`)}>
+      <img className="ms-hero-bg" src={art(segment, "hero-welcome")} alt="" aria-hidden="true" decoding="async" />
       <div>
         <span className="ms-hero-tag"><i><Icon name={PANEL_ICON[segment]} size={15} /></i>{t(`${segment}Panel`)}</span>
         <h1>{t(greetingKey())} <span className="wave" aria-hidden="true">👋</span>{first && <span>{first}</span>}</h1>
@@ -114,16 +114,17 @@ function Hero({ d, member }) {
 }
 
 function Stats({ stats, rate }) {
-  const { t } = useStudio();
+  const { t, segment } = useStudio();
+  const im = (n) => art(segment, `icon-${n}`);
   const s = stats || {};
   const usd = (Number(s.points || 0) * rate).toFixed(2);
   return (
     <section className="ms-stats" data-tour="stats" aria-label={t("participated")}>
-      <Stat i={0} label={t("participated")} value={s.total} icon="surveys" tone="#3b82f6" />
-      <Stat i={1} label={t("completed")} value={s.complete} icon="check" tone="#12b76a" />
-      <Stat i={2} label={t("disqualified")} value={s.disqualified} icon="x" tone="#f04438" />
-      <Stat i={3} label={t("earned")} value={s.points} icon="star" tone="#f59e0b" note={`$${usd}`} />
-      <Stat i={4} label={t("claimed")} value={Math.round(Number(s.claimed || 0) / 100)} icon="gift" tone="#8b5cf6" note="USD" />
+      <Stat i={0} label={t("participated")} value={s.total} img={im("doc")} tone="#3b82f6" />
+      <Stat i={1} label={t("completed")} value={s.complete} img={im("check")} tone="#12b76a" />
+      <Stat i={2} label={t("disqualified")} value={s.disqualified} img={im("cross")} tone="#f04438" />
+      <Stat i={3} label={t("earned")} value={s.points} img={im("coin")} tone="#f59e0b" note={`$${usd}`} />
+      <Stat i={4} label={t("claimed")} value={Math.round(Number(s.claimed || 0) / 100)} img={im("gift")} tone="#8b5cf6" note="USD" />
     </section>
   );
 }
@@ -218,7 +219,7 @@ function Surveys({ d, counts }) {
         <ul className="ms-list">
           {list.slice(0, 5).map((x) => (
             <li key={x.slug} className="ms-survey">
-              <span className="ic"><Icon name={SURVEY_ICON[segment]} size={20} /></span>
+              <span className="ic img"><img src={art(segment, "disc-survey")} alt="" width="48" height="48" loading="lazy" /></span>
               <span className="tx">
                 <b>{x.name}</b>
                 <span className="meta">
@@ -236,7 +237,7 @@ function Surveys({ d, counts }) {
 }
 
 function RewardsQuality({ member }) {
-  const { t } = useStudio();
+  const { t, segment } = useStudio();
   const bal = React.useContext(BalanceCtx);
   const q = Number(member?.qualityScore) || 0, qt = Number(member?.qualityScoreTotal) || 0;
   const qp = qt > 0 ? Math.min(100, Math.round((q / qt) * 100)) : q > 0 ? 100 : 0;
@@ -248,7 +249,7 @@ function RewardsQuality({ member }) {
     <article className="ms-card ms-reveal ms-rq" style={{ "--i": 1 }} aria-labelledby="ms-rq">
       <h2 className="ms-h2" id="ms-rq" style={{ margin: 0 }}><span className="ic"><Icon name="trophy" /></span>{t("qualityTitle")}</h2>
       <div className="ms-purse" ref={ref}>
-        <span className="coins" aria-hidden="true">{[0, 1, 2].map((i) => <span key={i} style={{ "--c": i }}><Icon name="coin" size={18} /></span>)}</span>
+        <span className="coins" aria-hidden="true">{[0, 1, 2].map((i) => <img key={i} style={{ "--c": i }} src={art(segment, "icon-coin")} alt="" width="40" height="40" />)}</span>
         <small>{t("balance")}</small>
         <b>{fmt(pts)} {t("points").toLowerCase()}</b>
         <span style={{ fontSize: 13, fontWeight: 600 }}>{t("worthNow")}: ${(bal.points * bal.rate).toFixed(2)}</span>
@@ -305,7 +306,7 @@ function Activity({ d }) {
 }
 
 function Updates({ d }) {
-  const { t } = useStudio();
+  const { t, segment } = useStudio();
   const n = d.notifications || [];
   const href = (x) => (x.action === "surveys" ? "/member/surveys" : x.action === "profile" ? "/member/profiles" : x.action === "consent" ? d.journey?.nextUrl || "/" : null);
   return (
@@ -315,7 +316,7 @@ function Updates({ d }) {
         <ul className="ms-feed">
           {n.slice(0, 4).map((x, i) => (
             <li key={x.kind + i} data-lv={x.level}>
-              <span className="dot"><Icon name={x.level === "done" ? "check" : x.kind === "surveys" ? "surveys" : x.kind === "profile" ? "profile" : "bell"} size={16} /></span>
+              <span className="dot img"><img src={art(segment, `icon-${x.level === "done" ? "check" : x.kind === "surveys" ? "doc" : x.kind === "profile" ? "user" : "bell"}`)} alt="" width="34" height="34" loading="lazy" /></span>
               <span>{x.text}{href(x) && <> <Link href={href(x)}>{t("open")}</Link></>}</span>
             </li>
           ))}
@@ -326,7 +327,7 @@ function Updates({ d }) {
 }
 
 function ConsentAccount({ d, member }) {
-  const { t } = useStudio();
+  const { t, segment } = useStudio();
   const c = d.consent;
   const old = c && c.current && c.version !== c.current;
   return (
@@ -334,7 +335,7 @@ function ConsentAccount({ d, member }) {
       <h2 className="ms-h2" id="ms-acc"><span className="ic"><Icon name="settings" /></span>{t("accountTitle")}</h2>
       {c ? (
         <div className="ms-consent" data-old={old ? "1" : undefined}>
-          <span className="sh"><Icon name="shield" size={22} /></span>
+          <span className="sh img"><img src={art(segment, "disc-shield")} alt="" width="52" height="52" loading="lazy" /></span>
           <div style={{ minWidth: 0 }}>
             <b style={{ display: "block" }}>{t("consent")}: {old ? t("olderVersion") : t("signed")}</b>
             <span className="ms-muted" style={{ fontSize: 12.5 }}>{t("version")} {c.version} · {day(c.at)}</span>
