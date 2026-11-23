@@ -1,11 +1,13 @@
 "use client";
-// Dashboard home: welcome, profile completion, the panel's rewards vault, surveys, activity and shortcuts.
+// Dashboard home: welcome, journey, the panel's rewards vault, alerts, profiles, survey opportunities, payout dial,
+// quality gauge, invites, milestones, recent activity and shortcuts.
 // Every number comes from /api/v1/me/dashboard or the reward balance; when there is nothing yet, the page says so.
 import React from "react";
 import Link from "next/link";
-import { useMx, firstName, noteHref } from "../data";
-import { Icon, Meter, Empty, fmtDate } from "../kit";
-import { Vault, ProfileCards, SurveyTiles, sectionHref, sectionTitle } from "../parts";
+import { useMx, firstName } from "../data";
+import { Icon, Meter, Empty, useCountUp } from "../kit";
+import { Vault, ProfileCards, sectionHref, sectionTitle } from "../parts";
+import { Journey, InstantAlerts, Opportunities, PayoutDial, QualityGauge, InviteCard, Milestones, RecentActivity } from "./HomeParts";
 import { SCENES, sectionArt } from "../art";
 
 const greet = () => { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"; };
@@ -44,6 +46,20 @@ function HeroArt() {
   );
 }
 
+function HeroStats() {
+  const { member, balance } = useMx();
+  const pts = useCountUp(balance.points);
+  const qs = Number(member?.qualityScore) || 0;
+  const p = balance.threshold ? Math.min(1, balance.points / balance.threshold) : 0;
+  return (
+    <div className="mx-hstats" role="list" aria-label="Your numbers">
+      <span role="listitem" className="pill"><span className="mx-coin"><Icon name="coin" size={15} /></span><b>{pts.toLocaleString()}</b> points</span>
+      <span role="listitem" className="pill"><span className="mx-qs"><Icon name="heart" size={14} /></span><b>{qs}</b> quality</span>
+      {balance.threshold > 0 && <span role="listitem" className="pill"><span className="mini" aria-hidden="true"><i style={{ "--p": p }} /></span><b>{Math.round(p * 100)}%</b> to payout</span>}
+    </div>
+  );
+}
+
 function Hero() {
   const { member, d, P, panel } = useMx();
   const name = firstName(member, d);
@@ -58,6 +74,7 @@ function Hero() {
         <span className="mx-hello" data-tour="greeting"><i><Icon name={P.icon} size={13} /></i>{greet()}{name ? `, ${name}` : ""}</span>
         <h1 id="mx-hello">{P.hello(name || "there")}</h1>
         <p className="lead">{P.lead}</p>
+        <HeroStats />
         {panel === "patient" && sections.length > 0 && (
           <div className="mx-progress2">
             <div><span>Profiles</span><Meter value={done / sections.length} label="Profiles complete" /><span>{done}/{sections.length}</span></div>
@@ -114,65 +131,6 @@ function Completion() {
   );
 }
 
-function Surveys() {
-  const { d, dash } = useMx();
-  const s = d?.surveys;
-  return (
-    <section className="mx-card mx-rise" aria-labelledby="mx-sv-h" style={{ "--i": 4 }} data-tour="surveys">
-      <div className="mx-sec-h">
-        <div><span className="mx-eyebrow">Surveys</span><h2 id="mx-sv-h" style={{ marginTop: 6 }}>Ready for you</h2>
-          <p>{s ? `${s.counts?.available || 0} available · ${s.counts?.inProgress || 0} in progress · ${s.counts?.completed || 0} completed` : ""}</p></div>
-        <Link className="mx-btn sm ghost" href="/member/surveys">All surveys <Icon name="arrow" size={14} /></Link>
-      </div>
-      {dash.loading ? <div className="mx-skel" style={{ minHeight: 160 }} /> : (
-        <>
-          {s?.inProgress?.length > 0 && <div style={{ marginBottom: 14 }}><SurveyTiles list={s.inProgress.slice(0, 2)} resume /></div>}
-          {s?.available?.length ? <SurveyTiles list={s.available.slice(0, 4)} /> : (
-            <Empty icon="surveys" title="No surveys open for you right now">New studies are matched to your profile answers. Completing more profiles widens the studies you can be invited to.</Empty>
-          )}
-        </>
-      )}
-    </section>
-  );
-}
-
-const tone = { action: "warn", info: "info", done: "ok", warning: "bad" };
-const iconOf = { surveys: "surveys", profile: "profile", consent: "shield", "consent-ok": "shield", announcement: "bell" };
-function Activity() {
-  const { notes, d, dash } = useMx();
-  const hist = (d?.surveys?.history || []).slice(0, 4);
-  const label = { completed: "Completed", "not-qualified": "Did not qualify", "quota-full": "Quota full", "in-progress": "In progress" };
-  return (
-    <section className="mx-card mx-rise" aria-labelledby="mx-act-h" style={{ "--i": 5 }} data-tour="survey-history">
-      <div className="mx-sec-h"><div><span className="mx-eyebrow">Activity</span><h2 id="mx-act-h" style={{ marginTop: 6 }}>Updates for you</h2></div>
-        <Link className="mx-btn sm ghost" href="/member/notifications">See all</Link></div>
-      {dash.loading ? <div className="mx-skel" /> : notes.length + hist.length === 0 ? (
-        <Empty icon="bell" title="Nothing new yet">Updates about your surveys, profile and consent will appear here.</Empty>
-      ) : (
-        <ul className="mx-list">
-          {notes.slice(0, 4).map((n, i) => {
-            const href = noteHref(n);
-            return (
-              <li className="mx-item" key={n.id} style={{ "--i": i }}>
-                <span className={`ic ${tone[n.level] || "info"}`}><Icon name={iconOf[n.kind] || "bell"} size={18} /></span>
-                <span className="tx"><b>{n.text}</b>{n.at && <span>{fmtDate(n.at)}</span>}</span>
-                {href ? <Link className="mx-btn sm ghost" href={href} aria-label={`Open: ${n.text}`}><Icon name="arrow" size={14} /></Link> : <span />}
-              </li>
-            );
-          })}
-          {hist.map((h, i) => (
-            <li className="mx-item" key={`${h.slug}-${i}`} style={{ "--i": i + 4 }}>
-              <span className={`ic ${h.status === "completed" ? "ok" : h.status === "in-progress" ? "info" : "bad"}`}><Icon name="surveys" size={18} /></span>
-              <span className="tx"><b>{h.name}</b><span>{label[h.status] || h.status} · {fmtDate(h.endedAt || h.startedAt)}{h.points ? ` · ${h.points} pts` : ""}</span></span>
-              {h.resumable ? <a className="mx-btn sm" href={`/survey?name=${encodeURIComponent(h.slug)}`}>Continue</a> : <span />}
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
-  );
-}
-
 function Shortcuts() {
   const { d } = useMx();
   const c = d?.consent;
@@ -204,12 +162,18 @@ export default function Home() {
     <>
       <Hero />
       {dash.error && <div className="mx-alert bad" role="alert"><Icon name="alert" size={18} />We could not load your dashboard just now. Your data is safe; please refresh the page in a moment.</div>}
+      <Journey />
       <div data-tour="stats"><Vault /></div>
+      <InstantAlerts />
       <Completion />
-      <div className="mx-split">
-        <Surveys />
-        <Activity />
+      <Opportunities />
+      <div className="mx-trio">
+        <PayoutDial />
+        <QualityGauge />
+        <InviteCard />
       </div>
+      <Milestones />
+      <RecentActivity />
       <Shortcuts />
     </>
   );
