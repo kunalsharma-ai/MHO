@@ -43,15 +43,33 @@ export default mongooseModel(
         default: "",
       },
       last: {
+        // optional since the 2026-11 registration redesign (first name is the only required name)
         type: String,
         trim: true,
-        required: [true, "Lastname is required"],
+        default: "",
       },
     },
     gender: {
+      // asked in the Basic profile now, not at sign-up; existing members keep their value
       type: String,
       enum: ["Male", "Female", "Other"],
-      required: [true, "Gender is required"],
+    },
+    postalCodeApplicable: {
+      // false when the member ticked "Postal code not applicable" at sign-up
+      type: Boolean,
+      default: true,
+    },
+    passwordChangedAt: {
+      // login tokens issued before this moment stop working (set when the password is created or reset)
+      type: Date,
+      default: null,
+      select: false,
+    },
+    accountStatus: {
+      // pending: registered, email not verified / no password yet · active: email verified and password set
+      type: String,
+      enum: ["pending", "active", "suspended"],
+      default: "pending",
     },
     dob: {
       type: Date,
@@ -82,6 +100,7 @@ export default mongooseModel(
           // Extract domain
           const domain = email.split("@")[1];
           if (!domain) return false;
+          if (process.env.MAIL_MX_CHECK === "false") return true; // offline test runs only
           try {
             const records = await resolveMx(domain);
             return records && records.length > 0; // has MX record
@@ -349,6 +368,7 @@ export default mongooseModel(
       },
       setPassword: async function (password) {
         this.isVerified.email = "verified";
+        this.accountStatus = "active";
         this.password = await bcrypt.hash(password, 10);
         await this.save();
         return this;

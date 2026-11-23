@@ -1,0 +1,33 @@
+Verify your new email address.
+
+{{ user.name.first }},
+
+WHAT THIS EMAIL IS ABOUT
+This is the last step of your email change.
+Verifying confirms that this address belongs to you. Until you do, the
+account keeps using the old one.
+  - Step: Last of two
+  - Valid for: 24 hours
+  - Time: A few seconds
+
+One click and all invitations, rewards and support messages will come
+here instead.
+
+THE CHANGE
+  Moving from  {{ user.mail }}
+  Moving to    {{ email }}
+  Valid for    24 hours
+
+VERIFY THIS ADDRESS
+https://{{ user.origin }}/auth/change-email?updatecode={{ token }}
+Until you verify, the account keeps using the old address.
+
+IF YOU WERE NOT EXPECTING THIS
+Ignore this email. Nothing changes without this confirmation, and the
+link expires on its own.
+
+You are receiving this because this address was given as the new address
+for a MyHealthOpinions account.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

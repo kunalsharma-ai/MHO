@@ -1,0 +1,50 @@
+Review and sign your panel terms.
+
+{{ user.name.first }},
+
+WHAT THIS EMAIL IS ABOUT
+Your account is active, but your consent is not signed yet.
+Until it is, we cannot send you any studies. It takes about five
+minutes: plain-language clauses, four required approvals and five
+optional ones.
+  - Time: About 5 minutes
+  - Required: 4 approvals
+  - Optional: 5 choices
+
+Before anyone invites you to research, you should know exactly what
+taking part involves. The Healthcare Professionals Terms, Privacy Notice
+& Consent page sets it out in six short sections, each with a
+plain-language summary beside the legal text.
+
+WHERE THINGS STAND
+  [ok] Your email is verified and your password is set.
+  [ ! ] Your consent has not been signed yet.
+  [ ! ] Until it is, no studies can be sent to your account.
+
+The consent page opens right after you log in, before your dashboard.
+
+THE SIX SECTIONS
+  1. Membership & eligibility
+  2. Patients & confidentiality
+  3. Professional practice & ethics
+  4. Medicines, devices & safety
+  5. Data, sharing & privacy
+  6. Rewards, account & changes
+
+LOG IN AND REVIEW THE TERMS
+https://{{ user.origin }}/?login
+Shown first, right after you log in.
+
+YOUR CHOICES STAY YOURS
+Optional approvals are exactly that: you can leave any of them off and
+still take part. Only the four required approvals are needed to join
+studies.
+
+Thank you for your time.
+The MyHealthOpinions Clinical Panel team
+
+You are receiving this because your account on the MyHealthOpinions
+Healthcare Professionals panel has no signed consent yet.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

@@ -46,22 +46,16 @@ class ValidUser {
       this.userinfo.isVerified.email === "verified"
     );
   }
-  async hasCompletedWelcomeSurvey() {
+  // Where the API says this member goes next: verify-email | consent | dashboard | admin | support.
+  // Returns null when the API has no journey endpoint (older backend image), so the legacy checks still apply.
+  async journey() {
     try {
-      let temp = await api.post(`/api/v1/response`, {
-        ["survey.slug"]: "welcome",
-        status: "complete",
-      });
-      if (temp.status === "error") {
-        return false;
-      }
-      return (
-        "data" in temp && Array.isArray(temp.data) && temp.data.length === 1
-      );
+      const temp = await api.get(`/api/v1/me/journey`);
+      if (temp?.status === "success" && temp.data && temp.data.next) return temp.data;
     } catch (error) {
-      console.error(error);
-      return false;
+      /* older API */
     }
+    return null;
   }
   isAdmin() {
     return (
@@ -77,16 +71,26 @@ class ValidUser {
       }
     }
     if (pathname.startsWith("/member")) {
+      // The welcome survey is no longer a gate: members reach the dashboard once their email is verified and
+      // they have signed the current consent version for their panel (HCP, caregiver or patient).
+      const j = await this.journey();
+      if (j) {
+        if (j.next === "verify-email") {
+          this.router.replace("/login?verify=1"); // no email address in the URL
+          return false;
+        }
+        if (j.next === "consent") {
+          window.location.replace(j.nextUrl); // static consent page served by the marketing site
+          return false;
+        }
+        return true;
+      }
       if (!this.emailVerified()) {
-        this.router.replace(`/?verifyemail=${this.userinfo.mail}`);
+        this.router.replace("/login?verify=1");
         return false;
       }
       if (!this.termsAccepted()) {
         this.router.replace("/auth/terms");
-        return false;
-      }
-      if (!(await this.hasCompletedWelcomeSurvey())) {
-        this.router.replace("/survey?name=welcome");
         return false;
       }
     }

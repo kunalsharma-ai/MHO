@@ -13,7 +13,7 @@ class OTPController extends CrudController {
 
     // optional check: expired
     if (otp.expiresAt < new Date()) {
-      return { expired: true };
+      return null; // was { expired: true }, which every caller treated as a valid code
     }
     return otp;
   }

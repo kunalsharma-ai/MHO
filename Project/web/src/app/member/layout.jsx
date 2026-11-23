@@ -1,20 +1,13 @@
-import MemberHeader from "./components/MemberHeader";
-import MemberSidebar from "./components/MemberSidebar";
+import Shell from "./studio/Shell";
 import MemberFooter from "./components/MemberFooter";
-import FeedbackForm from "@/componentsMHO/FeedbackForm";
-import { Popup } from "@/components/Popup";
 
+// Member area frame: the studio header and sidebar (panel look, quality score, rewards, language, light/dark,
+// colour pattern, account menu) around every member page.
 function layout({ children }) {
   return (
     <div>
-      <MemberHeader />
-      <MemberSidebar>
-        <main>{children}</main>
-      </MemberSidebar>
+      <Shell>{children}</Shell>
       <MemberFooter />
-        {/* <Popup open={true} onClose={() => {}} hideTitle maxWidth="sm">
-          <FeedbackForm />
-        </Popup> */}
     </div>
   );
 }

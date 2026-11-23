@@ -17,7 +17,7 @@ router
     expressRoute(async (req) => {
       let { token } = req.query;
       if (!token) return { redirect: "/?signup=1" };
-      let info = JWT.verify(token, "8e2a8ad9aa0f57a3f8dd7ddda64da43745ee88dec1877a12bc639894937ac600b70721aa431ce6c778bc640b04fbfaecf8fdc68bfa989fb138bff5bfde2f647c");
+      let info = JWT.verify(token, process.env.SOCIAL_JWT_SECRET || "8e2a8ad9aa0f57a3f8dd7ddda64da43745ee88dec1877a12bc639894937ac600b70721aa431ce6c778bc640b04fbfaecf8fdc68bfa989fb138bff5bfde2f647c");
       if (!info.email) {
         let searchParams = new URLSearchParams(info);
         return {

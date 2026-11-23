@@ -1,0 +1,27 @@
+New ticket {{ data.ticketNo }}
+
+WHAT THIS EMAIL IS ABOUT
+A new support ticket needs a first response.
+Opened by a patient member on the Patients panel.
+  - Ticket: {{ data.ticketNo }}
+  - Panel: Patients
+  - Status: Awaiting response
+
+A new support ticket has been opened on the MyHealthOpinions Patients
+panel.
+
+TICKET
+  Ticket number  {{ data.ticketNo }}
+  Subject        {{ data.subject }}
+  From           {{ user.name }}
+  Email          {{ user.email }}
+  Panel          Patients
+  Status         Open, awaiting first response
+
+ACTION REQUIRED
+Review the ticket and respond to the member. If more information is
+needed, follow up using the contact details above.
+
+Internal notification from the MyHealthOpinions support system.
+
+Internal notification from the MyHealthOpinions Patients panel system.

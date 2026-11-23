@@ -31,7 +31,7 @@ import { useQuery, useMember } from "@/Context";
 import { SurveyPoints } from "../../components";
 import ProfileSection from "../../components/ProfileSection";
 import SectionCard from "../../components/SectionCard";
-import { SurveyHistory } from "../dashboard/page";
+import { SurveyHistory } from "../dashboard/page_legacy";
 import {useTourActive} from "@/Context/tourStore";
 import mockSurveys from "@/mockData/surveys";
 

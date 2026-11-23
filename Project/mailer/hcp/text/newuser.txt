@@ -1,0 +1,24 @@
+New registration on the Healthcare Professionals panel
+
+WHAT THIS EMAIL IS ABOUT
+A new healthcare professional has registered.
+Credential documents will need review before verified-only studies can
+be sent.
+  - Panel: Healthcare Professionals
+  - User ID: {{ user._id }}
+  - Status: Registered
+
+A new panelist has registered successfully.
+
+REGISTRATION
+  Name     {{ user.name.first }}
+  User ID  {{ user._id }}
+  Panel    MyHealthOpinions — Healthcare Professionals
+
+NEXT
+This notification is generated automatically after a new registration.
+Review the account in the admin panel if any further action is required.
+
+Internal notification from the MyHealthOpinions registration system.
+
+Internal notification from the MyHealthOpinions Healthcare Professionals panel system.

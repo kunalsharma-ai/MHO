@@ -1,0 +1,23 @@
+New registration on the Caregivers panel
+
+WHAT THIS EMAIL IS ABOUT
+A new caregiver member has registered.
+No action is needed unless the account looks wrong.
+  - Panel: Caregivers
+  - User ID: {{ user._id }}
+  - Status: Registered
+
+A new panelist has registered successfully.
+
+REGISTRATION
+  Name     {{ user.name.first }}
+  User ID  {{ user._id }}
+  Panel    MyHealthOpinions — Caregivers
+
+NEXT
+This notification is generated automatically after a new registration.
+Review the account in the admin panel if any further action is required.
+
+Internal notification from the MyHealthOpinions registration system.
+
+Internal notification from the MyHealthOpinions Caregivers panel system.

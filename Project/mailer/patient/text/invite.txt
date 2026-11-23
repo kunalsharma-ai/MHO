@@ -1,0 +1,42 @@
+You have been invited to MyHealthOpinions.
+
+WHAT THIS EMAIL IS ABOUT
+{{ user.fullName }} thinks you would be a valuable voice in health
+research.
+MyHealthOpinions pays people living with health conditions to share
+their experience in online surveys. No tests, no clinic visits, and
+joining is free.
+  - Cost: Free to join
+  - Rewards: PayPal, UPI, gift cards
+  - Coverage: 55 countries
+
+What it is, in plain terms, is below. Nothing is created until you
+accept.
+
+WHY PATIENTS JOIN
+  - Your experience counts: Researchers need to hear from people living
+  with a condition, not just about them.
+  - From your phone: No tests, no clinic visits. Answer when it suits
+  you.
+  - Rewarded every time: 1,000 points = $1.00, redeemable by PayPal, UPI
+  (India), wire transfer or an Amazon gift card.
+
+GOOD TO KNOW
+  - Every invitation shows the reward and the length before you start
+  - You can decline any survey, and declining costs you nothing
+  - You can close your account whenever you like
+
+ACCEPT THE INVITATION
+{{ ref.link }}
+
+NOT FOR YOU?
+If this invitation was not meant for you, ignore it — nothing is created
+until you accept. Your answers are used for research only. They are
+reported in aggregate, never attributed to you by name, and never sold
+on or used for advertising.
+
+You are receiving this because a MyHealthOpinions member sent you an
+invitation.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

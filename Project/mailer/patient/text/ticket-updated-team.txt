@@ -1,0 +1,27 @@
+Ticket {{ reply.ticketNo }} updated
+
+WHAT THIS EMAIL IS ABOUT
+Ticket {{ reply.ticketNo }} has a new message to review.
+On the Patients panel. The full message is below.
+  - Ticket: {{ reply.ticketNo }}
+  - Panel: Patients
+  - Status: Awaiting review
+
+A new message has been added to support ticket {{ reply.ticketNo }}.
+
+TICKET
+  Ticket number  {{ reply.ticketNo }}
+  Updated by     {{ repliedBy.fullName }}
+  Panel          Patients
+  Status         Awaiting review
+
+LATEST RESPONSE — {{ repliedBy.fullName }}
+{{ reply.message }}
+
+ACTION REQUIRED
+Review the update and take the appropriate action. If a response is
+required, reply through the Support Ticket system.
+
+Internal notification from the MyHealthOpinions support system.
+
+Internal notification from the MyHealthOpinions Patients panel system.
