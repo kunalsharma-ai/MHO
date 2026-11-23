@@ -136,7 +136,7 @@ export default function SurveyDashboard() {
       console.log("3) after filter:", filtered.length);
       return { ...resp, data: filtered };
     })(),
-    (resp) => setSurveys(resp.data),
+    (resp) => setSurveys(Array.isArray(resp?.data) ? resp.data : []), // an error answer has no list: show none instead of crashing
     () => setIsLoading(false),
   );
 }, [query, tourActive]);

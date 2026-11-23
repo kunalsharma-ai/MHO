@@ -4,12 +4,10 @@
 // pauses when off screen and stands still when the visitor prefers reduced motion.
 import React from "react";
 import Icon from "./Icon";
+import { art } from "./art";
 
-const ORBIT = {
-  hcp: ["stethoscope", "microscope", "dna", "chart", "pill", "shield"],
-  caregiver: ["heart", "calendar", "pill", "hands", "home", "chat"],
-  patient: ["heart", "pulse", "leaf", "chat", "shield", "target"],
-};
+// 3D discs from the panel's own brand art set (see art.js)
+const ORBIT = ["disc-survey", "disc-badge", "disc-shield", "disc-chat", "disc-invite", "disc-welcome"];
 
 function Helix() {
   return (
@@ -70,7 +68,7 @@ export default function Scene({ segment = "patient", percent = 0 }) {
     el.addEventListener("pointerleave", leave);
     return () => { io?.disconnect(); el.removeEventListener("pointermove", move); el.removeEventListener("pointerleave", leave); cancelAnimationFrame(raf); };
   }, []);
-  const tiles = ORBIT[segment] || ORBIT.patient;
+  const tiles = ORBIT;
   return (
     <div className={`ms-stage seg-${segment}`} ref={ref} aria-hidden="true">
       <div className="ms-glow" />
@@ -79,7 +77,7 @@ export default function Scene({ segment = "patient", percent = 0 }) {
         <div className="ms-orbit">
           {tiles.map((n, i) => (
             <span key={n + i} className="ms-tile" style={{ "--k": i, "--n": tiles.length }}>
-              <span className="ms-tile-in"><Icon name={n} size={22} /></span>
+              <span className="ms-tile-in"><img src={art(segment, n)} alt="" width="64" height="64" loading="lazy" decoding="async" /></span>
             </span>
           ))}
         </div>

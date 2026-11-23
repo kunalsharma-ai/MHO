@@ -81,3 +81,8 @@ export function useCountUp(to, ms = 1200) {
   }, [to, ms]);
   return [v, ref];
 }
+
+export const PANEL_ICON = { hcp: "stethoscope", caregiver: "hands", patient: "heart" };
+export const greetingKey = () => { const h = new Date().getHours(); return h < 12 ? "morning" : h < 17 ? "afternoon" : "evening"; };
+/** Reward balance shared by the header pill, the sidebar card and the pages (filled in by the Shell). */
+export const BalanceCtx = React.createContext({ points: 0, threshold: 15000, rate: 0.001, ready: false });

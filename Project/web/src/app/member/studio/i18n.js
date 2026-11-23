@@ -39,7 +39,7 @@ const D = {
     pointsText: "Points from completed surveys and profile sections.", consentNone: "No consent record yet.", review: "Review", answersFromProfile: "Answers you gave in your profile",
     playAgain: "Play the celebration", sectionsDone: "sections completed", accountText: "Your contact details and preferences.",
     internalText: "Studies picked for your profile.", externalText: "Quick rotating questionnaires from partners.",
-    rewardsHint: "Redeem once you reach the threshold.",
+    rewardsHint: "Redeem once you reach the threshold.", leftToRedeem: "Left to redeem",
   },
   hi: {
     dashboard: "डैशबोर्ड", account: "मेरा खाता", profiles: "प्रोफ़ाइल", surveys: "सर्वेक्षण", rewards: "पुरस्कार", referrals: "रेफ़रल", settings: "सेटिंग्स", help: "सहायता",
