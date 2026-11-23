@@ -1,0 +1,38 @@
+Thank you — you are all set.
+
+{{ user.name.first }},
+
+WHAT THIS EMAIL IS ABOUT
+Your consent is signed and on record.
+This email is your copy. Keep it — it shows what you agreed to and when.
+  - Version: {{ consent.version | default: "current" }}
+  - Signed: {{ consent.signedAt }}
+  - Status: Complete
+
+Invitations can now be sent to your account. Here is the record of what
+you signed.
+
+CONSENT RECORD
+  Member ID           {{ user.memberId | default: "your member ID" }}
+  Document            Patients Terms, Privacy Notice & Consent
+  Version             {{ consent.version | default: "current" }}
+  Signed on           {{ consent.signedAt }}
+  Required approvals  All 4 given
+  Optional approvals  {{ consent.optionalCount | default: 0 }} of 5 given
+
+GO TO MY DASHBOARD
+https://{{ user.origin }}/?login
+
+IF YOU CHANGE YOUR MIND
+  - You can read the terms again at any time from your account.
+  - To change an optional approval or withdraw your consent, write to
+  support@myhealthopinions.com and we will update your record.
+
+Stay well,
+The MyHealthOpinions Patients team
+
+You are receiving this because you signed the Patients Terms, Privacy
+Notice & Consent.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

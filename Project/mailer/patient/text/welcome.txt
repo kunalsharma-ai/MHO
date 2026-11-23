@@ -1,0 +1,48 @@
+Welcome! Let’s build your health story together.
+
+{{ user.name.first }},
+
+WHAT THIS EMAIL IS ABOUT
+Your password is set and your account is now active.
+Nothing else is needed to keep it open. What decides how many
+invitations you receive is your profile — that is the next step.
+  - Status: Active
+  - Member ID: {{ user.memberId | default: "your member ID" }}
+  - Next step: Your profiles
+
+Start with a few short profiles about you. Each one helps us invite you
+to studies that truly fit your life.
+
+YOUR HEALTH PULSE
+  About You profiles: 6
+  points each: +50
+  surveys to unlock: 19
+
+WHAT TO DO NEXT
+  1. Log in to your dashboard
+  2. Complete 6 short About You profiles — each adds +50 points and +1
+  Quality Score
+  3. Your surveys unlock as your profile grows — each shows the reward
+  and the length first
+
+LOG IN TO MY DASHBOARD
+https://{{ user.origin }}/?login
+Your answers save as you go, so you can stop and come back.
+
+GOOD TO KNOW
+  - Redeem your way: 1,000 points = $1.00, redeemable by PayPal, UPI
+  (India), wire transfer or an Amazon gift card.
+  - Private by design: Your answers are used for research only. They are
+  reported in aggregate, never attributed to you by name, and never sold
+  on or used for advertising.
+  - At your own pace: Each profile takes a couple of minutes, and you
+  can do them in any order.
+
+Stay well,
+The MyHealthOpinions Patients team
+
+You are receiving this because your MyHealthOpinions account was just
+activated.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

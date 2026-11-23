@@ -1,0 +1,34 @@
+Confirm your email change.
+
+{{ user.name.first }},
+
+WHAT THIS EMAIL IS ABOUT
+A request was made to move your account to a new email address.
+Nothing changes until you confirm here. If you did not ask for this, do
+not click — the request expires on its own.
+  - Valid for: 24 hours
+  - Changes: Only if you confirm
+  - Then: Verify new address
+
+We received a request to change the email address on your
+MyHealthOpinions account.
+
+THE CHANGE
+  Current address  {{ user.mail }}
+  New address      {{ email }}
+  Valid for        24 hours
+
+CONFIRM THIS CHANGE
+https://{{ user.origin }}/auth/change-email?confcode={{ token }}
+Next, we will send a verification link to the new address.
+
+IF YOU DID NOT REQUEST THIS
+Do not click the link. Your address stays as it is, and the request
+expires on its own. Please write to support@myhealthopinions.com so we
+can check the account.
+
+You are receiving this because a change of email address was requested
+on your account.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

@@ -1,0 +1,24 @@
+Happy birthday!
+
+{{ user.name.first }},
+
+WHAT THIS EMAIL IS ABOUT
+Today is your birthday — that is the only reason for this email.
+No survey attached and nothing to do. Just a good wish from all of us.
+  - Action needed: None
+  - From: The MHO team
+  - Occasion: Your birthday
+
+Wishing you a day of good health, good company and plenty of reasons to
+smile. Thank you for sharing your experience with us this year.
+
+May the year ahead be full of good opportunities and happy moments.
+
+With best wishes,
+The MyHealthOpinions Patients team
+
+You are receiving this because you are a MyHealthOpinions member and
+today is the birthday on your profile.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

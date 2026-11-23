@@ -1,10 +1,7 @@
 import express from "express";
 import {User as userController} from "../../controller/index.js";
 import { expressRoute, expressView, isAuthenticated, fsLogger } from "../../../utils/index.js"
-import fs from "fs";
-const world=JSON.parse(
-    fs.readFileSync("/src/app/dataBank/theworld.json","utf-8")
-)
+import { world } from "../../lib/world.js";
 
 const router = express.Router();
 router

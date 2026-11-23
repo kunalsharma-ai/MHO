@@ -1,0 +1,36 @@
+You are a verified clinician on the panel.
+
+{{ user.name.first }},
+
+WHAT THIS EMAIL IS ABOUT
+Your professional credentials are verified.
+Your licence details were checked against what you submitted, so you can
+now be invited to studies open only to verified clinicians.
+  - Status: Verified clinician
+  - Member ID: {{ user.memberId | default: "your member ID" }}
+  - Access: Professional studies
+
+Verified status is what pharma, device and health-tech teams ask for. It
+is now on your record.
+
+ACCOUNT STATUS
+  Verification    Licence checked
+  Account status  Active
+  You can now     Receive verified-only studies
+
+GO TO MY ACCOUNT
+https://{{ user.origin }}/?login
+
+ONE THING WE ASK
+Please keep your answers accurate and truthful, in your profile and in
+every study. That is what keeps the research reliable — and it is the
+one thing we ask of everyone on the panel.
+
+Glad to have you verified.
+The MyHealthOpinions Clinical Panel team
+
+You are receiving this because your professional credentials were
+reviewed.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

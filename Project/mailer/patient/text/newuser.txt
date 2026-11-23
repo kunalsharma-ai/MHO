@@ -1,0 +1,23 @@
+New registration on the Patients panel
+
+WHAT THIS EMAIL IS ABOUT
+A new patient member has registered.
+No action is needed unless the account looks wrong.
+  - Panel: Patients
+  - User ID: {{ user._id }}
+  - Status: Registered
+
+A new panelist has registered successfully.
+
+REGISTRATION
+  Name     {{ user.name.first }}
+  User ID  {{ user._id }}
+  Panel    MyHealthOpinions — Patients
+
+NEXT
+This notification is generated automatically after a new registration.
+Review the account in the admin panel if any further action is required.
+
+Internal notification from the MyHealthOpinions registration system.
+
+Internal notification from the MyHealthOpinions Patients panel system.

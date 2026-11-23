@@ -107,7 +107,19 @@ router
         async req => {
             const { terms } = req.body;
             const [message, data] = ["Updated successfully", []];
-            await userController.update(req.user._id, req.body);
+            // Only fields a member may change about themselves. Role, category, email, verification, account
+            // status, DOB and origin can no longer be set through this route (they were before: mass assignment).
+            const ALLOWED = ["name", "gender", "phone", "timezone", "address", "profilePicture", "notification", "socials", "terms", "consent", "postalCodeApplicable", "qualityScore"];
+            const update = Object.fromEntries(Object.entries(req.body || {}).filter(([k]) => ALLOWED.includes(k)));
+            if ("qualityScore" in update) {
+                // the member area credits +1 per completed item from the browser (hooks/useRewardsRefresh.js);
+                // until that moves to the server, accept only small increases
+                const current = Number(req.user.qualityScore) || 0;
+                const wanted = Number(update.qualityScore);
+                if (!Number.isFinite(wanted) || wanted < current || wanted > Math.min(200, current + 5)) delete update.qualityScore;
+            }
+            if (update.name && typeof update.name === "object") update.name = { salutation: update.name.salutation, first: update.name.first, middle: update.name.middle, last: update.name.last };
+            await userController.update(req.user._id, update);
             if (!!terms) {
                 eventStream.emitEvent("user-accepted-terms", { ...req.user, terms })
             } else {

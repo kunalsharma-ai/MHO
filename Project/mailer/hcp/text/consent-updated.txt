@@ -1,0 +1,28 @@
+The panel terms have changed.
+
+{{ user.name.first }},
+
+WHAT THIS EMAIL IS ABOUT
+We have updated the panel terms, and your consent needs renewing.
+Your account and balance are untouched. Invitations pause only until you
+review the changes and sign the new version.
+  - New version: {{ consent.version | default: "current" }}
+  - Time: About 3 minutes
+  - Balance: Unchanged
+
+Clauses that changed are marked on the consent page, so you can go
+straight to what is new instead of reading everything again.
+
+REVIEW THE UPDATED TERMS
+https://{{ user.origin }}/?login
+Shown right after you log in.
+
+WHY WE ASK AGAIN
+Consent only counts when it is given to the version that applies.
+Signing again keeps your record accurate and lets invitations resume.
+
+You are receiving this because the panel terms changed after you last
+signed them.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

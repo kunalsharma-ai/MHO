@@ -9,8 +9,8 @@ router
         async req => {
             let message = "A password reset link has been sent to your mailbox, Please check your email and proceed.";
             let user = await userController.list({ mail: req.body.user });
-            if (user.length !== 1)
-                throw new Error("You have not registered with us with this email id. Please signup, or try some other email id.")
+            // same answer whether or not the address is registered (no account probing)
+            if (user.length !== 1) return { message, data: [] };
             let otp = await otpController.generate(
                 user[0]._id,
                 "email",

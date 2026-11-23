@@ -18,4 +18,6 @@ export { default as Reward } from "./Rewards.js";
 export { default as ProfileQuestions } from "./ProfileQuestions.js";
 export { default as ProfileOptions } from "./ProfileOptions.js";
 
-//*/
+//*/export { default as AuthToken } from "./AuthToken.js";
+export { default as ConsentRecord } from "./ConsentRecord.js";
+export { default as CaptchaChallenge } from "./CaptchaChallenge.js";

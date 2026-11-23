@@ -7,25 +7,31 @@ import {
 } from "../../utils/index.js";
 import { OTP as otpController } from "../controller/index.js";
 
+// Logs keep who and what, never the record itself: no passwords, codes, DOB, phone or health answers.
+const who = (d) => {
+    const u = d?.user ?? d;
+    return { _id: u?._id ? String(u._id) : undefined, category: u?.category, ...(d?.message ? { message: d.message } : {}) };
+};
+
 eventStream.onEvent("user-changed-password", (data) => {
-    fsLogger.Log(`Password Changed`, data)
+    fsLogger.Log(`Password Changed`, who(data))
 })
 
 eventStream.onEvent("user-accepted-terms", (data) => {
-    fsLogger.Log(`Terms Accepted: `, data)
+    fsLogger.Log(`Terms Accepted: `, who(data))
 })
 
 eventStream.onEvent("user-updated", (data) => {
-    fsLogger.Log(`User Updated: `, data)
+    fsLogger.Log(`User Updated: `, who(data))
 })
 
 eventStream.onEvent("user-chagned-payment-method", (data) => {
-    fsLogger.Log(`Payment Method Changed: `, data)
+    fsLogger.Log(`Payment Method Changed: `, who(data))
 })
 
 
 eventStream.onEvent("user-invited-friends", (data) => {
-    fsLogger.Log(`User Invited: `, data)
+    fsLogger.Log(`User Invited: `, who(data))
 })
 
 eventStream.onEvent("user-created", async data => {
@@ -51,7 +57,7 @@ eventStream.onEvent("user-created", async data => {
     )
     fsLogger.Log(
         "OTP Sent to user",
-        data
+        who(data)
     )
 })
 eventStream.onEvent("user-resend-otp", async data => {
@@ -77,25 +83,25 @@ eventStream.onEvent("user-resend-otp", async data => {
     )
     fsLogger.Log(
         "OTP Sent to user",
-        data
+        who(data)
     )
 })
 eventStream.onEvent("user-password-reset", data => {
     fsLogger.Log(
         "Password Changed",
-        data
+        who(data)
     )
 })
 eventStream.onEvent("user-login", data => {
     fsLogger.Log(
         "User Logged In",
-        data
+        who(data)
     )
 })
 eventStream.onEvent("user-login-failed", data => {
     fsLogger.Log(
         "Login Failed",
-        data
+        who(data)
     )
 })
 

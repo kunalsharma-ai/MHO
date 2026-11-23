@@ -1,0 +1,39 @@
+Thank you for contacting us.
+
+{{ user.name }},
+
+WHAT THIS EMAIL IS ABOUT
+We have your request — ticket {{ data.ticketNo }} is open.
+Our support team is reviewing it now. You do not need to do anything in
+the meantime.
+  - Ticket: {{ data.ticketNo }}
+  - Reply within: 24–48 hours
+  - Status: Open
+
+Your support request has been logged and our team is reviewing it.
+
+YOUR TICKET
+  Ticket number  {{ data.ticketNo }}
+  Subject        {{ data.subject }}
+  Status         Open, with our support team
+  Response time  Within 24 to 48 hours
+
+WHAT HAPPENS NEXT
+  1. Our team reviews your request
+  2. You receive an email as soon as there is an update
+  3. You can add details at any time from Support Tickets in your
+  account
+
+PLEASE DO NOT REPLY TO THIS EMAIL
+Replies to this address are not monitored. To add details or respond,
+use the Support Ticket system on your account and quote {{ data.ticketNo
+}}.
+
+Thank you for your patience.
+The MyHealthOpinions Caregivers team
+
+You are receiving this because you submitted a support request to
+MyHealthOpinions.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

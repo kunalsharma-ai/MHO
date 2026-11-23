@@ -27,7 +27,7 @@ import {
     sendMail,
     Token,
     adminLogger
-} from "/src/utils/index.js"
+} from "../../../utils/index.js"
 
 const router = express.Router();
 router
@@ -127,7 +127,7 @@ router
                 console.log(error)
                 eventStream.emitEvent("user-login-failed", {
                     message: error.message,
-                    data: req.body
+                    data: { mail: req.body?.mail, _id: req.body?._id }
                 })
                 throw new HttpError(error.message, 401);
             }
@@ -155,7 +155,7 @@ router
                 console.log(error)
                 eventStream.emitEvent("user-login-failed", {
                     message: error.message,
-                    data: req.body
+                    data: { mail: req.body?.mail, _id: req.body?._id }
                 })
                 throw new HttpError(error.message, 401);
             }

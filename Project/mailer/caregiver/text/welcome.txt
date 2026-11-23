@@ -1,0 +1,48 @@
+Your care makes a difference. Let’s capture it.
+
+{{ user.name.first }},
+
+WHAT THIS EMAIL IS ABOUT
+Your password is set and your account is now active.
+Nothing else is needed to keep it open. What decides how many
+invitations you receive is your profile — that is the next step.
+  - Status: Active
+  - Member ID: {{ user.memberId | default: "your member ID" }}
+  - Next step: Your profiles
+
+A few warm questions about you and the care you give is all it takes to
+open your first surveys.
+
+YOUR CIRCLE OF CARE
+  About You profiles: 7
+  Care Points each: +50
+  Quality Score each: +1
+
+WHAT TO DO NEXT
+  1. Log in to your dashboard
+  2. Complete 7 short About You profiles — each adds +50 Care Points and
+  +1 Quality Score
+  3. Your surveys open one at a time — each shows the reward and the
+  length first
+
+LOG IN TO MY DASHBOARD
+https://{{ user.origin }}/?login
+Your answers save as you go, so you can stop and come back.
+
+GOOD TO KNOW
+  - Redeem your way: 1,000 Care Points = $1.00, redeemable by PayPal,
+  UPI (India), wire transfer or an Amazon gift card.
+  - Private by design: Your answers are used for research only. They are
+  reported in aggregate, never attributed to you by name, and never sold
+  on or used for advertising.
+  - Whenever care allows: Your answers save automatically, so you can
+  stop whenever care calls and pick up where you left off.
+
+With warm thanks,
+The MyHealthOpinions Caregivers team
+
+You are receiving this because your MyHealthOpinions account was just
+activated.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

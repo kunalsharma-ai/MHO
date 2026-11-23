@@ -1,0 +1,43 @@
+{{ survey.name }}
+
+{{ user.name.first }},
+
+WHAT THIS EMAIL IS ABOUT
+A health survey matched to your experience is open.
+{{ survey.name }} — the brief is below in full. Places close as soon as
+the quota fills, so this one is worth opening today.
+  - Reward: {{ survey.points }} points
+  - Time: About {{ survey.time }} minutes
+  - Closes: When full
+
+You match the audience for this one. Everything you need to decide is
+below.
+
+THE BRIEF
+  Reward          {{ survey.points }} Reward Points
+  Estimated time  {{ survey.time }} minutes
+  Topic           {{ survey.name }}
+  Device          Phone, tablet or computer
+
+START THE SURVEY
+{{ survey.link }}
+You can stop at any point.
+
+NO OBLIGATION, EITHER WAY
+Declining never affects your standing or your balance. If this one is
+not for you, simply leave it — the next invitation comes when you match
+another. Your answers are used for research only. They are reported in
+aggregate, never attributed to you by name, and never sold on or used
+for advertising.
+
+Trouble opening the link? Write to support@myhealthopinions.com and we
+will help.
+
+Your experience helps shape better care.
+The MyHealthOpinions Patients team
+
+You are receiving this because you are a member of the MyHealthOpinions
+Patients panel matched to this study.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

@@ -1,0 +1,30 @@
+Update on your ticket.
+
+{{ user.name }},
+
+WHAT THIS EMAIL IS ABOUT
+There is a new reply on ticket {{ reply.ticketNo }}.
+Read it below. If it answers your question, there is nothing more to do.
+  - Ticket: {{ reply.ticketNo }}
+  - Status: Updated
+  - From: Support team
+
+A new message has been added to your support ticket.
+
+LATEST UPDATE — {{ repliedBy.fullName }}
+{{ reply.message }}
+
+OPEN MY TICKET
+https://www.myhealthopinions.com/?login
+Support Tickets, in your account.
+
+PLEASE DO NOT REPLY TO THIS EMAIL
+Replies to this address are not monitored. To add details or respond,
+use the Support Ticket system on your account and quote {{
+reply.ticketNo }}.
+
+You are receiving this because a support ticket you opened has been
+updated.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

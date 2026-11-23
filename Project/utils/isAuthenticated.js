@@ -40,6 +40,13 @@ export default async function isAuthenticated(req, res, next) {
         }
 
         req.user = await getUserDetails(user);
+        if (!req.user) {
+            return res.status(401).json({ status: "error", message: "Unauthorized [Unknown account]" })
+        }
+        // a password change or reset ends every session that started before it
+        if (req.user.passwordChangedAt && user.iat && user.iat * 1000 < new Date(req.user.passwordChangedAt).getTime() - 1000) {
+            return res.status(401).json({ status: "error", message: "token expired" })
+        }
         return next();
     } catch (error) {
         console.log(error);
@@ -52,6 +59,6 @@ export default async function isAuthenticated(req, res, next) {
 }
 
 async function getUserDetails(user) {
-    let usr=await userModel.findById(user._id).select("+role");
+    let usr=await userModel.findById(user._id).select("+role +passwordChangedAt");
     return usr;
 }

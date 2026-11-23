@@ -1,0 +1,34 @@
+You’re approved. Your surveys can begin.
+
+{{ user.name.first }},
+
+WHAT THIS EMAIL IS ABOUT
+Your membership is approved.
+Your account has been reviewed and is cleared for caregiver surveys.
+They open one at a time, as your profile grows.
+  - Status: Approved
+  - Member ID: {{ user.memberId | default: "your member ID" }}
+  - Access: Caregiver surveys
+
+Thank you for your patience while we checked your account.
+
+ACCOUNT STATUS
+  Review          Approved
+  Account status  Active
+  You can now     Take eligible caregiver surveys
+
+GO TO MY ACCOUNT
+https://{{ user.origin }}/?login
+
+ONE THING WE ASK
+Please keep your answers accurate and truthful, in your profile and in
+every study. That is what keeps the research reliable — and it is the
+one thing we ask of everyone on the panel.
+
+With warm thanks,
+The MyHealthOpinions Caregivers team
+
+You are receiving this because your membership was reviewed.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

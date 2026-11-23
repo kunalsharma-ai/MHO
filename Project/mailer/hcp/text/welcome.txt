@@ -1,0 +1,48 @@
+Welcome to the Healthcare Professionals panel.
+
+{{ user.name.first }},
+
+WHAT THIS EMAIL IS ABOUT
+Your password is set and your account is now active.
+Nothing else is needed to keep it open. What decides how many
+invitations you receive is your profile — that is the next step.
+  - Status: Active
+  - Member ID: {{ user.memberId | default: "your member ID" }}
+  - Next step: Your profiles
+
+Your expertise moves healthcare research forward. Every profile you
+complete sequences one gene of your Clinical Genome.
+
+YOUR CLINICAL GENOME
+  profiles to sequence: 11
+  Reward Points each: +70
+  Quality Score each: +5
+
+WHAT TO DO NEXT
+  1. Log in to your dashboard
+  2. Complete your 11 professional profiles — each adds +70 Reward
+  Points and +5 Quality Score
+  3. Watch for study invitations — each shows the reward and the length
+  before you start
+
+LOG IN TO MY DASHBOARD
+https://{{ user.origin }}/?login
+Your answers save as you go, so you can stop and come back.
+
+GOOD TO KNOW
+  - Redeem your way: PayPal, UPI (India), wire transfer or an Amazon
+  gift card.
+  - Private by design: Your answers are used for research only. They are
+  reported in aggregate, never attributed to you by name, and never sold
+  on or used for advertising.
+  - Fits between clinics: Profiles take about two minutes each. Studies
+  show their length before you start.
+
+Glad to have your expertise on board.
+The MyHealthOpinions Clinical Panel team
+
+You are receiving this because your MyHealthOpinions account was just
+activated.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

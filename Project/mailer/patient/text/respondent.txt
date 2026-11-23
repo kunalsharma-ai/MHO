@@ -1,0 +1,48 @@
+Confirm your email to activate your account.
+
+{{ user.name.first }},
+
+WHAT THIS EMAIL IS ABOUT
+Your registration is in, but your email is not verified yet.
+Until it is, the account stays inactive and no surveys can be sent to
+it. Verifying also sets your password, so it is one step, not two.
+  - Time: About a minute
+  - Link valid: 24 hours
+  - Account: Not active yet
+
+Your registration has arrived. One confirmation activates the account
+and sets your password at the same time.
+
+WHERE THINGS STAND
+  [ok] Your registration has been received.
+  [ ! ] Your email address has not been verified yet.
+  [ ! ] Until it is, the account stays inactive and no surveys can be sent to it.
+
+Verifying takes about a minute and sets your password at the same time.
+
+VERIFY MY EMAIL ADDRESS
+https://{{ user.origin }}/set-password?user={{ user._id }}&code={{ otp.code }}
+This link expires 24 hours after it was sent.
+
+ONCE VERIFIED, YOU CAN
+  - Set your password and review the patient terms
+  - Complete 6 short About You profiles — each adds +50 points and +1
+  Quality Score
+  - Unlock 19 health surveys matched to your experience
+  - Redeem rewards by PayPal, UPI (India), wire transfer or an Amazon
+  gift card
+
+DIDN’T REGISTER?
+Ignore this email and nothing happens — no account is activated without
+this confirmation. Your answers are used for research only. They are
+reported in aggregate, never attributed to you by name, and never sold
+on or used for advertising.
+
+Welcome — we’re glad you’re here.
+The MyHealthOpinions Patients team
+
+You are receiving this because this address was used to register for the
+MyHealthOpinions Patients panel.
+
+Frequent Research Fieldwork Solutions Pvt. Ltd.
+Mangolpur Kalan, New Delhi 110085, India

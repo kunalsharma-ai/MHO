@@ -21,6 +21,8 @@ import { isAuthenticated } from "../../utils/index.js";
 
 import meRouter from "./api/Me.js";
 import changeEmail from "./api/changeEmail.js"
+import accountRouter from "./api/Account.js";
+import meJourneyRouter from "./api/MeJourney.js";
 const router = express.Router();
 router
     // .use("/api/v1/llm", llmRouter)
@@ -38,6 +40,8 @@ router
     .use("/api/v1/feasibility", feasibilityRouter)
     .use("/api/v1/project-dev", projectRouter)
     .use("/api/v1/rewards", isAuthenticated, rewardsRouter)
+    .use("/api/v1/account", accountRouter)
+    .use("/api/v1/me", isAuthenticated, meJourneyRouter)
     .use("/api/v1/me", isAuthenticated, meRouter)
     .use("/api/v1/response", isAuthenticated, meResponse)
     .use("/api/v1/support", isAuthenticated, supportRouter)
