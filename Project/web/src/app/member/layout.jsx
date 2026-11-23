@@ -1,8 +1,8 @@
-import Shell from "./studio/Shell";
+import Shell from "./mx/Shell";
 import MemberFooter from "./components/MemberFooter";
 
-// Member area frame: the studio header and sidebar (panel look, quality score, rewards, language, light/dark,
-// colour pattern, account menu) around every member page.
+// Member area frame (mx/): panel top bar and navigation around every member page, styled after the member's
+// panel design (HCP, caregiver or patient).
 function layout({ children }) {
   return (
     <div>

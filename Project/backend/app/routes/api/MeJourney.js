@@ -6,9 +6,11 @@
 //   POST /api/v1/me/consent/decline record a decline (the client then logs the member out)
 //   GET  /api/v1/me/consent/history the member's own consent records, newest first
 //   GET  /api/v1/me/dashboard       everything the dashboard shows, from the member's own records (403 until consent)
+//   GET  /api/v1/me/referrals       people who joined with the member's link: first name + initial, verified, joined date
+//                                   (members cannot use POST /api/v1/user, which is admin only)
 import express from "express";
 import crypto from "crypto";
-import { ConsentRecord, User } from "../../model/index.js";
+import { ConsentRecord, User, Invites } from "../../model/index.js";
 import { fsLogger } from "../../../utils/index.js";
 import { journeyFor } from "../../lib/journey.js";
 import { dashboardFor } from "../../lib/dashboard.js";
@@ -106,6 +108,25 @@ router.post("/consent/decline", limits.consent, wrap(async (req, res) => {
 router.get("/consent/history", noStore, wrap(async (req, res) => {
     const rows = await ConsentRecord.find({ user: req.user._id }).sort({ acceptedAt: -1 }).select("-_id consentId segment action termsVersion approvals acceptedAt language").lean();
     ok(res, "", rows);
+}));
+
+router.get("/referrals", noStore, wrap(async (req, res) => {
+    const me = String(req.user._id);
+    const [joined, invites] = await Promise.all([
+        User.find({ referredBy: me, origin: req.user.origin }).select("name mail isVerified createdAt").sort({ createdAt: -1 }).limit(500).lean(),
+        Invites.find({ invitedBy: req.user._id }).select("email").lean(),
+    ]);
+    const invited = new Set(invites.map((i) => String(i.email || "").toLowerCase()));
+    ok(res, "", joined.map((u) => {
+        const mail = String(u.mail || "").toLowerCase();
+        return {
+            name: [u.name?.first, u.name?.last ? `${u.name.last[0]}.` : ""].filter(Boolean).join(" "),
+            // the address is returned only when the member invited it themselves; link sign-ups stay private
+            email: invited.has(mail) ? u.mail : null,
+            verified: u.isVerified?.email === "verified",
+            joinedAt: u.createdAt,
+        };
+    }));
 }));
 
 router.get("/dashboard", noStore, wrap(async (req, res) => {
