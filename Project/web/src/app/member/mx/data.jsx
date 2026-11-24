@@ -8,6 +8,21 @@ import React from "react";
 import { api } from "@/util";
 import { useMember } from "@/Context";
 import { useRewardsTick, fetchRewardBalance } from "@/hooks/useRewardsRefresh";
+import { loadRewardRows } from "./rewardsData";
+import { streakOf } from "./engage";
+import { tr } from "./i18n";
+import { BY_CODE, DEFAULT_LANG } from "./lang/languages";
+import { sectionLang } from "./lang/bridge";
+import { setPageLanguage, onStatus, retryWithGesture } from "./lang/engine";
+import { isSoundEnabled, setSoundEnabled, onSoundChange } from "./lang/soundPrefs";
+
+const playLanguageSound = (code) => { if (isSoundEnabled()) import("./lang/sounds").then((m) => m.playLanguageSound(code)).catch(() => {}); };
+/** The language's colour grade (three colours), used by the header and the language wave, as on the website. */
+function applyGrade(meta) {
+  if (typeof document === "undefined") return;
+  const st = document.documentElement.style;
+  st.setProperty("--lg1", meta.grade[0]); st.setProperty("--lg2", meta.grade[1]); st.setProperty("--lg3", meta.grade[2]);
+}
 
 export const segOf = (category) => {
   const v = String(category || "").toLowerCase();
@@ -47,15 +62,43 @@ export const PANELS = {
   },
 };
 
+// Colour themes the member can pick in the header. "panel" keeps the panel's own colours.
+export const THEMES = [
+  { id: "panel", name: "Panel colours", sw: null },
+  { id: "aurora", name: "Aurora", sw: ["#14B8A6", "#8B5CF6"], deep: "#0B1E3A" },
+  { id: "sunset", name: "Sunset", sw: ["#F97316", "#E11D48"], deep: "#3B0A1E" },
+  { id: "ocean", name: "Ocean", sw: ["#0EA5E9", "#2563EB"], deep: "#062544" },
+  { id: "forest", name: "Forest", sw: ["#10B981", "#65A30D"], deep: "#0B2A1E" },
+  { id: "royal", name: "Royal", sw: ["#7C3AED", "#DB2777"], deep: "#1E0B3A" },
+  { id: "gold", name: "Gold", sw: ["#F59E0B", "#D9480F"], deep: "#2A1A05" },
+];
+/** CSS variables of a colour theme, set on the member area root. */
+export function themeVars(id, panel) {
+  const t = THEMES.find((x) => x.id === id);
+  if (!t || !t.sw) return undefined;
+  const [a, b] = t.sw;
+  const v = {
+    "--accent": a, "--accent-2": b, "--focus": a,
+    "--cta": `linear-gradient(115deg, ${a} 0%, ${b} 100%)`, "--cta-sh": `0 14px 28px -12px ${b}aa`,
+    "--brandtext": `linear-gradient(115deg, ${a}, ${b})`, "--meter": `linear-gradient(90deg, ${a}, ${b})`,
+    "--vault": `linear-gradient(160deg, ${t.deep} 0%, ${t.deep}ee 55%, ${b}88 140%)`,
+    "--nav-on": `linear-gradient(115deg, ${a}, ${b})`, "--nav-on-ink": "#fff", "--tint-a": a, "--tint-b": b,
+  };
+  if (panel !== "patient") v["--bar"] = `linear-gradient(120deg, ${t.deep} 0%, ${t.deep} 45%, ${b}cc 140%)`;
+  return v;
+}
+
+// [label, href, icon, tour id, i18n key]
 export const NAV = [
-  ["Dashboard", "/member/dashboard", "home", "nav-dashboard"],
-  ["My Profile", "/member/profiles", "profile", "nav-profiles"],
-  ["Surveys", "/member/surveys", "surveys", "nav-surveys"],
-  ["Rewards", "/member/rewards", "gift", "nav-rewards"],
-  ["Referrals", "/member/referrals", "share", "nav-referrals"],
-  ["Notifications", "/member/notifications", "bell", "nav-notifications"],
-  ["My Account", "/member/myaccount", "user", "nav-myaccount"],
-  ["Help & Support", "/member/support", "help", "nav-support"],
+  ["Dashboard", "/member/dashboard", "home", "nav-dashboard", "dashboard"],
+  ["My Profile", "/member/profiles", "profile", "nav-profiles", "profile"],
+  ["Surveys", "/member/surveys", "surveys", "nav-surveys", "surveys"],
+  ["Rewards", "/member/rewards", "gift", "nav-rewards", "rewards"],
+  ["Referrals", "/member/referrals", "share", "nav-referrals", "referrals"],
+  ["Messages", "/member/messages", "inbox", "nav-messages", "messages"],
+  ["Notifications", "/member/notifications", "bell", "nav-notifications", "notifications"],
+  ["My Account", "/member/myaccount", "user", "nav-myaccount", "account"],
+  ["Help & Support", "/member/support", "help", "nav-support", "help"],
 ];
 
 const Ctx = React.createContext(null);
@@ -70,10 +113,39 @@ export function MxProvider({ children }) {
   const [balance, setBalance] = React.useState({ points: 0, threshold: 0, rate: 0, ready: false });
   const [alerts, setAlerts] = React.useState({ loading: true, list: [] });
   const [mode, setModeState] = React.useState("light");
+  const [lang, setLangState] = React.useState("en");
+  const [palette, setPaletteState] = React.useState("panel");
+  const [picker, setPicker] = React.useState(false);
+  const [sound, setSound] = React.useState(true);
+  const [txStatus, setTxStatus] = React.useState({ waiting: 0, pending: 0, hasProvider: false, needsClick: false });
   const [n, setN] = React.useState(0);
 
   React.useEffect(() => { const m = read("mho.member.mode", "light"); setModeState(m === "dark" ? "dark" : "light"); }, []);
   const setMode = React.useCallback((m) => { setModeState(m); write("mho.member.mode", m); }, []);
+  // language and colour theme are display preferences of this browser, like light / dark mode
+  const setLang = React.useCallback((code, { origin, silent = false, interactive = true } = {}) => {
+    const meta = BY_CODE[code] || BY_CODE[DEFAULT_LANG];
+    setLangState(meta.code);
+    write("mho.member.lang", meta.code);
+    if (!silent) {
+      playLanguageSound(meta.code);
+      import("./lang/Language").then((m) => m.gradeWave(meta, origin)).catch(() => {});
+    }
+    applyGrade(meta);
+    // the wave starts first, then the page text changes (same timing as the website)
+    setTimeout(() => setPageLanguage(meta.code, { interactive }), silent ? 30 : 160);
+  }, []);
+  React.useEffect(() => {
+    setSound(isSoundEnabled());
+    const off1 = onStatus(setTxStatus);
+    const off2 = onSoundChange(setSound);
+    let l = read("mho.member.lang", "en");
+    if (l === "zh") l = "zh-CN"; // older saved value
+    if (BY_CODE[l] && l !== "en") setLang(l, { silent: true, interactive: false }); else applyGrade(BY_CODE.en);
+    const p = read("mho.member.palette", "panel"); if (THEMES.some((x) => x.id === p)) setPaletteState(p);
+    return () => { off1(); off2(); };
+  }, [setLang]);
+  const setPalette = React.useCallback((p) => { setPaletteState(p); write("mho.member.palette", p); }, []);
 
   React.useEffect(() => {
     if (!member?._id) return undefined;
@@ -102,6 +174,26 @@ export function MxProvider({ children }) {
     return () => { live = false; };
   }, [member?._id, n]);
 
+  // activity: every dated entry of the rewards history (surveys taken, profiles credited, friends, social follows)
+  const [activity, setActivity] = React.useState({ ready: false, rows: [] });
+  React.useEffect(() => {
+    if (!member?._id) return undefined;
+    let live = true;
+    loadRewardRows(member._id, []).then((r) => live && setActivity({ ready: true, rows: r.rows })).catch(() => live && setActivity({ ready: true, rows: [] }));
+    return () => { live = false; };
+  }, [member?._id, tick, n]);
+  // the member's own support tickets (same call as Help & Support)
+  const [tickets, setTickets] = React.useState({ ready: false, list: [] });
+  const mail = member?.mail || member?.email;
+  React.useEffect(() => {
+    if (!mail) return undefined;
+    let live = true;
+    api.post("/api/v1/support", { "issueRaisedBy.email": mail })
+      .then((r) => live && setTickets({ ready: true, list: Array.isArray(r?.data) ? r.data : [] }))
+      .catch(() => live && setTickets({ ready: true, list: [] }));
+    return () => { live = false; };
+  }, [mail, n]);
+
   const reload = React.useCallback(() => setN((x) => x + 1), []);
   const value = React.useMemo(() => {
     const d = dash.data;
@@ -109,8 +201,15 @@ export function MxProvider({ children }) {
       ...((d?.notifications || []).map((x, i) => ({ id: `d${i}`, kind: x.kind, level: x.level, text: x.text, at: x.at, action: x.action, section: x.section }))),
       ...alerts.list.map((a, i) => ({ id: `a${a._id || i}`, kind: "announcement", level: "info", text: a.title || a.subject || a.message || a.text || "Announcement", body: a.description || a.content || a.message, at: a.createdAt, link: a.link || a.url })),
     ];
-    return { member, panel, P: PANELS[panel], dash, d, balance, alerts, notes, reload, mode, setMode };
-  }, [member, panel, dash, balance, alerts, reload, mode, setMode]);
+    const langMeta = BY_CODE[lang] || BY_CODE.en;
+    return {
+      member, panel, P: PANELS[panel], dash, d, balance, alerts, notes, reload, mode, setMode, palette, setPalette,
+      activity, streak: streakOf(activity.rows), tickets,
+      lang, langMeta, setLang, sectionLang: sectionLang(lang), t: tr(sectionLang(lang)),
+      picker, openPicker: () => { import("./lang/sounds").catch(() => {}); setPicker(true); }, closePicker: () => setPicker(false),
+      sound, toggleSound: () => setSoundEnabled(!isSoundEnabled()), txStatus, translateRest: retryWithGesture,
+    };
+  }, [member, panel, dash, balance, alerts, reload, mode, setMode, lang, setLang, palette, setPalette, picker, sound, txStatus, activity, tickets]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

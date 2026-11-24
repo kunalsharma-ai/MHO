@@ -141,3 +141,11 @@ export function sectionArt(panel, slug = "", name = "") {
   return src(set[sectionKey(panel, slug, name)] || set.basic);
 }
 export const artByName = (panel, name) => src((SETS[panel] || {})[name]);
+
+/** A different illustration for every member page in every panel, so no two page heads look alike. */
+const PAGE_ART = {
+  hcp: { surveys: "survey-participation", rewards: "professional-category", referrals: "social-media", messages: "technical", notifications: "documents", account: "professional-address", help: "additional-details" },
+  caregiver: { surveys: "survey", rewards: "care-role", referrals: "social", messages: "tech", notifications: "additional", account: "basic", help: "health" },
+  patient: { surveys: "survey", rewards: "insurance", referrals: "social", messages: "digital", notifications: "info", account: "basic", help: "providers" },
+};
+export const pageArt = (panel, page) => src((SETS[panel] || SETS.patient)[(PAGE_ART[panel] || PAGE_ART.patient)[page]] || (SETS[panel] || SETS.patient).basic);

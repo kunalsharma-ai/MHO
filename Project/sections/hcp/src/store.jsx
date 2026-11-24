@@ -17,10 +17,12 @@ export const PRERENDER_STATE = { lang: 'en', theme: 'light', sound: true, answer
 function initial(boot = {}) {
   const saved = readState() || {};
   const completed = boot.completed || {};
+  const c = (typeof window !== 'undefined' && window.MHO_CONFIG) || {};
   return {
-    lang: 'en',
-    theme: 'light',
-    sound: false,
+    // the member area passes the language and light / dark mode chosen in its header
+    lang: c.lang || 'en',
+    theme: c.theme === 'dark' ? 'dark' : 'light',
+    sound: c.sound !== false,
     answers: boot.answers || {},
     completed,
     seen: { ...completed },

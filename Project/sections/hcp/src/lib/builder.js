@@ -32,7 +32,8 @@ export default function build({ PROFILES, QUESTIONS, OPTIONS, ALL_NAMES = [], DY
     const p = profBySlug[slug];
     if (!p) continue;
     const page = p.pages[0];
-    outProfiles.push({ slug, name: clean(page[0]), questions: page.slice(1) });
+    const drop = new Set((overrides.dropFrom || {})[slug] || []);
+    outProfiles.push({ slug, name: clean(page[0]), questions: page.slice(1).filter((n) => !drop.has(n)) });
   }
   const dynamicNames = new Set(DYNAMIC || []);
   const known = new Set(outProfiles.flatMap((p) => p.questions));

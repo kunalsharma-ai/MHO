@@ -22,7 +22,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
 import { optionEmoji, applySequence, QUESTION_EMOJI } from './option-emoji.mjs';
-import { editProfileDocs, DROP_2026, DUPLICATE_OF, patchOptions, patchFlags } from '../src/lib/questions-2026.js';
+import { editProfileDocs, DROP_2026, DUPLICATE_OF, patchOptions, patchFlags, remapParents } from '../src/lib/questions-2026.js';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..');
 const RAW = path.join(ROOT, 'raw');
@@ -475,6 +475,7 @@ function finishChoice(q) {
 }
 
 /* Profiles: drop questions that ended up undefined */
+remapParents(questions);
 for (const p of profiles) p.questions = p.questions.filter((n) => questions[n]);
 for (const p of profiles) { contentStrings.add(p.title); contentStrings.add(p.blurb); contentStrings.add(p.flavor); }
 

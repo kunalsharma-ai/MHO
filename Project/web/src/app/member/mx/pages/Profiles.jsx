@@ -16,7 +16,7 @@ function Opener({ handleRef }) {
   const params = useSearchParams();
   const want = params?.get("open");
   React.useEffect(() => {
-    if (!want || /\s/.test(want)) return undefined; // only package slugs (no spaces) can be opened directly
+    if (!want) return undefined; // the sections accept their own id, the database slug or the profile name
     let tries = 0;
     const id = setInterval(() => {
       tries += 1;
@@ -29,7 +29,7 @@ function Opener({ handleRef }) {
 }
 
 export default function Profiles() {
-  const { member, d, panel } = useMx();
+  const { member, d, panel, sectionLang: lang, mode, sound } = useMx();
   const [failed, setFailed] = React.useState(false);
   const handleRef = React.useRef(null);
   if (!member) return <LoadingOverlay />;
@@ -49,7 +49,7 @@ export default function Profiles() {
         </>
       ) : (
         <div className="mx-embed" style={{ borderRadius: 28, overflow: "hidden", boxShadow: "var(--sh-lg)" }}>
-          <ProfileSection view="profiles" handleRef={handleRef} onFail={() => setFailed(true)}/>
+          <ProfileSection lang={lang} theme={mode} sound={sound} view="profiles" handleRef={handleRef} onFail={() => setFailed(true)}/>
         </div>
       )}
     </>

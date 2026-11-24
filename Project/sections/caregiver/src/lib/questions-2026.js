@@ -11,6 +11,7 @@
 
 const PNS = ['Prefer not to say', 'Prefer not to say'];
 const OTHER = ['Other (please specify)', 'Other'];
+const SCREENER = ['caregiver-support', 'caregiving-situation'];
 
 export const PROFILE_EDITS = {
   // "Age (numeric entry)" uses the bank's existing "age" question. It must agree with the date of birth,
@@ -18,10 +19,21 @@ export const PROFILE_EDITS = {
   'basic profile': { after: { 'relationship-status': ['age'] } },
   // the allergy details box moves with the allergy question that is kept (Personal Health)
   'personal health profile': { after: { 'cg-food-allergy': ['cg-allergy-details'] } },
-  'food and lifestyle': { remove: ['cg-allergy-details'] },
   // existing bank questions that the 2026 document asks
-  'professional profile': { after: { 'primary-work-location': ['direct-patient-care-proportion'] } },
+  'professional profile': { after: { 'primary-work-location': ['direct-patient-care-proportion'] }, remove: SCREENER },
   'survey participation and reward preferences profile': { after: { 'video-survey-participation-consent': ['video-platforms', 'video-based-research'] } },
+  // the health check-up and COVID-19 vaccine questions are asked once, in Personal Health
+  'sports and physical fitness': { remove: ['cg-health-checkup', 'cg-vaccine-covid', ...SCREENER] },
+  // the two screener questions are asked once, in the Care Role (screener) profile
+  'educational profile': { remove: SCREENER },
+  'health insurance profile': { remove: SCREENER },
+  'food and lifestyle': { remove: ['cg-allergy-details', ...SCREENER] },
+};
+
+// profiles whose questions are loaded with another profile, so a follow-up there can read an answer given here.
+// '*' = every profile: the screener answers decide which caregiver questions are shown.
+export const PRELOAD = {
+  '*': ['screener'],
 };
 
 // question → the question that already asks the same thing (kept)
@@ -30,6 +42,8 @@ export const DUPLICATE_OF = {
   'ad-occupation': 'cg-jobrole', // Professional Profile → "What is your job title?"
   'ad-mobile': 'account:phone', // mobile number is already on the account (sign-up, My Account)
   'ad-alt-email': 'account:alternate-email', // My Account → Alternate contact
+  'mode-of-payment': 'payment-method', // Survey Participation & Reward Preferences
+  'cg-tobacco-type': 'current-tobacco-nicotine-products-used', // Food & Lifestyle, the 2026 tobacco products question
 };
 export const DROP_2026 = new Set(Object.keys(DUPLICATE_OF));
 
@@ -40,6 +54,9 @@ export const PATCHES = {
   'care-recipient-category': { add: [PNS], multi: true },
   'cg-describe': { add: [PNS] },
   'unpaid-healthcare-activities': { optional: true },
+  // unpaid caregivers answer their own insurance in the Health Insurance profile ("current health insurance status"),
+  // so the Personal Health insurance question is only asked of paid and paid+unpaid caregivers
+  'cg-have-insurance': { parent: 'caregiving-situation', parentValues: ['I provide paid/professional care as part of my work', 'I provide both unpaid and paid/professional care'] },
   'primary-care-recipient': { add: [['Other', 'Other']] },
   'employer-type': { add: [['Other', 'Other']] },
   // the export gave "Yes" the value "No", so only one of the two options could be shown
@@ -68,6 +85,12 @@ export const PATCHES = {
   'video-platforms': { relabel: { Other: 'Other (please specify)' }, icons: { 'Microsoft Teams': '💼', 'Google Meet': '📹', Skype: '☎️', 'WhatsApp Video': '📱' } },
   'video-based-research': { label: 'Are you open to taking part in video-based research that may require any of these? (Select all that apply)', multi: true, optional: true, icons: { 'Sharing your opinions on camera (e.g., interviews)': '🗣️', 'Participating in a group video discussion': '👥' } },
 };
+
+const keyOf = (name) => String(name ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
+/** Names of the profile documents to load together with this one. */
+export function preloadFor(name) {
+  return [...(PRELOAD[keyOf(name)] || []), ...(PRELOAD['*'] || [])].filter((n) => n !== keyOf(name));
+}
 
 /** Applies PROFILE_EDITS and DROP_2026 to the profile documents from the database (returns copies). */
 export function editProfileDocs(docs) {
@@ -108,6 +131,7 @@ export function patchOptions(q, name) {
     else q.options.push(withPv(l, v));
   }
   if (p.relabel) q.options = q.options.map((o) => (p.relabel[o[1]] ? [p.relabel[o[1]], ...o.slice(1)] : o));
+  if (p.parent) q.parent = p.parent;
   if (p.parentValues) q.options = q.options.map((o) => [o[0], o[1], [...p.parentValues]]);
 }
 

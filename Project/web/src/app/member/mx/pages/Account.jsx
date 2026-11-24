@@ -8,11 +8,11 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { api } from "@/util";
 import DeleteAccountSection from "../../(member pages)/myaccount/component/accountActions/DeleteAccountSection";
-import { useMx, useAnswers, fullName, initials, memberId } from "../data";
+import { useMx, useAnswers, fullName, initials, memberId, THEMES } from "../data";
 import { PageHead } from "../parts";
 import { Icon, Tabs, Empty, Field, Password, useToast, apiOk, apiMessage, fmtDate, cap } from "../kit";
 import { STATEMENTS, REQUIRED, OPTIONAL } from "../consentText";
-import { sectionArt } from "../art";
+import { sectionArt, pageArt } from "../art";
 
 const TABS = [
   { id: "personal", label: "Personal details", icon: "user" },
@@ -46,7 +46,7 @@ const Err = ({ text }) => (text ? <div className="mx-alert bad" role="alert"><Ic
 
 // ---- personal -------------------------------------------------------------------------------------------------------
 function Personal() {
-  const { member, d } = useMx();
+  const { member, d, panel, t } = useMx();
   const save = useSave();
   const [pic, setPic] = React.useState(false);
   const [alt, setAlt] = React.useState({ email: "", phone: "" });
@@ -79,7 +79,7 @@ function Personal() {
       setEdit(null);
     }
   };
-  const loc = [d?.member?.city, d?.member?.country?.toUpperCase()].filter(Boolean).map(cap).join(", ");
+  const loc = [String(d?.member?.city || "").replace(/\b\w/g, (c) => c.toUpperCase()), d?.member?.country?.toUpperCase()].filter(Boolean).join(", ");
   return (
     <div className="mx-form">
       <div className="mx-row" style={{ gap: 18 }}>
@@ -99,7 +99,7 @@ function Personal() {
         <div><small>Date of birth</small><b>{member?.dob ? `${fmtDate(member.dob)}${age ? ` (${age})` : ""}` : "—"}</b></div>
         <div><small>Location</small><b>{loc || "—"}</b></div>
         <div><small>Member since</small><b>{fmtDate(member?.createdAt || d?.member?.joinedAt)}</b></div>
-        <div><small>Panel</small><b>{cap(member?.category || "—")}</b></div>
+        <div><small>Panel</small><b>{t(panel)}</b></div>
       </div>
       <p className="mx-muted" style={{ fontSize: 13.5 }}>Your sign-in email, date of birth and gender cannot be changed here for security reasons. To change your sign-in email, please <Link href="/member/support?tab=new&subject=Change%20my%20sign-in%20email" style={{ fontWeight: 700 }}>open a support ticket</Link>. Other details live in <Link href="/member/profiles" style={{ fontWeight: 700 }}>My Profile</Link>.</p>
       <h3 style={{ fontSize: 17, marginTop: 6 }}>Alternate contact</h3>
@@ -348,29 +348,49 @@ function PrivacyTab() {
 }
 
 // ---- preferences ----------------------------------------------------------------------------------------------------
-const LANGS = [["en", "English"], ["hi", "हिन्दी"], ["es", "Español"], ["fr", "Français"], ["de", "Deutsch"], ["pt", "Português"], ["ar", "العربية"], ["zh-CN", "简体中文"]];
+// The same controls as the header: they change the whole member area at once and are kept in this browser.
 function PreferencesTab() {
-  const { mode, setMode } = useMx();
-  const [lang, setLang] = React.useState("en");
-  React.useEffect(() => { try { setLang(localStorage.getItem("mho.lang") || "en"); } catch (e) { /* storage blocked */ } }, []);
-  const pick = (code) => {
-    setLang(code);
-    try { localStorage.setItem("mho.lang", code); } catch (e) { /* storage blocked */ }
-    setTimeout(() => window.location.reload(), 120); // the site translator reads mho.lang when the page loads
-  };
+  const { mode, setMode, langMeta, openPicker, palette, setPalette, sound, toggleSound } = useMx();
   return (
-    <div className="mx-form" style={{ maxWidth: 560 }}>
-      <p className="mx-muted">These settings are kept in this browser only.</p>
-      <Field label="Theme" id="mx-theme">
-        <div className="mx-filters" role="radiogroup" aria-label="Theme" id="mx-theme">
+    <div className="mx-form mx-prefs" style={{ maxWidth: 640 }}>
+      <p className="mx-muted">These settings are kept in this browser and apply straight away. Nothing reloads.</p>
+      <Field label="Appearance" id="mx-theme">
+        <div className="mx-filters" role="radiogroup" aria-label="Appearance" id="mx-theme">
           {[["light", "Light", "sun"], ["dark", "Dark", "moon"]].map(([k, l, ic]) => <button key={k} type="button" role="radio" aria-checked={mode === k} aria-pressed={mode === k} onClick={() => setMode(k)}><Icon name={ic} size={15} />{l}</button>)}
         </div>
       </Field>
-      <Field label="Language" id="mx-lang" hint="The page reloads in the chosen language.">
-        <select id="mx-lang" className="mx-input" value={lang} onChange={(e) => pick(e.target.value)}>
-          {LANGS.map(([c, n]) => <option key={c} value={c} lang={c}>{n}</option>)}
-        </select>
+      {(
+        <Field label="Colour theme" id="mx-pal">
+          <div className="mx-filters" role="radiogroup" aria-label="Colour theme" id="mx-pal">
+            {THEMES.map((p) => <button key={p.id} type="button" role="radio" aria-checked={palette === p.id} aria-pressed={palette === p.id} onClick={() => setPalette(p.id)}><i className="mx-sw" style={{ background: p.sw ? `linear-gradient(135deg, ${p.sw[0]}, ${p.sw[1]})` : "linear-gradient(135deg, var(--accent), var(--accent-2))" }} />{p.name}</button>)}
+          </div>
+        </Field>
+      )}
+      <Field label="Language" id="mx-lang" hint="Menus, pages and profile questionnaires switch at once.">
+        <button type="button" id="mx-lang" className="mx-btn ghost" onClick={() => openPicker?.()}><Icon name="globe" size={16} />{langMeta?.native || langMeta?.name || "English"}<Icon name="chev" size={14} /></button>
       </Field>
+      {typeof toggleSound === "function" && (
+        <Field label="Sounds" id="mx-snd">
+          <label className="mx-check" style={{ maxWidth: 360 }}><input id="mx-snd" type="checkbox" checked={!!sound} onChange={toggleSound} /><Icon name="sound" size={18} />Play soft sounds when I answer a question or change the language</label>
+        </Field>
+      )}
+    </div>
+  );
+}
+
+function IdStrip() {
+  const { member, panel, d, t } = useMx();
+  const secs = d?.profile?.sections || [];
+  const done = secs.filter((x) => x.status === "complete").length;
+  const pic = member?.profilePicture && !/logo\/user\.png$/.test(member.profilePicture) ? member.profilePicture : null;
+  const items = [["card", "Member ID", memberId(member, d) || "—"], ["calendar", "Member since", fmtDate(member?.createdAt || d?.member?.joinedAt)], ["profile", "Profiles complete", secs.length ? `${done} of ${secs.length}` : "—"], ["heart", "Quality score", Number(member?.qualityScore) || 0]];
+  return (
+    <div className="mx-idstrip">
+      <div className="who">
+        <span className="av">{pic ? <img src={pic} alt="" /> : initials(member)}</span>
+        <span><b>{fullName(member)}</b><small>{t(panel)}{member?.mail ? ` · ${member.mail}` : ""}</small></span>
+      </div>
+      <ul>{items.map(([ic, k, v], i) => <li key={k} style={{ "--i": i }}><Icon name={ic} size={16} /><span><small>{k}</small><b>{v}</b></span></li>)}</ul>
     </div>
   );
 }
@@ -383,14 +403,15 @@ function AccountInner({ initialTab }) {
   const [tab, setTab] = React.useState(TABS.some((t) => t.id === want) ? want : "personal");
   React.useEffect(() => { if (TABS.some((t) => t.id === want)) setTab(want); }, [want]);
   const change = (t) => { setTab(t); router.replace(`/member/myaccount?tab=${t}`, { scroll: false }); };
-  const q = Number(member?.qualityScore) || 0;
   return (
     <>
-      <PageHead icon="user" title="My Account" art={sectionArt(panel, "basic", "basic")}
-        lead="Your personal and contact details, password, notification and payment preferences, privacy choices and account settings."
-        facts={[["Member ID", memberId(member, d) || "—"], ["Quality score", q], ["Member since", fmtDate(member?.createdAt || d?.member?.joinedAt)]]} />
+      <PageHead icon="user" title="My Account" art={pageArt(panel, "account")}
+        lead="Your details, password, contact and payment preferences, privacy choices and settings.">
+        <IdStrip />
+      </PageHead>
+      <div className="mx-acct">
       <Tabs label="Account sections" value={tab} onChange={change} tabs={TABS} />
-      <section className="mx-card" role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
+      <section className="mx-card" role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`} key={tab}>
         <h2 style={{ marginBottom: 16 }}>{TABS.find((t) => t.id === tab)?.label}</h2>
         {tab === "personal" && <Personal />}
         {tab === "password" && <PasswordTab />}
@@ -406,6 +427,7 @@ function AccountInner({ initialTab }) {
           </div>
         )}
       </section>
+      </div>
     </>
   );
 }

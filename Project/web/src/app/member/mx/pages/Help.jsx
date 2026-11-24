@@ -11,7 +11,7 @@ import { useMx } from "../data";
 import { PageHead } from "../parts";
 import { Icon, Tabs, Empty, Field, useToast, apiOk, apiMessage, fmtDate, cap } from "../kit";
 import { faqs } from "../faqs";
-import { sectionArt } from "../art";
+import { sectionArt, pageArt } from "../art";
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
@@ -149,8 +149,13 @@ function HelpInner() {
   const [rk, setRk] = React.useState(0);
   return (
     <>
-      <PageHead icon="help" title="Help & Support" art={sectionArt(panel, "info", "information")}
+      <PageHead icon="help" title="Help & Support" art={pageArt(panel, "help")}
         lead="Answers to common questions, and a direct line to the My Health Opinions support team." />
+      <section className="mx-ways three" aria-label="Ways to get help">
+        <button type="button" className="mx-way t-violet" style={{ "--i": 0 }} onClick={() => setTab("faq")}><span className="ic"><Icon name="help" size={22} /></span><b>Find a quick answer</b><span>Search the questions members ask most often.</span><em>Open the FAQ <Icon name="arrow" size={14} /></em></button>
+        <button type="button" className="mx-way t-coral" style={{ "--i": 1 }} onClick={() => setTab("new")}><span className="ic"><Icon name="ticket" size={22} /></span><b>Ask our team</b><span>Open a ticket about rewards, surveys or your account.</span><em>New ticket <Icon name="arrow" size={14} /></em></button>
+        <Link className="mx-way t-teal" style={{ "--i": 2 }} href="/member/messages"><span className="ic"><Icon name="inbox" size={22} /></span><b>Follow the replies</b><span>Every ticket and reply also lands in Messages.</span><em>Open Messages <Icon name="arrow" size={14} /></em></Link>
+      </section>
       <Tabs label="Help sections" value={tab} onChange={setTab} tabs={[{ id: "faq", label: "FAQ", icon: "help" }, { id: "tickets", label: "My tickets", icon: "ticket" }, { id: "new", label: "New ticket", icon: "plus" }]} />
       <section className="mx-card" role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
         {tab === "faq" && <Faq />}

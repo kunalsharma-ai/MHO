@@ -1,0 +1,82 @@
+/* =====================================================================
+   Member area motion and depth: 3D scenes, tilt cards, entrance
+   animations and the panel ambience. Transform / opacity only; all of it
+   stops with prefers-reduced-motion.
+   ===================================================================== */
+.mx-3d { position: absolute; inset: 0; opacity: 0; transition: opacity .9s var(--ease); }
+.mx-3d.on { opacity: 1; }
+.mx-3d canvas { width: 100% !important; height: 100% !important; display: block; }
+
+.mx-hero3d { position: relative; width: 100%; aspect-ratio: 1 / .92; max-height: 460px; min-height: 280px; }
+.mx-hero3d .halo { position: absolute; inset: 8%; border-radius: 50%; filter: blur(30px); opacity: .55;
+  background: radial-gradient(circle, var(--tint-a, var(--accent-2)) 0%, transparent 62%); animation: mxHalo 6s ease-in-out infinite alternate; }
+.mx-hero3d.p-caregiver .halo { background: radial-gradient(circle, #FF8FB1 0%, transparent 62%); }
+.mx-hero3d.p-hcp .halo { background: radial-gradient(circle, #8B7CFF 0%, transparent 62%); }
+@keyframes mxHalo { from { transform: scale(.9); opacity: .4; } to { transform: scale(1.08); opacity: .65; } }
+.mx-hero3d .mx-scene.mini { z-index: 2; border-width: 3px; }
+.mx-hero3d .mx-orbit, .mx-hero3d .mx-pulseorb, .mx-hero3d .mx-scenes { position: absolute; inset: 0; margin: auto; }
+
+/* page heads carry a small 3D emblem of the panel */
+.mx-head .art3d { position: relative; width: clamp(150px, 16vw, 210px); aspect-ratio: 1; justify-self: end; }
+.mx-head .art3d .halo { position: absolute; inset: 14%; border-radius: 50%; filter: blur(22px); opacity: .5; background: radial-gradient(circle, var(--tint-a, var(--accent-2)), transparent 65%); }
+
+/* cards lift and tilt toward the pointer */
+.mx-tilt { transform-style: preserve-3d; transition: transform .35s var(--ease), box-shadow .35s var(--ease); will-change: transform; }
+.mx-tilt:hover { box-shadow: var(--sh-lg); }
+
+/* staggered entrance for page sections */
+.mx-main > * { animation: mxEnter .7s var(--ease) backwards; }
+.mx-main > *:nth-child(2) { animation-delay: .06s; } .mx-main > *:nth-child(3) { animation-delay: .12s; }
+.mx-main > *:nth-child(4) { animation-delay: .18s; } .mx-main > *:nth-child(5) { animation-delay: .24s; }
+.mx-main > *:nth-child(n+6) { animation-delay: .3s; }
+@keyframes mxEnter { from { opacity: 0; transform: translateY(18px); } }
+
+/* ambient: drifting light blobs behind the content, different for each panel */
+.mx-amb { position: absolute; inset: 0; overflow: hidden; }
+.mx-amb i { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .45; animation: mxDrift 26s ease-in-out infinite alternate; }
+.mx-amb i:nth-child(1) { width: 42vw; height: 42vw; left: -10vw; top: -12vw; background: var(--tint-a, var(--accent-2)); }
+.mx-amb i:nth-child(2) { width: 36vw; height: 36vw; right: -8vw; top: 20vh; background: var(--tint-b, var(--accent)); animation-duration: 32s; animation-delay: -8s; }
+.mx-amb i:nth-child(3) { width: 30vw; height: 30vw; left: 30vw; bottom: -14vw; background: var(--tint-a, var(--accent-2)); animation-duration: 38s; animation-delay: -16s; opacity: .3; }
+.mx[data-mode="dark"] .mx-amb i { opacity: .28; }
+@keyframes mxDrift { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(6vw, 4vh) scale(1.12); } 100% { transform: translate(-4vw, 8vh) scale(.92); } }
+.mx[data-panel="hcp"] { --tint-a: #8B7CFF; --tint-b: #22C3F5; }
+.mx[data-panel="caregiver"] { --tint-a: #FF8FB1; --tint-b: #FFC65C; }
+.mx[data-panel="patient"] { --tint-a: #5CC8F0; --tint-b: #A78BFA; }
+
+/* floating panel motifs come back on wide screens, drifting slowly */
+@media (min-width: 961px) {
+  .mx-bg .mx-float { display: block; position: absolute; animation: mxBob 9s ease-in-out infinite alternate; animation-delay: var(--d, 0s); opacity: .7; }
+}
+
+/* section buttons sparkle on hover */
+.mx-btn { position: relative; overflow: hidden; }
+.mx-btn::after { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; transform: skewX(-20deg); background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent); transition: left .6s var(--ease); pointer-events: none; }
+.mx-btn:hover::after { left: 130%; }
+
+@media (max-width: 960px) {
+  .mx-hero3d { max-width: 380px; margin: 0 auto; min-height: 240px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mx-main > *, .mx-amb i, .mx-hero3d .halo, .mx-bg .mx-float { animation: none !important; }
+  .mx-tilt { transition: none; }
+}
+
+/* ---- surveys: how to take part ---- */
+.mx-takepart ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; position: relative; }
+.mx-takepart ol::before { content: ""; position: absolute; left: 28px; right: 28px; top: 27px; height: 3px; border-radius: 3px; background: var(--meter); opacity: .35; }
+.mx-takepart li { position: relative; display: grid; align-content: start; gap: 8px; padding: 0 4px; animation: mxEnter .6s var(--ease) backwards; animation-delay: calc(var(--i) * 90ms); }
+.mx-takepart .num { position: relative; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--card-solid); color: var(--accent-ink);
+  box-shadow: 0 0 0 1px var(--line-2), 0 10px 22px -12px var(--accent); }
+.mx-takepart .num svg.ring { position: absolute; inset: 0; transform: rotate(-90deg); }
+.mx-takepart .num circle { fill: none; stroke-width: 4; }
+.mx-takepart .num .bg { stroke: var(--line); }
+.mx-takepart .num .fg { stroke: var(--accent); stroke-linecap: round; stroke-dasharray: 119.4; stroke-dashoffset: calc(119.4 * (1 - var(--p))); transition: stroke-dashoffset 1.2s var(--ease); }
+.mx-takepart .st-now .num { background: var(--cta); color: #fff; box-shadow: var(--cta-sh); animation: mxNow 2.6s ease-in-out infinite; }
+.mx-takepart .st-now .num .bg { stroke: rgba(255, 255, 255, .3); } .mx-takepart .st-now .num .fg { stroke: #fff; }
+.mx-takepart .st-done .num { background: linear-gradient(135deg, #2BD48C, #0E9F6E); color: #fff; }
+@keyframes mxNow { 50% { transform: scale(1.07); } }
+.mx-takepart b { font-family: var(--f-display); font-size: 16px; }
+.mx-takepart .tx { color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+.mx-takepart .act { margin-top: 4px; }
+@media (max-width: 960px) { .mx-takepart ol { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mx-takepart ol::before { display: none; } }
+@media (max-width: 560px) { .mx-takepart ol { grid-template-columns: minmax(0, 1fr); } }

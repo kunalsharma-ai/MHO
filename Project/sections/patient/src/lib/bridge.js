@@ -1,6 +1,6 @@
 import { parsePhone } from './phone.js';
 import build from './builder.js';
-import { editProfileDocs } from './questions-2026.js';
+import { editProfileDocs, preloadFor } from './questions-2026.js';
 
 let queue = Promise.resolve();
 const host = () => window.MHO_HOST || {};
@@ -102,8 +102,10 @@ function detail(profile) {
       const doc = docOf(profile.source);
       if (!doc) throw new Error(`Profile not found: ${profile.source}`);
       const extra = ['country', ...(namesOf(doc).includes('department') ? ['employment-jobrole'] : [])];
-      const { questions, options } = await collect(doc, extra);
-      const files = build({ PROFILES: [doc], QUESTIONS: byId(questions), OPTIONS: byId(options) });
+      // profiles whose answers this one reads (a question asked once, elsewhere) are built with it, then left out of the result
+      const also = preloadFor(doc.name).map(docOf).filter((d) => d && d !== doc);
+      const { questions, options } = await collect(doc, [...extra, ...also.flatMap(namesOf)]);
+      const files = build({ PROFILES: [doc, ...also], QUESTIONS: byId(questions), OPTIONS: byId(options) });
       const out = JSON.parse(files[MAIN]);
       for (const [key, body] of Object.entries(files)) if (key.startsWith('jobs/')) jobFiles[key] = body;
       return { profile: out.profiles.find((p) => p.id === profile.id), questions: out.questions };
@@ -160,6 +162,13 @@ function cities(cc) {
     })().catch((error) => { cityCache.delete(cc); throw error; }));
   }
   return cityCache.get(cc);
+}
+
+/** Name of the database profile with this slug (the member area links to profiles by their database slug). */
+export function sourceOfSlug(slug) {
+  const w = String(slug ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
+  const d = docs.find((x) => same(x.slug, w) || same(x.name, w));
+  return d ? clean(d.name).toLowerCase() : null;
 }
 
 export async function sectionFile(path) {

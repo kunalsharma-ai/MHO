@@ -23,6 +23,10 @@ async function mount(target, opts = {}) {
     assetBase,
     dataBase: (opts.config && opts.config.dataBase) || prev.dataBase || (assetBase ? assetBase.replace(/\/?$/, '/') + 'data/' : 'data/'),
     user: { ...(prev.user || {}), ...(opts.user || {}) },
+    lang: opts.lang || prev.lang,
+    theme: opts.theme || prev.theme,
+    // answer sounds: on unless the host turns them off
+    sound: opts.sound ?? prev.sound ?? true,
     disableSW: true,
   };
   if (opts.user?.respondentId) store.set({ rid: String(opts.user.respondentId) });
@@ -32,7 +36,7 @@ async function mount(target, opts = {}) {
     el.style.background = 'transparent';
   }
   setHost(el);
-  await loadUI('en');
+  await loadUI(window.MHO_CONFIG.lang || 'en');
   const root = createRoot(el);
   const view = opts.view || 'all';
   root.render(<App userName={opts.user?.firstName} view={view} />);

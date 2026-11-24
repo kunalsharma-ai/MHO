@@ -10,6 +10,7 @@
  */
 
 const PNS = ['Prefer not to say', 'Prefer not to say'];
+const YES_MR = ['Yes, within the last 6 months', 'Yes, 6-12 months ago', 'Yes, 1-2 years ago', 'Yes, more than 2 years ago'];
 
 // Each profile is matched by its name in the database. "after" places questions right after another one;
 // "remove" takes them off that profile (used together with "after" on another profile to move a question).
@@ -20,6 +21,47 @@ export const PROFILE_EDITS = {
   // the drink and tobacco follow-ups now follow the 2026 questions they depend on
   'food and lifestyle profile': { remove: ['alcohol-category', 'smoke-category'] },
   'lifestyle and behaviour': { after: { 'smoking-tobacco-nicotine': ['smoke-category'], 'consume-alcohlic-beverages': ['alcohol-category'] } },
+  // the survey history follow-ups now follow the 2026 question "Have you participated in market research?" (document Q62)
+  'survey participation and reward preferences profile': { remove: ['survey-participation-frequency', 'survey-participation-category', 'other-survey-panel'] },
+  'clinical research and market research experience': { after: { 'participate-market-research': ['survey-participation-frequency', 'survey-participation-category', 'other-survey-panel'] } },
+  // "How would you rate your overall health?" is asked once, in General Health
+  'personal health profile': { remove: ['health-status'] },
+};
+
+// profiles whose questions are loaded with another profile, so a follow-up there can read an answer given here:
+// the condition follow-ups in Personal Health open from the conditions picked in Medical Conditions (document Q12)
+export const PRELOAD = {
+  'personal health profile': ['medical condition profile'],
+};
+
+// "Have you been diagnosed with any of these chronic conditions?" (Personal Health) asked the same thing as
+// "Which of the following conditions have you ever been diagnosed with?" (Medical Conditions, document Q12).
+// It is no longer asked; its follow-ups now open from the document question. Old value → document values.
+export const REPARENT = {
+  from: 'chronic-conditions',
+  to: 'disease-types',
+  values: {
+    Diabetes: ['Diabetes'],
+    Hypertension: ['High blood pressure/hypertension'],
+    'High Cholesterol': ['High cholesterol'],
+    Asthma: ['Asthma'],
+    Arthritis: ['Arthritis'],
+    'Heart Disease': ['Heart disease'],
+    'Depression or Anxiety': ['Depression', 'Anxiety'],
+    Obesity: ['Obesity'],
+    Cancer: ['Cancer'],
+    'Thyroid disorder': ['Thyroid condition'],
+    'Sleep Apnea': ['Sleep apnea'],
+    'Skin Disorder': ['Skin condition'],
+    'Gastric / Digestive / Urinary': ['Digestive/Gastrointestinal condition', 'Kidney disease', 'Liver disease'],
+    'Neurologic / Nervous': ['Neurological condition', 'Migraine', 'Epilepsy', 'Multiple sclerosis', "Parkinson's disease", "Alzheimer's/dementia", 'Stroke'],
+    'Vision / Hearing Impairments': ['Eye/vision condition', 'Hearing condition'],
+    'Autoimmune / Blood': ['Autoimmune condition'],
+    'Dental Disorder': ['Dental/oral health condition'],
+    'Bone and Musculoskeletal / Cervical Disorders': ['Musculoskeletal condition', 'Osteoporosis'],
+    'Male / Female Health': ["Women's health condition", "Men's health condition", 'Sexual/reproductive health condition'],
+    HIV: ['HIV/AIDS'],
+  },
 };
 
 // question → the question that already asks the same thing (kept)
@@ -32,6 +74,17 @@ export const DUPLICATE_OF = {
   'ad-mobile': 'account:phone', // mobile number is already on the account (sign-up, My Account)
   'ad-alt-email': 'account:alternate-email', // My Account → Alternate contact
   'ad-diagnosis-year': 'first-diagnosed-timing', // Medical Conditions → "Approximately when were you first diagnosed?"
+  'survey-participation-history': 'participate-market-research', // document Q62, which also gives how recently
+  'willingness-survey-participation': 'participating-future-healthcare-market', // document Q64
+  'survey-type-interested-in': 'types-of-research-consider-participating', // document Q65
+  'survey-mode': 'types-of-research-consider-participating', // online / phone / in person are options of Q65
+  'survey-participation-time-duration': 'spending-time-on-research', // document Q66
+  'recontact-consent': 'contacted-for-research-opportunities', // document Q75
+  'mode-of-payment': 'payment-method', // Survey Participation & Reward Preferences
+  'use-fitness-mobile-app': 'health-medical-apps', // document Q40
+  'health-management-app': 'types-of-health-apps', // document Q41
+  'chronic-conditions': 'disease-types', // document Q12, see REPARENT
+  'receiving-treatment': 'receiving-treatment-primary-condition', // the document asks it twice (Q73 and Q25); Q25 is kept
 };
 export const DROP_2026 = new Set(Object.keys(DUPLICATE_OF));
 
@@ -58,8 +111,32 @@ export const PATCHES = {
   },
   'factors-choosing-treatment': { max: 3 },
   'smoke-category': { parent: 'smoking-tobacco-nicotine', parentValues: ['Daily', 'Occasionally'] },
+  'survey-participation-frequency': { parent: 'participate-market-research', parentValues: YES_MR },
+  'survey-participation-category': { parent: 'participate-market-research', parentValues: YES_MR },
+  'other-survey-panel': { parent: 'participate-market-research', parentValues: YES_MR },
   'alcohol-category': { parent: 'consume-alcohlic-beverages', parentValues: ['Daily', 'Several times a week', 'Weekly', 'Occasionally'] },
 };
+
+const keyOf = (name) => String(name ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
+/** Names of the profile documents to load together with this one. */
+export function preloadFor(name) {
+  return [...(PRELOAD[keyOf(name)] || []), ...(PRELOAD['*'] || [])].filter((n) => n !== keyOf(name));
+}
+
+/** Moves the follow-ups of a dropped question onto the question that is kept (REPARENT), on the built questions. */
+export function remapParents(questions) {
+  const map = (list) => [...new Set(list.flatMap((v) => REPARENT.values[v] || []))];
+  for (const q of Object.values(questions)) {
+    if (q.parent === REPARENT.from) {
+      q.parent = REPARENT.to;
+      if (q.options) q.options = q.options.map((o) => (o[2] ? [o[0], o[1], map(o[2])] : o));
+    }
+    if (q.when?.q === REPARENT.from) {
+      const byLow = Object.fromEntries(Object.entries(REPARENT.values).map(([k, v]) => [k.toLowerCase(), v]));
+      q.when = { ...q.when, q: REPARENT.to, in: [...new Set((q.when.in || []).flatMap((v) => byLow[String(v).toLowerCase()] || []))] };
+    }
+  }
+}
 
 /** Applies PROFILE_EDITS and DROP_2026 to the profile documents from the database (returns copies). */
 export function editProfileDocs(docs) {

@@ -5,7 +5,7 @@ import { applyLanguage } from './lib/languages.js';
 import { I18nCtx, makeT } from './lib/i18n.js';
 import { loadContent, loadSurvey, geoStore, onGeo } from './lib/data.js';
 import { sound, installClickSound } from './lib/sound.js';
-import { hydrate, ensureProfile, flush } from './lib/bridge.js';
+import { hydrate, ensureProfile, flush, sourceOfSlug } from './lib/bridge.js';
 import { registerItems, setPoints, rewardOf } from './lib/rewards.js';
 import { controller } from './lib/controller.js';
 import { cards } from './lib/cards.js';
@@ -41,8 +41,10 @@ function useUserName(propName, answers) {
 
 export default function App({ userName: propName, view = 'all' }) {
   const saved = useStore((s) => s);
-  const lang = 'en';
-  const theme = 'light';
+  // the member area passes the language and light / dark mode chosen in its header
+  const conf = (typeof window !== 'undefined' && window.MHO_CONFIG) || {};
+  const lang = typeof conf.lang === 'string' && conf.lang ? conf.lang : 'en';
+  const theme = conf.theme === 'dark' ? 'dark' : 'light';
   const [content, setContent] = useState({});
   const [survey, setSurvey] = useState(null);
   const [surveyErr, setSurveyErr] = useState(false);
@@ -70,7 +72,8 @@ export default function App({ userName: propName, view = 'all' }) {
   }, [lang]);
 
   useEffect(() => { hostEl().dataset.theme = theme; }, [theme]);
-  useEffect(() => { sound.setMuted(true); }, []);
+  // answer sounds follow the host's setting (on by default)
+  useEffect(() => { const c = (typeof window !== 'undefined' && window.MHO_CONFIG) || {}; sound.setMuted(c.sound === false); }, []);
 
   const loading = useRef(false);
   const fetchSurvey = useCallback(() => {
@@ -140,7 +143,31 @@ export default function App({ userName: propName, view = 'all' }) {
     setLockInfo({ id, reason: gg.lock[id] || 'profiles' });
   }, []);
 
-  useEffect(() => { controller.attach({ open: (id) => openProfile(id, 'run') }); }, [openProfile]);
+  /* the member area opens a profile by its database slug or name, the package by its own id: accept all three */
+  const surveyRef = useRef(null);
+  surveyRef.current = survey;
+  const wantRef = useRef(null);
+  const resolveId = (want) => {
+    const ps = surveyRef.current?.profiles;
+    if (!ps) return null;
+    const w = String(want ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
+    const src = sourceOfSlug(w);
+    const hit = ps.find((p) => p.id === want) || ps.find((p) => String(p.source || '').toLowerCase() === w) || (src && ps.find((p) => String(p.source || '').toLowerCase() === src));
+    return hit ? hit.id : null;
+  };
+  useEffect(() => {
+    controller.attach({ open: (want) => {
+      const id = resolveId(want);
+      if (id) openProfile(id, 'run');
+      else if (!surveyRef.current) { wantRef.current = want; fetchSurvey(); }
+    } });
+  }, [openProfile]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!survey || !wantRef.current) return;
+    const id = resolveId(wantRef.current);
+    wantRef.current = null;
+    if (id) openProfile(id, 'run');
+  }, [survey]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const rules = window.MHO_HOST?.screenOut || {};
     for (const [question, rule] of Object.entries(rules)) {
@@ -192,7 +219,11 @@ export default function App({ userName: propName, view = 'all' }) {
   }, []);
 
   /* lock page scroll while the question flow is open */
-  useEffect(() => { document.documentElement.classList.toggle('lock', !!open); }, [open]);
+  useEffect(() => {
+    document.documentElement.classList.toggle('lock', !!open);
+    // leaving the page (back button, menu link) while a questionnaire is open must give the page its scroll back
+    return () => { if (open) document.documentElement.classList.remove('lock'); };
+  }, [open]);
 
   const nextItem = g.next ? g.items.find((p) => p.id === g.next) : null;
   const returning = mounted && Object.keys(saved.meta.started || {}).length > 0;
