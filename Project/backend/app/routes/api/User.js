@@ -29,6 +29,7 @@ import {
     adminLogger
 } from "../../../utils/index.js"
 import { lockedFor, fail, clear, norm } from "../../../utils/throttle.js";
+import { createCaptcha, requireCaptcha } from "../../../utils/captcha.js";
 import { limit } from "../../../utils/security.js";
 
 // What a visitor may never set when registering (role, verification, status, points...): an admin role from the
@@ -67,6 +68,7 @@ router
     ))
     .put(limit(20, 60), expressRoute(
         async req => {
+            await requireCaptcha(req); // the human check (required for every client once CAPTCHA_REQUIRED=true)
             const userInfo = { ...(req.body && typeof req.body === "object" ? req.body : {}) };
             for (const col of Object.keys(userInfo))
                 if (REGISTER_BLOCKED.includes(col) || col.startsWith("$") || col.includes(".")) delete userInfo[col];
@@ -109,10 +111,16 @@ router
             },
             userController
         ))
+    // a new human check (picture, or ?mode=text for a small sum); each one can be checked once, within 5 minutes
+    .get("/captcha", limit(60, 10), expressRoute(
+        async req => ({ message: "", data: await createCaptcha(req.origin, req.query.mode === "text" ? "text" : "image") }),
+        userController
+    ))
     .post("/login", limit(30, 10), expressRoute(
         async req => {
             const message = "Login successful";
             let data = [];
+            await requireCaptcha(req);
             // strings only (an object here would be a database filter), and a per-account lock after 10 wrong
             // passwords in 15 minutes, so a bot that keeps changing its address gets no further
             const { mail, phone, password } = req.body || {};

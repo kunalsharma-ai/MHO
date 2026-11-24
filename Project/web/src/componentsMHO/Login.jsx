@@ -39,7 +39,7 @@ import "react-phone-input-2/lib/material.css";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTelemetry } from "@/Context";
 import { useToast } from "@/hooks";
-import Captcha from "./Captcha";
+import HumanCheck from "@/components/HumanCheck";
 import { motion, AnimatePresence } from "framer-motion";
 
 const MotionBox = motion.create(Box);
@@ -211,6 +211,7 @@ function LoginCard({ onClose, setCardType, setOpenSignUp, socials }) {
   const [loginType, setLoginType] = React.useState("mail");
   const [phone, setPhone] = React.useState("");
   const [btnDisabled, setBtnDisabled] = React.useState(true);
+  const [captchaTries, setCaptchaTries] = React.useState(0);
 
   const [providers, setProviders] = React.useState([]);
   React.useEffect(() => {
@@ -542,13 +543,13 @@ function LoginCard({ onClose, setCardType, setOpenSignUp, socials }) {
                   break;
 
                 default:
-                  setErrorMessage(resp.message);
+                  setErrorMessage(resp.message); setCaptchaTries((n) => n + 1);
                   setLoading(false);
                   break;
               }
             } catch (error) {
               console.log({ error });
-              setErrorMessage("Something went wrong.");
+              setErrorMessage("Something went wrong."); setCaptchaTries((n) => n + 1);
               setLoading(false);
             }
           }}
@@ -793,11 +794,7 @@ function LoginCard({ onClose, setCardType, setOpenSignUp, socials }) {
                 boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
               }}
             >
-              <Captcha
-                onVerified={() => {
-                  setBtnDisabled(false);
-                }}
-              />
+              <HumanCheck resetKey={captchaTries} onChange={(v) => setBtnDisabled(!v)} />
             </Box>
 
             {errorMessage && <Page.Error message={errorMessage} />}

@@ -47,7 +47,7 @@ import user from "@/validators/user";
 import { useToast } from "@/hooks";
 import { useMember, useQuery, useTelemetry } from "@/Context";
 import MapComponent from "@/components/Map"; //Temporary Import
-import Captcha from "./Captcha";
+import HumanCheck from "@/components/HumanCheck";
 const MotionBox = motion.create(Box);
 const MotionGrid = motion.create(Grid);
 
@@ -121,6 +121,8 @@ export default function SignUp({
   const [query, member] = [useQuery(), useMember()];
   const [isInvalidUser, setIsInvalidUser] = React.useState(false);
   const [btnDisabled, setBtnDisabled] = React.useState(true);
+  const [captchaTries, setCaptchaTries] = React.useState(0);
+  const human = React.useRef(null);
   const [salutationChange, setSalutationchange] = React.useState(false);
   const RESEND_SECONDS = 60;
   const [cooldown, setCooldown] = React.useState(0);
@@ -329,11 +331,13 @@ export default function SignUp({
         }
         data.category = newCategory;
       }
+      data.captcha = human.current;
       const temp = await api.put("api/v1/user", data);
+      if (temp?.status != "success") setCaptchaTries((n) => n + 1); // the check is spent
       if (temp?.status == "success") setStatus("success");
       else if (temp?.message?.includes("duplicate")) setStatus("duplicate");
     } catch (error) {
-      console.error(error);
+      console.error(error); setCaptchaTries((n) => n + 1);
       useToast(error);
     } finally {
       setIsLoading(false);
@@ -898,11 +902,7 @@ export default function SignUp({
                         direction="row"
                         alignItems="center"
                       >
-                        <Captcha
-                          onVerified={() => {
-                            setBtnDisabled(false);
-                          }}
-                        />
+                        <HumanCheck resetKey={captchaTries} onChange={(v) => { human.current = v; setBtnDisabled(!v); }} />
                       </Grid>
 
                       <Grid size={12} mt={1}>
