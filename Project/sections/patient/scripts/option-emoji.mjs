@@ -41,6 +41,7 @@ const Q = {
   'survey-participation-time-duration': '⏱️', 'willingness-survey-participation': '🙌', 'survey-type-interested-in': '🔍', 'share-consent': '🤝', 'survey-participation-motivation': '💡',
   'video-survey-participation-consent': '🎥', 'mode-of-payment': '🎁', 'survey-participation-timeslot': '🕰️', 'recontact-consent': '📬',
   'use-fitness-mobile-app': '⌚', 'use-devices': '💻', 'health-management-app': '📱', 'health-service': '🌐',
+  'patient-age': '🎂', 'patient-living-arrangement': '🏡', 'patient-care-support': '🤝',
   'patient-health-condition': '🩺', 'no-health-problem': '🔢', 'health-condition-timing': '⏳', 'diagnosed-condition': '🔎', 'current-condition-status': '📈',
   'disease-types': '📋', 'primary-health-condition': '🎯', 'condition-diagnsis-by-healthcareprofessional': '👨‍⚕️', 'first-diagnosed-timing': '📅',
   'experience-symptoms-releted-to-primary-condition': '🌡️', 'describe-severity-symptoms': '📶', 'condition-affect-daily-life': '🏃', 'condition-affect-work-study': '💼', 'condition-affect-everyday-activities': '🧺',
@@ -278,6 +279,8 @@ const R = [
 export function optionEmoji(q, label, value) {
   const l = String(label).trim();
   if (q === 'gender' && /^other/i.test(l)) return '🌈';
+  if (q === 'patient-living-arrangement') return ({ 'living alone': '🧍', 'living with spouse/partner': '💑', 'living with children': '👨‍👧', 'living with parents': '👪', 'living with other family members': '🏠', 'assisted living/community housing': '🏘️' })[l.toLowerCase()] || (/^other/i.test(l) ? '✏️' : null);
+  if (q === 'patient-care-support') return ({ 'yes, regularly': '🤝', 'yes, occasionally': '🫶', no: '🙅' })[l.toLowerCase()] || null;
   if (BY_VALUE[q]) return BY_VALUE[q][value] || '💼';
   if (/income/.test(q)) return '💵';
   for (const [re, e] of R) if (re.test(l)) return e;

@@ -1,6 +1,6 @@
 
 import { optionEmoji, applySequence, QUESTION_EMOJI } from './emoji.js';
-import { DROP_2026, DUPLICATE_OF, patchOptions, patchFlags } from './questions-2026.js';
+import { DROP_2026, DUPLICATE_OF, patchOptions, patchFlags, remapParents } from './questions-2026.js';
 
 export default function build({ PROFILES, QUESTIONS, OPTIONS }) {
 const files = {};
@@ -474,6 +474,7 @@ function finishChoice(q) {
 }
 
 /* Profiles: drop questions that ended up undefined */
+remapParents(questions);
 for (const p of profiles) p.questions = p.questions.filter((n) => questions[n]);
 for (const p of profiles) { contentStrings.add(p.title); contentStrings.add(p.blurb); contentStrings.add(p.flavor); }
 

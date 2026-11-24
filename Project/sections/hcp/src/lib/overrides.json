@@ -1,6 +1,18 @@
 {
   "_doc": "Gap-fills and UI hints layered on top of the raw MHO exports. See DATA.md.",
 
+  "dropQuestions": {
+    "_why": "Removed so no question is asked twice (2026 review). Kept question in brackets.",
+    "participating-research": "survey-mode (How do you prefer to participate in Survey?)",
+    "online-surveys": "willingness-survey-participation (Are you willing to participate in future market research studies)",
+    "focus-groups": "survey-type-interested-in (option: Focus group discussions)",
+    "country": "Basic Profile country (same saved answer)",
+    "state": "Basic Profile state (same saved answer)",
+    "phone": "account mobile number (sign-up, My Account; same saved answer)",
+    "survey-participation-frequency (Experience)": "survey-participation-frequency in Survey Participation and Reward Preferences (same question)"
+  },
+  "dropFrom": { "professional-address": ["country", "state", "phone"], "technical": ["participating-research", "online-surveys", "focus-groups"], "experience": ["survey-participation-frequency"] },
+
   "textTypes": {
     "fullname":                  { "type": "text", "rule": "name", "min": 2, "max": 80, "autocomplete": "name" },
     "mail":                      { "type": "email", "rule": "email", "autocomplete": "email" },
