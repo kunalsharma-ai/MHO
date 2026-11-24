@@ -12,7 +12,7 @@ import { useMx, useAnswers, fullName, initials, memberId, THEMES } from "../data
 import { PageHead } from "../parts";
 import { Icon, Tabs, Empty, Field, Password, useToast, apiOk, apiMessage, fmtDate, cap } from "../kit";
 import { STATEMENTS, REQUIRED, OPTIONAL } from "../consentText";
-import { sectionArt } from "../art";
+import { sectionArt, pageArt } from "../art";
 
 const TABS = [
   { id: "personal", label: "Personal details", icon: "user" },
@@ -370,8 +370,8 @@ function PreferencesTab() {
         <button type="button" id="mx-lang" className="mx-btn ghost" onClick={() => openPicker?.()}><Icon name="globe" size={16} />{langMeta?.native || langMeta?.name || "English"}<Icon name="chev" size={14} /></button>
       </Field>
       {typeof toggleSound === "function" && (
-        <Field label="Language sounds" id="mx-snd">
-          <label className="mx-check" style={{ maxWidth: 360 }}><input id="mx-snd" type="checkbox" checked={!!sound} onChange={toggleSound} /><Icon name="sound" size={18} />Play a short sound when the language changes</label>
+        <Field label="Sounds" id="mx-snd">
+          <label className="mx-check" style={{ maxWidth: 360 }}><input id="mx-snd" type="checkbox" checked={!!sound} onChange={toggleSound} /><Icon name="sound" size={18} />Play soft sounds when I answer a question or change the language</label>
         </Field>
       )}
     </div>
@@ -405,7 +405,7 @@ function AccountInner({ initialTab }) {
   const change = (t) => { setTab(t); router.replace(`/member/myaccount?tab=${t}`, { scroll: false }); };
   return (
     <>
-      <PageHead icon="user" title="My Account" art={sectionArt(panel, "basic", "basic")}
+      <PageHead icon="user" title="My Account" art={pageArt(panel, "account")}
         lead="Your details, password, contact and payment preferences, privacy choices and settings.">
         <IdStrip />
       </PageHead>

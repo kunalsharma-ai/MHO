@@ -43,6 +43,8 @@ async function mount(target, opts = {}) {
     user: { ...(prev.user || {}), ...(opts.user || {}) },
     lang: opts.lang || prev.lang,
     theme: opts.theme || prev.theme,
+    // answer sounds: on unless the host turns them off
+    sound: opts.sound ?? prev.sound ?? true,
     embedded: true,
     disableSW: true,
   };

@@ -72,7 +72,8 @@ export default function App({ userName: propName, view = 'all' }) {
   }, [lang]);
 
   useEffect(() => { hostEl().dataset.theme = theme; }, [theme]);
-  useEffect(() => { sound.setMuted(true); }, []);
+  // answer sounds follow the host's setting (on by default)
+  useEffect(() => { const c = (typeof window !== 'undefined' && window.MHO_CONFIG) || {}; sound.setMuted(c.sound === false); }, []);
 
   const loading = useRef(false);
   const fetchSurvey = useCallback(() => {

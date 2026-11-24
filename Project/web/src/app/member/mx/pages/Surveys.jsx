@@ -12,7 +12,7 @@ import SectionCard from "../../components/SectionCard";
 import { useMx } from "../data";
 import { PageHead, SurveyTiles, sectionHref, sectionTitle } from "../parts";
 import { Icon, Tabs, Empty, fmtDate } from "../kit";
-import { sectionArt } from "../art";
+import { sectionArt, pageArt } from "../art";
 
 const norm = (v) => String(v ?? "").trim().toLowerCase();
 const toList = (v) => (v === null || v === undefined ? [] : Array.isArray(v) ? v.flatMap(toList) : typeof v === "object" ? toList(v.answer ?? v.Answer ?? v.value) : [norm(v)]);
@@ -88,14 +88,14 @@ function TakePart({ available, onOpenAvailable }) {
 }
 
 function PanelSurveys() {
-  const { sectionLang: lang, mode } = useMx();
+  const { sectionLang: lang, mode, sound } = useMx();
   const handle = React.useRef(null);
   const [items, setItems] = React.useState([]);
   const [ready, setReady] = React.useState(false);
   const onItems = React.useCallback((list) => { setItems(Array.isArray(list) ? list : []); setReady(true); }, []);
   return (
     <>
-      <ProfileSection lang={lang} theme={mode} view="headless" categories={["patient", "care giver", "healthcare professional"]} handleRef={handle} onItems={onItems} />
+      <ProfileSection lang={lang} theme={mode} sound={sound} view="headless" categories={["patient", "care giver", "healthcare professional"]} handleRef={handle} onItems={onItems} />
       {ready && items.length > 0 && (
         <section className="mx-card" aria-labelledby="mx-ps-h">
           <div className="mx-sec-h"><div><span className="mx-eyebrow">Panel surveys</span><h2 id="mx-ps-h" style={{ marginTop: 6 }}>Your panel&apos;s profile steps and health surveys</h2>
@@ -129,7 +129,7 @@ export default function Surveys() {
   ];
   return (
     <>
-      <PageHead icon="surveys" title="Surveys" facts={loading ? [] : facts} art={sectionArt(panel, "survey", "survey participation")}
+      <PageHead icon="surveys" title="Surveys" facts={loading ? [] : facts} art={pageArt(panel, "surveys")}
         lead="Studies matched to your profile answers. Each card shows the reward and the expected time. Screening questions at the start decide whether a study fits you." />
       <TakePart available={available.length} onOpenAvailable={() => { setTab("available"); document.getElementById("mx-sv-list")?.scrollIntoView({ behavior: "smooth", block: "start" }); }} />
       <span id="mx-sv-list" />

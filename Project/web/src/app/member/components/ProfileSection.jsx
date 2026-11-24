@@ -96,7 +96,7 @@ function loadStyle(href) {
   document.head.appendChild(link);
 }
 
-export default function ProfileSection({ view = "all", categories, onFail, onItems, handleRef, lang = "en", theme = "light" }) {
+export default function ProfileSection({ view = "all", categories, onFail, onItems, handleRef, lang = "en", theme = "light", sound = true }) {
   const user = useMember();
   const hostRef = React.useRef(null);
   const key = user?.category?.trim().toLowerCase();
@@ -148,7 +148,8 @@ export default function ProfileSection({ view = "all", categories, onFail, onIte
         mounted = await window[section.global].mount(hostRef.current, {
           assetBase: root,
           view,
-          sound: false,
+          // a soft sound on every answer, as in the original section packages; the member can turn it off
+          sound,
           // language and light / dark mode chosen in the member area header
           theme: theme === "dark" ? "dark" : "light",
           lang,
@@ -177,7 +178,7 @@ export default function ProfileSection({ view = "all", categories, onFail, onIte
       if (handleRef) handleRef.current = null;
       if (mounted) mounted.unmount();
     };
-  }, [section?.folder, user?._id, view, lang, theme]);
+  }, [section?.folder, user?._id, view, lang, theme, sound]);
 
   if (!section) return null;
   return <div ref={hostRef} />;

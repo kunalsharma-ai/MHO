@@ -11,7 +11,7 @@ import { useMx } from "../data";
 import { PageHead } from "../parts";
 import { Icon, Tabs, Empty, Field, useToast, apiOk, apiMessage, fmtDate, cap } from "../kit";
 import { faqs } from "../faqs";
-import { sectionArt } from "../art";
+import { sectionArt, pageArt } from "../art";
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
@@ -149,7 +149,7 @@ function HelpInner() {
   const [rk, setRk] = React.useState(0);
   return (
     <>
-      <PageHead icon="help" title="Help & Support" art={sectionArt(panel, "info", "information")}
+      <PageHead icon="help" title="Help & Support" art={pageArt(panel, "help")}
         lead="Answers to common questions, and a direct line to the My Health Opinions support team." />
       <section className="mx-ways three" aria-label="Ways to get help">
         <button type="button" className="mx-way t-violet" style={{ "--i": 0 }} onClick={() => setTab("faq")}><span className="ic"><Icon name="help" size={22} /></span><b>Find a quick answer</b><span>Search the questions members ask most often.</span><em>Open the FAQ <Icon name="arrow" size={14} /></em></button>

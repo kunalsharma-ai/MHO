@@ -14,9 +14,11 @@ import { sectionHref, sectionTitle } from "./parts";
 import { LanguageButton, LanguagePicker, TranslateStatus } from "./lang/Language";
 import { buildInbox, useSeen } from "./messages";
 import "./theme.css";
+import { useLite } from "./perf";
 import "./header.css";
 import "./fx.css";
 import "./prism.css";
+import "./story.css";
 
 const MUI_COLORS = { hcp: ["#5B4BFF", "#FF5A78"], caregiver: ["#9B1E4E", "#F2611B"], patient: ["#0F7EA8", "#F2611B"] };
 
@@ -195,7 +197,14 @@ function ThemePicker({ inline }) {
   );
 }
 
-/** Completed profiles, as a stack of their emblems; the panel lists every profile with its progress. */
+/** One ring segment per profile: full when complete, faint when started. */
+const arc = (i, n) => {
+  const gap = n > 1 ? Math.min(14, 120 / n) : 0; const seg = 360 / n;
+  const a0 = ((i * seg + gap / 2 - 90) * Math.PI) / 180; const a1 = (((i + 1) * seg - gap / 2 - 90) * Math.PI) / 180;
+  const r = 15; const p = (a) => `${(18 + r * Math.cos(a)).toFixed(2)} ${(18 + r * Math.sin(a)).toFixed(2)}`;
+  return `M ${p(a0)} A ${r} ${r} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${p(a1)}`;
+};
+/** Completed profiles, as a segmented ring; the panel lists every profile with its progress. */
 function ProfileStack() {
   const { d, panel, t } = useMx();
   const [open, setOpen] = React.useState(false);
@@ -204,17 +213,16 @@ function ProfileStack() {
   const secs = d?.profile?.sections || [];
   if (!secs.length) return null;
   const done = secs.filter((s) => s.status === "complete");
-  const shown = (done.length ? done : secs).slice(0, 4);
   const pct = Math.round((done.length / secs.length) * 100);
   return (
     <div ref={ref} className="mx-pop-wrap">
       <button type="button" className={`mx-pill mx-pstack${done.length ? "" : " none"}`} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(!open)}
         aria-label={`${t("profilesComplete")}: ${done.length} of ${secs.length}`}>
-        <span className="faces" aria-hidden="true">
-          {shown.map((s, i) => <span key={s.slug} className={`f${s.status === "complete" ? " ok" : ""}`} style={{ "--i": i }}><img src={sectionArt(panel, s.slug, s.name)} alt="" width="26" height="26" /></span>)}
+        <span className="segs" aria-hidden="true">
+          <svg viewBox="0 0 36 36" width="34" height="34">{secs.map((s, i) => <path key={s.slug} d={arc(i, secs.length)} className={s.status === "complete" ? "ok" : s.answered ? "part" : ""} style={{ "--i": i }} />)}</svg>
+          <img src={sectionArt(panel, (done[done.length - 1] || secs[0]).slug, (done[done.length - 1] || secs[0]).name)} alt="" width="18" height="18" />
         </span>
         <span className="v"><small>{t("profile")}</small><b>{done.length}<em>/{secs.length}</em></b></span>
-        <span className="ring" style={{ "--p": done.length / secs.length }} aria-hidden="true" />
       </button>
       {open && (
         <div className="mx-menu mx-profpop" role="dialog" aria-label={t("profile")}>
@@ -333,6 +341,7 @@ function useScrollGuard(path) {
 
 function Frame({ children }) {
   const { member, d, panel, mode, palette, lang, langMeta } = useMx();
+  const lite = useLite();
   const [navOpen, setNavOpen] = React.useState(false);
   const path = usePathname();
   React.useEffect(() => setNavOpen(false), [path]);
@@ -343,7 +352,7 @@ function Frame({ children }) {
     return createTheme(baseTheme, { palette: { primary: { main: a, contrastText: "#fff" }, secondary: { main: b, contrastText: "#fff" } } });
   }, [panel, palette]);
   return (
-    <div className="mx" data-panel={panel} data-mode={mode} data-palette={palette} lang={lang} dir={langMeta.dir || "ltr"} data-nav={navOpen ? "open" : undefined} style={themeVars(palette, panel)}>
+    <div className="mx" data-page={(path || "").split("/")[2] || "dashboard"} data-lite={lite ? "" : undefined} data-panel={panel} data-mode={mode} data-palette={palette} lang={lang} dir={langMeta.dir || "ltr"} data-nav={navOpen ? "open" : undefined} style={themeVars(palette, panel)}>
       <div className="mx-bg" aria-hidden="true"><span className="mx-amb"><i /><i /><i /></span></div>
       <OnboardingTour member={member} greeting="Welcome" userName={firstName(member, d)} />
       <Top onMenu={() => setNavOpen(true)} />

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useMx, noteHref } from "../data";
 import { PageHead } from "../parts";
 import { Icon, Empty, fmtDate } from "../kit";
-import { sectionArt } from "../art";
+import { sectionArt, pageArt } from "../art";
 
 const GROUPS = [
   ["action", "Needs your attention", "warn"],
@@ -21,7 +21,7 @@ export default function Notifications() {
   const groupOf = (n) => (n.level === "action" || n.level === "warning" ? "action" : n.level === "done" ? "done" : "info");
   return (
     <>
-      <PageHead icon="bell" title="Notifications" art={sectionArt(panel, "info", "information")}
+      <PageHead icon="bell" title="Notifications" art={pageArt(panel, "notifications")}
         lead="Updates about your surveys, profile and consent, and announcements from the My Health Opinions team."
         facts={loading ? [] : [["Need attention", notes.filter((n) => groupOf(n) === "action").length], ["Total", notes.length]]}>
         <div className="mx-row" style={{ marginTop: 16 }}>

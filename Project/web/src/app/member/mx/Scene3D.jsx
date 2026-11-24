@@ -6,6 +6,7 @@
 // The scene follows the pointer, pauses when it is off screen or the tab is hidden, draws a single still frame with
 // prefers-reduced-motion, and shows the panel's flat art instead when WebGL is not available.
 import React from "react";
+import { useLite, goLite } from "./perf";
 
 const COLORS = {
   hcp: { a: "#5B4BFF", b: "#FF5A78", c: "#22C3F5", glow: "#8B7CFF" },
@@ -174,9 +175,10 @@ export default function Scene3D({ panel = "patient", compact = false, className 
   const ref = React.useRef(null);
   const [failed, setFailed] = React.useState(false);
   const [ready, setReady] = React.useState(false);
+  const lite = useLite();
   React.useEffect(() => {
     const host = ref.current;
-    if (!host) return undefined;
+    if (!host || lite) return undefined;
     let disposed = false;
     let cleanup = () => {};
     (async () => {
@@ -188,9 +190,9 @@ export default function Scene3D({ panel = "patient", compact = false, className 
       if (disposed) return;
       let renderer;
       try {
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
+        renderer = new THREE.WebGLRenderer({ antialias: (window.devicePixelRatio || 1) < 1.5, alpha: true, powerPreference: "low-power" });
       } catch (e) { setFailed(true); return; }
-      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      renderer.setPixelRatio(Math.min(1.5, window.devicePixelRatio || 1));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.05;
@@ -222,12 +224,19 @@ export default function Scene3D({ panel = "patient", compact = false, className 
       window.addEventListener("pointermove", onMove, { passive: true });
       const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
       let visible = true; let raf = 0; const t0 = performance.now();
+      // 30 frames a second is plenty for a slow-moving emblem; if even that takes too long, the scene hands over to lite mode
+      let last = 0; let cost = 0; let drawn = 0;
       const frame = (now) => {
+        if (now - last < 32) { raf = requestAnimationFrame(frame); return; }
+        last = now;
+        const c0 = performance.now();
         const t = Math.max(0, (now - t0) / 1000); // the first animation frame can be stamped before t0
         tick.forEach((f) => f(reduce ? 1.2 : t));
         root.rotation.x += (target.y - root.rotation.x) * 0.05;
         root.rotation.y += (target.x - root.rotation.y) * 0.05 * (panel === "patient" ? 0 : 1);
         renderer.render(scene, camera);
+        drawn += 1; cost += performance.now() - c0;
+        if (drawn % 45 === 0) { if (cost / 45 > 14) { goLite(); return; } cost = 0; }
         if (!reduce && visible && !document.hidden) raf = requestAnimationFrame(frame);
       };
       const io = new IntersectionObserver(([e]) => {
@@ -248,7 +257,7 @@ export default function Scene3D({ panel = "patient", compact = false, className 
       };
     })();
     return () => { disposed = true; cleanup(); };
-  }, [panel, compact]);
-  if (failed) return fallback;
+  }, [panel, compact, lite]);
+  if (failed || lite) return fallback;
   return <div ref={ref} className={`mx-3d ${ready ? "on" : ""} ${className}`} role="img" aria-label={label || "Animated 3D illustration"} />;
 }

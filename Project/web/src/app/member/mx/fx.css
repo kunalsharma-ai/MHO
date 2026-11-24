@@ -25,7 +25,7 @@
 .mx-tilt:hover { box-shadow: var(--sh-lg); }
 
 /* staggered entrance for page sections */
-.mx-main > * { animation: mxEnter .7s var(--ease) both; }
+.mx-main > * { animation: mxEnter .7s var(--ease) backwards; }
 .mx-main > *:nth-child(2) { animation-delay: .06s; } .mx-main > *:nth-child(3) { animation-delay: .12s; }
 .mx-main > *:nth-child(4) { animation-delay: .18s; } .mx-main > *:nth-child(5) { animation-delay: .24s; }
 .mx-main > *:nth-child(n+6) { animation-delay: .3s; }
@@ -64,7 +64,7 @@
 /* ---- surveys: how to take part ---- */
 .mx-takepart ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; position: relative; }
 .mx-takepart ol::before { content: ""; position: absolute; left: 28px; right: 28px; top: 27px; height: 3px; border-radius: 3px; background: var(--meter); opacity: .35; }
-.mx-takepart li { position: relative; display: grid; align-content: start; gap: 8px; padding: 0 4px; animation: mxEnter .6s var(--ease) both; animation-delay: calc(var(--i) * 90ms); }
+.mx-takepart li { position: relative; display: grid; align-content: start; gap: 8px; padding: 0 4px; animation: mxEnter .6s var(--ease) backwards; animation-delay: calc(var(--i) * 90ms); }
 .mx-takepart .num { position: relative; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--card-solid); color: var(--accent-ink);
   box-shadow: 0 0 0 1px var(--line-2), 0 10px 22px -12px var(--accent); }
 .mx-takepart .num svg.ring { position: absolute; inset: 0; transform: rotate(-90deg); }

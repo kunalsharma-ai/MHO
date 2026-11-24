@@ -10,7 +10,7 @@ import { useMx, useAnswers } from "../data";
 import { PageHead, Vault } from "../parts";
 import { Icon, Empty, Field, Modal, useToast, apiOk, apiMessage, fmtDate, cap } from "../kit";
 import { loadRewardRows, fmtLoi, SOCIAL_POINTS, REFERRAL_POINTS } from "../rewardsData";
-import { sectionArt } from "../art";
+import { sectionArt, pageArt } from "../art";
 
 const STATUS = { complete: ["Completed", "ok"], approved: ["Approved", "ok"], credited: ["Credited", "ok"], terminate: ["Did not qualify", "bad"], overquota: ["Quota full", "warn"], dropout: ["Not finished", "info"] };
 const PAY_LABEL = { "wire-transfer": "Bank transfer", upi: "UPI", paypal: "PayPal", "amazon-gift-card": "Amazon gift card", "healthcare-report": "Healthcare report" };
@@ -117,7 +117,7 @@ export default function Rewards() {
   const method = pay["payment-method-primary"] || pay["payment-method"] || "";
   return (
     <>
-      <PageHead icon="gift" title="Rewards" art={sectionArt(panel, "survey", "reward")}
+      <PageHead icon="gift" title="Rewards" art={pageArt(panel, "rewards")}
         lead="Your points, what they are worth, and every activity that earned them."
         facts={[["Balance", `${balance.points.toLocaleString()} pts`], ...(worth ? [["Worth about", `$${worth}`]] : []), ...(balance.threshold ? [["Payout at", `${balance.threshold.toLocaleString()} pts`]] : [])]} />
       <Vault compact />

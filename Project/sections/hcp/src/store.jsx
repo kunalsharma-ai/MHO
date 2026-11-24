@@ -22,7 +22,7 @@ function initial(boot = {}) {
     // the member area passes the language and light / dark mode chosen in its header
     lang: c.lang || 'en',
     theme: c.theme === 'dark' ? 'dark' : 'light',
-    sound: false,
+    sound: c.sound !== false,
     answers: boot.answers || {},
     completed,
     seen: { ...completed },

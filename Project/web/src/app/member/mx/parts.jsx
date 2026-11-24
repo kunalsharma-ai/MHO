@@ -1,7 +1,6 @@
 "use client";
 // Pieces shared by several member pages: the page head, the panel's rewards vault, profile cards and survey tiles.
 import React from "react";
-import Scene3D from "./Scene3D";
 import Link from "next/link";
 import { useMx } from "./data";
 import { Icon, Meter, useCountUp, cap } from "./kit";
@@ -10,24 +9,37 @@ import { metaOf } from "./catalog";
 
 const TITLE_KEY = { Messages: "messages", "My Profile": "profile", Surveys: "surveys", Rewards: "rewards", Referrals: "referrals", Notifications: "notifications", "My Account": "account", "Help & Support": "help" };
 
+// Each panel tells its own story: the HCP area reads like a clinical record, the caregiver area like a care journal,
+// and the patient area like a journey. Every page gets its own label in that story and its own illustration.
+const STORY = {
+  hcp: { profile: "Clinical record", surveys: "Research desk", rewards: "Honorarium ledger", referrals: "Peer network", messages: "Correspondence", notifications: "Alerts", account: "Practitioner file", help: "Support desk" },
+  caregiver: { profile: "Your care story", surveys: "Stories to share", rewards: "Thank-you jar", referrals: "Circle of care", messages: "Letters", notifications: "Gentle reminders", account: "About you", help: "We are here for you" },
+  patient: { profile: "Your health journey", surveys: "Your voice", rewards: "Treasure chest", referrals: "Bring a friend along", messages: "Your inbox", notifications: "Updates", account: "Your details", help: "Help is near" },
+};
+
 export function PageHead({ icon, title: en, lead, facts = [], art, children }) {
   const { t, panel } = useMx();
-  const title = TITLE_KEY[en] ? t(TITLE_KEY[en]) : en;
-  const flat = art ? <div className="art" aria-hidden="true"><img src={art} alt="" width="160" height="160" /></div> : null;
+  const key = TITLE_KEY[en];
+  const title = key ? t(key) : en;
+  const kicker = (STORY[panel] || STORY.patient)[key];
   return (
-    <section className="mx-head mx-rise" aria-labelledby="mx-page-title">
+    <section className="mx-head mx-rise" aria-labelledby="mx-page-title" data-story={key || undefined}>
       <div>
         <nav className="mx-crumb" aria-label="Breadcrumb"><Link href="/member/dashboard">{t("dashboard")}</Link><Icon name="chev" size={13} /><span aria-current="page">{title}</span></nav>
+        {kicker && <span className="mx-kicker">{kicker}</span>}
         <h1 id="mx-page-title"><span className="ic"><Icon name={icon} size={26} /></span>{title}</h1>
         {lead && <p className="lead">{lead}</p>}
         {facts.length > 0 && (
           <div className="mx-facts">
-            {facts.map(([k, v]) => <div className="mx-fact" key={k}><small>{k}</small><b>{v}</b></div>)}
+            {facts.map(([k, v], i) => <div className="mx-fact" key={k} style={{ "--i": i }}><small>{k}</small><b>{v}</b></div>)}
           </div>
         )}
         {children}
       </div>
-      <div className="art art3d"><span className="halo" aria-hidden="true" /><Scene3D panel={panel} compact label="Animated 3D emblem of your panel" fallback={flat} /></div>
+      <div className="mx-emblem" aria-hidden="true">
+        <span className="r1" /><span className="r2" /><span className="r3" />
+        {art && <img src={art} alt="" width="150" height="150" />}
+      </div>
     </section>
   );
 }

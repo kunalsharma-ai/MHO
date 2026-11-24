@@ -12,6 +12,7 @@ import { InstantAlerts, PayoutDial, QualityGauge, InviteCard } from "./HomeParts
 import { levelOf, earnedOf, badgesOf, calendarOf, monthOf } from "../engage";
 import { buildInbox, useSeen } from "../messages";
 import Scene3D from "../Scene3D";
+import { sectionArt } from "../art";
 
 const greet = () => { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"; };
 const TAGLINE = {
@@ -44,7 +45,7 @@ function Hero() {
         <Link role="listitem" href="#mx-quality" className="kpi k-q"><span className="ic"><Icon name="heart" size={18} /></span><b>{Number(member?.qualityScore) || 0}</b><small>quality</small></Link>
         <Link role="listitem" href="#mx-streak" className="kpi k-fire"><span className="ic"><Icon name="flame" size={18} /></span><b>{streak.current}</b><small>week streak</small></Link>
       </div>
-      <div className="emb" aria-hidden="false"><span className="halo" aria-hidden="true" /><Scene3D panel={panel} compact label={HERO_LABEL[panel]} /></div>
+      <div className="emb" aria-hidden="false"><span className="halo" aria-hidden="true" /><Scene3D panel={panel} compact label={HERO_LABEL[panel]} fallback={<img className="flat" src={sectionArt(panel, "basic", "basic")} alt="" width="120" height="120" />} /></div>
     </section>
   );
 }

@@ -3,6 +3,7 @@
 // replies). Sources are listed in ../messages.js. Replying to a ticket uses the same call as the ticket page
 // (PUT /api/v1/support/:id/reply) and only shows as sent once the server confirms it.
 import React from "react";
+import { pageArt } from "../art";
 import Link from "next/link";
 import { api } from "@/util";
 import { useMx, initials } from "../data";
@@ -123,7 +124,7 @@ function Reader({ msg, onBack }) {
 }
 
 export default function Messages() {
-  const { d, notes, tickets, dash } = useMx();
+  const { d, notes, tickets, dash, panel } = useMx();
   const [seen, mark, unmark] = useSeen();
   const [filter, setFilter] = React.useState("all");
   const [q, setQ] = React.useState("");
@@ -138,7 +139,7 @@ export default function Messages() {
 
   return (
     <>
-      <PageHead icon="inbox" title="Messages" lead="Everything we send you in one place: notifications, new surveys, notices from the MHO team and your support tickets with every reply."
+      <PageHead icon="inbox" title="Messages" art={pageArt(panel, "messages")} lead="Everything we send you in one place: notifications, new surveys, notices from the MHO team and your support tickets with every reply."
         facts={[["Unread", unread.length], ["New surveys", count("survey")], ["Open tickets", tickets.list.filter((x) => !/resolved|closed/i.test(x.status || "")).length]]} />
       <section className={`mx-inbox${open ? " reading" : ""}`} aria-label="Messages">
         <div className="mx-ilist">
