@@ -21,3 +21,4 @@ export { default as ProfileOptions } from "./ProfileOptions.js";
 //*/export { default as AuthToken } from "./AuthToken.js";
 export { default as ConsentRecord } from "./ConsentRecord.js";
 export { default as CaptchaChallenge } from "./CaptchaChallenge.js";
+export { default as ContentPage } from "./ContentPage.js";

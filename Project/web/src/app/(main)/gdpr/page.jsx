@@ -1,4 +1,5 @@
 import React from "react";
+import ConsoleContent from "@/components/ConsoleContent";
 import { Grid, Typography } from "@mui/material";
 import SubHeader from "@/componentsMHO/SubHeader";
 
@@ -21,6 +22,7 @@ function page() {
         // px={2}
         textAlign={"justify"}
       >
+        <ConsoleContent pageKey="gdpr">
         <Typography
           lineHeight={"1.5"}
           fontSize={"22px"}
@@ -182,6 +184,7 @@ function page() {
             support@myhealthopinions.com.
           </Typography>
         </Typography>
+        </ConsoleContent>
       </Grid>
     </Grid>
   );

@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import ConsoleContent from "@/components/ConsoleContent";
 import {
   Accordion,
   AccordionSummary,
@@ -73,6 +74,7 @@ const CookiePolicy = () => {
           background: "linear-gradient(180deg,#ffffff 0%,#f8fafc 100%)",
         }}
       >
+        <ConsoleContent pageKey="cookies">
         <Grid container spacing={4}>
           <MotionGrid size={12} variants={item}>
             <Box
@@ -706,6 +708,7 @@ const CookiePolicy = () => {
             </Accordion>
           </motion.div>
         </MotionBox>
+        </ConsoleContent>
       </Grid>
     </MotionGrid>
   );
