@@ -29,7 +29,7 @@ function Opener({ handleRef }) {
 }
 
 export default function Profiles() {
-  const { member, d, panel } = useMx();
+  const { member, d, panel, lang, mode } = useMx();
   const [failed, setFailed] = React.useState(false);
   const handleRef = React.useRef(null);
   if (!member) return <LoadingOverlay />;
@@ -49,7 +49,7 @@ export default function Profiles() {
         </>
       ) : (
         <div className="mx-embed" style={{ borderRadius: 28, overflow: "hidden", boxShadow: "var(--sh-lg)" }}>
-          <ProfileSection view="profiles" handleRef={handleRef} onFail={() => setFailed(true)}/>
+          <ProfileSection lang={lang} theme={mode} view="profiles" handleRef={handleRef} onFail={() => setFailed(true)}/>
         </div>
       )}
     </>

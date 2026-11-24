@@ -42,6 +42,7 @@ async function mount(target, opts = {}) {
     assetBase: opts.assetBase ?? prev.assetBase ?? '',
     user: { ...(prev.user || {}), ...(opts.user || {}) },
     lang: opts.lang || prev.lang,
+    theme: opts.theme || prev.theme,
     embedded: true,
     disableSW: true,
   };

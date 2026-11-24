@@ -9,10 +9,11 @@ import { Icon, Meter, Empty, useCountUp } from "../kit";
 import { Vault, ProfileCards, sectionHref, sectionTitle } from "../parts";
 import { Journey, InstantAlerts, Opportunities, PayoutDial, QualityGauge, InviteCard, Milestones, RecentActivity } from "./HomeParts";
 import { SCENES, sectionArt } from "../art";
+import Scene3D from "../Scene3D";
 
 const greet = () => { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"; };
 
-function HeroArt() {
+function FlatArt() {
   const { panel, d } = useMx();
   const sections = d?.profile?.sections || [];
   if (panel === "caregiver") {
@@ -42,6 +43,24 @@ function HeroArt() {
         const a = (i / sats.length) * Math.PI * 2 - Math.PI / 2;
         return <span key={s.slug} className="sat" style={{ left: `calc(50% + ${Math.cos(a) * 41}% - 25px)`, top: `calc(50% + ${Math.sin(a) * 41}% - 25px)`, "--d": `${-i}s` }}><img src={sectionArt("hcp", s.slug, s.name)} alt="" width="40" height="40" /></span>;
       })}
+    </div>
+  );
+}
+
+const HERO_LABEL = { hcp: "A turning 3D DNA helix with a medical cross and capsules", caregiver: "A beating 3D heart in a ring of glowing beads", patient: "A glass orb with a glowing heartbeat line" };
+
+function HeroArt() {
+  const { panel } = useMx();
+  return (
+    <div className={`mx-hero3d art-col p-${panel}`}>
+      <span className="halo" aria-hidden="true" />
+      <Scene3D panel={panel} label={HERO_LABEL[panel]} fallback={<FlatArt />} />
+      {panel === "caregiver" && (
+        <>
+          <span className="mx-scene mini" aria-hidden="true" style={{ left: "-2%", bottom: "4%", "--rot": "-8deg", "--w": "34%" }}><img src={SCENES.hug} alt="" width="300" height="220" /></span>
+          <span className="mx-scene mini" aria-hidden="true" style={{ right: "-2%", top: "2%", "--rot": "7deg", "--w": "32%", "--d": "-2s" }}><img src={SCENES.meal} alt="" width="300" height="220" /></span>
+        </>
+      )}
     </div>
   );
 }

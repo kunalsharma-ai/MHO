@@ -96,7 +96,7 @@ function loadStyle(href) {
   document.head.appendChild(link);
 }
 
-export default function ProfileSection({ view = "all", categories, onFail, onItems, handleRef }) {
+export default function ProfileSection({ view = "all", categories, onFail, onItems, handleRef, lang = "en", theme = "light" }) {
   const user = useMember();
   const hostRef = React.useRef(null);
   const key = user?.category?.trim().toLowerCase();
@@ -149,7 +149,9 @@ export default function ProfileSection({ view = "all", categories, onFail, onIte
           assetBase: root,
           view,
           sound: false,
-          theme: "light",
+          // language and light / dark mode chosen in the member area header
+          theme: theme === "dark" ? "dark" : "light",
+          lang,
           user: {
             firstName: user.firstname,
             id: user._id,
@@ -175,7 +177,7 @@ export default function ProfileSection({ view = "all", categories, onFail, onIte
       if (handleRef) handleRef.current = null;
       if (mounted) mounted.unmount();
     };
-  }, [section?.folder, user?._id, view]);
+  }, [section?.folder, user?._id, view, lang, theme]);
 
   if (!section) return null;
   return <div ref={hostRef} />;

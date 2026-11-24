@@ -10,7 +10,7 @@ import { api } from "@/util";
 import ProfileSection from "../../components/ProfileSection";
 import SectionCard from "../../components/SectionCard";
 import { useMx } from "../data";
-import { PageHead, SurveyTiles } from "../parts";
+import { PageHead, SurveyTiles, sectionHref, sectionTitle } from "../parts";
 import { Icon, Tabs, Empty, fmtDate } from "../kit";
 import { sectionArt } from "../art";
 
@@ -49,14 +49,53 @@ const OUTCOME = {
   "in-progress": ["In progress", "info", "You started this survey and can continue while it is open."],
 };
 
+/** How a member takes part, with where they are now: profiles first, then the panel's health surveys, then studies. */
+function TakePart({ available, onOpenAvailable }) {
+  const { d, balance } = useMx();
+  const sections = d?.profile?.sections || [];
+  const done = sections.filter((x) => x.status === "complete").length;
+  const next = d?.profile?.next;
+  const profP = sections.length ? done / sections.length : 0;
+  const steps = [
+    { icon: "profile", title: "Complete your profiles", text: sections.length ? `${done} of ${sections.length} done. Your answers decide which studies you are invited to.` : "Answer your profile questions.",
+      p: profP, state: profP >= 1 ? "done" : "now", action: next ? <Link className="mx-btn sm" href={sectionHref(next)}>Continue: {sectionTitle(next)} <Icon name="arrow" size={14} /></Link> : <Link className="mx-btn sm ghost" href="/member/profiles">Open my profiles</Link> },
+    { icon: "lock", title: "Unlock health surveys", text: "Your panel's health surveys open one by one once the About You profiles are complete.",
+      p: null, state: profP >= 1 ? "now" : "next", action: <a className="mx-btn sm ghost" href="#mx-ps-h">See them <Icon name="arrow" size={14} /></a> },
+    { icon: "surveys", title: "Take matched studies", text: available ? `${available} stud${available === 1 ? "y is" : "ies are"} open for you now. Each card shows the time and reward first.` : "New studies appear here when your answers match one.",
+      p: null, state: available ? "now" : "next", action: available ? <button type="button" className="mx-btn sm" onClick={onOpenAvailable}>Start a survey <Icon name="arrow" size={14} /></button> : null },
+    { icon: "gift", title: "Earn and redeem points", text: `${balance.points.toLocaleString()} points so far. Points land in Rewards as soon as a survey is complete.`,
+      p: balance.threshold ? Math.min(1, balance.points / balance.threshold) : null, state: "next", action: <Link className="mx-btn sm ghost" href="/member/rewards">My rewards</Link> },
+  ];
+  return (
+    <section className="mx-card mx-takepart" aria-labelledby="mx-tp-h">
+      <span className="mx-eyebrow">How to take part</span>
+      <h2 id="mx-tp-h" style={{ margin: "6px 0 18px" }}>Four steps from profile to reward</h2>
+      <ol>
+        {steps.map((st, i) => (
+          <li key={st.title} className={`st-${st.state}`} style={{ "--i": i }}>
+            <span className="num" aria-hidden="true">
+              {st.p != null && <svg className="ring" viewBox="0 0 44 44"><circle cx="22" cy="22" r="19" className="bg" /><circle cx="22" cy="22" r="19" className="fg" style={{ "--p": st.p }} /></svg>}
+              <Icon name={st.state === "done" ? "check" : st.icon} size={18} />
+            </span>
+            <b>{i + 1}. {st.title}</b>
+            <span className="tx">{st.text}</span>
+            {st.action && <span className="act">{st.action}</span>}
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
 function PanelSurveys() {
+  const { lang, mode } = useMx();
   const handle = React.useRef(null);
   const [items, setItems] = React.useState([]);
   const [ready, setReady] = React.useState(false);
   const onItems = React.useCallback((list) => { setItems(Array.isArray(list) ? list : []); setReady(true); }, []);
   return (
     <>
-      <ProfileSection view="headless" categories={["patient", "care giver", "healthcare professional"]} handleRef={handle} onItems={onItems} />
+      <ProfileSection lang={lang} theme={mode} view="headless" categories={["patient", "care giver", "healthcare professional"]} handleRef={handle} onItems={onItems} />
       {ready && items.length > 0 && (
         <section className="mx-card" aria-labelledby="mx-ps-h">
           <div className="mx-sec-h"><div><span className="mx-eyebrow">Panel surveys</span><h2 id="mx-ps-h" style={{ marginTop: 6 }}>Your panel&apos;s profile steps and health surveys</h2>
@@ -92,12 +131,14 @@ export default function Surveys() {
     <>
       <PageHead icon="surveys" title="Surveys" facts={loading ? [] : facts} art={sectionArt(panel, "survey", "survey participation")}
         lead="Studies matched to your profile answers. Each card shows the reward and the expected time. Screening questions at the start decide whether a study fits you." />
+      <TakePart available={available.length} onOpenAvailable={() => { setTab("available"); document.getElementById("mx-sv-list")?.scrollIntoView({ behavior: "smooth", block: "start" }); }} />
+      <span id="mx-sv-list" />
       <Tabs label="Survey lists" value={tab} onChange={setTab} tabs={[
         { id: "available", label: `Available (${available.length})`, icon: "spark" },
         { id: "progress", label: `In progress (${inProgress.length})`, icon: "clock" },
         { id: "history", label: `History (${history.length})`, icon: "calendar" },
       ]} />
-      <section className="mx-card" role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`} data-tour="surveys-list">
+      <section className="mx-card" role="tabpanel" id={`panel-${tab}`}  aria-labelledby={`tab-${tab}`} data-tour="surveys-list">
         {loading ? <div className="mx-skel" style={{ minHeight: 200 }} /> : tab === "available" ? (
           <>
             <div className="mx-spread" style={{ marginBottom: 14 }}>

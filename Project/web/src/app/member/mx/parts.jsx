@@ -1,17 +1,23 @@
 "use client";
 // Pieces shared by several member pages: the page head, the panel's rewards vault, profile cards and survey tiles.
 import React from "react";
+import Scene3D from "./Scene3D";
 import Link from "next/link";
 import { useMx } from "./data";
 import { Icon, Meter, useCountUp, cap } from "./kit";
 import { sectionArt, artByName } from "./art";
 import { metaOf } from "./catalog";
 
-export function PageHead({ icon, title, lead, facts = [], art, children }) {
+const TITLE_KEY = { "My Profile": "profile", Surveys: "surveys", Rewards: "rewards", Referrals: "referrals", Notifications: "notifications", "My Account": "account", "Help & Support": "help" };
+
+export function PageHead({ icon, title: en, lead, facts = [], art, children }) {
+  const { t, panel } = useMx();
+  const title = TITLE_KEY[en] ? t(TITLE_KEY[en]) : en;
+  const flat = art ? <div className="art" aria-hidden="true"><img src={art} alt="" width="160" height="160" /></div> : null;
   return (
     <section className="mx-head mx-rise" aria-labelledby="mx-page-title">
       <div>
-        <nav className="mx-crumb" aria-label="Breadcrumb"><Link href="/member/dashboard">Dashboard</Link><Icon name="chev" size={13} /><span aria-current="page">{title}</span></nav>
+        <nav className="mx-crumb" aria-label="Breadcrumb"><Link href="/member/dashboard">{t("dashboard")}</Link><Icon name="chev" size={13} /><span aria-current="page">{title}</span></nav>
         <h1 id="mx-page-title"><span className="ic"><Icon name={icon} size={26} /></span>{title}</h1>
         {lead && <p className="lead">{lead}</p>}
         {facts.length > 0 && (
@@ -21,7 +27,7 @@ export function PageHead({ icon, title, lead, facts = [], art, children }) {
         )}
         {children}
       </div>
-      {art && <div className="art" aria-hidden="true"><img src={art} alt="" width="160" height="160" /></div>}
+      <div className="art art3d"><span className="halo" aria-hidden="true" /><Scene3D panel={panel} compact label="Animated 3D emblem of your panel" fallback={flat} /></div>
     </section>
   );
 }

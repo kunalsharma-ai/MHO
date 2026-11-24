@@ -186,15 +186,19 @@ export const apiOk = (resp) => resp?.status === "success";
 /** Counts up to `to` once visible (instant with reduced motion). */
 export function useCountUp(to, ms = 1100) {
   const [v, setV] = React.useState(0);
+  const shown = React.useRef(0);
   React.useEffect(() => {
     const target = Number(to) || 0;
+    const from = shown.current; // a later change counts on from the number already shown
     const reduce = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || !target) { setV(target); return undefined; }
+    if (reduce || !target || from === target) { shown.current = target; setV(target); return undefined; }
     let raf = 0;
     const t0 = performance.now();
     const step = (now) => {
       const k = Math.min(1, (now - t0) / ms);
-      setV(Math.round(target * (1 - Math.pow(1 - k, 3))));
+      const x = Math.round(from + (target - from) * (1 - Math.pow(1 - k, 3)));
+      shown.current = x;
+      setV(x);
       if (k < 1) raf = requestAnimationFrame(step);
     };
     raf = requestAnimationFrame(step);

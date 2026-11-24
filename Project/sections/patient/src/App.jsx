@@ -42,7 +42,8 @@ function Section({ view: viewProp }) {
   const saved = useStore((s) => s);
   const c = cfg();
   const view = viewProp || c.view || 'all';
-  const lang = 'en';
+  // the member area passes the language and light / dark mode chosen in its header
+  const lang = typeof c.lang === 'string' && c.lang ? c.lang : 'en';
   const theme = c.theme === 'dark' ? 'dark' : 'light';
   const [content, setContent] = useState({});
   const [uiTick, setUiTick] = useState(0);

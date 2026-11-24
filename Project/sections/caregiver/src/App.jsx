@@ -41,8 +41,10 @@ function useUserName(propName, answers) {
 
 export default function App({ userName: propName, view = 'all' }) {
   const saved = useStore((s) => s);
-  const lang = 'en';
-  const theme = 'light';
+  // the member area passes the language and light / dark mode chosen in its header
+  const conf = (typeof window !== 'undefined' && window.MHO_CONFIG) || {};
+  const lang = typeof conf.lang === 'string' && conf.lang ? conf.lang : 'en';
+  const theme = conf.theme === 'dark' ? 'dark' : 'light';
   const [content, setContent] = useState({});
   const [survey, setSurvey] = useState(null);
   const [surveyErr, setSurveyErr] = useState(false);

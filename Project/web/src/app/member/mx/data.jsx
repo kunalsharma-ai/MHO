@@ -8,6 +8,7 @@ import React from "react";
 import { api } from "@/util";
 import { useMember } from "@/Context";
 import { useRewardsTick, fetchRewardBalance } from "@/hooks/useRewardsRefresh";
+import { LANGS, tr } from "./i18n";
 
 export const segOf = (category) => {
   const v = String(category || "").toLowerCase();
@@ -47,15 +48,42 @@ export const PANELS = {
   },
 };
 
+// Colour themes the member can pick in the header. "panel" keeps the panel's own colours.
+export const THEMES = [
+  { id: "panel", name: "Panel colours", sw: null },
+  { id: "aurora", name: "Aurora", sw: ["#14B8A6", "#8B5CF6"], deep: "#0B1E3A" },
+  { id: "sunset", name: "Sunset", sw: ["#F97316", "#E11D48"], deep: "#3B0A1E" },
+  { id: "ocean", name: "Ocean", sw: ["#0EA5E9", "#2563EB"], deep: "#062544" },
+  { id: "forest", name: "Forest", sw: ["#10B981", "#65A30D"], deep: "#0B2A1E" },
+  { id: "royal", name: "Royal", sw: ["#7C3AED", "#DB2777"], deep: "#1E0B3A" },
+  { id: "gold", name: "Gold", sw: ["#F59E0B", "#D9480F"], deep: "#2A1A05" },
+];
+/** CSS variables of a colour theme, set on the member area root. */
+export function themeVars(id, panel) {
+  const t = THEMES.find((x) => x.id === id);
+  if (!t || !t.sw) return undefined;
+  const [a, b] = t.sw;
+  const v = {
+    "--accent": a, "--accent-2": b, "--focus": a,
+    "--cta": `linear-gradient(115deg, ${a} 0%, ${b} 100%)`, "--cta-sh": `0 14px 28px -12px ${b}aa`,
+    "--brandtext": `linear-gradient(115deg, ${a}, ${b})`, "--meter": `linear-gradient(90deg, ${a}, ${b})`,
+    "--vault": `linear-gradient(160deg, ${t.deep} 0%, ${t.deep}ee 55%, ${b}88 140%)`,
+    "--nav-on": `linear-gradient(115deg, ${a}, ${b})`, "--nav-on-ink": "#fff", "--tint-a": a, "--tint-b": b,
+  };
+  if (panel !== "patient") v["--bar"] = `linear-gradient(120deg, ${t.deep} 0%, ${t.deep} 45%, ${b}cc 140%)`;
+  return v;
+}
+
+// [label, href, icon, tour id, i18n key]
 export const NAV = [
-  ["Dashboard", "/member/dashboard", "home", "nav-dashboard"],
-  ["My Profile", "/member/profiles", "profile", "nav-profiles"],
-  ["Surveys", "/member/surveys", "surveys", "nav-surveys"],
-  ["Rewards", "/member/rewards", "gift", "nav-rewards"],
-  ["Referrals", "/member/referrals", "share", "nav-referrals"],
-  ["Notifications", "/member/notifications", "bell", "nav-notifications"],
-  ["My Account", "/member/myaccount", "user", "nav-myaccount"],
-  ["Help & Support", "/member/support", "help", "nav-support"],
+  ["Dashboard", "/member/dashboard", "home", "nav-dashboard", "dashboard"],
+  ["My Profile", "/member/profiles", "profile", "nav-profiles", "profile"],
+  ["Surveys", "/member/surveys", "surveys", "nav-surveys", "surveys"],
+  ["Rewards", "/member/rewards", "gift", "nav-rewards", "rewards"],
+  ["Referrals", "/member/referrals", "share", "nav-referrals", "referrals"],
+  ["Notifications", "/member/notifications", "bell", "nav-notifications", "notifications"],
+  ["My Account", "/member/myaccount", "user", "nav-myaccount", "account"],
+  ["Help & Support", "/member/support", "help", "nav-support", "help"],
 ];
 
 const Ctx = React.createContext(null);
@@ -70,10 +98,19 @@ export function MxProvider({ children }) {
   const [balance, setBalance] = React.useState({ points: 0, threshold: 0, rate: 0, ready: false });
   const [alerts, setAlerts] = React.useState({ loading: true, list: [] });
   const [mode, setModeState] = React.useState("light");
+  const [lang, setLangState] = React.useState("en");
+  const [palette, setPaletteState] = React.useState("panel");
   const [n, setN] = React.useState(0);
 
   React.useEffect(() => { const m = read("mho.member.mode", "light"); setModeState(m === "dark" ? "dark" : "light"); }, []);
   const setMode = React.useCallback((m) => { setModeState(m); write("mho.member.mode", m); }, []);
+  // language and colour theme are display preferences of this browser, like light / dark mode
+  React.useEffect(() => {
+    const l = read("mho.member.lang", "en"); if (LANGS.some((x) => x.code === l)) setLangState(l);
+    const p = read("mho.member.palette", "panel"); if (THEMES.some((x) => x.id === p)) setPaletteState(p);
+  }, []);
+  const setLang = React.useCallback((l) => { setLangState(l); write("mho.member.lang", l); }, []);
+  const setPalette = React.useCallback((p) => { setPaletteState(p); write("mho.member.palette", p); }, []);
 
   React.useEffect(() => {
     if (!member?._id) return undefined;
@@ -109,8 +146,8 @@ export function MxProvider({ children }) {
       ...((d?.notifications || []).map((x, i) => ({ id: `d${i}`, kind: x.kind, level: x.level, text: x.text, at: x.at, action: x.action, section: x.section }))),
       ...alerts.list.map((a, i) => ({ id: `a${a._id || i}`, kind: "announcement", level: "info", text: a.title || a.subject || a.message || a.text || "Announcement", body: a.description || a.content || a.message, at: a.createdAt, link: a.link || a.url })),
     ];
-    return { member, panel, P: PANELS[panel], dash, d, balance, alerts, notes, reload, mode, setMode };
-  }, [member, panel, dash, balance, alerts, reload, mode, setMode]);
+    return { member, panel, P: PANELS[panel], dash, d, balance, alerts, notes, reload, mode, setMode, lang, setLang, t: tr(lang), palette, setPalette };
+  }, [member, panel, dash, balance, alerts, reload, mode, setMode, lang, setLang, palette, setPalette]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
