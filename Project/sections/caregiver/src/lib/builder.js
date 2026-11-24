@@ -14,6 +14,7 @@ const EMOJI_ALT = {
 };
 const EMOJI_ALT_ANY = ['✨', '🔹', '🔸', '⭐', '🌟', '💫', '🔷', '🔶'];
 import { optionEmoji } from './emoji.js';
+import { DROP_2026, DUPLICATE_OF, patchOptions, patchFlags } from './questions-2026.js';
 
 export default function build({ PROFILES, QUESTIONS, OPTIONS }) {
 const files = {};
@@ -214,6 +215,7 @@ for (const meta of [...PROFILE_META, ...dynamicMeta]) {
   } else names = Object.keys(ADDITIONAL);
   names = names.filter((n) => {
     if (DROP.has(n)) { report.droppedQuestions.push({ profile: meta.id, question: n }); return false; }
+    if (DROP_2026.has(n)) { report.droppedQuestions.push({ profile: meta.id, question: n, duplicateOf: DUPLICATE_OF[n] }); return false; }
     return true;
   });
   names = [...new Set(names)];
@@ -260,6 +262,7 @@ for (const name of usedNames) {
 
   if (TEXT_QUESTIONS[name]) {
     Object.assign(q, TEXT_QUESTIONS[name]);
+    patchOptions(q, name);
     delete q.parent;
     questions[name] = q;
     continue;
@@ -316,7 +319,9 @@ for (const name of usedNames) {
     q.options.push(entry);
     if (!LONG_LIST(name)) contentStrings.add(lab);
   }
+  patchOptions(q, name);
   decorateChoice(q, name);
+  patchFlags(q, name);
   questions[name] = q;
 }
 

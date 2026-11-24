@@ -22,13 +22,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
 import { optionEmoji, applySequence, QUESTION_EMOJI } from './option-emoji.mjs';
+import { editProfileDocs, DROP_2026, DUPLICATE_OF, patchOptions, patchFlags } from '../src/lib/questions-2026.js';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..');
 const RAW = path.join(ROOT, 'raw');
 const OUT = path.join(ROOT, 'public', 'data');
 
 const read = (f) => JSON.parse(fs.readFileSync(path.join(RAW, f), 'utf8'));
-const PROFILES = read('myhealthopinions.Patient.Profile.json');
+const PROFILES = editProfileDocs(read('myhealthopinions.Patient.Profile.json'));
 const QUESTIONS = read('myhealthopinions.Patient.Question.json');
 const OPTIONS = read('myhealthopinions.Option.json');
 
@@ -302,6 +303,7 @@ for (const meta of PROFILE_META) {
   } else names = Object.keys(ADDITIONAL);
   names = names.filter((n) => {
     if (DROP.has(n)) { report.droppedQuestions.push({ profile: meta.id, question: n }); return false; }
+    if (DROP_2026.has(n)) { report.droppedQuestions.push({ profile: meta.id, question: n, duplicateOf: DUPLICATE_OF[n] }); return false; }
     return true;
   });
   names = [...new Set(names)];
@@ -432,7 +434,9 @@ for (const name of usedNames) {
   if (OPTION_RELABEL[name]) entries = entries.map((e) => (OPTION_RELABEL[name][e[0]] ? [OPTION_RELABEL[name][e[0]], ...e.slice(1)] : e));
   q.options = entries;
   for (const e of entries) if (!LONG_LIST.has(name) && /\p{L}/u.test(e[0])) contentStrings.add(e[0]);
+  patchOptions(q, name);
   decorateChoice(q, name);
+  patchFlags(q, name);
   questions[name] = q;
 }
 

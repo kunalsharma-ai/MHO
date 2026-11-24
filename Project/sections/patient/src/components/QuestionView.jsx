@@ -121,7 +121,7 @@ export default function QuestionView({ name, q, ctx, opt, geoErr, onRetryGeo, an
         </div>
       </div>
       {q.type === 'choice' && <MoneyNote note={money.note} />}
-      {q.type === 'choice' && <p className="q-hint"><span className="emo" aria-hidden="true">{multi ? '☑️' : '👆'}</span> {multi ? t('run.multi') : t('run.single')}</p>}
+      {q.type === 'choice' && <p className="q-hint"><span className="emo" aria-hidden="true">{multi ? '☑️' : '👆'}</span> {multi ? (q.max ? t('run.multiMax', { n: q.max }) : t('run.multi')) : t('run.single')}</p>}
       {body}
       <p className={'q-err' + (err ? ' on' : '')} role="alert" aria-live="assertive">
         {err ? <ErrText err={err} t={t} onFix={err[0] === 'emailTypo' ? () => { onSubmit(name, { v: err[1].fix }); } : null} /> : ''}
@@ -186,6 +186,10 @@ function Choices({ name, q, list, ans, multi, onSubmit, fail, setErr, isLast }) 
       setTimeout(() => { lock.current = false; commit([o.v], ''); }, 240);
       return;
     }
+    if (q.max && !o.excl && !sel.includes(o.v) && sel.filter((v) => !list.some((x) => x.excl && x.v === v)).length >= q.max) {
+      fail(['maxPick', { n: q.max }]);
+      return;
+    }
     setSel((s) => {
       if (s.includes(o.v)) return s.filter((v) => v !== o.v);
       if (o.excl) return [o.v];
@@ -248,8 +252,13 @@ function Choices({ name, q, list, ans, multi, onSubmit, fail, setErr, isLast }) 
           />
         </div>
       )}
-      {needsButton && (
+      {(needsButton || q.optional) && (
         <div className="q-actions">
+          {q.optional && !sel.length && (
+            <button className="btn ghost" type="button" onClick={() => { sound.tap(1); onSubmit(name, { v: multi ? [] : '', s: 1 }); }}>
+              {t('run.skip')}
+            </button>
+          )}
           <button className="btn primary big" type="button" onClick={() => commit(sel, other)} disabled={!sel.length}>
             {isLast ? t('run.finish') + ' ✓' : t('run.next')} <span aria-hidden="true">→</span>
           </button>

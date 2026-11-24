@@ -1,5 +1,6 @@
 import { PHONE } from './phone-meta.js';
 import build from './builder.js';
+import { editProfileDocs } from './questions-2026.js';
 
 let queue = Promise.resolve();
 const host = () => window.MHO_HOST || {};
@@ -68,7 +69,7 @@ let skeletonPromise = null;
 function skeleton() {
   if (!skeletonPromise) {
     skeletonPromise = (async () => {
-      docs = (await call('POST', '/api/v1/profile', { category: host().category })).data;
+      docs = editProfileDocs((await call('POST', '/api/v1/profile', { category: host().category })).data);
       const names = [...new Set(docs.flatMap(namesOf))];
       const placeholders = names.map((name) => ({ name, label: name, _id: name }));
       const out = JSON.parse(build({ PROFILES: byId(docs), QUESTIONS: placeholders, OPTIONS: [] })[MAIN]);
@@ -204,8 +205,8 @@ function toAnswer(name, q, resp) {
   if (!(name in resp)) return null;
   const raw = resp[name];
   if (raw && typeof raw === 'object' && !Array.isArray(raw)) return null;
-  if (blank(raw)) return q.type !== 'choice' && q.optional ? { v: '', s: 1 } : null;
-  const list = [].concat(raw).map(String);
+  if (blank(raw)) return q.optional ? { v: q.type === 'choice' && q.multi ? [] : '', s: 1 } : null;
+  const list = [].concat(raw).map(String).map((v) => q.alias?.[v] ?? v);
   const specify = resp[`${name}_specify`] ? String(resp[`${name}_specify`]) : '';
   if (q.type === 'choice') {
     if (q.multi) return { v: list, ...(specify ? { o: specify } : {}) };

@@ -100,7 +100,7 @@ export default function QuestionView({ name, q, ctx, opt, geoErr, onRetryGeo, an
           </h3>
         </div>
       </div>
-      {q.type === 'choice' && <p className="q-hint"><span className="emo" aria-hidden="true">{multi ? '☑️' : '👆'}</span> {multi ? t('run.multi') : t('run.single')}</p>}
+      {q.type === 'choice' && <p className="q-hint"><span className="emo" aria-hidden="true">{multi ? '☑️' : '👆'}</span> {multi ? (q.max ? t('run.multiMax', { n: q.max }) : t('run.multi')) : t('run.single')}</p>}
       {isIncome(q) && country && <MoneyNote cc={country} />}
       {(q.geo === 'state' || q.geo === 'city') && country && <p className="q-hint geo-note"><Flag cc={country} size={22} /> {t('run.inCountry', { country: ctryName(country) })}</p>}
       {body}
@@ -180,6 +180,10 @@ function Choices({ name, q, list, ans, multi, cc, onSubmit, fail, setErr, isLast
       setTimeout(() => { lock.current = false; commit([o.v], ''); }, 240);
       return;
     }
+    if (q.max && !o.excl && !sel.includes(o.v) && sel.filter((v) => !list.some((x) => x.excl && x.v === v)).length >= q.max) {
+      fail(['maxPick', { n: q.max }]);
+      return;
+    }
     setSel((s) => {
       if (s.includes(o.v)) return s.filter((v) => v !== o.v);
       if (o.excl) return [o.v];
@@ -241,8 +245,13 @@ function Choices({ name, q, list, ans, multi, cc, onSubmit, fail, setErr, isLast
           />
         </div>
       )}
-      {needsButton && (
+      {(needsButton || q.optional) && (
         <div className="q-actions">
+          {q.optional && !sel.length && (
+            <button className="btn ghost" type="button" onClick={() => { sound.tap(1); onSubmit(name, { v: multi ? [] : '', s: 1 }); }}>
+              {t('run.skip')}
+            </button>
+          )}
           <button className="btn primary big" type="button" onClick={() => commit(sel, other)} disabled={!sel.length}>
             {isLast ? t('run.finish') + ' ✓' : t('run.next')} <span aria-hidden="true">→</span>
           </button>

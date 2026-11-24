@@ -9,6 +9,7 @@
 const Q = {
   fullname: '🙋', gender: '🧑‍🤝‍🧑', dob: '🎂', mail: '📧', country: '🌍', state: '🗺️', city: '🏙️', zipcode: '📮', ethnicity: '🧬', rural: '🏡',
   'personal-income': '💰', 'household-income': '🏦', 'relationship-status': '💍', children: '👶', website: '🌐',
+  'patient-living-arrangement': '🏡', 'patient-care-support': '🤝',
   education: '🎓', 'education-diploma': '📜', 'education-associate-degree': '📘', 'education-ug': '🎓', 'education-pg': '🧑‍🎓', 'education-doctorate': '👩‍🔬',
   'diet-plan': '🥗', 'have-food-allergy': '🥜', 'food-allergy': '🤧', 'hot-drinks': '☕', 'cold-drinks': '🧃', alcohol: '🍷', 'alcohol-category': '🍹', smoke: '🚭',
   'smoke-category': '🚬', suppliment: '💪', 'do-exercise': '🏋️', exercises: '🤸', 'do-sport-participation': '🏅', 'sport-category': '⚽', 'sleep-duration': '😴',
@@ -278,6 +279,8 @@ const R = [
 export function optionEmoji(q, label, value) {
   const l = String(label).trim();
   if (q === 'gender' && /^other/i.test(l)) return '🌈';
+  if (q === 'patient-living-arrangement') return ({ 'living alone': '🧍', 'living with spouse/partner': '💑', 'living with children': '👨‍👧', 'living with parents': '👪', 'living with other family members': '🏠', 'assisted living/community housing': '🏘️' })[l.toLowerCase()] || (/^other/i.test(l) ? '✏️' : null);
+  if (q === 'patient-care-support') return ({ 'yes, regularly': '🤝', 'yes, occasionally': '🫶', no: '🙅' })[l.toLowerCase()] || null;
   if (BY_VALUE[q]) return BY_VALUE[q][value] || '💼';
   if (/income/.test(q)) return '💵';
   for (const [re, e] of R) if (re.test(l)) return e;
