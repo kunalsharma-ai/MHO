@@ -1,6 +1,8 @@
 import express from "express";
 import { Response as responseController, Survey as surveyController } from "../../controller/index.js";
 import { Mutate, expressRoute, expressView, isAuthenticated, fsLogger } from "../../../utils/index.js"
+import { requireAdmin, requireMember } from "../../../utils/access.js";
+// Reading surveys is public. Creating, changing and deleting them, and the response lists, are for admins only.
 
 const router = express.Router();
 router
@@ -22,7 +24,7 @@ router
         },
         surveyController
     ))
-    .put(expressRoute(
+    .put(requireAdmin, expressRoute(
         async req => {
             // Create new entry
             let message = "Survey created";
@@ -33,7 +35,7 @@ router
     ))
 router
     .route("/responses/:slug")
-    .get(expressRoute(
+    .get(requireAdmin, expressRoute(
         async req => {
             let data = await responseController.list({
                 "survey.slug":req.params.slug
@@ -44,6 +46,7 @@ router
     ))
 router.post(
     "/responses",
+    requireAdmin,
     expressRoute(
         async req => {
             let data = await responseController.listResponses({
@@ -65,7 +68,7 @@ router
         },
         surveyController
     ))
-    .put(expressRoute(
+    .put(requireAdmin, expressRoute(
         async req => {
             // update single entry
             let message = "Survey updated";
@@ -74,7 +77,7 @@ router
         },
         surveyController
     ))
-    .delete(expressRoute(
+    .delete(requireAdmin, expressRoute(
         async req => {
             // delete single entry
             let message = "Survey Deleted";

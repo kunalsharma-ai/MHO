@@ -56,7 +56,9 @@ class User extends CrudController {
         return await super.update(id, data);
     }
     async read(id) {
-        let temp = Mutate(await userModel.findById(id).select("+role"))
+        // this brand's members only (all three brands share one database)
+        let temp = Mutate(await userModel.findOne(this.byId(id)).select("+role"))
+        if (!temp) throw new Error("Item not found");
         let dob = new Date(temp.dob);
         const fullname = temp?.fullName ?? null;
         return { ...temp, isMinor: dob.isMinor(), fullname };
