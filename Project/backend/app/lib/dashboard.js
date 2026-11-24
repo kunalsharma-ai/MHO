@@ -23,7 +23,7 @@ export async function surveysFor(user) {
     const now = new Date();
     const [surveys, responses] = await Promise.all([
         Survey.find({ category: norm(user.category), origin: user.origin, isActive: { $ne: false }, isDeleted: { $ne: true } })
-            .select("slug name summary icon points loi status active filters source link").lean(),
+            .select("slug name summary icon points loi status active filters source link createdAt").lean(),
         Response.find({ user: user._id, isDeleted: { $ne: true } }).select("survey status timeline points updatedAt createdAt").sort({ updatedAt: -1 }).lean(),
     ]);
     const research = surveys.filter((s) => !NOT_RESEARCH.has(s.slug));
@@ -33,7 +33,7 @@ export async function surveysFor(user) {
     const answers = Object.fromEntries(answerRows.map((r) => [r.question, [].concat(r.answer ?? [])]));
     const taken = new Set(responses.map((r) => r.survey?.slug));
     const open = (s) => norm(s.status) === "active" && (!s.active?.from || new Date(s.active.from) <= now) && (!s.active?.to || new Date(s.active.to) >= now);
-    const card = (s) => ({ slug: s.slug, name: s.name, summary: s.summary || "", points: s.points || 0, minutes: s.loi || null, source: s.source });
+    const card = (s) => ({ slug: s.slug, name: s.name, summary: s.summary || "", points: s.points || 0, minutes: s.loi || null, source: s.source, launchedAt: s.active?.from || s.createdAt || null });
 
     const available = research.filter((s) => open(s) && !taken.has(s.slug) && qualifies(s.filters, answers)).map(card);
     const history = responses

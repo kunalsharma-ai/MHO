@@ -1,176 +1,213 @@
 "use client";
-// Dashboard home: welcome, journey, the panel's rewards vault, alerts, profiles, survey opportunities, payout dial,
-// quality gauge, invites, milestones, recent activity and shortcuts.
-// Every number comes from /api/v1/me/dashboard or the reward balance; when there is nothing yet, the page says so.
+// Dashboard home: a short welcome, then the member's progress as a game: activity streak, level, payout vault,
+// quality score, badges, an activity calendar, next steps, latest messages, invites and survey alerts.
+// Profiles and surveys have their own pages (My Profile, Surveys); the dashboard does not list them.
+// Every number comes from the member's records (dashboard API, rewards balance and history, referrals, answers).
 import React from "react";
 import Link from "next/link";
-import { useMx, firstName } from "../data";
-import { Icon, Meter, Empty, useCountUp } from "../kit";
-import { Vault, ProfileCards, sectionHref, sectionTitle } from "../parts";
-import { Journey, InstantAlerts, Opportunities, PayoutDial, QualityGauge, InviteCard, Milestones, RecentActivity } from "./HomeParts";
-import { SCENES, sectionArt } from "../art";
+import { api } from "@/util";
+import { useMx, firstName, useAnswers } from "../data";
+import { Icon, useCountUp, fmtDate } from "../kit";
+import { InstantAlerts, PayoutDial, QualityGauge, InviteCard } from "./HomeParts";
+import { levelOf, earnedOf, badgesOf, calendarOf, monthOf } from "../engage";
+import { buildInbox, useSeen } from "../messages";
 import Scene3D from "../Scene3D";
 
 const greet = () => { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"; };
-
-function FlatArt() {
-  const { panel, d } = useMx();
-  const sections = d?.profile?.sections || [];
-  if (panel === "caregiver") {
-    return (
-      <div className="mx-scenes art-col" aria-hidden="true">
-        <span className="mx-scene" style={{ left: "2%", top: "4%", "--rot": "-6deg", "--w": "44%" }}><img src={SCENES.hug} alt="" width="300" height="220" /></span>
-        <span className="mx-scene" style={{ right: "2%", top: "0%", "--rot": "5deg", "--w": "40%", "--d": "-2s" }}><img src={SCENES.meal} alt="" width="300" height="220" /></span>
-        <span className="mx-scene" style={{ left: "26%", bottom: "0%", "--rot": "-2deg", "--w": "42%", "--d": "-4s" }}><img src={SCENES.walk} alt="" width="300" height="220" /></span>
-      </div>
-    );
-  }
-  if (panel === "patient") {
-    return (
-      <div className="mx-pulseorb art-col" aria-hidden="true">
-        <span className="glass" />
-        <svg viewBox="0 0 300 120"><defs><linearGradient id="mxEcgG" x1="0" x2="1"><stop offset="0" stopColor="#14B8C4" /><stop offset=".5" stopColor="#3B82F6" /><stop offset="1" stopColor="#E1192F" /></linearGradient></defs>
-          <path className="ecg" d="M0 70h70l14-30 16 60 18-80 16 70 12-20h154" fill="none" stroke="url(#mxEcgG)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" /></svg>
-      </div>
-    );
-  }
-  const sats = sections.slice(0, 6);
-  return (
-    <div className="mx-orbit art-col" aria-hidden="true">
-      <span className="ring r2" /><span className="ring r1" />
-      <span className="core"><span className="mx-cross" /></span>
-      {sats.map((s, i) => {
-        const a = (i / sats.length) * Math.PI * 2 - Math.PI / 2;
-        return <span key={s.slug} className="sat" style={{ left: `calc(50% + ${Math.cos(a) * 41}% - 25px)`, top: `calc(50% + ${Math.sin(a) * 41}% - 25px)`, "--d": `${-i}s` }}><img src={sectionArt("hcp", s.slug, s.name)} alt="" width="40" height="40" /></span>;
-      })}
-    </div>
-  );
-}
-
-const HERO_LABEL = { hcp: "A turning 3D DNA helix with a medical cross and capsules", caregiver: "A beating 3D heart in a ring of glowing beads", patient: "A glass orb with a glowing heartbeat line" };
-
-function HeroArt() {
-  const { panel } = useMx();
-  return (
-    <div className={`mx-hero3d art-col p-${panel}`}>
-      <span className="halo" aria-hidden="true" />
-      <Scene3D panel={panel} label={HERO_LABEL[panel]} fallback={<FlatArt />} />
-      {panel === "caregiver" && (
-        <>
-          <span className="mx-scene mini" aria-hidden="true" style={{ left: "-2%", bottom: "4%", "--rot": "-8deg", "--w": "34%" }}><img src={SCENES.hug} alt="" width="300" height="220" /></span>
-          <span className="mx-scene mini" aria-hidden="true" style={{ right: "-2%", top: "2%", "--rot": "7deg", "--w": "32%", "--d": "-2s" }}><img src={SCENES.meal} alt="" width="300" height="220" /></span>
-        </>
-      )}
-    </div>
-  );
-}
-
-function HeroStats() {
-  const { member, balance } = useMx();
-  const pts = useCountUp(balance.points);
-  const qs = Number(member?.qualityScore) || 0;
-  const p = balance.threshold ? Math.min(1, balance.points / balance.threshold) : 0;
-  return (
-    <div className="mx-hstats" role="list" aria-label="Your numbers">
-      <span role="listitem" className="pill"><span className="mx-coin"><Icon name="coin" size={15} /></span><b>{pts.toLocaleString()}</b> points</span>
-      <span role="listitem" className="pill"><span className="mx-qs"><Icon name="heart" size={14} /></span><b>{qs}</b> quality</span>
-      {balance.threshold > 0 && <span role="listitem" className="pill"><span className="mini" aria-hidden="true"><i style={{ "--p": p }} /></span><b>{Math.round(p * 100)}%</b> to payout</span>}
-    </div>
-  );
-}
+const TAGLINE = {
+  hcp: "Your clinical voice shapes better care. Here is how your research journey is going.",
+  caregiver: "Your care experience matters. Here is everything you have built with us so far.",
+  patient: "Your health story helps others. Here is your progress at a glance.",
+};
+const HERO_LABEL = { hcp: "A turning 3D DNA helix with a medical cross", caregiver: "A beating 3D heart in a ring of glowing beads", patient: "A glass orb with a glowing heartbeat line" };
 
 function Hero() {
-  const { member, d, P, panel } = useMx();
+  const { member, d, panel, balance, activity, streak } = useMx();
   const name = firstName(member, d);
-  const prof = d?.profile;
-  const sections = prof?.sections || [];
-  const done = sections.filter((s) => s.status === "complete").length;
-  const next = prof?.next;
-  const counts = d?.surveys?.counts || {};
+  const earned = earnedOf(activity.rows, balance.points);
+  const lv = levelOf(panel, earned);
+  const pts = useCountUp(balance.points);
   return (
-    <section className="mx-hero mx-rise" aria-labelledby="mx-hello">
-      <div>
-        <span className="mx-hello" data-tour="greeting"><i><Icon name={P.icon} size={13} /></i>{greet()}{name ? `, ${name}` : ""}</span>
-        <h1 id="mx-hello">{P.hello(name || "there")}</h1>
-        <p className="lead">{P.lead}</p>
-        <HeroStats />
-        {panel === "patient" && sections.length > 0 && (
-          <div className="mx-progress2">
-            <div><span>Profiles</span><Meter value={done / sections.length} label="Profiles complete" /><span>{done}/{sections.length}</span></div>
-            <div><span>Surveys</span><Meter value={(counts.completed || 0) / Math.max(1, (counts.completed || 0) + (counts.available || 0))} label="Surveys completed" /><span>{counts.completed || 0}/{(counts.completed || 0) + (counts.available || 0)}</span></div>
-          </div>
-        )}
-        <div className="acts">
-          {next ? (
-            <Link className="mx-btn" href={sectionHref(next)}><Icon name="profile" size={18} />{next.answered ? `Continue: ${sectionTitle(next)}` : `Start: ${sectionTitle(next)}`}<Icon name="arrow" size={16} /></Link>
-          ) : sections.length ? (
-            <Link className="mx-btn" href="/member/surveys"><Icon name="surveys" size={18} />See my surveys<Icon name="arrow" size={16} /></Link>
-          ) : (
-            <Link className="mx-btn" href="/member/profiles"><Icon name="profile" size={18} />Open my profile<Icon name="arrow" size={16} /></Link>
-          )}
-          {(counts.available || 0) > 0 && <Link className="mx-btn ghost" href="/member/surveys">{counts.available} survey{counts.available === 1 ? "" : "s"} waiting</Link>}
+    <section className="mx-wel mx-rise" aria-labelledby="mx-hello">
+      <div className="txt">
+        <span className="mx-hello" data-tour="greeting"><i><Icon name="spark" size={12} /></i>{greet()}</span>
+        <h1 id="mx-hello">Welcome back, <em>{name || "there"}</em></h1>
+        <p className="lead">{TAGLINE[panel]}</p>
+        <div className="lvl" aria-label={`Level ${lv.n}, ${lv.name}`}>
+          <span className="badge"><b>{lv.n}</b><small>LEVEL</small></span>
+          <span className="lt"><b>{lv.name}</b><span className="xp" aria-hidden="true"><i style={{ "--p": lv.p }} /></span>
+            <small>{lv.next ? `${lv.left.toLocaleString()} points to ${lv.next}` : "Top level reached"}</small></span>
         </div>
-        {panel === "caregiver" && next && <p className="note"><Icon name="heart" size={16} />A few warm questions about you and the care you give is all it takes.</p>}
       </div>
-      <HeroArt />
+      <div className="kpis" role="list" aria-label="Your numbers">
+        <Link role="listitem" href="/member/rewards" className="kpi k-coin"><span className="ic"><Icon name="coin" size={18} /></span><b>{pts.toLocaleString()}</b><small>points</small></Link>
+        <Link role="listitem" href="#mx-quality" className="kpi k-q"><span className="ic"><Icon name="heart" size={18} /></span><b>{Number(member?.qualityScore) || 0}</b><small>quality</small></Link>
+        <Link role="listitem" href="#mx-streak" className="kpi k-fire"><span className="ic"><Icon name="flame" size={18} /></span><b>{streak.current}</b><small>week streak</small></Link>
+      </div>
+      <div className="emb" aria-hidden="false"><span className="halo" aria-hidden="true" /><Scene3D panel={panel} compact label={HERO_LABEL[panel]} /></div>
     </section>
   );
 }
 
-function Completion() {
-  const { d, P, dash } = useMx();
-  const sections = d?.profile?.sections || [];
-  const [filter, setFilter] = React.useState("all");
-  const [more, setMore] = React.useState(false);
-  if (dash.loading) return <div className="mx-card"><div className="mx-skel" style={{ minHeight: 260 }} /></div>;
-  const todo = sections.filter((s) => s.status !== "complete");
-  const shown = filter === "todo" ? todo : filter === "done" ? sections.filter((s) => s.status === "complete") : sections;
+const DAYS = ["M", "T", "W", "T", "F", "S", "S"];
+function StreakCard() {
+  const { streak, activity } = useMx();
+  const n = useCountUp(streak.current);
+  const msg = !activity.ready ? "" : streak.activeNow ? "You're active this week. Keep the flame going next week too." : streak.current ? "Do one thing this week, a survey, a profile or an invite, to keep your streak." : "Take part in anything this week to light your first flame.";
   return (
-    <section aria-labelledby="mx-prof-h" className="mx-rise" style={{ "--i": 3 }}>
-      <div className="mx-sec-h">
-        <div><span className="mx-eyebrow">Your profiles</span><h2 id="mx-prof-h" style={{ marginTop: 6 }}>{P.profilesTitle}</h2>
-          <p>{sections.length ? `${todo.length} to go. Pick any, in any order. Your answers save as you go.` : "Your profile sections appear here once they are set up for your panel."}</p></div>
-        {sections.length > 0 && (
-          <div className="mx-filters" role="group" aria-label="Filter profiles">
-            {[["all", "All", sections.length], ["todo", "To do", todo.length], ["done", "Completed", sections.length - todo.length]].map(([k, l, c]) => (
-              <button key={k} type="button" aria-pressed={filter === k} onClick={() => setFilter(k)}>{l}<span>{c}</span></button>
+    <section id="mx-streak" className="mx-card mx-streakc mx-rise" aria-labelledby="mx-st-h" style={{ "--i": 1 }}>
+      <span className="mx-eyebrow">Activity streak</span>
+      <div className="flame" aria-hidden="true"><i /><i /><i /><Icon name="flame" size={44} /></div>
+      <h2 id="mx-st-h"><b>{n}</b> week{streak.current === 1 ? "" : "s"} in a row</h2>
+      <p className="note">{msg}</p>
+      <ol className="wk" aria-label="This week">
+        {streak.week.map((x, i) => <li key={x.start} className={`${x.count ? "on" : ""}${x.today ? " today" : ""}${x.future ? " fut" : ""}`} title={new Date(x.start).toDateString()}><i>{x.count ? <Icon name="check" size={12} stroke={3.5} /> : null}</i><span>{DAYS[i]}</span></li>)}
+      </ol>
+      <div className="best"><Icon name="trophy" size={15} />Best run: <b>{streak.best} week{streak.best === 1 ? "" : "s"}</b></div>
+    </section>
+  );
+}
+
+function LevelCard() {
+  const { panel, balance, activity } = useMx();
+  const earned = earnedOf(activity.rows, balance.points);
+  const lv = levelOf(panel, earned);
+  return (
+    <section className="mx-card mx-levelc mx-rise" aria-labelledby="mx-lv-h" style={{ "--i": 2 }}>
+      <span className="mx-eyebrow">Your level</span>
+      <h2 id="mx-lv-h"><span>Level {lv.n}</span> {lv.name}</h2>
+      <ol className="ladder">
+        {lv.all.map((l, i) => (
+          <li key={l.name} className={i + 1 < lv.n ? "done" : i + 1 === lv.n ? "now" : ""} style={{ "--i": i }}>
+            <i>{i + 1 < lv.n ? <Icon name="check" size={12} stroke={3} /> : i + 1}</i><span>{l.name}</span><small>{l.at.toLocaleString()}</small>
+          </li>
+        ))}
+      </ol>
+      <div className="xp"><span style={{ "--p": lv.p }} /></div>
+      <p className="note">{lv.next ? <>{earned.toLocaleString()} points earned · <b>{lv.left.toLocaleString()}</b> more to reach {lv.next}</> : <>{earned.toLocaleString()} points earned · top level</>}</p>
+      <p className="fine">Levels show how much you have taken part. They do not change the points a survey pays.</p>
+    </section>
+  );
+}
+
+const TONES = { violet: ["#8A4DFF", "#4B3CC9"], teal: ["#14C9B5", "#0E8F86"], gold: ["#FFC233", "#E08A00"], coral: ["#FF6A2C", "#EF2D56"], amber: ["#FFB020", "#FF6A2C"], sky: ["#38BDF8", "#2F6BFF"], pink: ["#FF5E9E", "#C9184A"] };
+function Badges() {
+  const { panel, d, balance, activity, streak } = useMx();
+  const [joined, setJoined] = React.useState(0);
+  React.useEffect(() => { api.get("/api/v1/me/referrals").then((r) => setJoined((Array.isArray(r?.data) ? r.data : []).filter((u) => u.verified).length)).catch(() => {}); }, []);
+  const list = badgesOf({ panel, d, balance, rows: activity.rows, joined, streak });
+  const got = list.filter((b) => b.got).length;
+  return (
+    <section className="mx-card mx-badges mx-rise" aria-labelledby="mx-bd-h" style={{ "--i": 3 }}>
+      <div className="mx-sec-h"><div><span className="mx-eyebrow">Badges</span><h2 id="mx-bd-h" style={{ marginTop: 6 }}>{got} of {list.length} badges earned</h2><p>Each badge comes from something you really did. Locked badges show what to do next.</p></div>
+        <div className="mx-bdmeter" aria-hidden="true"><i style={{ "--p": got / list.length }} /></div></div>
+      <ul>
+        {list.map((b, i) => {
+          const [a, c] = TONES[b.tone] || TONES.violet;
+          return (
+            <li key={b.id} className={b.got ? "got" : ""} style={{ "--i": i, "--a": a, "--b": c, "--p": b.p }}>
+              <span className="medal"><span className="rim" /><span className="face"><Icon name={b.got ? b.icon : "lock"} size={b.got ? 24 : 18} /></span>{b.got && <span className="shine" aria-hidden="true" />}</span>
+              <b>{b.name}</b>
+              <small>{b.got ? "Earned" : `${b.cur.toLocaleString()} / ${b.goal.toLocaleString()}`}</small>
+              <span className="how" role="note">{b.how}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
+function Calendar() {
+  const { activity } = useMx();
+  const weeks = calendarOf(activity.rows, 18);
+  const m = monthOf(activity.rows);
+  const max = Math.max(1, ...weeks.flat().map((x) => x.count));
+  const months = weeks.map((w) => new Date(w[0].day)).map((dt, i, a) => (i === 0 || dt.getMonth() !== a[i - 1].getMonth() ? dt.toLocaleDateString(undefined, { month: "short" }) : ""));
+  return (
+    <section className="mx-card mx-cal mx-rise" aria-labelledby="mx-cal-h" style={{ "--i": 4 }}>
+      <div className="mx-sec-h"><div><span className="mx-eyebrow">Activity</span><h2 id="mx-cal-h" style={{ marginTop: 6 }}>Your last 18 weeks</h2></div>
+        <Link className="mx-btn sm ghost" href="/member/rewards">Full history <Icon name="arrow" size={14} /></Link></div>
+      <div className="cal-wrap">
+        <div className="cal" role="img" aria-label={`${activity.rows.length} activities in your history`}>
+          <div className="mo" aria-hidden="true">{months.map((x, i) => <span key={i}>{x}</span>)}</div>
+          <div className="grid">
+            {weeks.map((w, i) => (
+              <div key={i} className="col" style={{ "--i": i }}>
+                {w.map((x) => <i key={x.day} className={x.future ? "fut" : ""} style={{ "--v": x.count / max }} data-n={x.count || undefined} title={`${new Date(x.day).toDateString()}: ${x.count} activit${x.count === 1 ? "y" : "ies"}`} />)}
+              </div>
             ))}
           </div>
-        )}
+          <div className="key" aria-hidden="true"><span>Less</span><i style={{ "--v": 0 }} /><i style={{ "--v": .34 }} /><i style={{ "--v": .67 }} /><i style={{ "--v": 1 }} /><span>More</span></div>
+        </div>
+        <div className="month">
+          <small>This month</small>
+          <div><b>{m.activities}</b><span>activities</span></div>
+          <div><b>{m.completed}</b><span>surveys completed</span></div>
+          <div><b>+{m.points.toLocaleString()}</b><span>points earned</span></div>
+        </div>
       </div>
-      {shown.length ? (<>
-        <ProfileCards sections={more ? shown : shown.slice(0, 8)} />
-        {shown.length > 8 && <div style={{ textAlign: "center", marginTop: 16 }}><button type="button" className="mx-btn ghost" aria-expanded={more} onClick={() => setMore(!more)}>{more ? "Show fewer" : `Show all ${shown.length} profiles`}</button></div>}
-      </>) : (
-        <Empty icon={filter === "done" ? "star" : "check"} title={filter === "done" ? "No completed profiles yet" : sections.length ? "Every profile is complete" : "No profile sections yet"}>
-          {filter === "done" ? "Finish a profile and it will show here with a full meter." : sections.length ? "Thank you. Keep an eye on Surveys for studies that match you." : "Open My Profile to see the questions for your panel."}
-        </Empty>
-      )}
     </section>
   );
 }
 
-function Shortcuts() {
-  const { d } = useMx();
-  const c = d?.consent;
-  const items = [
-    ["My Profile", "Answer and edit your profiles", "/member/profiles", "profile", "#2EE6C5", "#0F7EA8"],
-    ["Rewards", "Points and history", "/member/rewards", "gift", "#FFD15C", "#F2611B"],
-    ["Refer a friend", "Share your invite link", "/member/referrals", "share", "#FF8FA8", "#C2185B"],
-    ["Payment details", "How you get paid", "/member/myaccount?tab=payment", "card", "#A78BFA", "#5B4BFF"],
-    ["Privacy & consent", c?.version ? `Signed ${c.version}` : "Your consent record", "/member/myaccount?tab=privacy", "shield", "#34D399", "#047857"],
-    ["Help & Support", "FAQs and tickets", "/member/support", "help", "#60A5FA", "#1D4ED8"],
+/** Next steps: actions that move the member forward, each checked against their own records. */
+function Quests() {
+  const { streak, activity, d } = useMx();
+  const [ans, , ready] = useAnswers(["communication-methods", "payment-method-primary", "payment-method"]);
+  const [inv, setInv] = React.useState(null);
+  React.useEffect(() => { api.get("/api/v1/me/invite").then((r) => setInv(Array.isArray(r?.data) ? r.data.length : 0)).catch(() => setInv(0)); }, []);
+  const alerts = [].concat(ans["communication-methods"] || []).length > 0;
+  const pay = Boolean(ans["payment-method-primary"] || ans["payment-method"]);
+  const social = activity.rows.some((r) => r.type === "Social");
+  const consentOk = !d?.notifications?.some((n) => n.action === "consent");
+  const list = [
+    ["flame", "Keep your streak alive", streak.activeNow ? "Done for this week" : "Do one activity this week", streak.activeNow, "/member/surveys"],
+    ["bell", "Turn on survey alerts", alerts ? "You will hear first" : "WhatsApp, email or SMS", alerts, "/member/myaccount?tab=notifications"],
+    ["card", "Choose how you get paid", pay ? "Payout method saved" : "PayPal, UPI, bank and more", pay, "/member/myaccount?tab=payment"],
+    ["share", "Invite a friend", inv ? `${inv} invitation${inv === 1 ? "" : "s"} sent` : "100 points when they verify", Boolean(inv), "/member/referrals"],
+    ["megaphone", "Follow MHO on social media", social ? "Approved, thank you" : "50 points once approved", social, "/member/referrals#follow"],
+    ["shield", "Privacy and consent up to date", consentOk ? "All signed" : "Please review your consent", consentOk, "/member/myaccount?tab=privacy"],
   ];
+  const done = list.filter((x) => x[3]).length;
   return (
-    <section aria-labelledby="mx-sc-h" className="mx-rise" style={{ "--i": 6 }}>
-      <div className="mx-sec-h"><div><span className="mx-eyebrow">Shortcuts</span><h2 id="mx-sc-h" style={{ marginTop: 6 }}>Jump back in</h2></div></div>
-      <div className="mx-shortcuts">
-        {items.map(([t, s, href, ic, a, b]) => (
-          <Link key={t} href={href} className="mx-short" style={{ "--a": a, "--b": b }}>
-            <span className="ic"><Icon name={ic} size={20} /></span><b>{t}</b><span>{s}</span>
-          </Link>
+    <section className="mx-card mx-quests mx-rise" aria-labelledby="mx-qs-h" style={{ "--i": 5 }}>
+      <div className="mx-sec-h"><div><span className="mx-eyebrow">Next steps</span><h2 id="mx-qs-h" style={{ marginTop: 6 }}>{done} of {list.length} done</h2></div>
+        <span className="qring" style={{ "--p": done / list.length }} aria-hidden="true"><b>{Math.round((done / list.length) * 100)}%</b></span></div>
+      <ul>
+        {list.map(([ic, label, sub, ok, href], i) => (
+          <li key={label} className={ok ? "ok" : ""} style={{ "--i": i }}>
+            <Link href={href}>
+              <span className="ic"><Icon name={ok ? "check" : ic} size={17} stroke={ok ? 3 : 2} /></span>
+              <span className="tx"><b>{label}</b><span>{!ready && (ic === "bell" || ic === "card") ? "Checking…" : sub}</span></span>
+              {!ok && <Icon name="arrow" size={15} />}
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
+    </section>
+  );
+}
+
+function LatestMessages() {
+  const { d, notes, tickets } = useMx();
+  const [seen] = useSeen();
+  const list = buildInbox({ d, notes, tickets: tickets.list }).slice(0, 4);
+  const unread = buildInbox({ d, notes, tickets: tickets.list }).filter((m) => !seen.has(m.key)).length;
+  const IC = { survey: "surveys", notice: "megaphone", ticket: "ticket", notification: "bell" };
+  return (
+    <section className="mx-card mx-latest mx-rise" aria-labelledby="mx-lm-h" style={{ "--i": 6 }}>
+      <div className="mx-sec-h"><div><span className="mx-eyebrow">Messages</span><h2 id="mx-lm-h" style={{ marginTop: 6 }}>{unread ? `${unread} unread` : "All read"}</h2></div>
+        <Link className="mx-btn sm ghost" href="/member/messages">Open inbox <Icon name="arrow" size={14} /></Link></div>
+      {!list.length ? <p className="mx-muted">New surveys, notices and replies from our team will arrive here.</p> : (
+        <ul>
+          {list.map((m, i) => (
+            <li key={m.key} className={`k-${m.kind}${seen.has(m.key) ? "" : " new"}`} style={{ "--i": i }}>
+              <Link href="/member/messages"><span className="ic"><Icon name={IC[m.kind]} size={16} /></span><span className="tx"><b>{m.title}</b><small>{m.at ? fmtDate(m.at) : ""}</small></span>{!seen.has(m.key) && <i className="dot" aria-label="Unread" />}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   );
 }
@@ -181,19 +218,22 @@ export default function Home() {
     <>
       <Hero />
       {dash.error && <div className="mx-alert bad" role="alert"><Icon name="alert" size={18} />We could not load your dashboard just now. Your data is safe; please refresh the page in a moment.</div>}
-      <Journey />
-      <div data-tour="stats"><Vault /></div>
-      <InstantAlerts />
-      <Completion />
-      <Opportunities />
-      <div className="mx-trio">
+      <div className="mx-bento" data-tour="stats">
+        <StreakCard />
+        <LevelCard />
         <PayoutDial />
-        <QualityGauge />
+        <div id="mx-quality"><QualityGauge /></div>
+      </div>
+      <Badges />
+      <div className="mx-duo">
+        <Calendar />
+        <Quests />
+      </div>
+      <div className="mx-duo b">
+        <LatestMessages />
         <InviteCard />
       </div>
-      <Milestones />
-      <RecentActivity />
-      <Shortcuts />
+      <InstantAlerts />
     </>
   );
 }

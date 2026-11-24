@@ -9,7 +9,7 @@ import { api } from "@/util";
 import { useMx, useAnswers } from "../data";
 import { PageHead, Vault } from "../parts";
 import { Icon, Empty, Field, Modal, useToast, apiOk, apiMessage, fmtDate, cap } from "../kit";
-import { loadRewardRows, fmtLoi } from "../rewardsData";
+import { loadRewardRows, fmtLoi, SOCIAL_POINTS, REFERRAL_POINTS } from "../rewardsData";
 import { sectionArt } from "../art";
 
 const STATUS = { complete: ["Completed", "ok"], approved: ["Approved", "ok"], credited: ["Credited", "ok"], terminate: ["Did not qualify", "bad"], overquota: ["Quota full", "warn"], dropout: ["Not finished", "info"] };
@@ -50,8 +50,51 @@ function RequestPayout({ open, onClose, points, worth, method }) {
   );
 }
 
+const SRC = [["Survey", "surveys", "coral"], ["Profile", "profile", "violet"], ["Referral", "share", "pink"], ["Social", "megaphone", "teal"]];
+const TYPE_ICON = { Survey: "surveys", Profile: "profile", Referral: "share", Social: "megaphone" };
+
+/** Where the points came from: totals per activity type, from the full rewards history. */
+function Sources({ rows, ready }) {
+  const tot = SRC.map(([k, ic, tone]) => ({ k, ic, tone, pts: rows.filter((r) => r.type === k).reduce((a, r) => a + (r.points || 0), 0), n: rows.filter((r) => r.type === k && (r.points || 0) > 0).length }));
+  const all = tot.reduce((a, t) => a + t.pts, 0);
+  return (
+    <section className="mx-card mx-src" aria-labelledby="mx-src-h">
+      <div className="mx-sec-h"><div><span className="mx-eyebrow">Where your points came from</span><h2 id="mx-src-h" style={{ marginTop: 6 }}>{ready ? `${all.toLocaleString()} points earned` : "Loading…"}</h2></div></div>
+      <div className="mx-src-bar" aria-hidden="true">{all > 0 && tot.filter((t) => t.pts).map((t) => <i key={t.k} className={`t-${t.tone}`} style={{ flexGrow: t.pts }} />)}</div>
+      <ul className="mx-src-list">
+        {tot.map((t, i) => (
+          <li key={t.k} className={`t-${t.tone}`} style={{ "--i": i }}>
+            <span className="ic"><Icon name={t.ic} size={18} /></span>
+            <span><small>{t.k === "Survey" ? "Surveys" : t.k === "Profile" ? "Profiles" : t.k === "Referral" ? "Referrals" : "Social"}</small><b>{t.pts.toLocaleString()}</b><em>{t.n} reward{t.n === 1 ? "" : "s"}{all ? ` · ${Math.round((t.pts / all) * 100)}%` : ""}</em></span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/** Ways to earn, with the values the platform actually pays. */
+function WaysToEarn() {
+  const ways = [
+    ["surveys", "coral", "Take surveys", "Each survey shows its points before you start. Completed surveys pay in full.", "/member/surveys", "See surveys"],
+    ["profile", "violet", "Complete profiles", "Finished profiles add points and unlock surveys that match you.", "/member/profile", "My profiles"],
+    ["share", "pink", `Invite friends · ${REFERRAL_POINTS} points`, "For each friend who joins with your link and verifies their email.", "/member/referrals", "Invite"],
+    ["megaphone", "teal", `Follow MHO · ${SOCIAL_POINTS} points`, "Once our team approves your follow on a social platform.", "/member/referrals#follow", "Follow"],
+  ];
+  return (
+    <section className="mx-ways" aria-label="Ways to earn">
+      {ways.map(([ic, tone, h, p, href, cta], i) => (
+        <Link key={h} href={href} className={`mx-way t-${tone}`} style={{ "--i": i }}>
+          <span className="ic"><Icon name={ic} size={22} /></span>
+          <b>{h}</b><span>{p}</span><em>{cta} <Icon name="arrow" size={14} /></em>
+        </Link>
+      ))}
+    </section>
+  );
+}
+
 export default function Rewards() {
-  const { member, balance, panel } = useMx();
+  const { member, balance, panel, activity } = useMx();
   const [range, setRange] = React.useState(["", ""]);
   const [type, setType] = React.useState("All");
   const [state, setState] = React.useState({ loading: true, rows: [], failed: false });
@@ -78,6 +121,8 @@ export default function Rewards() {
         lead="Your points, what they are worth, and every activity that earned them."
         facts={[["Balance", `${balance.points.toLocaleString()} pts`], ...(worth ? [["Worth about", `$${worth}`]] : []), ...(balance.threshold ? [["Payout at", `${balance.threshold.toLocaleString()} pts`]] : [])]} />
       <Vault compact />
+      <Sources rows={activity.rows} ready={activity.ready} />
+      <WaysToEarn />
       <div className="mx-grid mx-g2">
         <section className="mx-card" aria-labelledby="mx-redeem-h">
           <span className="mx-eyebrow">Payout</span>
@@ -125,12 +170,12 @@ export default function Rewards() {
                   const resumable = r.type === "Survey" && r.status === "dropout" && r.source !== "external" && r.slug;
                   return (
                     <tr key={r.id}>
-                      <td data-l="Type"><span className="mx-chip info">{r.type}</span></td>
+                      <td data-l="Type"><span className={`mx-type t-${r.type.toLowerCase()}`}><Icon name={TYPE_ICON[r.type] || "gift"} size={14} />{r.type}</span></td>
                       <td data-l="Activity"><b style={{ textTransform: r.type === "Profile" ? "capitalize" : undefined }}>{r.activity}</b></td>
                       <td data-l="Date">{fmtDate(r.date)}</td>
                       <td data-l="Length">{fmtLoi(r.loiMs)}</td>
                       <td data-l="Status">{resumable ? <a className="mx-btn sm" href={`/survey?name=${encodeURIComponent(r.slug)}`}>Continue</a> : <span className={`mx-chip ${t}`}>{l}</span>}</td>
-                      <td data-l="Points"><b>{r.points ? `+${r.points.toLocaleString()}` : "—"}</b></td>
+                      <td data-l="Points"><b className={r.points ? "mx-plus" : ""}>{r.points ? `+${r.points.toLocaleString()}` : "—"}</b></td>
                     </tr>
                   );
                 })}

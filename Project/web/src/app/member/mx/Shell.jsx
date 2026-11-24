@@ -8,12 +8,15 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import baseTheme from "@/theme/theme.js";
 import OnboardingTour from "../components/OnboardingTour";
 import { MxProvider, useMx, NAV, THEMES, themeVars, noteHref, initials, fullName, firstName, memberId } from "./data";
-import { LANGS, langOf } from "./i18n";
 import { Icon, Toasts, useCountUp } from "./kit";
-import { LOGO } from "./art";
+import { LOGO, sectionArt } from "./art";
+import { sectionHref, sectionTitle } from "./parts";
+import { LanguageButton, LanguagePicker, TranslateStatus } from "./lang/Language";
+import { buildInbox, useSeen } from "./messages";
 import "./theme.css";
 import "./header.css";
 import "./fx.css";
+import "./prism.css";
 
 const MUI_COLORS = { hcp: ["#5B4BFF", "#FF5A78"], caregiver: ["#9B1E4E", "#F2611B"], patient: ["#0F7EA8", "#F2611B"] };
 
@@ -47,9 +50,10 @@ function Me() {
         <div className="mx-menu" role="menu">
           <div className="who"><b>{fullName(member)}</b><span>{member?.mail || member?.email || ""}</span></div>
           <Link href="/member/myaccount" role="menuitem" onClick={close}><Icon name="user" size={18} />{t("account")}</Link>
+          <Link href="/member/messages" role="menuitem" onClick={close}><Icon name="inbox" size={18} />{t("messages")}</Link>
           <Link href="/member/notifications" role="menuitem" onClick={close}><Icon name="bell" size={18} />{t("notifications")}</Link>
           <Link href="/member/support" role="menuitem" onClick={close}><Icon name="help" size={18} />{t("help")}</Link>
-          <div className="mx-menu-prefs"><ModeSwitch /><ThemePicker inline /><LangPicker inline /></div>
+          <div className="mx-menu-prefs"><div className="mx-row"><ModeSwitch /><LanguageButton compact /></div><ThemePicker inline /></div>
           <button type="button" role="menuitem" onClick={logout} style={{ color: "var(--err)" }}><Icon name="logout" size={18} />{t("signOut")}</button>
         </div>
       )}
@@ -191,29 +195,62 @@ function ThemePicker({ inline }) {
   );
 }
 
-function LangPicker({ inline }) {
-  const { lang, setLang, t } = useMx();
+/** Completed profiles, as a stack of their emblems; the panel lists every profile with its progress. */
+function ProfileStack() {
+  const { d, panel, t } = useMx();
   const [open, setOpen] = React.useState(false);
   const close = React.useCallback(() => setOpen(false), []);
   const ref = useAway(open, close);
-  const cur = langOf(lang);
-  const list = (
-    <div className="mx-langs" role="listbox" aria-label={t("language")}>
-      {LANGS.map((l) => (
-        <button key={l.code} type="button" role="option" aria-selected={lang === l.code} lang={l.code} className={lang === l.code ? "on" : undefined} onClick={() => { setLang(l.code); close(); }}>
-          <span className="fl" aria-hidden="true">{l.flag}</span><span className="nm">{l.native}</span>{lang === l.code && <Icon name="check" size={14} />}
-        </button>
-      ))}
-    </div>
-  );
-  if (inline) return <div className="mx-pref"><span className="lb">{t("language")}</span>{list}</div>;
+  const secs = d?.profile?.sections || [];
+  if (!secs.length) return null;
+  const done = secs.filter((s) => s.status === "complete");
+  const shown = (done.length ? done : secs).slice(0, 4);
+  const pct = Math.round((done.length / secs.length) * 100);
   return (
     <div ref={ref} className="mx-pop-wrap">
-      <button type="button" className="mx-iconbtn mx-langbtn" aria-haspopup="listbox" aria-expanded={open} onClick={() => setOpen(!open)} aria-label={`${t("language")}: ${cur.native}`} title={t("language")}>
-        <span className="fl" aria-hidden="true">{cur.flag}</span><span className="cd">{cur.code.toUpperCase()}</span>
+      <button type="button" className={`mx-pill mx-pstack${done.length ? "" : " none"}`} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(!open)}
+        aria-label={`${t("profilesComplete")}: ${done.length} of ${secs.length}`}>
+        <span className="faces" aria-hidden="true">
+          {shown.map((s, i) => <span key={s.slug} className={`f${s.status === "complete" ? " ok" : ""}`} style={{ "--i": i }}><img src={sectionArt(panel, s.slug, s.name)} alt="" width="26" height="26" /></span>)}
+        </span>
+        <span className="v"><small>{t("profile")}</small><b>{done.length}<em>/{secs.length}</em></b></span>
+        <span className="ring" style={{ "--p": done.length / secs.length }} aria-hidden="true" />
       </button>
-      {open && <div className="mx-menu mx-langpop"><div className="hd"><b>{t("language")}</b></div>{list}</div>}
+      {open && (
+        <div className="mx-menu mx-profpop" role="dialog" aria-label={t("profile")}>
+          <div className="hd"><b>{t("profilesComplete")}</b><span className="mx-chip info">{pct}%</span></div>
+          <div className="bar" aria-hidden="true"><i style={{ "--p": done.length / secs.length }} /></div>
+          <ul>
+            {secs.map((s, i) => {
+              const p = s.total ? s.answered / s.total : (s.status === "complete" ? 1 : 0);
+              return (
+                <li key={s.slug} style={{ "--i": i }}>
+                  <Link href={sectionHref(s)} onClick={close} className={s.status === "complete" ? "ok" : ""}>
+                    <span className="em"><img src={sectionArt(panel, s.slug, s.name)} alt="" width="34" height="34" />{s.status === "complete" && <i className="tick"><Icon name="check" size={11} stroke={3.5} /></i>}</span>
+                    <span className="tx"><b>{sectionTitle(s)}</b><span className="m"><i style={{ "--p": p }} /></span></span>
+                    <small>{s.status === "complete" ? "Done" : s.answered ? `${s.answered}/${s.total}` : "Start"}</small>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          <Link className="all" href="/member/profiles" onClick={close}>{t("goProfile")} <Icon name="arrow" size={14} /></Link>
+        </div>
+      )}
     </div>
+  );
+}
+
+/** Weekly activity streak: a flame that grows with the run of active weeks. */
+function StreakPill() {
+  const { streak, activity } = useMx();
+  if (!activity.ready) return null;
+  const n = streak.current;
+  return (
+    <Link href="/member/dashboard#mx-streak" className={`mx-pill mx-streak${streak.activeNow ? " hot" : ""}`} aria-label={`Activity streak: ${n} week${n === 1 ? "" : "s"}`} title="Weeks in a row with activity">
+      <span className="fl" aria-hidden="true"><Icon name="flame" size={17} /><i /></span>
+      <span className="v"><small>Streak</small><b>{n}<em>wk</em></b></span>
+    </Link>
   );
 }
 
@@ -227,9 +264,8 @@ function Top({ onMenu }) {
         <span className="tag"><b>{t("memberArea")}</b><small>{t(panel)}</small></span>
       </Link>
       <span className="sp" />
-      <PointsPill />
-      <QualityPill />
-      <span className="mx-top-prefs"><ModeSwitch /><ThemePicker /><LangPicker /></span>
+      <span className="mx-top-stats"><ProfileStack /><PointsPill /><QualityPill /><StreakPill /></span>
+      <span className="mx-top-prefs"><ModeSwitch /><ThemePicker /><LanguageButton /></span>
       <Bell />
       <Me />
       <span className="mx-top-glow" aria-hidden="true" />
@@ -242,7 +278,10 @@ function Nav({ onNavigate }) {
   const path = usePathname() || "";
   const total = d?.profile?.sections?.length || 0;
   const done = (d?.profile?.sections || []).filter((s) => s.status === "complete").length;
-  const counts = { "/member/surveys": d?.surveys?.counts?.available || 0, "/member/notifications": notes.filter((n) => n.level === "action").length };
+  const { tickets } = useMx();
+  const [seen] = useSeen();
+  const unread = buildInbox({ d, notes, tickets: tickets.list }).filter((m) => !seen.has(m.key)).length;
+  const counts = { "/member/surveys": d?.surveys?.counts?.available || 0, "/member/messages": unread, "/member/notifications": notes.filter((n) => n.level === "action").length };
   return (
     <nav className="mx-nav" aria-label="Member pages">
       <Link href="/member/dashboard" className="mx-navbrand" aria-label="My Health Opinions, dashboard" tabIndex={-1}><img src={LOGO} alt="" width="114" height="32" /></Link>
@@ -272,34 +311,40 @@ function Nav({ onNavigate }) {
   );
 }
 
+/**
+ * Safety net for page scroll. The profile sections lock the page while a questionnaire is open; if the member
+ * leaves with the Back button or a menu link, the lock must not stay behind. After each page change, when no
+ * dialog is open any more, any leftover lock is removed.
+ */
+function useScrollGuard(path) {
+  React.useEffect(() => {
+    const free = () => {
+      if (document.querySelector('[aria-modal="true"]')) return;
+      const html = document.documentElement;
+      html.classList.remove("lock", "hcp-lock", "mxl-open");
+      if (html.style.overflow === "hidden") html.style.overflow = "";
+      if (document.body.style.overflow === "hidden") document.body.style.overflow = "";
+    };
+    const id = setTimeout(free, 350);
+    window.addEventListener("popstate", free);
+    return () => { clearTimeout(id); window.removeEventListener("popstate", free); };
+  }, [path]);
+}
+
 function Frame({ children }) {
-  const { member, d, panel, mode, palette, lang } = useMx();
+  const { member, d, panel, mode, palette, lang, langMeta } = useMx();
   const [navOpen, setNavOpen] = React.useState(false);
   const path = usePathname();
   React.useEffect(() => setNavOpen(false), [path]);
+  useScrollGuard(path);
   const muiTheme = React.useMemo(() => {
     const t = THEMES.find((x) => x.id === palette);
     const [a, b] = t?.sw || MUI_COLORS[panel];
     return createTheme(baseTheme, { palette: { primary: { main: a, contrastText: "#fff" }, secondary: { main: b, contrastText: "#fff" } } });
   }, [panel, palette]);
   return (
-    <div className="mx" data-panel={panel} data-mode={mode} data-palette={palette} lang={lang} data-nav={navOpen ? "open" : undefined} style={themeVars(palette, panel)}>
-      <div className="mx-bg" aria-hidden="true">
-        <span className="mx-amb"><i /><i /><i /></span>
-        {panel === "hcp" && (<>
-          <span className="mx-float mx-cross" style={{ left: "3%", top: "38%", "--d": "-2s" }} />
-          <span className="mx-float mx-capsule" style={{ right: "4%", top: "22%", "--r0": "30deg", "--r1": "50deg" }} />
-          <span className="mx-float mx-cross" style={{ right: "8%", bottom: "8%", transform: "scale(.7)", "--d": "-5s" }} />
-        </>)}
-        {panel === "caregiver" && (<>
-          <span className="mx-float mx-heart3d" style={{ left: "2%", top: "44%" }} />
-          <span className="mx-float mx-heart3d" style={{ right: "3%", top: "62%", "--d": "-4s", transform: "scale(.7)" }} />
-        </>)}
-        {panel === "patient" && (<>
-          <span className="mx-float mx-orb" style={{ right: "5%", top: "30%" }} />
-          <span className="mx-float mx-orb" style={{ left: "20%", bottom: "6%", "--d": "-3s", transform: "scale(.6)" }} />
-        </>)}
-      </div>
+    <div className="mx" data-panel={panel} data-mode={mode} data-palette={palette} lang={lang} dir={langMeta.dir || "ltr"} data-nav={navOpen ? "open" : undefined} style={themeVars(palette, panel)}>
+      <div className="mx-bg" aria-hidden="true"><span className="mx-amb"><i /><i /><i /></span></div>
       <OnboardingTour member={member} greeting="Welcome" userName={firstName(member, d)} />
       <Top onMenu={() => setNavOpen(true)} />
       <div className="mx-frame">
@@ -309,6 +354,8 @@ function Frame({ children }) {
           <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>
         </main>
       </div>
+      <LanguagePicker />
+      <TranslateStatus />
     </div>
   );
 }

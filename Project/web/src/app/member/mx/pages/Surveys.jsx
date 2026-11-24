@@ -88,7 +88,7 @@ function TakePart({ available, onOpenAvailable }) {
 }
 
 function PanelSurveys() {
-  const { lang, mode } = useMx();
+  const { sectionLang: lang, mode } = useMx();
   const handle = React.useRef(null);
   const [items, setItems] = React.useState([]);
   const [ready, setReady] = React.useState(false);

@@ -95,7 +95,11 @@ function Shell({ userName }) {
   useEffect(() => { applyTheme(state.lang, state.theme); }, [state.lang, state.theme]);
 
   const overlay = route.kind !== 'home';
-  useEffect(() => { lockScroll(overlay); }, [overlay]);
+  useEffect(() => {
+    lockScroll(overlay);
+    // leaving the page (back button, menu link) while a questionnaire is open must give the page its scroll back
+    return () => { if (overlay) lockScroll(false); };
+  }, [overlay]);
 
   const goRewards = useCallback(() => document.getElementById('rewards')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), []);
   const openItem = useCallback((slug, mode = 'run', at) => {

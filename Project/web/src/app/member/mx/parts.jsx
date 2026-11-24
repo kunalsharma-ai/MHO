@@ -8,7 +8,7 @@ import { Icon, Meter, useCountUp, cap } from "./kit";
 import { sectionArt, artByName } from "./art";
 import { metaOf } from "./catalog";
 
-const TITLE_KEY = { "My Profile": "profile", Surveys: "surveys", Rewards: "rewards", Referrals: "referrals", Notifications: "notifications", "My Account": "account", "Help & Support": "help" };
+const TITLE_KEY = { Messages: "messages", "My Profile": "profile", Surveys: "surveys", Rewards: "rewards", Referrals: "referrals", Notifications: "notifications", "My Account": "account", "Help & Support": "help" };
 
 export function PageHead({ icon, title: en, lead, facts = [], art, children }) {
   const { t, panel } = useMx();

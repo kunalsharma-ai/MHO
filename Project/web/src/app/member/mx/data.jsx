@@ -8,7 +8,21 @@ import React from "react";
 import { api } from "@/util";
 import { useMember } from "@/Context";
 import { useRewardsTick, fetchRewardBalance } from "@/hooks/useRewardsRefresh";
-import { LANGS, tr } from "./i18n";
+import { loadRewardRows } from "./rewardsData";
+import { streakOf } from "./engage";
+import { tr } from "./i18n";
+import { BY_CODE, DEFAULT_LANG } from "./lang/languages";
+import { sectionLang } from "./lang/bridge";
+import { setPageLanguage, onStatus, retryWithGesture } from "./lang/engine";
+import { isSoundEnabled, setSoundEnabled, onSoundChange } from "./lang/soundPrefs";
+
+const playLanguageSound = (code) => { if (isSoundEnabled()) import("./lang/sounds").then((m) => m.playLanguageSound(code)).catch(() => {}); };
+/** The language's colour grade (three colours), used by the header and the language wave, as on the website. */
+function applyGrade(meta) {
+  if (typeof document === "undefined") return;
+  const st = document.documentElement.style;
+  st.setProperty("--lg1", meta.grade[0]); st.setProperty("--lg2", meta.grade[1]); st.setProperty("--lg3", meta.grade[2]);
+}
 
 export const segOf = (category) => {
   const v = String(category || "").toLowerCase();
@@ -81,6 +95,7 @@ export const NAV = [
   ["Surveys", "/member/surveys", "surveys", "nav-surveys", "surveys"],
   ["Rewards", "/member/rewards", "gift", "nav-rewards", "rewards"],
   ["Referrals", "/member/referrals", "share", "nav-referrals", "referrals"],
+  ["Messages", "/member/messages", "inbox", "nav-messages", "messages"],
   ["Notifications", "/member/notifications", "bell", "nav-notifications", "notifications"],
   ["My Account", "/member/myaccount", "user", "nav-myaccount", "account"],
   ["Help & Support", "/member/support", "help", "nav-support", "help"],
@@ -100,16 +115,36 @@ export function MxProvider({ children }) {
   const [mode, setModeState] = React.useState("light");
   const [lang, setLangState] = React.useState("en");
   const [palette, setPaletteState] = React.useState("panel");
+  const [picker, setPicker] = React.useState(false);
+  const [sound, setSound] = React.useState(true);
+  const [txStatus, setTxStatus] = React.useState({ waiting: 0, pending: 0, hasProvider: false, needsClick: false });
   const [n, setN] = React.useState(0);
 
   React.useEffect(() => { const m = read("mho.member.mode", "light"); setModeState(m === "dark" ? "dark" : "light"); }, []);
   const setMode = React.useCallback((m) => { setModeState(m); write("mho.member.mode", m); }, []);
   // language and colour theme are display preferences of this browser, like light / dark mode
-  React.useEffect(() => {
-    const l = read("mho.member.lang", "en"); if (LANGS.some((x) => x.code === l)) setLangState(l);
-    const p = read("mho.member.palette", "panel"); if (THEMES.some((x) => x.id === p)) setPaletteState(p);
+  const setLang = React.useCallback((code, { origin, silent = false, interactive = true } = {}) => {
+    const meta = BY_CODE[code] || BY_CODE[DEFAULT_LANG];
+    setLangState(meta.code);
+    write("mho.member.lang", meta.code);
+    if (!silent) {
+      playLanguageSound(meta.code);
+      import("./lang/Language").then((m) => m.gradeWave(meta, origin)).catch(() => {});
+    }
+    applyGrade(meta);
+    // the wave starts first, then the page text changes (same timing as the website)
+    setTimeout(() => setPageLanguage(meta.code, { interactive }), silent ? 30 : 160);
   }, []);
-  const setLang = React.useCallback((l) => { setLangState(l); write("mho.member.lang", l); }, []);
+  React.useEffect(() => {
+    setSound(isSoundEnabled());
+    const off1 = onStatus(setTxStatus);
+    const off2 = onSoundChange(setSound);
+    let l = read("mho.member.lang", "en");
+    if (l === "zh") l = "zh-CN"; // older saved value
+    if (BY_CODE[l] && l !== "en") setLang(l, { silent: true, interactive: false }); else applyGrade(BY_CODE.en);
+    const p = read("mho.member.palette", "panel"); if (THEMES.some((x) => x.id === p)) setPaletteState(p);
+    return () => { off1(); off2(); };
+  }, [setLang]);
   const setPalette = React.useCallback((p) => { setPaletteState(p); write("mho.member.palette", p); }, []);
 
   React.useEffect(() => {
@@ -139,6 +174,26 @@ export function MxProvider({ children }) {
     return () => { live = false; };
   }, [member?._id, n]);
 
+  // activity: every dated entry of the rewards history (surveys taken, profiles credited, friends, social follows)
+  const [activity, setActivity] = React.useState({ ready: false, rows: [] });
+  React.useEffect(() => {
+    if (!member?._id) return undefined;
+    let live = true;
+    loadRewardRows(member._id, []).then((r) => live && setActivity({ ready: true, rows: r.rows })).catch(() => live && setActivity({ ready: true, rows: [] }));
+    return () => { live = false; };
+  }, [member?._id, tick, n]);
+  // the member's own support tickets (same call as Help & Support)
+  const [tickets, setTickets] = React.useState({ ready: false, list: [] });
+  const mail = member?.mail || member?.email;
+  React.useEffect(() => {
+    if (!mail) return undefined;
+    let live = true;
+    api.post("/api/v1/support", { "issueRaisedBy.email": mail })
+      .then((r) => live && setTickets({ ready: true, list: Array.isArray(r?.data) ? r.data : [] }))
+      .catch(() => live && setTickets({ ready: true, list: [] }));
+    return () => { live = false; };
+  }, [mail, n]);
+
   const reload = React.useCallback(() => setN((x) => x + 1), []);
   const value = React.useMemo(() => {
     const d = dash.data;
@@ -146,8 +201,15 @@ export function MxProvider({ children }) {
       ...((d?.notifications || []).map((x, i) => ({ id: `d${i}`, kind: x.kind, level: x.level, text: x.text, at: x.at, action: x.action, section: x.section }))),
       ...alerts.list.map((a, i) => ({ id: `a${a._id || i}`, kind: "announcement", level: "info", text: a.title || a.subject || a.message || a.text || "Announcement", body: a.description || a.content || a.message, at: a.createdAt, link: a.link || a.url })),
     ];
-    return { member, panel, P: PANELS[panel], dash, d, balance, alerts, notes, reload, mode, setMode, lang, setLang, t: tr(lang), palette, setPalette };
-  }, [member, panel, dash, balance, alerts, reload, mode, setMode, lang, setLang, palette, setPalette]);
+    const langMeta = BY_CODE[lang] || BY_CODE.en;
+    return {
+      member, panel, P: PANELS[panel], dash, d, balance, alerts, notes, reload, mode, setMode, palette, setPalette,
+      activity, streak: streakOf(activity.rows), tickets,
+      lang, langMeta, setLang, sectionLang: sectionLang(lang), t: tr(sectionLang(lang)),
+      picker, openPicker: () => { import("./lang/sounds").catch(() => {}); setPicker(true); }, closePicker: () => setPicker(false),
+      sound, toggleSound: () => setSoundEnabled(!isSoundEnabled()), txStatus, translateRest: retryWithGesture,
+    };
+  }, [member, panel, dash, balance, alerts, reload, mode, setMode, lang, setLang, palette, setPalette, picker, sound, txStatus, activity, tickets]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

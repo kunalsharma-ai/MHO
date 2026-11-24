@@ -194,7 +194,11 @@ export default function App({ userName: propName, view = 'all' }) {
   }, []);
 
   /* lock page scroll while the question flow is open */
-  useEffect(() => { document.documentElement.classList.toggle('lock', !!open); }, [open]);
+  useEffect(() => {
+    document.documentElement.classList.toggle('lock', !!open);
+    // leaving the page (back button, menu link) while a questionnaire is open must give the page its scroll back
+    return () => { if (open) document.documentElement.classList.remove('lock'); };
+  }, [open]);
 
   const nextItem = g.next ? g.items.find((p) => p.id === g.next) : null;
   const returning = mounted && Object.keys(saved.meta.started || {}).length > 0;

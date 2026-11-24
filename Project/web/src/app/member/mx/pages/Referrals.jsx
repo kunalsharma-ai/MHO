@@ -127,10 +127,16 @@ function FollowUs() {
     } catch (x) { setErr("It could not be sent. Please try again."); }
     setBusy(false);
   };
+  // links such as /member/referrals#follow (dashboard quests, Rewards) land on this section once it has loaded
+  React.useEffect(() => {
+    if (!socials?.length || typeof window === "undefined" || !/#follow$/.test(window.location.href)) return;
+    const t = setTimeout(() => document.getElementById("follow")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
+    return () => clearTimeout(t);
+  }, [socials]);
   if (!socials?.length) return null;
   const cfg = PLATFORM[String(pick?.platform || "").toLowerCase()] || [`Verify ${pick?.platform || ""}`, `Connect with our ${pick?.platform || "social media"} page and submit your profile information for verification.`, "Your profile name"];
   return (
-    <section className="mx-card" aria-labelledby="mx-fu-h">
+    <section className="mx-card" id="follow" aria-labelledby="mx-fu-h" style={{ scrollMarginTop: 96 }}>
       <div className="mx-sec-h"><div><span className="mx-eyebrow">Bonus points</span><h2 id="mx-fu-h" style={{ marginTop: 6 }}>Follow MHO on social media</h2>
         <p>Follow us, then send your handle and a screenshot. Points are added after an admin verifies it.</p></div></div>
       <div className="mx-shortcuts">

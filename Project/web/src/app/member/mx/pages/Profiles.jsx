@@ -29,7 +29,7 @@ function Opener({ handleRef }) {
 }
 
 export default function Profiles() {
-  const { member, d, panel, lang, mode } = useMx();
+  const { member, d, panel, sectionLang: lang, mode } = useMx();
   const [failed, setFailed] = React.useState(false);
   const handleRef = React.useRef(null);
   if (!member) return <LoadingOverlay />;
