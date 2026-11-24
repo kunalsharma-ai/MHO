@@ -14,8 +14,9 @@ const PNS = ['Prefer not to say', 'Prefer not to say'];
 // Each profile is matched by its name in the database. "after" places questions right after another one;
 // "remove" takes them off that profile (used together with "after" on another profile to move a question).
 export const PROFILE_EDITS = {
-  // existing bank questions that the 2026 document asks in About You (age is not added: About You already asks date of birth)
-  'basic profile': { after: { 'relationship-status': ['patient-living-arrangement', 'patient-care-support'] } },
+  // existing bank questions that the 2026 document asks in About You. Age is asked again on purpose:
+  // the chosen band must agree with the date of birth, a simple check that a real person is answering.
+  'basic profile': { after: { 'relationship-status': ['patient-age', 'patient-living-arrangement', 'patient-care-support'] } },
   // the drink and tobacco follow-ups now follow the 2026 questions they depend on
   'food and lifestyle profile': { remove: ['alcohol-category', 'smoke-category'] },
   'lifestyle and behaviour': { after: { 'smoking-tobacco-nicotine': ['smoke-category'], 'consume-alcohlic-beverages': ['alcohol-category'] } },
@@ -35,6 +36,7 @@ export const DUPLICATE_OF = {
 export const DROP_2026 = new Set(Object.keys(DUPLICATE_OF));
 
 export const PATCHES = {
+  'patient-age': { check: 'ageBand', icons: { 'Under 18': '🧒', '18-24': '🧑', '25-34': '🧑‍💼', '35-44': '🧔', '45-54': '👩', '55-64': '👩‍🦳', '65-74': '🧓', '75+': '👴' } },
   gender: {
     replace: [['Male', 'Male'], ['Female', 'Female'], ['Non-binary', 'Non-binary'], ['Prefer to self-describe', 'Other'], PNS],
     icons: { Other: '✍️' },
@@ -97,6 +99,7 @@ export function patchFlags(q, name) {
   const p = PATCHES[name];
   if (!p || !q.options) return;
   if (p.max) q.max = p.max;
+  if (p.check) q.check = p.check;
   if (p.optional) q.optional = true;
   if (p.icons && q.oe) q.oe = q.options.map((o, i) => p.icons[o[1]] || q.oe[i]);
   if (p.specify) {

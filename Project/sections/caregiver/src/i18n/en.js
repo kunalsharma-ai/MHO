@@ -60,6 +60,8 @@ export default {
   "err.required": "This field is required.",
   "err.pick": "Please choose an option.",
   "err.maxPick": "You can choose up to {n} options.",
+  "err.ageMismatch": "This does not match the date of birth you gave. Please check your age.",
+  "err.ageNumber": "Please enter your age in years, as a number.",
   "err.minChars": "Please enter at least {n} characters.",
   "err.maxChars": "Please keep it under {n} characters.",
   "err.noDigits": "Names cannot contain numbers.",

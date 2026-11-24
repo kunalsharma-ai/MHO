@@ -146,6 +146,7 @@ export function answerError(ctx, name, ans) {
     const byV = new Map(r.list.map((o) => [o.v, o]));
     for (const v of vals) if (!byV.has(v)) return ['pick'];
     if (vals.some((v) => byV.get(v).other)) return validate('specify', ans.o || '');
+    if (q.check) return validate(q.check, vals[0], { answers: ctx.answers });
     return null;
   }
   if (ans.s && q.optional) return null;

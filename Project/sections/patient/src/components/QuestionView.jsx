@@ -88,7 +88,7 @@ export default function QuestionView({ name, q, ctx, opt, geoErr, onRetryGeo, an
     } else if (!multi && opt.list.length > CHIP_LIMIT) {
       body = <SearchSelect name={name} q={q} list={money.list} ans={ans} onSubmit={onSubmit} fail={fail} setErr={setErr} />;
     } else {
-      body = <Choices name={name} q={q} list={money.list} ans={ans} multi={multi} onSubmit={onSubmit} fail={fail} setErr={setErr} isLast={isLast} />;
+      body = <Choices name={name} q={q} ctx={ctx} list={money.list} ans={ans} multi={multi} onSubmit={onSubmit} fail={fail} setErr={setErr} isLast={isLast} />;
     }
   } else {
     body = (
@@ -150,7 +150,7 @@ function ErrText({ err, t, onFix }) {
 }
 
 /* ---------------- chips (single & multi choice) ---------------- */
-function Choices({ name, q, list, ans, multi, onSubmit, fail, setErr, isLast }) {
+function Choices({ name, q, ctx, list, ans, multi, onSubmit, fail, setErr, isLast }) {
   const { t, tc, country } = useI18n();
   const [sel, setSel] = useState(() => asArray(ans?.v).filter((v) => list.some((o) => o.v === v)));
   const [other, setOther] = useState(ans?.o || '');
@@ -166,6 +166,10 @@ function Choices({ name, q, list, ans, multi, onSubmit, fail, setErr, isLast }) 
     if (hasOther) {
       const e = validate('specify', otherText);
       if (e) { otherRef.current?.focus(); return fail(e); }
+    }
+    if (q.check) {
+      const e = validate(q.check, values[0], { answers: ctx?.answers || {} });
+      if (e) return fail(e);
     }
     const a = { v: multi ? values : values[0] };
     if (hasOther) a.o = otherText.trim();

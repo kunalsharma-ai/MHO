@@ -13,6 +13,9 @@ const PNS = ['Prefer not to say', 'Prefer not to say'];
 const OTHER = ['Other (please specify)', 'Other'];
 
 export const PROFILE_EDITS = {
+  // "Age (numeric entry)" uses the bank's existing "age" question. It must agree with the date of birth,
+  // a simple check that a real person is answering.
+  'basic profile': { after: { 'relationship-status': ['age'] } },
   // the allergy details box moves with the allergy question that is kept (Personal Health)
   'personal health profile': { after: { 'cg-food-allergy': ['cg-allergy-details'] } },
   'food and lifestyle': { remove: ['cg-allergy-details'] },
@@ -113,6 +116,7 @@ export function patchFlags(q, name) {
   const p = PATCHES[name];
   if (!p || !q.options) return;
   if (p.max) q.max = p.max;
+  if (p.check) q.check = p.check;
   if (p.optional) q.optional = true;
   if (p.icons && q.oe) q.oe = q.options.map((o, i) => p.icons[o[1]] || q.oe[i]);
   if (p.alias) q.alias = p.alias;

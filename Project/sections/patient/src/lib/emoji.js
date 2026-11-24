@@ -9,7 +9,7 @@
 const Q = {
   fullname: '🙋', gender: '🧑‍🤝‍🧑', dob: '🎂', mail: '📧', country: '🌍', state: '🗺️', city: '🏙️', zipcode: '📮', ethnicity: '🧬', rural: '🏡',
   'personal-income': '💰', 'household-income': '🏦', 'relationship-status': '💍', children: '👶', website: '🌐',
-  'patient-living-arrangement': '🏡', 'patient-care-support': '🤝',
+  'patient-age': '🎂', 'patient-living-arrangement': '🏡', 'patient-care-support': '🤝',
   education: '🎓', 'education-diploma': '📜', 'education-associate-degree': '📘', 'education-ug': '🎓', 'education-pg': '🧑‍🎓', 'education-doctorate': '👩‍🔬',
   'diet-plan': '🥗', 'have-food-allergy': '🥜', 'food-allergy': '🤧', 'hot-drinks': '☕', 'cold-drinks': '🧃', alcohol: '🍷', 'alcohol-category': '🍹', smoke: '🚭',
   'smoke-category': '🚬', suppliment: '💪', 'do-exercise': '🏋️', exercises: '🤸', 'do-sport-participation': '🏅', 'sport-category': '⚽', 'sleep-duration': '😴',

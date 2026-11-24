@@ -93,6 +93,26 @@ export function validate(rule, value, ctx = {}) {
       if (v.length > 40) return ['maxChars', { n: 40 }];
       if (!/^[\p{L}\p{M}][\p{L}\p{M}'’.\- ]*$/u.test(v)) return ['lettersOnly'];
       return null;
+    case 'ageMatch': {
+      // typed age must agree with the date of birth (a simple check that a real person is answering)
+      if (!/^\d{1,3}$/.test(v)) return ['ageNumber'];
+      const n = +v;
+      if (n < 18) return ['minAge', { n: 18 }];
+      if (n > 110) return ['maxAge', { n: 110 }];
+      const a = ageFromDob(String(ctx.answers?.dob?.v ?? '').slice(0, 10));
+      return a !== null && a !== n ? ['ageMismatch'] : null;
+    }
+    case 'ageBand': {
+      // chosen age band must contain the age worked out from the date of birth
+      const a = ageFromDob(String(ctx.answers?.dob?.v ?? '').slice(0, 10));
+      if (a === null) return null;
+      const t = v.toLowerCase().replace(/[–—]/g, '-');
+      let lo = 0, hi = 200, m;
+      if ((m = /^under\s*(\d+)/.exec(t))) hi = +m[1] - 1;
+      else if ((m = /^(\d+)\s*\+/.exec(t))) lo = +m[1];
+      else if ((m = /^(\d+)\s*-\s*(\d+)/.exec(t))) { lo = +m[1]; hi = +m[2]; } else return null;
+      return a >= lo && a <= hi ? null : ['ageMismatch'];
+    }
     case 'dob': {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return ['date'];
       const a = ageFromDob(v);

@@ -94,6 +94,7 @@ const PARENT_VALUE_ALIASES = {
 const TEXT_QUESTIONS = {
   fullname: { type: 'text', rule: 'fullname', autocomplete: 'name' },
   dob: { type: 'date', rule: 'dob', autocomplete: 'bday' },
+  age: { label: 'What is your age? (in years)', type: 'number', rule: 'ageMatch', inputmode: 'numeric', min: 18, max: 110, placeholder: 'e.g. 42' },
   mail: { type: 'email', rule: 'email', autocomplete: 'email' },
   zipcode: { type: 'text', rule: 'zip', autocomplete: 'postal-code', when: { q: 'country', any: true } },
   website: { type: 'url', rule: 'url', optional: true, autocomplete: 'url' },
@@ -122,7 +123,7 @@ const isOther = (label) => /^others?(\b|$)/i.test(clean(label));
 
 /* emoji per question – first matching keyword wins */
 const EMOJI_RULES = [
-  [/^fullname$/, '🙋'], [/^dob$/, '🎂'], [/^mail$/, '📧'], [/^gender$/, '🧑‍🤝‍🧑'], [/^country$/, '🌍'], [/^ethnicity$/, '🧬'], [/^state$/, '🗺️'], [/^city$/, '🏙️'], [/^zipcode$/, '📮'], [/^rural$/, '🏡'],
+  [/^fullname$/, '🙋'], [/^dob$/, '🎂'], [/^age$/, '🎂'], [/^mail$/, '📧'], [/^gender$/, '🧑‍🤝‍🧑'], [/^country$/, '🌍'], [/^ethnicity$/, '🧬'], [/^state$/, '🗺️'], [/^city$/, '🏙️'], [/^zipcode$/, '📮'], [/^rural$/, '🏡'],
   [/income/, '💰'], [/^website$/, '🌐'], [/relationship-status/, '💍'], [/^children$/, '👶'], [/caregiver-support/, '🤝'], [/caregiving-situation/, '🧭'],
   [/education|qualification|certification|degree|diploma|doctorate/, '🎓'], [/licen[sc]e/, '📜'], [/medication/, '💊'], [/decision/, '⚖️'], [/relationship-to-person/, '👪'],
   [/agegroup|age-group/, '🎂'], [/childcare/, '🧸'], [/disability/, '♿'], [/older-adult|elder/, '🧓'], [/residential|facility|location|setting|residence|environment|work-setting/, '🏥'],
