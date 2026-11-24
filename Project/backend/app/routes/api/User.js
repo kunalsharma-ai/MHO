@@ -28,6 +28,12 @@ import {
     Token,
     adminLogger
 } from "../../../utils/index.js"
+import { lockedFor, fail, clear, norm } from "../../../utils/throttle.js";
+import { limit } from "../../../utils/security.js";
+
+// What a visitor may never set when registering (role, verification, status, points...): an admin role from the
+// sign-up form would have made the visitor an admin.
+const REGISTER_BLOCKED = ["password", "fullName", "age", "role", "isVerified", "memberStatus", "qualityScore", "isActive", "isDeleted", "origin", "_id", "createdAt", "updatedAt", "created", "updated", "deleted", "points", "balance", "respondentID", "registrationStatus", "data_mode", "adultMove", "sortOrder", "expert", "adminNote"];
 
 const router = express.Router();
 router
@@ -59,14 +65,11 @@ router
         },
         userController
     ))
-    .put(expressRoute(
+    .put(limit(20, 60), expressRoute(
         async req => {
-            const userInfo = req.body;
-            const unwantedCols = ["password", "fullName", "age"];
-            for (let index = 0; index < unwantedCols.length; index++) {
-                const col = unwantedCols[index];
-                if (col in userInfo) delete (userInfo[col]);
-            }
+            const userInfo = { ...(req.body && typeof req.body === "object" ? req.body : {}) };
+            for (const col of Object.keys(userInfo))
+                if (REGISTER_BLOCKED.includes(col) || col.startsWith("$") || col.includes(".")) delete userInfo[col];
             let message = "";
             let data = await userController.create(userInfo);
             eventStream.emitEvent("user-created",
@@ -81,7 +84,7 @@ router
         },
         userController
     ))
-    .patch(expressRoute(
+    .patch(limit(20, 10), expressRoute(
         async req => {
             if (!req?.body?.password || !req?.body?.confirmPassword || req?.body?.password !== req?.body?.confirmPassword) throw new Error("Passwords not matching.")
             const message = "Your password is created. Go to login page and proceed.";
@@ -106,12 +109,21 @@ router
             },
             userController
         ))
-    .post("/login", expressRoute(
+    .post("/login", limit(30, 10), expressRoute(
         async req => {
             const message = "Login successful";
             let data = [];
+            // strings only (an object here would be a database filter), and a per-account lock after 10 wrong
+            // passwords in 15 minutes, so a bot that keeps changing its address gets no further
+            const { mail, phone, password } = req.body || {};
+            if (typeof password !== "string" || !password || (typeof mail !== "string" && typeof phone !== "string"))
+                throw new HttpError(401, "E-Mail id or Password is invalid");
+            const who = `login:${req.origin}:${norm(typeof mail === "string" && mail ? mail : phone)}`;
+            const wait = await lockedFor(who);
+            if (wait) throw new HttpError(429, `Too many wrong attempts. Please wait ${wait} minute${wait === 1 ? "" : "s"} or reset your password.`);
             try {
-                const user = await userController.login(req.body);
+                const user = await userController.login(typeof mail === "string" && mail ? { mail, password } : { phone, password });
+                await clear(who);
                 const token = Token.generate({
                     _id: user._id,
                     category: user.category,
@@ -125,16 +137,19 @@ router
                 return { message, data, token }
             } catch (error) {
                 console.log(error)
+                if (/invalid/i.test(error.message)) await fail(who, { max: 10, windowMin: 15, lockMin: 15 });
                 eventStream.emitEvent("user-login-failed", {
                     message: error.message,
                     data: { mail: req.body?.mail, _id: req.body?._id }
                 })
-                throw new HttpError(error.message, 401);
+                throw new HttpError(401, error.message);
             }
         },
         userController
     ))
-    .put("/login", expressRoute(
+    // "Log in as this panelist" from the admin panelist page. It had no check at all: anyone who knew a member's id
+    // got a year-long sign-in for them. Admins only now, and the token lasts a day.
+    .put("/login", isAdmin, expressRoute(
         async req => {
             const message = "Login successful";
             let data = [];
@@ -148,7 +163,7 @@ router
                     name: user.name,
                     origin: user.origin,
                     role: user.role
-                }, "365d")
+                }, "1d")
                 eventStream.emitEvent("user-login-api", user);
                 return { message, data, token }
             } catch (error) {
@@ -157,7 +172,7 @@ router
                     message: error.message,
                     data: { mail: req.body?.mail, _id: req.body?._id }
                 })
-                throw new HttpError(error.message, 401);
+                throw new HttpError(401, error.message);
             }
         },
         userController
@@ -286,7 +301,7 @@ router
             },
             userController
         ))
-    .post(expressRoute(
+    .post(limit(30, 10), expressRoute(
         async req => {
             // read single entry
             let message = ""

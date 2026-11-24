@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import crypto from "node:crypto";
 import mongooseModel from "../../utils/mongooseModel.js"; // adjust path as needed
 
 export default mongooseModel(
@@ -7,7 +8,8 @@ export default mongooseModel(
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     channel: { type: String, required: true },
     code: { type: String, required: true },
-    expiresAt: { type: Date, default: (Date.now() + 900) }
+    expiresAt: { type: Date, default: () => new Date(Date.now() + 15 * 60 * 1000) },
+    attempts: { type: Number, default: 0 }
   },
   [
     [{ user: 1, type: 1, origin: 1 }, { unique: true }],
@@ -22,7 +24,8 @@ export default mongooseModel(
         const existing = await OTPModel.findOne({ user, channel, origin });
         if (existing) return existing;
 
-        const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+        // a cryptographic random number (the old pseudo-random codes could be predicted from earlier ones)
+        const otpCode = String(crypto.randomInt(100000, 1000000));
 
         const otpDoc = await OTPModel.create({
           user,

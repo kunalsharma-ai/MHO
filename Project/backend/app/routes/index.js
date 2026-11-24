@@ -18,6 +18,9 @@ import batchRouter from "./api/Batch.js"
 import rewardsRouter from "./api/Reward.js";
 
 import { isAuthenticated } from "../../utils/index.js";
+import { requireAdmin } from "../../utils/access.js";
+import { bindRequest } from "../../utils/requestContext.js";
+import { securityHeaders, sanitizeInput } from "../../utils/security.js";
 
 import meRouter from "./api/Me.js";
 import changeEmail from "./api/changeEmail.js"
@@ -25,6 +28,11 @@ import accountRouter from "./api/Account.js";
 import meJourneyRouter from "./api/MeJourney.js";
 const router = express.Router();
 router
+    // every answer gets the browser security headers; member routes run in their own request context (so two
+    // requests can't swap brands or members while they wait for the database) and never see code-running Mongo
+    // operators
+    .use(securityHeaders)
+    .use("/api/v1", bindRequest, sanitizeInput)
     // .use("/api/v1/llm", llmRouter)
     .use("/api/v1/answers", ansRouter)
     .use("/api/v1/auth", authRouter)
@@ -38,15 +46,16 @@ router
     .use("/api/v1/forgot-password", forgotPassword)
     .use("/api/v1/change-email", changeEmail)
     .use("/api/v1/feasibility", feasibilityRouter)
-    .use("/api/v1/project-dev", projectRouter)
+    // projects and scheduled e-mail batches are admin tools (project-dev had no sign-in at all)
+    .use("/api/v1/project-dev", requireAdmin, projectRouter)
     .use("/api/v1/rewards", isAuthenticated, rewardsRouter)
     .use("/api/v1/account", accountRouter)
     .use("/api/v1/me", isAuthenticated, meJourneyRouter)
     .use("/api/v1/me", isAuthenticated, meRouter)
     .use("/api/v1/response", isAuthenticated, meResponse)
     .use("/api/v1/support", isAuthenticated, supportRouter)
-    .use("/api/v1/project", isAuthenticated, projectRouter)
-    .use("/api/v1/batch", isAuthenticated, batchRouter)
+    .use("/api/v1/project", requireAdmin, projectRouter)
+    .use("/api/v1/batch", requireAdmin, batchRouter)
 
 
 // router

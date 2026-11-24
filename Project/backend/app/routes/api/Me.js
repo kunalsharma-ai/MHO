@@ -1,4 +1,5 @@
 import express from "express";
+import { requireAdmin } from "../../../utils/access.js";
 import {
     Survey as surveyController,
     User as userController,
@@ -187,7 +188,8 @@ router
         },
         answerController
     ))
-    .patch("/change-category", expressRoute(
+    // members can't change their own segment: admins only
+    .patch("/change-category", requireAdmin, expressRoute(
         async req => {
             const [message, data] = [
                 "Category Updated",

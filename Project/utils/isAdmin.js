@@ -1,16 +1,4 @@
-import { isAuthenticated, adminLogger } from "./index.js";
-async function isAdmin(req, res, next) {
-    isAuthenticated(req, res, () => {
-        if (![
-            "admin",
-            "superadmin",
-            "root"
-        ].includes(req.user.role)) {
-            adminLogger.Log(`Error: User trying administrative action`, req.user)
-            throw new HttpError("Forbidden", 403)
-        }
-        next();
-    })
-}
-
-export default isAdmin;
+// An admin, with the role read fresh from the database (utils/access.js). The old check here threw an undefined
+// HttpError inside a callback, so a refused request hung instead of answering 403, and it read the role from a record
+// that never selects it.
+export { requireAdmin as default } from "./access.js";

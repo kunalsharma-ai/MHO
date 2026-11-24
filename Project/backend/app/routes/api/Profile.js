@@ -1,6 +1,7 @@
 import express from "express";
 import { Profile as profileController } from "../../controller/index.js";
 import { expressRoute, Mutate, expressView, isAuthenticated, fsLogger, getMailer, sendMail, Token } from "../../../utils/index.js"
+import { requireAdmin } from "../../../utils/access.js";
 
 const router = express.Router();
 router
@@ -28,7 +29,7 @@ router
         },
         profileController
     ))
-    .put(isAuthenticated, expressRoute(
+    .put(requireAdmin, expressRoute(
         async req => {
             let data = await profileController.create(req.body)
             return {
@@ -69,7 +70,7 @@ router
         },
         profileController
     ))
-    .put(isAuthenticated, expressRoute(
+    .put(requireAdmin, expressRoute(
         async req => {
             // update single entry
             let message = "Updated";
@@ -87,7 +88,7 @@ router
         },
         profileController
     ))
-    .delete(expressRoute(
+    .delete(requireAdmin, expressRoute(
         async req => {
             // delete single entry
             let message = "";
