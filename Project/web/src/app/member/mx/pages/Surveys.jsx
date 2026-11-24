@@ -5,6 +5,7 @@
 // shown with the package's cards, as before.
 import React from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { api } from "@/util";
 import ProfileSection from "../../components/ProfileSection";
 import SectionCard from "../../components/SectionCard";
@@ -76,7 +77,8 @@ export default function Surveys() {
   const available = s ? s.available : legacy.list.filter((x) => !x.resume);
   const inProgress = s ? s.inProgress : legacy.list.filter((x) => x.resume);
   const history = s?.history || [];
-  const [tab, setTab] = React.useState("available");
+  const q = useSearchParams();
+  const [tab, setTab] = React.useState(() => (["available", "progress", "history"].includes(q?.get("tab")) ? q.get("tab") : "available"));
   const [filter, setFilter] = React.useState("all");
   const shown = available.filter((x) => (filter === "high" ? Number(x.points) > 500 : filter === "short" ? Number(x.minutes) > 0 && Number(x.minutes) <= 5 : true));
   const counts = s?.counts;
@@ -142,6 +144,16 @@ export default function Surveys() {
         ) : <Empty icon="calendar" title="No survey history yet">Surveys you take will be listed here with how each one ended.</Empty>}
       </section>
       <PanelSurveys />
+      <section className="mx-card" aria-labelledby="mx-how-h">
+        <span className="mx-eyebrow">How surveys work</span>
+        <h2 id="mx-how-h" style={{ margin: "6px 0 16px" }}>From invitation to reward</h2>
+        <ol className="mx-how">
+          <li><span className="ic"><Icon name="profile" size={18} /></span><b>Matched to you</b><span>Surveys are picked from your profile answers, so a complete profile brings more invitations.</span></li>
+          <li><span className="ic"><Icon name="filter" size={18} /></span><b>Short screening</b><span>The first questions check whether a study needs someone like you. If not, the survey ends early.</span></li>
+          <li><span className="ic"><Icon name="check" size={18} /></span><b>Finish the survey</b><span>Each card shows the time it takes and the points it pays, before you start.</span></li>
+          <li><span className="ic"><Icon name="gift" size={18} /></span><b>Points to rewards</b><span>Points land in Rewards. Once you reach the payout level you can request a payout.</span></li>
+        </ol>
+      </section>
     </>
   );
 }

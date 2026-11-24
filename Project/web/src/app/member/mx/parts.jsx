@@ -101,6 +101,7 @@ export function SurveyTiles({ list, resume }) {
             {Number(s.minutes) > 0 && <span className="mx-chip teal"><Icon name="clock" size={13} />~{s.minutes} min</span>}
           </div>
           <a className="mx-btn sm" href={`/survey?name=${encodeURIComponent(s.slug)}`}>{resume ? "Continue" : "Start survey"} <Icon name="arrow" size={14} /></a>
+          <span className="orb" aria-hidden="true"><Icon name={resume ? "clock" : "surveys"} size={24} /></span>
         </article>
       ))}
     </div>
