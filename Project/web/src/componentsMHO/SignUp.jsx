@@ -178,6 +178,7 @@ export default function SignUp({
   const form = useForm({
     mode: "onBlur",
     defaultValues: {
+      marketingOptIn: false,
       category: "",
       name: {
         salutation: "",
@@ -312,7 +313,9 @@ export default function SignUp({
   const onSubmit = async (userData) => {
     setIsLoading(true);
     try {
-      let { agreedtoterms, ...data } = userData;
+      let { agreedtoterms, marketingOptIn, ...data } = userData;
+      // "Send me news and offers": unticked by default; only a tick opts in
+      data.marketingOptIn = marketingOptIn === true;
       if (Boolean(query?.ref) && query.ref !== "") data.referredBy = query.ref;
       let selectedCategory = categoryOptions.find(
         (cat) => cat.value === data.category,
@@ -992,6 +995,14 @@ export default function SignUp({
                             .
                           </Typography>
                         </Box>
+                      </Grid>
+                      <Grid size={12}>
+                        <Form.Checkbox
+                          size="medium"
+                          name="marketingOptIn"
+                          control={control}
+                          label="Send me news and offers (optional)"
+                        />
                       </Grid>
                       <motion.div
                         whileHover={{ y: -2 }}

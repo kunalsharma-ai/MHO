@@ -342,7 +342,7 @@ rememberSignup(res.data?.user, { memberType: v.memberType, firstName: v.firstNam
                       {err('agreeTerms') ? <p className="f-err" role="alert">{err('agreeTerms')}</p> : null}
                       <label className="sx-consent">
                         <input type="checkbox" checked={v.marketing} onChange={(e) => set('marketing', e.target.checked)} />
-                        <span>Send me occasional earning tips and newsletters (optional).</span>
+                        <span>Send me news and offers (optional).</span>
                       </label>
                       {status === 'error' ? <p className="form-error" role="alert">{serverMsg}</p> : null}
                     </>
