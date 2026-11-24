@@ -6,7 +6,7 @@ import { applyLanguage, isFull } from './lib/languages.js';
 import { I18nCtx, makeT } from './lib/i18n.js';
 import { loadContent, loadSurvey, geoStore, onGeo } from './lib/data.js';
 import { sound } from './lib/sound.js';
-import { hydrate, ensureProfile } from './lib/bridge.js';
+import { hydrate, ensureProfile, sourceOfSlug } from './lib/bridge.js';
 import { registerRoot, setRootAttrs, lockScroll } from './lib/root.js';
 import { totals, pendingDelivery, levelOf, completedIds, setPoints, rewardOf } from './lib/rewards.js';
 import { controller } from './lib/controller.js';
@@ -161,7 +161,31 @@ function Section({ view: viewProp }) {
     setOpen({ id, mode, at });
   }, [survey]);
   const showLocked = useCallback((id) => { sound.unlock(); setLocked(id); }, []);
-  useEffect(() => { controller.attach({ open: (id) => openItem(id, 'run') }); }, [openItem]);
+  /* the member area opens a profile by its database slug or name, the package by its own id: accept all three */
+  const surveyRef = useRef(null);
+  surveyRef.current = survey;
+  const wantRef = useRef(null);
+  const resolveId = (want) => {
+    const ps = surveyRef.current?.profiles;
+    if (!ps) return null;
+    const w = String(want ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
+    const src = sourceOfSlug(w);
+    const hit = ps.find((p) => p.id === want) || ps.find((p) => String(p.source || '').toLowerCase() === w) || (src && ps.find((p) => String(p.source || '').toLowerCase() === src));
+    return hit ? hit.id : null;
+  };
+  useEffect(() => {
+    controller.attach({ open: (want) => {
+      const id = resolveId(want);
+      if (id) openItem(id, 'run');
+      else if (!surveyRef.current) { wantRef.current = want; }
+    } });
+  }, [openItem]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!survey || !wantRef.current) return;
+    const id = resolveId(wantRef.current);
+    wantRef.current = null;
+    if (id) openItem(id, 'run');
+  }, [survey]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!survey || !access || !statuses) return;
     controller.publish(access.surveys.map((p) => ({

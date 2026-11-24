@@ -1,0 +1,183 @@
+/* Panel layouts: the three dashboards share real data but not a layout.
+     HCP        a research console: dense 12-column grid, square corners, monospace read-outs, cards slide in like a scan
+     Caregiver  a care journal: two columns of paper notes, stitched edges, cards are "placed" with a small tilt
+     Patient    a health journey: one calm column flowing down the page, round shapes, cards float up
+   Only transform and opacity are animated. Loaded after story.css. */
+
+.mx-dash { display: grid; gap: clamp(14px, 1.8vw, 22px); align-items: stretch; }
+.mx-dash > .ga { min-width: 0; display: grid; }
+.mx-dash > .ga > * { min-width: 0; height: 100%; }
+.mx-sig { position: relative; min-width: 0; }
+
+/* =====================================================================================================
+   HCP — research console
+   ===================================================================================================== */
+.mx-dash.d-hcp { grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-areas:
+  "quality quality quality quality level level level level vault vault vault vault"
+  "cal cal cal cal cal cal cal cal quests quests quests quests"
+  "badges badges badges badges badges badges badges badges badges badges badges badges"
+  "msgs msgs msgs msgs msgs msgs invite invite invite streak streak streak"; }
+.d-hcp .ga-quality { grid-area: quality; } .d-hcp .ga-level { grid-area: level; } .d-hcp .ga-vault { grid-area: vault; }
+.d-hcp .ga-cal { grid-area: cal; } .d-hcp .ga-quests { grid-area: quests; } .d-hcp .ga-badges { grid-area: badges; }
+.d-hcp .ga-msgs { grid-area: msgs; } .d-hcp .ga-invite { grid-area: invite; } .d-hcp .ga-streak { grid-area: streak; }
+.mx[data-panel="hcp"] .mx-dash .mx-card, .mx[data-panel="hcp"] .mx-dash .mx-dialcard { border-radius: 10px; }
+.mx[data-panel="hcp"] .mx-dash .mx-card { border-color: color-mix(in srgb, var(--accent) 22%, var(--line)); box-shadow: 0 1px 0 color-mix(in srgb, var(--accent) 12%, transparent), 0 16px 30px -26px rgba(10, 8, 40, .55); }
+.mx[data-panel="hcp"] .mx-dash h2 { letter-spacing: -.01em; }
+.mx[data-panel="hcp"] .mx-dash > .ga { animation: hcpScan .55s var(--ease) backwards; animation-delay: calc(.12s + var(--n, 0) * 55ms); }
+@keyframes hcpScan { from { opacity: 0; transform: translateX(-18px); } }
+.mx[data-panel="hcp"] .mx-dash .mx-rise { animation: none; }
+
+/* console */
+.mx-console { margin-bottom: clamp(14px, 1.8vw, 22px); border-radius: 12px; padding: 16px 18px 18px; color: #DCE7FF; overflow: hidden;
+  background: linear-gradient(rgba(92, 225, 255, .06) 1px, transparent 1px) 0 0 / 100% 24px, linear-gradient(90deg, rgba(92, 225, 255, .06) 1px, transparent 1px) 0 0 / 24px 100%, linear-gradient(160deg, #101538, #070A1F 70%);
+  border: 1px solid rgba(92, 225, 255, .22); box-shadow: 0 24px 50px -34px rgba(5, 8, 30, .9); animation: hcpScan .6s var(--ease) backwards; }
+.mx-console header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.mx-console header .dot { width: 9px; height: 9px; border-radius: 50%; background: #39F3A1; box-shadow: 0 0 0 4px rgba(57, 243, 161, .15); animation: hcpBlink 1.6s steps(1) infinite; }
+@keyframes hcpBlink { 50% { opacity: .25; } }
+.mx-console h2 { font: 700 13px/1 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; letter-spacing: .14em; text-transform: uppercase; color: #8FB8FF; }
+.mx-console header small { margin-left: auto; font: 600 12.5px/1.3 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; color: #9AA6D6; }
+.mx-console header small a { color: #5CE1FF; text-decoration: none; border-bottom: 1px dashed rgba(92, 225, 255, .5); }
+.mx-console .ecg { position: relative; height: 34px; margin: 10px -18px 6px; overflow: hidden; opacity: .9; }
+.mx-console .ecg svg { position: absolute; top: 0; width: 100%; height: 100%; animation: hcpEcg 6s linear infinite; }
+.mx-console .ecg svg + svg { left: 100%; }
+.mx-console .ecg path { fill: none; stroke: #39F3A1; stroke-width: 1.6; vector-effect: non-scaling-stroke; filter: drop-shadow(0 0 4px rgba(57, 243, 161, .6)); }
+@keyframes hcpEcg { to { transform: translateX(-100%); } }
+.mx-console .reads { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 0; }
+.mx-console .reads > div { padding: 10px 12px; border-radius: 8px; background: rgba(8, 12, 36, .7); border: 1px solid rgba(143, 184, 255, .16); animation: hcpScan .5s var(--ease) backwards; animation-delay: calc(.2s + var(--i) * 70ms); }
+.mx-console dt { font: 700 10.5px/1 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; letter-spacing: .14em; color: #7D89BD; }
+.mx-console dd { margin: 6px 0 2px; font: 800 clamp(20px, 2.2vw, 28px)/1 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; color: #5CE1FF; text-shadow: 0 0 14px rgba(92, 225, 255, .35); }
+.mx-console .reads small { font-size: 11px; color: #8E97C4; }
+.mx-console .matrix { list-style: none; margin: 12px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; }
+.mx-console .matrix li { animation: hcpScan .45s var(--ease) backwards; animation-delay: calc(.35s + var(--i) * 40ms); }
+.mx-console .matrix a { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "code nm val" "bar bar bar"; gap: 4px 8px; align-items: center; padding: 8px 10px; border-radius: 6px; text-decoration: none; color: #DCE7FF; background: rgba(255, 255, 255, .03); border: 1px solid rgba(143, 184, 255, .12); position: relative; }
+.mx-console .matrix a::after { content: ""; position: absolute; inset: -1px; border-radius: inherit; border: 1px solid #5CE1FF; opacity: 0; transition: opacity .2s; pointer-events: none; }
+.mx-console .matrix a:hover::after, .mx-console .matrix a:focus-visible::after { opacity: 1; }
+.mx-console .matrix .code { grid-area: code; font: 700 10.5px/1 ui-monospace, Menlo, Consolas, monospace; color: #7D89BD; }
+.mx-console .matrix .nm { grid-area: nm; font-size: 12.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mx-console .matrix .val { grid-area: val; font: 700 11px/1 ui-monospace, Menlo, Consolas, monospace; color: #9AA6D6; }
+.mx-console .matrix .ok .val { color: #39F3A1; }
+.mx-console .matrix .bar { grid-area: bar; height: 3px; border-radius: 3px; background: rgba(143, 184, 255, .14); overflow: hidden; }
+.mx-console .matrix .bar i { display: block; height: 100%; background: linear-gradient(90deg, #5CE1FF, #39F3A1); transform-origin: left; transform: scaleX(var(--p)); animation: hcpFill .9s var(--ease) backwards; animation-delay: calc(.5s + var(--i) * 50ms); }
+@keyframes hcpFill { from { transform: scaleX(0); } }
+
+/* =====================================================================================================
+   Caregiver — care journal
+   ===================================================================================================== */
+.mx-dash.d-caregiver { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr); grid-template-areas:
+  "quests streak level"
+  "quests vault quality"
+  "badges badges badges"
+  "cal cal msgs"
+  "invite invite msgs"; }
+.d-caregiver .ga-quests { grid-area: quests; } .d-caregiver .ga-streak { grid-area: streak; } .d-caregiver .ga-level { grid-area: level; }
+.d-caregiver .ga-vault { grid-area: vault; } .d-caregiver .ga-quality { grid-area: quality; } .d-caregiver .ga-badges { grid-area: badges; }
+.d-caregiver .ga-cal { grid-area: cal; } .d-caregiver .ga-msgs { grid-area: msgs; } .d-caregiver .ga-invite { grid-area: invite; }
+.mx[data-panel="caregiver"] .mx-dash .mx-card { border-radius: 28px 28px 28px 10px; background-image: radial-gradient(color-mix(in srgb, var(--accent) 9%, transparent) 1px, transparent 1.4px); background-size: 16px 16px; }
+.mx[data-panel="caregiver"] .mx-dash .mx-card::after { opacity: .9; }
+.mx[data-panel="caregiver"] .mx-dash .mx-dialcard { border-radius: 28px 28px 28px 10px; }
+.mx[data-panel="caregiver"] .mx-dash h2 { font-family: var(--f-display); font-weight: 700; }
+.mx[data-panel="caregiver"] .mx-dash > .ga { animation: cgPlace .7s var(--spring) backwards; animation-delay: calc(.12s + var(--n, 0) * 70ms); }
+.mx[data-panel="caregiver"] .mx-dash > .ga:nth-child(3n + 1) { --tilt: -1.6deg; } .mx[data-panel="caregiver"] .mx-dash > .ga:nth-child(3n + 2) { --tilt: 1.4deg; } .mx[data-panel="caregiver"] .mx-dash > .ga:nth-child(3n) { --tilt: -.8deg; }
+@keyframes cgPlace { from { opacity: 0; transform: translateY(-14px) rotate(var(--tilt, -1deg)) scale(.97); } }
+.mx[data-panel="caregiver"] .mx-dash .mx-rise { animation: none; }
+/* paper tape on the top of a few notes */
+.mx[data-panel="caregiver"] .mx-dash > .ga-quests::before, .mx[data-panel="caregiver"] .mx-dash > .ga-badges::before, .mx[data-panel="caregiver"] .mx-dash > .ga-msgs::before { content: ""; position: absolute; z-index: 2; top: -9px; left: 50%; width: 86px; height: 20px; margin-left: -43px; transform: rotate(-3deg); border-radius: 3px; pointer-events: none;
+  background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--accent) 22%, rgba(255, 255, 255, .7)) 0 6px, color-mix(in srgb, var(--accent) 14%, rgba(255, 255, 255, .7)) 6px 12px); box-shadow: 0 2px 6px -3px rgba(80, 20, 30, .35); opacity: .9; }
+.mx[data-panel="caregiver"] .mx-dash > .ga { position: relative; }
+
+/* circle of care */
+.mx-circle { margin-bottom: clamp(14px, 1.8vw, 22px); display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); gap: clamp(16px, 3vw, 40px); align-items: center; padding: clamp(18px, 2.4vw, 30px);
+  border-radius: 36px 36px 36px 12px; background: radial-gradient(circle at 18% 30%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%), radial-gradient(color-mix(in srgb, var(--accent) 10%, transparent) 1.1px, transparent 1.5px) 0 0 / 18px 18px, var(--card-solid);
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line)); box-shadow: var(--sh); animation: cgPlace .8s var(--spring) backwards; }
+.mx-circle::after { content: ""; position: absolute; inset: 10px; border-radius: 28px 28px 28px 8px; border: 1.5px dashed color-mix(in srgb, var(--accent) 30%, transparent); pointer-events: none; }
+.mx-circle .ring { position: relative; aspect-ratio: 1; width: 100%; max-width: 300px; justify-self: center; }
+.mx-circle svg { width: 100%; height: 100%; overflow: visible; }
+.mx-circle .thread { fill: none; stroke: color-mix(in srgb, var(--accent) 35%, transparent); stroke-width: .8; stroke-dasharray: 1.6 1.6; transform-origin: 50px 50px; animation: mxSpin 60s linear infinite; }
+.mx-circle .bead { animation: cgBead .6s var(--spring) backwards; animation-delay: calc(.3s + var(--i) * 80ms); }
+@keyframes cgBead { from { opacity: 0; transform: scale(.2); } }
+.mx-circle .bead .b { fill: var(--card-solid); stroke: color-mix(in srgb, var(--accent) 45%, transparent); stroke-width: 1.4; }
+.mx-circle .bead.ok .b { fill: var(--accent); stroke: color-mix(in srgb, var(--accent) 70%, #fff); }
+.mx-circle .bead .arc { fill: none; stroke: var(--accent); stroke-width: 1.6; transform: rotate(-90deg); }
+.mx-circle .bead .tick { fill: none; stroke: #fff; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.mx-circle .mid { position: absolute; inset: 26%; border-radius: 50%; display: grid; place-content: center; text-align: center; background: radial-gradient(circle at 35% 30%, #fff, color-mix(in srgb, var(--accent) 16%, #FFF4F1)); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .8), 0 18px 30px -18px color-mix(in srgb, var(--accent) 70%, transparent); color: #3A1020; }
+.mx-circle .mid b { font: 800 clamp(30px, 3.6vw, 44px)/1 var(--f-display); }
+.mx-circle .mid small { font-size: 12px; font-weight: 700; opacity: .7; }
+.mx-circle .mid em { margin-top: 4px; font: italic 600 14px/1.2 var(--f-display); color: var(--accent); }
+.mx-circle .txt h2 { margin-top: 6px; font: 700 clamp(22px, 2.4vw, 30px)/1.15 var(--f-display); }
+.mx-circle .txt p { margin-top: 8px; color: var(--muted); max-width: 58ch; font-size: 14.5px; line-height: 1.55; }
+.mx-circle ul { list-style: none; margin: 14px 0 16px; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.mx-circle li { animation: cgPlace .5s var(--spring) backwards; animation-delay: calc(.4s + var(--i) * 50ms); }
+.mx-circle li a { display: flex; align-items: center; gap: 9px; padding: 7px 10px 7px 7px; border-radius: 16px 16px 16px 6px; text-decoration: none; color: var(--ink); background: color-mix(in srgb, var(--accent) 6%, var(--card-solid)); border: 1px solid color-mix(in srgb, var(--accent) 16%, transparent); transition: transform .2s var(--ease); }
+.mx-circle li a:hover { transform: translateY(-2px) rotate(-.6deg); }
+.mx-circle li img { flex: none; border-radius: 10px; }
+.mx-circle li span { flex: 1; min-width: 0; font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mx-circle li small { font-size: 11.5px; font-weight: 800; color: var(--muted); }
+.mx-circle li.ok small { color: var(--ok); }
+
+/* =====================================================================================================
+   Patient — health journey
+   ===================================================================================================== */
+.mx-dash.d-patient { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-areas:
+  "streak streak streak quality quality quality"
+  "badges badges badges badges badges badges"
+  "level level level vault vault vault"
+  "cal cal cal cal cal cal"
+  "quests quests quests quests invite invite"
+  "msgs msgs msgs msgs msgs msgs"; }
+.d-patient .ga-streak { grid-area: streak; } .d-patient .ga-quality { grid-area: quality; } .d-patient .ga-level { grid-area: level; }
+.d-patient .ga-vault { grid-area: vault; } .d-patient .ga-badges { grid-area: badges; } .d-patient .ga-quests { grid-area: quests; }
+.d-patient .ga-cal { grid-area: cal; } .d-patient .ga-invite { grid-area: invite; } .d-patient .ga-msgs { grid-area: msgs; }
+.mx[data-panel="patient"] .mx-dash .mx-card, .mx[data-panel="patient"] .mx-dash .mx-dialcard { border-radius: 32px; }
+.mx[data-panel="patient"] .mx-dash .mx-card { border-color: transparent; background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 6%, var(--card-solid)), var(--card-solid) 60%); box-shadow: 0 22px 44px -30px color-mix(in srgb, var(--accent) 55%, rgba(0, 40, 80, .5)); }
+.mx[data-panel="patient"] .mx-dash > .ga { animation: ptFloat .8s var(--ease) backwards; animation-delay: calc(.12s + var(--n, 0) * 80ms); }
+@keyframes ptFloat { from { opacity: 0; transform: translateY(26px) scale(.97); } }
+.mx[data-panel="patient"] .mx-dash .mx-rise { animation: none; }
+
+/* journey path */
+.mx-journey { margin-bottom: clamp(14px, 1.8vw, 22px); padding: clamp(18px, 2.2vw, 26px) 0 10px; border-radius: 34px; overflow: hidden;
+  background: radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%), radial-gradient(90% 90% at 100% 100%, color-mix(in srgb, var(--accent-2, var(--accent)) 14%, transparent), transparent 60%), var(--card-solid);
+  box-shadow: 0 26px 50px -34px color-mix(in srgb, var(--accent) 60%, rgba(0, 40, 80, .5)); animation: ptFloat .8s var(--ease) backwards; }
+.mx-journey .hd { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 0 clamp(18px, 2.2vw, 26px); }
+.mx-journey .hd h2 { margin-top: 6px; font-size: clamp(20px, 2vw, 26px); }
+.mx .mx-journey .hd .pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 800; color: #fff; background: linear-gradient(90deg, var(--accent), var(--accent-2, var(--accent))); white-space: nowrap; }
+.mx-journey .track { overflow-x: auto; overflow-y: hidden; padding: 4px clamp(10px, 2vw, 20px) 6px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+.mx-journey .road { position: relative; height: 150px; margin: 0 auto; }
+.mx-journey .road svg { position: absolute; inset: 0 auto auto 0; overflow: visible; }
+.mx-journey .base { fill: none; stroke: color-mix(in srgb, var(--accent) 18%, transparent); stroke-width: 10; stroke-linecap: round; }
+.mx-journey .walked { fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round; animation: ptFade 1s .4s var(--ease) backwards; }
+@keyframes ptFade { from { opacity: 0; } }
+.mx-journey .stop { position: absolute; display: grid; justify-items: center; gap: 6px; width: 110px; margin-left: -55px; margin-top: -23px; text-decoration: none; color: var(--ink); animation: ptFloat .6s var(--ease) backwards; animation-delay: calc(.3s + var(--i) * 60ms); }
+.mx-journey .pin { position: relative; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--card-solid); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent), 0 10px 18px -10px rgba(0, 40, 80, .5); transition: transform .25s var(--spring); }
+.mx-journey .stop:hover .pin, .mx-journey .stop:focus-visible .pin { transform: translateY(-4px) scale(1.08); }
+.mx-journey .pin img { border-radius: 50%; }
+.mx-journey .pin i { position: absolute; right: -3px; bottom: -3px; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: var(--ok); box-shadow: 0 0 0 2px var(--card-solid); }
+.mx-journey .stop.ok .pin { box-shadow: 0 0 0 3px var(--accent), 0 10px 18px -10px rgba(0, 40, 80, .5); }
+.mx-journey .stop.now .pin::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--accent); animation: mxRipple2 2.4s ease-out infinite; }
+.mx-journey .stop small { max-width: 104px; text-align: center; font-size: 11.5px; font-weight: 700; line-height: 1.25; color: var(--ink-2, var(--ink)); }
+.mx-journey .stop.now small { color: var(--accent); }
+
+/* =====================================================================================================
+   Narrower screens keep each panel's look; only the grid folds
+   ===================================================================================================== */
+@media (max-width: 1180px) {
+  .mx-dash.d-hcp { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-areas: "quality quality quality level level level" "vault vault vault streak streak streak" "cal cal cal cal cal cal" "quests quests quests quests quests quests" "badges badges badges badges badges badges" "msgs msgs msgs invite invite invite"; }
+  .mx-dash.d-caregiver { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: "quests quests" "streak level" "vault quality" "badges badges" "cal cal" "msgs invite"; }
+  .mx-dash.d-patient { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: "streak quality" "level vault" "badges badges" "quests quests" "cal cal" "invite msgs"; }
+  .mx-console .reads { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .mx-dash.d-hcp, .mx-dash.d-caregiver, .mx-dash.d-patient { grid-template-columns: minmax(0, 1fr); }
+  .mx-dash.d-hcp { grid-template-areas: "quality" "level" "vault" "streak" "cal" "quests" "badges" "msgs" "invite"; }
+  .mx-dash.d-caregiver { grid-template-areas: "quests" "streak" "level" "vault" "quality" "badges" "cal" "msgs" "invite"; }
+  .mx-dash.d-patient { grid-template-areas: "streak" "quality" "level" "vault" "badges" "quests" "cal" "invite" "msgs"; }
+  .mx-console .reads { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mx-console .reads > div:last-child { grid-column: span 2; }
+  .mx-circle { grid-template-columns: minmax(0, 1fr); }
+  .mx-circle .ring { max-width: 240px; }
+}
+
+/* lite mode (slow devices) and reduced motion: no loops, no entrance motion */
+.mx[data-lite] .mx-console .ecg svg, .mx[data-lite] .mx-circle .thread, .mx[data-lite] .mx-journey .stop.now .pin::after, .mx[data-lite] .mx-console header .dot { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .mx-dash > .ga, .mx-sig, .mx-sig * { animation: none !important; }
+}

@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 import { segmentFor } from "./segments.js";
+// What each profile questionnaire actually asks (generated from the section packages by
+// sections/tools/export-completion-rules.mjs): questions moved between profiles, duplicates no longer asked,
+// follow-ups that open on a specific answer, optional questions. Without it a finished profile never reaches 100%.
+import SECTION_RULES from "./sectionRules.json" with { type: "json" };
 
 const filled = (v) => v !== undefined && v !== null && v !== "" && !(Array.isArray(v) && (v.length === 0 || v.every((x) => x === "" || x === null)));
 
@@ -7,6 +11,8 @@ const filled = (v) => v !== undefined && v !== null && v !== "" && !(Array.isArr
  * Profile completion of one member, computed from the profiles and questions in the database (the same rules as
  * controller/Profile.js status(): a follow-up question only counts when its parent answer triggers it), but only
  * for the profiles of the member's own category. Returns sections in database order with real counts.
+ * The section packages' own rules (sectionRules.json) decide which questions each profile asks, so the count
+ * matches what the member sees in the questionnaire.
  */
 export async function profileStatus(user) {
     const Profile = mongoose.model("Profile");
@@ -31,8 +37,18 @@ export async function profileStatus(user) {
     profiles = profiles.filter((p) => byName.get(String(p.name || p.slug || "").trim().toLowerCase()) === p);
     if (!profiles.length) return { overall: 0, sections: [], completed: 0, total: 0, configured: false };
 
-    const namesOf = (p) => [...new Set((p.pages || []).flatMap((page) => (Array.isArray(page) ? page.slice(1) : [])))];
-    const all = [...new Set(profiles.flatMap(namesOf))];
+    const rulesKey = String(profiles[0]?.category || user.category || "").replace(/\s+/g, " ").trim().toLowerCase();
+    const R = SECTION_RULES[rulesKey] || { profiles: {}, rules: {}, optional: [] };
+    const optional = new Set(R.optional || []);
+    const namesOf = (p) => {
+        const raw = [...new Set((p.pages || []).flatMap((page) => (Array.isArray(page) ? page.slice(1) : [])))];
+        const edit = R.profiles?.[String(p.name || "").replace(/\s+/g, " ").trim().toLowerCase()];
+        if (!edit) return raw;
+        const removed = new Set(edit.remove || []);
+        return [...new Set([...raw.filter((n) => !removed.has(n)), ...(edit.add || [])])];
+    };
+    const own = [...new Set(profiles.flatMap(namesOf))];
+    const all = [...new Set([...own, ...own.map((n) => R.rules?.[n]?.p).filter(Boolean)])];
     const [questions, options, validations, answers] = await Promise.all([
         Question.find({ name: { $in: all } }).select("name parent label").lean(),
         Option.find({ question: { $in: all } }).select("question parentValue").lean(),
@@ -59,25 +75,40 @@ export async function profileStatus(user) {
         city: ans.city ?? home.city ?? "",
         zipcode: ans.zipcode ?? (user.postalCodeApplicable === false ? "n/a" : home.zipcode ?? ""),
     });
-    const first = (v) => (Array.isArray(v) ? v[0] : v);
+    const values = (v) => [].concat(v ?? []).filter((x) => x !== "" && x !== null && x !== undefined).map((x) => String(x).toLowerCase());
     const memo = {};
     const applies = (name, seen = new Set()) => {
         if (name in memo) return memo[name];
+        const rule = R.rules?.[name];
+        if (rule === "always") return (memo[name] = true);
+        if (rule && rule.p) {
+            if (seen.has(name)) return (memo[name] = false);
+            seen.add(name);
+            // "loose": the parent is asked in another profile; until it is answered every option shows
+            if (rule.loose && !filled(ans[rule.p])) return (memo[name] = true);
+            if (!applies(rule.p, seen) || !filled(ans[rule.p])) return (memo[name] = false);
+            return (memo[name] = rule.v === "*" || values(ans[rule.p]).some((v) => rule.v.includes(v)));
+        }
         const q = qBy[name];
         if (!q) return (memo[name] = ["fullname", "mail", "dob", "country", "state", "city", "zipcode", "gender"].includes(name));
         if (!q.parent) return (memo[name] = true);
         if (seen.has(name)) return (memo[name] = false);
         seen.add(name);
         if (!applies(q.parent, seen)) return (memo[name] = false);
-        const parent = first(ans[q.parent]);
-        if (!filled(parent)) return (memo[name] = false);
+        if (!filled(ans[q.parent])) return (memo[name] = false);
         const t = triggers[name];
-        return (memo[name] = !t || t.size === 0 || t.has(String(parent).toLowerCase()));
+        // a multiple-choice parent opens the follow-up when ANY picked answer triggers it
+        return (memo[name] = !t || t.size === 0 || values(ans[q.parent]).some((v) => t.has(v)));
     };
+    // an optional question the member chose to skip is saved as an empty answer: it counts as answered
+    const done = (n) => filled(ans[n]) || (optional.has(n) && n in ans);
 
+    // the question that decides whether a follow-up is asked (section rule first, then the bank)
+    const gateOf = (n) => (R.rules?.[n] && R.rules[n] !== "always" ? R.rules[n].p : R.rules?.[n] === "always" ? null : qBy[n]?.parent || null);
     const sections = profiles.map((p) => {
-        const names = namesOf(p).filter((n) => applies(n));
-        const answered = names.filter((n) => filled(ans[n])).length;
+        const all = namesOf(p);
+        const names = all.filter((n) => applies(n));
+        const answered = names.filter(done).length;
         const total = names.length;
         const percent = total ? Math.round((answered / total) * 100) : 0;
         return {
@@ -87,9 +118,12 @@ export async function profileStatus(user) {
             total,
             percent,
             status: total && answered === total ? "complete" : answered > 0 ? "in-progress" : "not-started",
-            missing: names.filter((n) => !filled(ans[n])).slice(0, 5).map((n) => qBy[n]?.label || n),
+            missing: names.filter((n) => !done(n)).slice(0, 5).map((n) => qBy[n]?.label || n),
+            // nothing applies YET because an earlier answer (e.g. the caregiving role) is still missing: keep the
+            // section in the list as not started, so the number of profiles does not change as the member answers
+            waiting: total === 0 && all.some((n) => { const g = gateOf(n); return g && !filled(ans[g]); }),
         };
-    }).filter((s) => s.total > 0);
+    }).filter((s) => s.total > 0 || s.waiting).map(({ waiting, ...s }) => s);
     const totalQ = sections.reduce((a, s) => a + s.total, 0);
     const doneQ = sections.reduce((a, s) => a + s.answered, 0);
     return {

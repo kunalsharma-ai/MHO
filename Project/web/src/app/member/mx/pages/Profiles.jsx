@@ -16,7 +16,7 @@ function Opener({ handleRef }) {
   const params = useSearchParams();
   const want = params?.get("open");
   React.useEffect(() => {
-    if (!want || /\s/.test(want)) return undefined; // only package slugs (no spaces) can be opened directly
+    if (!want) return undefined; // the sections accept their own id, the database slug or the profile name
     let tries = 0;
     const id = setInterval(() => {
       tries += 1;

@@ -164,6 +164,13 @@ function cities(cc) {
   return cityCache.get(cc);
 }
 
+/** Name of the database profile with this slug (the member area links to profiles by their database slug). */
+export function sourceOfSlug(slug) {
+  const w = String(slug ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
+  const d = docs.find((x) => same(x.slug, w) || same(x.name, w));
+  return d ? clean(d.name).toLowerCase() : null;
+}
+
 export async function sectionFile(path) {
   if (path === MAIN) return skeleton();
   const city = /^geo\/cities\/([A-Za-z]+)\.json$/.exec(path);

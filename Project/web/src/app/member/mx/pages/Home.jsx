@@ -13,6 +13,7 @@ import { levelOf, earnedOf, badgesOf, calendarOf, monthOf } from "../engage";
 import { buildInbox, useSeen } from "../messages";
 import Scene3D from "../Scene3D";
 import { sectionArt } from "../art";
+import { ResearchConsole, CircleOfCare, JourneyPath } from "./Signature";
 
 const greet = () => { const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"; };
 const TAGLINE = {
@@ -213,26 +214,32 @@ function LatestMessages() {
   );
 }
 
+/* Each panel gets its own centrepiece and its own arrangement of the same real cards (see panels.css). */
+const SIGNATURE = { hcp: ResearchConsole, caregiver: CircleOfCare, patient: JourneyPath };
+const ORDER = {
+  hcp: ["quality", "level", "vault", "cal", "quests", "badges", "msgs", "invite", "streak"],
+  caregiver: ["quests", "streak", "level", "vault", "badges", "cal", "quality", "msgs", "invite"],
+  patient: ["streak", "quality", "level", "vault", "badges", "quests", "cal", "invite", "msgs"],
+};
+const CARDS = {
+  streak: StreakCard, level: LevelCard, vault: PayoutDial, quality: QualityGauge, badges: Badges,
+  cal: Calendar, quests: Quests, msgs: LatestMessages, invite: InviteCard,
+};
+
 export default function Home() {
-  const { dash } = useMx();
+  const { dash, panel } = useMx();
+  const Sig = SIGNATURE[panel] || JourneyPath;
+  const order = ORDER[panel] || ORDER.patient;
   return (
     <>
       <Hero />
       {dash.error && <div className="mx-alert bad" role="alert"><Icon name="alert" size={18} />We could not load your dashboard just now. Your data is safe; please refresh the page in a moment.</div>}
-      <div className="mx-bento" data-tour="stats">
-        <StreakCard />
-        <LevelCard />
-        <PayoutDial />
-        <div id="mx-quality"><QualityGauge /></div>
-      </div>
-      <Badges />
-      <div className="mx-duo">
-        <Calendar />
-        <Quests />
-      </div>
-      <div className="mx-duo b">
-        <LatestMessages />
-        <InviteCard />
+      <Sig />
+      <div className={`mx-dash d-${panel}`} data-tour="stats">
+        {order.map((k, i) => {
+          const C = CARDS[k];
+          return <div key={k} className={`ga ga-${k}`} id={k === "quality" ? "mx-quality" : undefined} style={{ "--n": i }}><C /></div>;
+        })}
       </div>
       <InstantAlerts />
     </>

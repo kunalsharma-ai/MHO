@@ -5,7 +5,7 @@ import { applyLanguage } from './lib/languages.js';
 import { I18nCtx, makeT } from './lib/i18n.js';
 import { loadContent, loadSurvey, geoStore, onGeo } from './lib/data.js';
 import { sound, installClickSound } from './lib/sound.js';
-import { hydrate, ensureProfile, flush } from './lib/bridge.js';
+import { hydrate, ensureProfile, flush, sourceOfSlug } from './lib/bridge.js';
 import { registerItems, setPoints, rewardOf } from './lib/rewards.js';
 import { controller } from './lib/controller.js';
 import { cards } from './lib/cards.js';
@@ -143,7 +143,31 @@ export default function App({ userName: propName, view = 'all' }) {
     setLockInfo({ id, reason: gg.lock[id] || 'profiles' });
   }, []);
 
-  useEffect(() => { controller.attach({ open: (id) => openProfile(id, 'run') }); }, [openProfile]);
+  /* the member area opens a profile by its database slug or name, the package by its own id: accept all three */
+  const surveyRef = useRef(null);
+  surveyRef.current = survey;
+  const wantRef = useRef(null);
+  const resolveId = (want) => {
+    const ps = surveyRef.current?.profiles;
+    if (!ps) return null;
+    const w = String(want ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
+    const src = sourceOfSlug(w);
+    const hit = ps.find((p) => p.id === want) || ps.find((p) => String(p.source || '').toLowerCase() === w) || (src && ps.find((p) => String(p.source || '').toLowerCase() === src));
+    return hit ? hit.id : null;
+  };
+  useEffect(() => {
+    controller.attach({ open: (want) => {
+      const id = resolveId(want);
+      if (id) openProfile(id, 'run');
+      else if (!surveyRef.current) { wantRef.current = want; fetchSurvey(); }
+    } });
+  }, [openProfile]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!survey || !wantRef.current) return;
+    const id = resolveId(wantRef.current);
+    wantRef.current = null;
+    if (id) openProfile(id, 'run');
+  }, [survey]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const rules = window.MHO_HOST?.screenOut || {};
     for (const [question, rule] of Object.entries(rules)) {

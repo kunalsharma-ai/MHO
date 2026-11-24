@@ -19,6 +19,7 @@ import "./header.css";
 import "./fx.css";
 import "./prism.css";
 import "./story.css";
+import "./panels.css";
 
 const MUI_COLORS = { hcp: ["#5B4BFF", "#FF5A78"], caregiver: ["#9B1E4E", "#F2611B"], patient: ["#0F7EA8", "#F2611B"] };
 
