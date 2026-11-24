@@ -1,4 +1,5 @@
 import React from "react";
+import ConsoleContent from "@/components/ConsoleContent";
 import { Grid, Typography, List, ListItem } from "@mui/material";
 import SubHeader from "@/componentsMHO/SubHeader";
 
@@ -20,6 +21,7 @@ function page() {
         py={7}
         textAlign={"justify"}
       >
+        <ConsoleContent pageKey="terms">
         <Typography fontSize={"18px"} fontWeight={"bold"}>
           My Health Opinions Terms of Use
         </Typography>
@@ -895,6 +897,7 @@ function page() {
             hereafter entered into by the parties.
           </ListItem>
         </List>
+        </ConsoleContent>
       </Grid>
     </Grid>
   );

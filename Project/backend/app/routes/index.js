@@ -24,6 +24,7 @@ import { securityHeaders, sanitizeInput } from "../../utils/security.js";
 
 import meRouter from "./api/Me.js";
 import changeEmail from "./api/changeEmail.js"
+import contentRouter from "./api/Content.js";
 import accountRouter from "./api/Account.js";
 import meJourneyRouter from "./api/MeJourney.js";
 const router = express.Router();
@@ -41,6 +42,7 @@ router
     .use("/api/v1/question", questionRouter)
     .use("/api/v1/option", optionRouter)
     .use("/api/v1/options", optionsRouter)
+    .use("/api/v1/content", contentRouter)
     .use("/api/v1/user", userRouter)
     .use("/api/v1/profile", profileRouter)
     .use("/api/v1/forgot-password", forgotPassword)

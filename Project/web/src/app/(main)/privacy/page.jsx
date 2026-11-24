@@ -1,4 +1,5 @@
 import React from "react";
+import ConsoleContent from "@/components/ConsoleContent";
 import { Grid, Typography } from "@mui/material";
 import SubHeader from "@/componentsMHO/SubHeader";
 
@@ -21,6 +22,7 @@ function page() {
         // px={2}
         textAlign={"justify"}
       >
+        <ConsoleContent pageKey="privacy">
         <Typography fontSize={"16px"} lineHeight={"1.5"}>
           This Privacy Policy pertains to My Health Opinions ("My Health
           Opinions," "we," "us," and "our"), an entity associated with{" "}
@@ -685,6 +687,7 @@ function page() {
           feedback regarding your privacy and data protection. Our team will be
           happy to assist you and address any concerns you may have.
         </Typography>
+        </ConsoleContent>
       </Grid>
     </Grid>
   );
