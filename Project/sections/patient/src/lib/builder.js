@@ -1,5 +1,6 @@
 
 import { optionEmoji, applySequence, QUESTION_EMOJI } from './emoji.js';
+import { DROP_2026, DUPLICATE_OF, patchOptions, patchFlags } from './questions-2026.js';
 
 export default function build({ PROFILES, QUESTIONS, OPTIONS }) {
 const files = {};
@@ -296,6 +297,7 @@ for (const meta of [...PROFILE_META, ...dynamicMeta]) {
   } else names = Object.keys(ADDITIONAL);
   names = names.filter((n) => {
     if (DROP.has(n)) { report.droppedQuestions.push({ profile: meta.id, question: n }); return false; }
+    if (DROP_2026.has(n)) { report.droppedQuestions.push({ profile: meta.id, question: n, duplicateOf: DUPLICATE_OF[n] }); return false; }
     return true;
   });
   names = [...new Set(names)];
@@ -431,7 +433,9 @@ for (const name of usedNames) {
   if (OPTION_RELABEL[name]) entries = entries.map((e) => (OPTION_RELABEL[name][e[0]] ? [OPTION_RELABEL[name][e[0]], ...e.slice(1)] : e));
   q.options = entries;
   for (const e of entries) if (!LONG_LIST.has(name) && /\p{L}/u.test(e[0])) contentStrings.add(e[0]);
+  patchOptions(q, name);
   decorateChoice(q, name);
+  patchFlags(q, name);
   questions[name] = q;
 }
 

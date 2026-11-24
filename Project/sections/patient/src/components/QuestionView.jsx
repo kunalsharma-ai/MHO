@@ -88,7 +88,7 @@ export default function QuestionView({ name, q, ctx, opt, geoErr, onRetryGeo, an
     } else if (!multi && opt.list.length > CHIP_LIMIT) {
       body = <SearchSelect name={name} q={q} list={money.list} ans={ans} onSubmit={onSubmit} fail={fail} setErr={setErr} />;
     } else {
-      body = <Choices name={name} q={q} list={money.list} ans={ans} multi={multi} onSubmit={onSubmit} fail={fail} setErr={setErr} isLast={isLast} />;
+      body = <Choices name={name} q={q} ctx={ctx} list={money.list} ans={ans} multi={multi} onSubmit={onSubmit} fail={fail} setErr={setErr} isLast={isLast} />;
     }
   } else {
     body = (
@@ -121,7 +121,7 @@ export default function QuestionView({ name, q, ctx, opt, geoErr, onRetryGeo, an
         </div>
       </div>
       {q.type === 'choice' && <MoneyNote note={money.note} />}
-      {q.type === 'choice' && <p className="q-hint"><span className="emo" aria-hidden="true">{multi ? '☑️' : '👆'}</span> {multi ? t('run.multi') : t('run.single')}</p>}
+      {q.type === 'choice' && <p className="q-hint"><span className="emo" aria-hidden="true">{multi ? '☑️' : '👆'}</span> {multi ? (q.max ? t('run.multiMax', { n: q.max }) : t('run.multi')) : t('run.single')}</p>}
       {body}
       <p className={'q-err' + (err ? ' on' : '')} role="alert" aria-live="assertive">
         {err ? <ErrText err={err} t={t} onFix={err[0] === 'emailTypo' ? () => { onSubmit(name, { v: err[1].fix }); } : null} /> : ''}
@@ -150,7 +150,7 @@ function ErrText({ err, t, onFix }) {
 }
 
 /* ---------------- chips (single & multi choice) ---------------- */
-function Choices({ name, q, list, ans, multi, onSubmit, fail, setErr, isLast }) {
+function Choices({ name, q, ctx, list, ans, multi, onSubmit, fail, setErr, isLast }) {
   const { t, tc, country } = useI18n();
   const [sel, setSel] = useState(() => asArray(ans?.v).filter((v) => list.some((o) => o.v === v)));
   const [other, setOther] = useState(ans?.o || '');
@@ -166,6 +166,10 @@ function Choices({ name, q, list, ans, multi, onSubmit, fail, setErr, isLast }) 
     if (hasOther) {
       const e = validate('specify', otherText);
       if (e) { otherRef.current?.focus(); return fail(e); }
+    }
+    if (q.check) {
+      const e = validate(q.check, values[0], { answers: ctx?.answers || {} });
+      if (e) return fail(e);
     }
     const a = { v: multi ? values : values[0] };
     if (hasOther) a.o = otherText.trim();
@@ -184,6 +188,10 @@ function Choices({ name, q, list, ans, multi, onSubmit, fail, setErr, isLast }) 
       }
       lock.current = true;
       setTimeout(() => { lock.current = false; commit([o.v], ''); }, 240);
+      return;
+    }
+    if (q.max && !o.excl && !sel.includes(o.v) && sel.filter((v) => !list.some((x) => x.excl && x.v === v)).length >= q.max) {
+      fail(['maxPick', { n: q.max }]);
       return;
     }
     setSel((s) => {
@@ -248,8 +256,13 @@ function Choices({ name, q, list, ans, multi, onSubmit, fail, setErr, isLast }) 
           />
         </div>
       )}
-      {needsButton && (
+      {(needsButton || q.optional) && (
         <div className="q-actions">
+          {q.optional && !sel.length && (
+            <button className="btn ghost" type="button" onClick={() => { sound.tap(1); onSubmit(name, { v: multi ? [] : '', s: 1 }); }}>
+              {t('run.skip')}
+            </button>
+          )}
           <button className="btn primary big" type="button" onClick={() => commit(sel, other)} disabled={!sel.length}>
             {isLast ? t('run.finish') + ' ✓' : t('run.next')} <span aria-hidden="true">→</span>
           </button>

@@ -97,16 +97,19 @@ export function visible(ctx, name) {
 /** Validates an answer. Returns null or [errKey, params] */
 export function answerError(ctx, name, ans) {
   const q = ctx.data.questions[name];
+  if (ans?.s && q.optional) return null; // optional question the member chose to skip
   if (!ans) return ['required'];
   if (q.type === 'choice') {
     const vals = asArray(ans.v);
     if (!vals.length) return ['pick'];
+    if (q.multi && q.max && vals.length > q.max) return ['maxPick', { n: q.max }];
     const r = resolveOptions(ctx, name);
     if (r.status === 'pending') return null; // cannot verify yet – trust stored answer
     if (r.status !== 'ok') return ['pick'];
     const byV = new Map(r.list.map((o) => [o.v, o]));
     for (const v of vals) if (!byV.has(v)) return ['pick'];
     if (vals.some((v) => byV.get(v).other)) return validate('specify', ans.o || '');
+    if (q.check) return validate(q.check, vals[0], { answers: ctx.answers });
     return null;
   }
   if (ans.s && q.optional) return null;

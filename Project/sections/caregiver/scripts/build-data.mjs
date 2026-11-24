@@ -35,13 +35,14 @@ const EMOJI_ALT = {
 };
 const EMOJI_ALT_ANY = ['✨', '🔹', '🔸', '⭐', '🌟', '💫', '🔷', '🔶'];
 import { optionEmoji } from './option-emoji.mjs';
+import { editProfileDocs, DROP_2026, DUPLICATE_OF, patchOptions, patchFlags } from '../src/lib/questions-2026.js';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..');
 const RAW = path.join(ROOT, 'raw');
 const OUT = path.join(ROOT, 'public', 'data');
 
 const read = (f) => JSON.parse(fs.readFileSync(path.join(RAW, f), 'utf8'));
-const PROFILES = read('myhealthopinions.CareGiver.Profile.json');
+const PROFILES = editProfileDocs(read('myhealthopinions.CareGiver.Profile.json'));
 const QUESTIONS = read('myhealthopinions.CareGiver.Question.json');
 const OPTIONS = read('myhealthopinions.Option.json');
 
@@ -118,6 +119,7 @@ const PARENT_VALUE_ALIASES = {
 const TEXT_QUESTIONS = {
   fullname: { type: 'text', rule: 'fullname', autocomplete: 'name' },
   dob: { type: 'date', rule: 'dob', autocomplete: 'bday' },
+  age: { label: 'What is your age? (in years)', type: 'number', rule: 'ageMatch', inputmode: 'numeric', min: 18, max: 110, placeholder: 'e.g. 42' },
   mail: { type: 'email', rule: 'email', autocomplete: 'email' },
   zipcode: { type: 'text', rule: 'zip', autocomplete: 'postal-code', when: { q: 'country', any: true } },
   website: { type: 'url', rule: 'url', optional: true, autocomplete: 'url' },
@@ -146,7 +148,7 @@ const isOther = (label) => /^others?(\b|$)/i.test(clean(label));
 
 /* emoji per question – first matching keyword wins */
 const EMOJI_RULES = [
-  [/^fullname$/, '🙋'], [/^dob$/, '🎂'], [/^mail$/, '📧'], [/^gender$/, '🧑‍🤝‍🧑'], [/^country$/, '🌍'], [/^ethnicity$/, '🧬'], [/^state$/, '🗺️'], [/^city$/, '🏙️'], [/^zipcode$/, '📮'], [/^rural$/, '🏡'],
+  [/^fullname$/, '🙋'], [/^dob$/, '🎂'], [/^age$/, '🎂'], [/^mail$/, '📧'], [/^gender$/, '🧑‍🤝‍🧑'], [/^country$/, '🌍'], [/^ethnicity$/, '🧬'], [/^state$/, '🗺️'], [/^city$/, '🏙️'], [/^zipcode$/, '📮'], [/^rural$/, '🏡'],
   [/income/, '💰'], [/^website$/, '🌐'], [/relationship-status/, '💍'], [/^children$/, '👶'], [/caregiver-support/, '🤝'], [/caregiving-situation/, '🧭'],
   [/education|qualification|certification|degree|diploma|doctorate/, '🎓'], [/licen[sc]e/, '📜'], [/medication/, '💊'], [/decision/, '⚖️'], [/relationship-to-person/, '👪'],
   [/agegroup|age-group/, '🎂'], [/childcare/, '🧸'], [/disability/, '♿'], [/older-adult|elder/, '🧓'], [/residential|facility|location|setting|residence|environment|work-setting/, '🏥'],
@@ -206,6 +208,7 @@ for (const meta of PROFILE_META) {
   } else names = Object.keys(ADDITIONAL);
   names = names.filter((n) => {
     if (DROP.has(n)) { report.droppedQuestions.push({ profile: meta.id, question: n }); return false; }
+    if (DROP_2026.has(n)) { report.droppedQuestions.push({ profile: meta.id, question: n, duplicateOf: DUPLICATE_OF[n] }); return false; }
     return true;
   });
   names = [...new Set(names)];
@@ -251,6 +254,7 @@ for (const name of usedNames) {
 
   if (TEXT_QUESTIONS[name]) {
     Object.assign(q, TEXT_QUESTIONS[name]);
+    patchOptions(q, name);
     delete q.parent;
     questions[name] = q;
     continue;
@@ -303,7 +307,9 @@ for (const name of usedNames) {
     q.options.push(entry);
     if (!LONG_LIST(name)) contentStrings.add(lab);
   }
+  patchOptions(q, name);
   decorateChoice(q, name);
+  patchFlags(q, name);
   questions[name] = q;
 }
 
