@@ -421,13 +421,6 @@ test("forgot password: generic answer, reset link works once, and old sessions e
     assert.equal(again.body.code, "LINK_USED");
 });
 
-test("rate limiting: the CAPTCHA endpoint answers 429 past its limit", async () => {
-    let last;
-    for (let i = 0; i < 305; i++) last = await call("GET", "/account/captcha");
-    assert.equal(last.status, 429);
-    assert.equal(last.body.code, "RATE_LIMITED");
-});
-
 test("dashboard: each profile section is counted once, even where the bank holds older copies of it", async () => {
     const { token } = await activeMember({ segment: "hcp", screening: { worksInHealthcare: "yes", clinician: "yes" } });
     assert.equal((await sign(token, "hcp")).status, 200);
@@ -435,4 +428,12 @@ test("dashboard: each profile section is counted once, even where the bank holds
     const names = d.profile.sections.map((s) => s.name.toLowerCase());
     assert.ok(names.length > 0);
     assert.equal(new Set(names).size, names.length, `duplicate sections: ${names.join(", ")}`);
+});
+
+// last: it uses up the CAPTCHA allowance for this minute, which every sign-up and login above needs
+test("rate limiting: the CAPTCHA endpoint answers 429 past its limit", async () => {
+    let last;
+    for (let i = 0; i < 305; i++) last = await call("GET", "/account/captcha");
+    assert.equal(last.status, 429);
+    assert.equal(last.body.code, "RATE_LIMITED");
 });
