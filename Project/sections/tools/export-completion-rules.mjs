@@ -12,7 +12,8 @@
  *   rules[name]                    when a question applies: "always", or { p: parent, v: [values] | "*" }
  *   optional                       questions a member may skip (a saved "skipped" answer counts as answered)
  *
- * Usage: node sections/tools/export-completion-rules.mjs <Profile.json> <Question.json> <Option.json> [out.json]
+ * Usage: node sections/tools/export-completion-rules.mjs            (reads sections/question-bank)
+ *        node sections/tools/export-completion-rules.mjs <Profile.json> <Question.json> <Option.json> [out.json]
  *        (exports of the Profile, Question and Option collections, as arrays)
  */
 import fs from 'fs';
@@ -20,8 +21,11 @@ import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const [profFile, qFile, oFile, outFile = path.join(here, '../../backend/app/lib/sectionRules.json')] = process.argv.slice(2);
-if (!oFile) { console.error('usage: export-completion-rules.mjs <Profile.json> <Question.json> <Option.json> [out.json]'); process.exit(1); }
+const BANK = path.join(here, '../question-bank');
+const args = process.argv.slice(2);
+// no arguments: the question bank kept in sections/question-bank
+const [profFile, qFile, oFile, outFile = path.join(here, '../../backend/app/lib/sectionRules.json')] = args.length ? args : [path.join(BANK, 'Profile.json'), path.join(BANK, 'Question.json'), path.join(BANK, 'Option.json')];
+if (!oFile) { console.error('usage: export-completion-rules.mjs [<Profile.json> <Question.json> <Option.json> [out.json]]'); process.exit(1); }
 const read = (f) => { const j = JSON.parse(fs.readFileSync(f, 'utf8')); return Array.isArray(j) ? j : j.data || j.Profile || j.Question || j.Option || []; };
 const oid = (x) => (x && x.$oid) || (x == null ? x : String(x));
 const live = (d) => d.isActive !== false && d.isDeleted !== true;

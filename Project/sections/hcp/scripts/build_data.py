@@ -2,7 +2,7 @@
 """
 Build the Healthcare Professional (HCP) app data from the raw MyHealthOpinions exports.
 
-Input  : data-source/*.json  (exports shared by the MHO team)
+Input  : ../question-bank/{Profile,Question,Option}.json  (the shared MHO question bank)
 Output : src/data/hcp.generated.json      -> profiles + questions + small option lists (bundled)
          public/data/states.json          -> { countryCode: [[stateCode, label], ...] }
          public/data/cities/<CC>.json     -> { stateCode: [cityLabel, ...] }
@@ -11,26 +11,32 @@ Output : src/data/hcp.generated.json      -> profiles + questions + small option
          public/data/joblevel.json        -> { specialization: [label, ...] }
 
 Run:  python3 scripts/build_data.py
-Re-run whenever the exports in data-source/ change. Overrides that fill gaps in the
+Re-run whenever the question bank in ../question-bank/ changes. Overrides that fill gaps in the
 exports live in scripts/overrides.json (documented in DATA.md).
 """
 import json, os, re, collections, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = os.path.join(ROOT, "data-source")
+SRC = os.path.join(os.path.dirname(ROOT), "question-bank")  # the shared bank: Profile.json, Question.json, Option.json
 OUT_SRC = os.path.join(ROOT, "src", "data")
 OUT_PUB = os.path.join(ROOT, "public", "data")
 
 def load(name):
+    # records in the order they were created (ObjectId order), which is the authored order of options;
+    # database exports are often sorted another way (for example by label)
     with open(os.path.join(SRC, name), encoding="utf-8") as f:
-        return json.load(f)
+        docs = json.load(f)
+    oid = lambda d: d["_id"]["$oid"] if isinstance(d.get("_id"), dict) else str(d.get("_id", ""))
+    return sorted(docs, key=oid)
 
 def clean(s):
     return re.sub(r"\s+", " ", (s or "").replace(" ", " ")).strip()
 
-profiles = load("myhealthopinions.HealthcareProfessional.Profile.json")
-questions = {q["name"]: q for q in load("myhealthopinions.HealthcareProfessional.Question.json")}
-options_raw = load("myhealthopinions.Option.json")
+CATEGORY = "healthcare professional"
+in_panel = lambda d: CATEGORY in [str(c).strip().lower() for c in (d.get("category") if isinstance(d.get("category"), list) else [d.get("category")])]
+profiles = [p for p in load("Profile.json") if in_panel(p)]
+questions = {q["name"]: q for q in load("Question.json") if in_panel(q)}
+options_raw = load("Option.json")
 overrides = json.load(open(os.path.join(ROOT, "scripts", "overrides.json"), encoding="utf-8"))
 
 opts = collections.defaultdict(list)

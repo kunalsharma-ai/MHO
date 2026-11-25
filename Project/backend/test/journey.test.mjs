@@ -3,7 +3,7 @@
 //   MONGO_URL=mongodb://127.0.0.1:27017 API_DIR=/path/to/src node --test test/journey.test.mjs
 //
 // API_DIR is a directory laid out like the container (/src/app + /src/utils). The suite seeds the profile
-// question bank from Project/sections/hcp/data-source, so profile completion is computed on the real banks.
+// question bank from Project/sections/question-bank, so profile completion is computed on the real banks.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
@@ -78,21 +78,14 @@ const sign = (token, segment, extra = {}) => call("POST", "/me/consent", { terms
 
 /* ---------- setup ---------- */
 async function seed() {
-    const src = path.resolve(here, "../../sections/hcp/data-source");
+    const src = path.resolve(here, "../../sections/question-bank");
     const meta = { origin: HOST, isActive: true, isDeleted: false };
     const load = (f) => JSON.parse(fs.readFileSync(path.join(src, f), "utf-8")).map(({ _id, ...d }) => ({ ...d, ...meta }));
     const uniq = (rows, key) => [...new Map(rows.map((r) => [key(r), r])).values()];
-    await db.collection("Profile").insertMany(uniq([
-        ...load("myhealthopinions.HealthcareProfessional.Profile.json"),
-        ...load("myhealthopinions.CareGiver.Profile.json").map((p) => ({ ...p, slug: p.slug || p.name })),
-        ...load("myhealthopinions.Patient.Profile.json"),
-    ], (p) => `${p.category}|${p.slug}`));
-    await db.collection("Question").insertMany(uniq([
-        ...load("myhealthopinions.HealthcareProfessional.Question.json"),
-        ...load("myhealthopinions.CareGiver.Question.json"),
-        ...load("myhealthopinions.Patient.Question.json"),
-    ], (q) => q.name));
-    await db.collection("Option").insertMany(load("myhealthopinions.Option.json"));
+    // the shared bank holds every panel; profiles keyed by category + slug (some copies have no slug)
+    await db.collection("Profile").insertMany(uniq(load("Profile.json").map((p) => ({ ...p, slug: p.slug || p.name })), (p) => `${p.category}|${p.slug}`));
+    await db.collection("Question").insertMany(uniq(load("Question.json"), (q) => q.name));
+    await db.collection("Option").insertMany(load("Option.json"));
     const s = (slug, category, extra = {}) => ({ slug, name: `Study ${slug}`, category, source: "internal", points: 100, loi: 10, status: "active", pages: [], ...meta, ...extra });
     await db.collection("Survey").insertMany([
         s("welcome", "patient"),
@@ -379,7 +372,8 @@ test("dashboard: profile completion is computed from the member's own answers an
     // answer the health question through the existing profile API, then the numbers move
     await call("PATCH", "/me/profile", { "health-status": "good" }, token);
     const after = (await call("GET", "/me/dashboard", null, token)).body.data;
-    const ph = (d) => d.profile.sections.find((s) => s.slug === "personal-health");
+    // the patient questionnaire asks health status once, in the General Health profile (sectionRules.json)
+    const ph = (d) => d.profile.sections.find((s) => s.slug === "general health profile");
     assert.ok(ph(after).answered === ph(before).answered + 1);
     assert.equal(after.highlights.find((h) => h.question === "health-status").value.toLowerCase().includes("good"), true);
 });
@@ -427,13 +421,6 @@ test("forgot password: generic answer, reset link works once, and old sessions e
     assert.equal(again.body.code, "LINK_USED");
 });
 
-test("rate limiting: the CAPTCHA endpoint answers 429 past its limit", async () => {
-    let last;
-    for (let i = 0; i < 305; i++) last = await call("GET", "/account/captcha");
-    assert.equal(last.status, 429);
-    assert.equal(last.body.code, "RATE_LIMITED");
-});
-
 test("dashboard: each profile section is counted once, even where the bank holds older copies of it", async () => {
     const { token } = await activeMember({ segment: "hcp", screening: { worksInHealthcare: "yes", clinician: "yes" } });
     assert.equal((await sign(token, "hcp")).status, 200);
@@ -441,4 +428,12 @@ test("dashboard: each profile section is counted once, even where the bank holds
     const names = d.profile.sections.map((s) => s.name.toLowerCase());
     assert.ok(names.length > 0);
     assert.equal(new Set(names).size, names.length, `duplicate sections: ${names.join(", ")}`);
+});
+
+// last: it uses up the CAPTCHA allowance for this minute, which every sign-up and login above needs
+test("rate limiting: the CAPTCHA endpoint answers 429 past its limit", async () => {
+    let last;
+    for (let i = 0; i < 305; i++) last = await call("GET", "/account/captcha");
+    assert.equal(last.status, 429);
+    assert.equal(last.body.code, "RATE_LIMITED");
 });

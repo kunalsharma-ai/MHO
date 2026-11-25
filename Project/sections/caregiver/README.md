@@ -72,7 +72,7 @@ Full guide: **[`docs/DASHBOARD_INTEGRATION.md`](docs/DASHBOARD_INTEGRATION.md)**
 | `npm run build:embed` | Dashboard bundle → `dist-embed/` (one JS + one scoped CSS + assets + example page) |
 | `npm run build:preview` | `preview/mho-caregiver-dashboard-preview.html` (everything inlined) |
 | `npm run build:all` | data → build → preview → embed |
-| `npm run data` | Rebuilds `public/data/*` from `raw/` (after the question bank changes) |
+| `npm run data` | Rebuilds `public/data/*` from `../question-bank/` (after the question bank changes) |
 | `npm run i18n:v2` | Merges `scripts/i18n-v2/<lang>.json` into the 12 UI dictionaries |
 | `npm run i18n:check` | Reports missing translations |
 | `npm run test:flows` | Completes **every** profile and survey for 4 caregiver personas in a real browser (in the order the gate allows; uses the name boxes, the DOB calendar and the phone input) |
