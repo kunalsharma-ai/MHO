@@ -11,6 +11,7 @@ import { useGuestOnly } from '../utils/session.js';
 import { visit } from '../utils/dismissed.js';
 import { SCREENER } from '../data/hcpForm.js';
 import SocialLogin from '../components/SocialLogin.jsx';
+import PanelTabs from '../components/PanelTabs.jsx';
 import { AccountShell, Steps, TextField, SearchSelect, ServerCaptcha, Alert, accountCall, NETWORK_ERROR } from '../components/AccountKit.jsx';
 
 const STEPS = ['About you', 'Where you live', 'Your panel', 'Review'];
@@ -104,6 +105,12 @@ export default function Register() {
   const { countries, states, cities, loading } = useLocation(f.country, f.state);
   const country = countries.find((c) => c.code === f.country);
   const stateRow = states.find((s) => s.code === f.state);
+  // The panel tabs at the top set the same value as the "Your panel" step (preselected below from ?panel= or this visit).
+  const choosePanel = (id) => {
+    if (isTeen && id !== 'patient') return;
+    visit.set('panel', id);
+    setF((x) => (x.segment === id ? x : { ...x, segment: id, worksInHealthcare: '', clinician: '' }));
+  };
   // Back from a social sign-in: fill in what the provider gave us. The person can still change it, and the email is
   // confirmed by the usual link before the account works.
   useEffect(() => {
@@ -278,6 +285,8 @@ export default function Register() {
         <h1 ref={head} tabIndex={-1}>Create your free account</h1>
         <p>Step {step + 1} of {STEPS.length}: {STEPS[step]}</p>
       </header>
+      <PanelTabs value={f.segment} onChange={choosePanel} label="I’m joining as" lines={Object.fromEntries(SEGMENTS.map((x) => [x.id, x.sub]))}
+        disabled={isTeen ? ['hcp', 'caregiver'] : []} hint={isTeen ? 'Members under 18 can join the patient panel only.' : ''} />
       <Steps steps={STEPS} current={step} />
       <form onSubmit={next} noValidate className="acx-form">
         {/* honeypot for bots: hidden from people and screen readers */}
