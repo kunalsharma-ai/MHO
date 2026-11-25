@@ -11,6 +11,7 @@ import { useMx } from "../data";
 import { PageHead, sectionTitle } from "../parts";
 import { sectionArt } from "../art";
 import { Icon } from "../kit";
+import Family from "./Family";
 
 function Opener({ handleRef }) {
   const params = useSearchParams();
@@ -33,6 +34,8 @@ export default function Profiles() {
   const [failed, setFailed] = React.useState(false);
   const handleRef = React.useRef(null);
   if (!member) return <LoadingOverlay />;
+  // members under 18 answer the questions the bank tags for teens, shared with their parent (Family page)
+  if (String(member.category || "").trim().toLowerCase() === "minor patient") return <Family />;
   const sections = d?.profile?.sections || [];
   const done = sections.filter((s) => s.status === "complete").length;
   const next = d?.profile?.next;

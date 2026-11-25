@@ -97,6 +97,7 @@ export const NAV = [
   ["Referrals", "/member/referrals", "share", "nav-referrals", "referrals"],
   ["Messages", "/member/messages", "inbox", "nav-messages", "messages"],
   ["Notifications", "/member/notifications", "bell", "nav-notifications", "notifications"],
+  ["Family", "/member/guardian", "hands", "nav-family", "family"], // shown only to teen members and parents of teens
   ["My Account", "/member/myaccount", "user", "nav-myaccount", "account"],
   ["Help & Support", "/member/support", "help", "nav-support", "help"],
 ];
@@ -194,6 +195,17 @@ export function MxProvider({ children }) {
     return () => { live = false; };
   }, [mail, n]);
 
+  // teen members and parents of teens get the Family page (routes/api/Guardian.js on the server)
+  const [family, setFamily] = React.useState({ ready: false, isTeen: false, children: 0 });
+  React.useEffect(() => {
+    if (!member?._id) return undefined;
+    let live = true;
+    api.get("/api/v1/guardian")
+      .then((r) => live && setFamily({ ready: true, isTeen: Boolean(r?.data?.isTeen), children: Array.isArray(r?.data?.children) ? r.data.children.length : 0 }))
+      .catch(() => live && setFamily({ ready: true, isTeen: false, children: 0 }));
+    return () => { live = false; };
+  }, [member?._id, n]);
+
   const reload = React.useCallback(() => setN((x) => x + 1), []);
   const value = React.useMemo(() => {
     const d = dash.data;
@@ -204,12 +216,12 @@ export function MxProvider({ children }) {
     const langMeta = BY_CODE[lang] || BY_CODE.en;
     return {
       member, panel, P: PANELS[panel], dash, d, balance, alerts, notes, reload, mode, setMode, palette, setPalette,
-      activity, streak: streakOf(activity.rows), tickets,
+      activity, streak: streakOf(activity.rows), tickets, family,
       lang, langMeta, setLang, sectionLang: sectionLang(lang), t: tr(sectionLang(lang)),
       picker, openPicker: () => { import("./lang/sounds").catch(() => {}); setPicker(true); }, closePicker: () => setPicker(false),
       sound, toggleSound: () => setSoundEnabled(!isSoundEnabled()), txStatus, translateRest: retryWithGesture,
     };
-  }, [member, panel, dash, balance, alerts, reload, mode, setMode, lang, setLang, palette, setPalette, picker, sound, txStatus, activity, tickets]);
+  }, [member, panel, dash, balance, alerts, reload, mode, setMode, lang, setLang, palette, setPalette, picker, sound, txStatus, activity, tickets, family]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

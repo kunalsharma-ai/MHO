@@ -243,7 +243,20 @@ router.get("/history/:who", wrap(async (req, res) => {
     const rows = await historyOf(s.subject, req.user._id, req.origin, Number(req.query.limit) || 200);
     const qs = await Question.find({ origin: req.origin, name: { $in: [...new Set(rows.map((r) => r.question.replace(/_specify$/, "")))] } }).select("name label").lean();
     const label = new Map(qs.map((q) => [q.name, q.label]));
-    ok(res, "", rows.map((r) => ({ ...r, label: label.get(r.question.replace(/_specify$/, "")) || r.question, reasonText: r.reason ? REFUSAL_TEXT[r.reason] || null : null })));
+    // stored values are option codes ("DZ", "fulltime"); show the option's label where the bank has one
+    const vals = [...new Set(rows.flatMap((r) => [].concat(r.before ?? [], r.after ?? []).map(String)))];
+    const opts = vals.length
+        ? await Option.find({ origin: req.origin, question: { $in: [...label.keys()] }, value: { $in: vals } }).select("question value label").lean()
+        : [];
+    const optLabel = new Map(opts.map((o) => [`${o.question}\u0000${o.value}`, o.label]));
+    const text = (q, v) => (v == null ? null : Array.isArray(v) ? v.map((x) => optLabel.get(`${q}\u0000${x}`) ?? x) : optLabel.get(`${q}\u0000${v}`) ?? v);
+    ok(res, "", rows.map((r) => ({
+        ...r,
+        label: label.get(r.question.replace(/_specify$/, "")) || r.question,
+        beforeText: text(r.question, r.before ?? null),
+        afterText: text(r.question, r.after ?? null),
+        reasonText: r.reason ? REFUSAL_TEXT[r.reason] || null : null,
+    })));
 }));
 
 export default router;

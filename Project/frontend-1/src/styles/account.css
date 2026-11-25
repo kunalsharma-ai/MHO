@@ -54,6 +54,7 @@
 .acx-input:focus-within { border-color: var(--acx-a); box-shadow: 0 0 0 4px var(--acx-soft); }
 .has-error .acx-input, .has-error .acx-combo-btn { border-color: #c81e3a; }
 .is-disabled { opacity: .6; }
+.acx-seg-opt.is-disabled { cursor: not-allowed; opacity: .45; }
 .acx-err { margin: 0; color: #b4152f; font-size: 13px; display: flex; gap: 6px; align-items: center; }
 .acx-hint, .acx-small { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
 .acx-dial { font-weight: 600; color: var(--ink); padding-right: 10px; border-right: 1px solid var(--line); }

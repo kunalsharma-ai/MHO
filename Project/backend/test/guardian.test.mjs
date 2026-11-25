@@ -151,7 +151,7 @@ test("sign-up: the parent is emailed only after the teen verifies their own addr
     assert.ok(mail, "the parent gets the approval mail");
     assert.equal(mail.data.teen.first, "Rohan");
     assert.equal(JSON.stringify(mail.data).includes(p.email), false, "the teen's own email is not in the parent's mail");
-    assert.match(mail.data.approve_url, /\/guardian\/approve\?link=[a-f0-9]{24}&code=/);
+    assert.match(mail.data.approve_url, /\/auth\/guardian-approve\?link=[a-f0-9]{24}&code=/);
     assert.equal(teen.journey.next, "guardian", "a teen waits for approval before anything else");
     const blocked = await call("PATCH", "/me/profile", { "diet-plan": "Vegetarian" }, teen.token);
     assert.equal(blocked.status, 403);
@@ -292,6 +292,10 @@ test("log: every change and every refused change is recorded with who made it, a
     assert.deepEqual([h[1].before, h[1].after], [["Vegetarian"], ["Vegan"]]);
     assert.match(h[0].reasonText, /Your teen gave this answer/);
     assert.ok(h[0].label.length > 3, "the log names the question");
+    // stored option codes are shown with the bank's label
+    await call("PATCH", "/me/profile", { country: "DZ" }, teen.token);
+    const c = (await call("GET", "/guardian/history/me", null, teen.token)).body.data.find((r) => r.question === "country");
+    assert.deepEqual([c.after, c.afterText], [["DZ"], ["Algeria"]]);
     const teenView = (await call("GET", "/guardian/history/me", null, teen.token)).body.data;
     assert.ok(teenView.some((r) => r.action === "refused" && r.by === "parent"), "the teen sees the parent's refused attempt too");
     // append-only through the model, like the consent records

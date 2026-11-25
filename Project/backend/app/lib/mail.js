@@ -69,7 +69,7 @@ export async function sendSegmentMail(user, template, extra = {}) {
 export async function sendParentApprovalMail(minor, link, code) {
     const to = link.parentEmail;
     const subject = `${minor.name?.first || "Your teen"} asked you to approve their MyHealthOpinions account`;
-    const approve_url = `https://${minor.origin}/guardian/approve?link=${link._id}&code=${encodeURIComponent(code)}`;
+    const approve_url = `https://${minor.origin}/auth/guardian-approve?link=${link._id}&code=${encodeURIComponent(code)}`;
     const data = { teen: { first: minor.name?.first || "" }, approve_url, to, preferences_url: `https://${minor.origin}/member/settings`, link: { _id: String(link._id) }, otp: { code } };
     if (process.env.NODE_ENV === "test") {
         testOutbox.push({ to, segment: "patient", template: "parent-approval", subject, data });
