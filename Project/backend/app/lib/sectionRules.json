@@ -22,9 +22,7 @@
     "remove": [
      "caregiver-support",
      "caregiving-situation",
-     "other-specify",
-     "freelancer",
-     "orgspend"
+     "other-specify"
     ],
     "add": [
      "direct-patient-care-proportion"
@@ -375,12 +373,6 @@
      "separated",
      "skip",
      "widowed"
-    ]
-   },
-   "food-allergy": {
-    "p": "have-food-allergy",
-    "v": [
-     "yes"
     ]
    },
    "exercises": {

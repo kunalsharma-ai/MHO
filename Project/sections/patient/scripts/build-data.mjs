@@ -2,7 +2,7 @@
 /**
  * build-data.mjs
  * ------------------------------------------------------------
- * Converts the raw MyHealthOpinions export (raw/*.json) into small,
+ * Converts the MyHealthOpinions question bank (../question-bank/*.json) into small,
  * fast, lazy-loadable JSON files used by the PATIENT website.
  *
  *   node scripts/build-data.mjs
@@ -22,16 +22,17 @@ import fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
 import { optionEmoji, applySequence, QUESTION_EMOJI } from './option-emoji.mjs';
+import { bank } from '../../question-bank/load.mjs';
 import { editProfileDocs, DROP_2026, DUPLICATE_OF, patchOptions, patchFlags, remapParents } from '../src/lib/questions-2026.js';
 
 const ROOT = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '..');
-const RAW = path.join(ROOT, 'raw');
 const OUT = path.join(ROOT, 'public', 'data');
 
-const read = (f) => JSON.parse(fs.readFileSync(path.join(RAW, f), 'utf8'));
-const PROFILES = editProfileDocs(read('myhealthopinions.Patient.Profile.json'));
-const QUESTIONS = read('myhealthopinions.Patient.Question.json');
-const OPTIONS = read('myhealthopinions.Option.json');
+// the shared question bank (sections/question-bank): Profile.json, Question.json, Option.json
+const BANK = bank('patient');
+const PROFILES = editProfileDocs(BANK.PROFILES);
+const QUESTIONS = BANK.QUESTIONS;
+const OPTIONS = BANK.OPTIONS;
 
 const report = { fixedParents: [], unmatchedParentValues: [], droppedQuestions: [], labelFixes: [], optionFixes: [], notes: [] };
 const clean = (s) => String(s ?? '').replace(/Â | /g, ' ').replace(/\s+/g, ' ').trim();
