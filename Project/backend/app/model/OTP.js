@@ -12,7 +12,8 @@ export default mongooseModel(
     attempts: { type: Number, default: 0 }
   },
   [
-    [{ user: 1, type: 1, origin: 1 }, { unique: true }],
+    // The old unique index on { user, type, origin } is gone: the schema has no "type", so it allowed only one code per
+    // member and blocked a second channel. The running API drops it at start ("OTP: dropped legacy index").
     [{ expiresAt: 1 }, { expireAfterSeconds: 0 }]
   ],
   {
@@ -36,7 +37,8 @@ export default mongooseModel(
         });
         return otpDoc;
       },
-      async remove(){
+      // Not called "remove": Mongoose uses that name itself and warns at start when a schema overwrites it.
+      async discard(){
         return this.deleteOne();
       }
     }

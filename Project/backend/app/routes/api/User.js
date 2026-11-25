@@ -94,7 +94,7 @@ router
             if (!otp) throw new Error("Link Expired. Unable to set password.");
             let status = await userController.setPassword(req.body.userID, req.body.password)
             if (!status) throw new Error("Something went wrong. Please contact support for more details");
-            await otp.remove();
+            await otp.discard();
             eventStream.emitEvent("user-password-reset", status);
             return { message, data: [] };
         },
