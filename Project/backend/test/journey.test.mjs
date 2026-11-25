@@ -2,7 +2,7 @@
 //
 //   MONGO_URL=mongodb://127.0.0.1:27017 API_DIR=/path/to/src node --test test/journey.test.mjs
 //
-// API_DIR is a directory laid out like the container (/src/app + /src/utils). The suite seeds the profile
+// API_DIR defaults to this backend folder (app/ and utils/ side by side). The suite seeds the profile
 // question bank from Project/sections/question-bank, so profile completion is computed on the real banks.
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";

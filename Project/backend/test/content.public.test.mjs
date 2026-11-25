@@ -1,6 +1,6 @@
 // Public read of pages published from the MADP console (the editor is the MFR admin API; brands share one database).
 //   MONGO_URL=mongodb://127.0.0.1:27017 API_DIR=/path/to/src node --test --test-force-exit test/content.public.test.mjs
-// API_DIR is laid out like the container (/src/app + /src/utils), as for journey.test.mjs.
+// API_DIR defaults to this backend folder (app/ and utils/ side by side), as for journey.test.mjs.
 import test from "node:test";
 import assert from "node:assert/strict";
 import http from "node:http";

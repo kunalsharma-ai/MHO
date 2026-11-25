@@ -35,7 +35,7 @@ services:
       - ./Project/backend/app/new-module:/app/app/new-module
       - ./uploads:/src/public/social/screenshots
       # - ./Project/backend/package.json:/src/package.json
-      # - ./Project/utils:/src/utils
+      # - ./Project/backend/utils:/src/utils
       # - ./defaultData:/data
       - ./logs:/app/app/logs
     command: "npm run dev"
