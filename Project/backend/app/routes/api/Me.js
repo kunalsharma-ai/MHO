@@ -18,6 +18,7 @@ import {
     Token,
     eventStream
 } from "../../../utils/index.js"
+import { REFUSAL_TEXT } from "../../lib/guardian.js";
 Date.prototype.resetTime = function (type = "start") {
     if (type === "end") {
         this.setHours(23);
@@ -183,8 +184,9 @@ router
                     answer: req.body[fld]
                 }
             })
-            await answerController.save(answers)
-            return { message, data }
+            const result = await answerController.save(answers)
+            if (result.refused.length && !result.saved.length) throw new Error(REFUSAL_TEXT[result.refused[0].reason] || "This answer cannot be changed.")
+            return { message, data: result }
         },
         answerController
     ))
@@ -324,26 +326,23 @@ router
     ))
 router
     .route("/profile")
-    .patch(expressRoute(
-        async req => {
+    // the member's own profile answers. Teen members: see lib/guardian.js for who may change which answer.
+    .patch(async (req, res) => {
+        try {
             const user = req.user;
-            // const { questions, answers } = req.body;
-            const questions = Object.keys(req.body);
-            const answers = req.body;
-            if (!user || !questions || !(questions instanceof Array) || questions.length < 1) throw new Error("Invalid request");
-            const updatedAnswers = questions.map(fld => {
-                if (!(fld in answers || answers[fld] === null)) return false;
-                return {
-                    user: user._id,
-                    question: fld,
-                    answer: answers[fld]
-                }
-            }).filter(q => Boolean(q))
-            await answerController.save(updatedAnswers)
-            return { message: "Profile updated successfully", data: [] }
-        },
-        answerController
-    ))
+            const questions = Object.keys(req.body || {});
+            if (!user || questions.length < 1) return res.status(400).json({ status: "error", message: "Invalid request" });
+            answerController.request = req;
+            const result = await answerController.save(questions.map((fld) => ({ user: user._id, question: fld, answer: req.body[fld] })));
+            if (result.refused.length && !result.saved.length) {
+                return res.status(403).json({ status: "error", code: "ANSWER_REFUSED", message: REFUSAL_TEXT[result.refused[0].reason] || "This answer cannot be changed.", data: result });
+            }
+            res.json({ status: "success", message: "Profile updated successfully", data: result });
+        } catch (error) {
+            fsLogger.Log(`me/profile failed: ${error.message}`);
+            res.status(500).json({ status: "error", message: "Your answer was not saved. Please try again." });
+        }
+    })
 router
     .route("/survey")
     .get(expressRoute(

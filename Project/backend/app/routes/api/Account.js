@@ -4,7 +4,9 @@
 //   GET  /api/v1/account/location/countries          countries with flag, dialling code, postal-code rule
 //   GET  /api/v1/account/location/:country/states    states / provinces
 //   GET  /api/v1/account/location/:country/:state/cities
+//   GET  /api/v1/account/eligibility                 ages the sign-up form allows (18+, and teens on the patient panel)
 //   POST /api/v1/account/register                    create a pending account, send the segment's verify mail
+//                                                    (under 18: patient panel only, with parentEmail; see Guardian.js)
 //   POST /api/v1/account/resend-verification         new verify link (generic answer, no account probing)
 //   POST /api/v1/account/link                        is a verify/reset link still usable? (does not spend it)
 //   POST /api/v1/account/set-password                spend the verify link, set the password, activate
@@ -16,14 +18,15 @@
 // and, for form errors, `errors: { field: message }`.
 import express from "express";
 import bcrypt from "bcryptjs";
-import { User, Answers } from "../../model/index.js";
+import { User, Answers, GuardianLink } from "../../model/index.js";
 import { Token, eventStream, fsLogger } from "../../../utils/index.js";
 import { limits } from "../../lib/limits.js";
 import { issueChallenge, captchaPassed } from "../../lib/captcha.js";
 import { issueToken, inspectToken, spendToken } from "../../lib/tokens.js";
 import { passwordProblem, clientIp } from "../../lib/security.js";
-import { validateRegistration, categoryForAge, ageOn, HCP_SCREEN_OUT } from "../../lib/registration.js";
-import { sendSegmentMail } from "../../lib/mail.js";
+import { validateRegistration, categoryForAge, teenRule, ageOn, HCP_SCREEN_OUT, MIN_SIGNUP_AGE } from "../../lib/registration.js";
+import { isMinor, latestLink, issueLinkCode } from "../../lib/guardian.js";
+import { sendSegmentMail, sendParentApprovalMail } from "../../lib/mail.js";
 import { segmentOf, SEGMENTS } from "../../lib/segments.js";
 import { journeyFor } from "../../lib/journey.js";
 import { world, statesOf, stateOf, postalPattern } from "../../lib/world.js";
@@ -79,6 +82,14 @@ router.get("/location/:country/postal", (req, res) => {
 });
 
 /* ---------- Register ---------- */
+// The ages the sign-up form allows, from the category rules in the database: 18+ for every panel, and the
+// "minor patient" age rule for teens on the patient panel (null when teens cannot join).
+router.get("/eligibility", wrap(async (req, res) => {
+    const teen = await teenRule("patient", req.origin);
+    res.set("Cache-Control", "public, max-age=300");
+    ok(res, "", { adultAge: MIN_SIGNUP_AGE, teen: teen ? { minAge: teen.min, segment: "patient" } : null });
+}));
+
 router.post("/register", limits.register, wrap(async (req, res) => {
     if (req.body?.website) return ok(res, GENERIC_EMAIL_SENT); // honeypot: bots get the normal answer, nothing is created
     const { errors, value: v } = validateRegistration(req.body);
@@ -86,7 +97,25 @@ router.post("/register", limits.register, wrap(async (req, res) => {
     if (!(await captchaPassed(req.body.captcha, clientIp(req)))) return CAPTCHA_FAILED(res);
 
     if (v.segment === "hcp" && v.worksInHealthcare === "no") return fail(res, 403, "NOT_ELIGIBLE", HCP_SCREEN_OUT);
-    const category = await categoryForAge(v.segment, ageOn(v.dob), req.origin);
+    const age = ageOn(v.dob);
+    let category = "";
+    let teen = null;
+    if (age < MIN_SIGNUP_AGE) {
+        // under 18: the patient panel only, from the "minor patient" age rule, and a parent or guardian must approve
+        teen = await teenRule(v.segment, req.origin);
+        if (!teen) {
+            const teensAllowed = await teenRule("patient", req.origin);
+            const message = teensAllowed && v.segment !== "patient"
+                ? "Members under 18 can join the patient panel only, with a parent’s or guardian’s approval."
+                : "Based on your date of birth you’re not eligible to join this panel yet.";
+            return fail(res, 403, "NOT_ELIGIBLE", message, { errors: { dob: teensAllowed && v.segment !== "patient" ? "Members under 18 can join the patient panel only." : "You’re not eligible to join this panel yet." } });
+        }
+        if (age < teen.min) return fail(res, 403, "NOT_ELIGIBLE", "Based on your date of birth you’re not eligible to join this panel yet.", { errors: { dob: "You’re not eligible to join this panel yet." } });
+        if (!v.parentEmail) return fail(res, 422, "INVALID", "Please check the highlighted fields.", { errors: { parentEmail: "Members under 18 need a parent or guardian to approve their account. Please enter their email address." } });
+        category = teen.category;
+    } else {
+        category = await categoryForAge(v.segment, age, req.origin);
+    }
     if (!category) return fail(res, 403, "NOT_ELIGIBLE", "Based on your date of birth you’re not eligible to join this panel yet.", { errors: { dob: "You’re not eligible to join this panel yet." } });
 
     const existing = await User.findOne({ mail: v.email, origin: req.origin });
@@ -129,6 +158,9 @@ router.post("/register", limits.register, wrap(async (req, res) => {
         if (v.clinician) answers.push({ user: String(user._id), question: "clinician", answer: [v.clinician], origin: req.origin });
         await Answers.insertMany(answers).catch((e) => fsLogger.Log(`screening answers not saved for ${user._id}: ${e.message}`));
     }
+    // the parent is emailed once the teen has verified their own address (set-password), so an unverified sign-up
+    // cannot send mail to a stranger
+    if (teen) await GuardianLink.create({ minor: user._id, parentEmail: v.parentEmail, origin: req.origin, status: "pending" });
     const raw = await issueToken(user._id, "verify-email", req.origin, clientIp(req));
     await sendSegmentMail(user, "respondent", { otp: { code: raw } });
     eventStream.emitEvent("account-registered", { _id: String(user._id), segment: v.segment });
@@ -179,6 +211,10 @@ async function setPasswordWithLink(req, res, kind) {
     user.passwordChangedAt = new Date();
     await user.save();
     if (kind === "verify" && firstActivation) await sendSegmentMail(user, "welcome");
+    if (kind === "verify" && firstActivation && isMinor(user)) {
+        const link = await latestLink(user._id, user.origin);
+        if (link?.status === "pending" && !link.sentAt) await sendParentApprovalMail(user, link, await issueLinkCode(link));
+    }
     eventStream.emitEvent(kind === "verify" ? "account-activated" : "account-password-reset", { _id: String(user._id) });
     ok(res, kind === "verify" ? "Your password is set and your account is active. Please log in." : "Your new password is set. Please log in.", { email: user.mail });
 }

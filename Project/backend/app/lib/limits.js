@@ -21,4 +21,5 @@ export const limits = {
     email: make(60 * 60 * 1000, 6, "Too many email requests. Please try again in an hour."),
     token: make(15 * 60 * 1000, 30, "Too many attempts. Please wait 15 minutes and try again."),
     consent: make(15 * 60 * 1000, 30, "Too many attempts. Please try again shortly."),
+    answers: make(15 * 60 * 1000, 900, "Too many changes in a short time. Please wait a few minutes and try again."),
 };

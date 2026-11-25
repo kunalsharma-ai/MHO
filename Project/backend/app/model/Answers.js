@@ -25,6 +25,23 @@ export default mongooseModel(
             }],
             select: false
         },
+        // who gave the answer: the member (role "self") or the parent linked to a teen member (role "parent").
+        // Answers saved before this field existed belong to the member. Only the person who gave an answer may
+        // change it (lib/guardian.js).
+        answeredBy: {
+            type: String,
+            trim: true,
+            default: null
+        },
+        answeredByRole: {
+            type: String,
+            enum: ["self", "parent", null],
+            default: null
+        },
+        answeredAt: {
+            type: Date,
+            default: null
+        },
     },
     [
         [
