@@ -1,0 +1,99 @@
+/* Panel tabs on /join and /login (components/PanelTabs.jsx). Animates transform and opacity only. */
+.ptabs { --pt-pad: 6px; margin: 4px 0 18px; }
+/* the sign-up page uses its own panel colours (account.css tones), so the tabs follow them there */
+.acx .ptab.t-hcp, .acx .ptabs-glider .g-hcp { --g1: #1d4ed8; --g2: #06b6d4; --gs: #e6f0ff; }
+.acx .ptab.t-caregiver, .acx .ptabs-glider .g-caregiver { --g1: #0f766e; --g2: #34d399; --gs: #e7f8f1; }
+.acx .ptab.t-patient, .acx .ptabs-glider .g-patient { --g1: #6d28d9; --g2: #38bdf8; --gs: #f1ecff; }
+.ptabs-glider .g-hcp { --g1: var(--hcp-1); --g2: var(--hcp-2); }
+.ptabs-glider .g-caregiver { --g1: var(--cg-1); --g2: var(--cg-2); }
+.ptabs-glider .g-patient { --g1: var(--pt-1); --g2: var(--pt-2); }
+
+.ptabs-label { margin: 0 0 8px; font: 750 .78rem/1.2 var(--font-head, inherit); letter-spacing: .08em; text-transform: uppercase; color: var(--muted, #5d5a78); }
+.ptabs-track { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: var(--pt-pad); border-radius: 24px; isolation: isolate;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(246, 244, 255, .92)); box-shadow: inset 0 0 0 1.5px rgba(27, 16, 53, .08), 0 18px 34px -26px rgba(27, 16, 53, .45); }
+
+/* the coloured pill that slides under the chosen tab; its three gradients cross-fade */
+.ptabs-glider { position: absolute; z-index: -1; top: var(--pt-pad); left: var(--pt-pad); width: calc((100% - var(--pt-pad) * 2) / 3); height: calc(100% - var(--pt-pad) * 2);
+  border-radius: 19px; transform: translateX(calc(var(--i) * 100%)); transition: transform .6s cubic-bezier(.34, 1.35, .64, 1), opacity .35s; }
+.ptabs.is-none .ptabs-glider { opacity: 0; transform: translateX(calc(var(--i) * 100%)) scale(.85); }
+.ptabs-glider i { position: absolute; inset: 0; border-radius: inherit; opacity: 0; transition: opacity .45s; background: linear-gradient(135deg, var(--g1), var(--g2)); box-shadow: 0 16px 30px -14px var(--g1); }
+.ptabs.is-hcp .g-hcp, .ptabs.is-caregiver .g-caregiver, .ptabs.is-patient .g-patient { opacity: 1; }
+/* a slow sheen across the pill */
+.ptabs-glider::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .38) 50%, transparent 65%); opacity: .9; transform: translateX(-60%); animation: ptSheen 3.6s ease-in-out infinite; overflow: hidden; }
+.ptabs-glider { overflow: hidden; }
+
+.ptab { all: unset; box-sizing: border-box; position: relative; cursor: pointer; display: grid; justify-items: center; align-content: start; gap: 8px; padding: 14px 6px 12px; border-radius: 19px; text-align: center; color: var(--ink, #12102a); -webkit-tap-highlight-color: transparent; }
+.ptab:focus-visible { outline: 2px solid var(--g1); outline-offset: 3px; }
+.ptab.off { cursor: not-allowed; opacity: .38; }
+
+.ptab-art { position: relative; width: 50px; height: 50px; display: grid; place-items: center; }
+.ptab-ic { position: relative; z-index: 1; width: 50px; height: 50px; border-radius: 16px; display: grid; place-items: center; color: var(--g1); background: var(--gs);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--g1) 18%, transparent); transition: transform .5s cubic-bezier(.34, 1.7, .64, 1); }
+.ptab-ic::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(140deg, var(--g1), var(--g2)); opacity: 0; transition: opacity .35s; z-index: -1; }
+.ptab-ic svg { position: relative; transition: transform .5s cubic-bezier(.34, 1.7, .64, 1); }
+.ptab:not(.off):not(.on):hover .ptab-ic { transform: translateY(-3px) rotate(-6deg); }
+.ptab-ring { position: absolute; inset: 0; border-radius: 18px; border: 2px solid rgba(255, 255, 255, .75); opacity: 0; }
+.ptab-fx { position: absolute; inset: 0; pointer-events: none; }
+.ptab-fx i { position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; margin: -3.5px; border-radius: 50%; background: #fff; opacity: 0; }
+
+.ptab-txt { display: grid; gap: 2px; }
+.ptab-txt b { font: 800 .9rem/1.2 var(--font-head, inherit); transition: color .3s; }
+.ptab-txt b .short { display: none; }
+.ptab-txt small { font-size: .7rem; line-height: 1.3; color: var(--muted, #5d5a78); transition: color .3s; }
+
+/* chosen tab */
+.ptab.on { color: #fff; }
+.ptab.on .ptab-txt small { color: rgba(255, 255, 255, .86); }
+.ptab.on .ptab-ic { color: #fff; background: rgba(255, 255, 255, .2); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .45), 0 10px 20px -10px rgba(0, 0, 0, .35); transform: scale(1.06); }
+.ptab.on .ptab-ring { animation: ptRing 2.4s cubic-bezier(.2, .7, .3, 1) infinite; }
+.ptab.on .ptab-ring.r2 { animation-delay: 1.2s; }
+/* each panel has its own motion: a stethoscope swing, rising hearts, a heartbeat */
+.ptab.on.pt-hcp .ptab-ic svg { animation: ptSwing 2.6s ease-in-out infinite; transform-origin: 50% 10%; }
+.ptab.on.pt-caregiver .ptab-ic svg { animation: ptHold 2.8s ease-in-out infinite; }
+.ptab.on.pt-caregiver .ptab-fx i { animation: ptRise 2.8s ease-out infinite; animation-delay: calc(var(--d, 0) * 1s); }
+.ptab.on.pt-caregiver .ptab-fx i:nth-child(1) { --x: -20px; --d: 0; }
+.ptab.on.pt-caregiver .ptab-fx i:nth-child(2) { --x: 18px; --d: .7; }
+.ptab.on.pt-caregiver .ptab-fx i:nth-child(3) { --x: -6px; --d: 1.4; }
+.ptab.on.pt-caregiver .ptab-fx i:nth-child(4) { --x: 10px; --d: 2.1; }
+.ptab.on.pt-patient .ptab-ic svg { animation: ptBeat 1.25s ease-in-out infinite; }
+.ptab.on.pt-hcp .ptab-fx i { animation: ptOrbit 3.2s linear infinite; animation-delay: calc(var(--d, 0) * -1s); width: 5px; height: 5px; margin: -2.5px; }
+.ptab.on.pt-hcp .ptab-fx i:nth-child(1) { --d: 0; } .ptab.on.pt-hcp .ptab-fx i:nth-child(2) { --d: .8; } .ptab.on.pt-hcp .ptab-fx i:nth-child(3) { --d: 1.6; } .ptab.on.pt-hcp .ptab-fx i:nth-child(4) { --d: 2.4; }
+.ptab.on.pt-patient .ptab-fx i { animation: ptTwinkle 2.4s ease-in-out infinite; animation-delay: calc(var(--d, 0) * 1s); width: 5px; height: 5px; margin: -2.5px; }
+.ptab.on.pt-patient .ptab-fx i:nth-child(1) { --tx: -30px; --ty: -18px; --d: 0; } .ptab.on.pt-patient .ptab-fx i:nth-child(2) { --tx: 30px; --ty: -12px; --d: .6; }
+.ptab.on.pt-patient .ptab-fx i:nth-child(3) { --tx: -26px; --ty: 20px; --d: 1.2; } .ptab.on.pt-patient .ptab-fx i:nth-child(4) { --tx: 28px; --ty: 18px; --d: 1.8; }
+
+/* one-off burst when a tab is chosen */
+.ptab-burst { position: absolute; left: 50%; top: 39px; width: 0; height: 0; pointer-events: none; }
+.ptab-burst i { position: absolute; width: 6px; height: 6px; margin: -3px; border-radius: 2px; background: #fff; opacity: 0; transform: rotate(calc(var(--k) * 60deg)) translateY(0); animation: ptBurst .8s cubic-bezier(.2, .8, .3, 1) forwards; }
+
+.ptabs-line { margin: 10px 2px 0; font-size: .86rem; line-height: 1.5; color: var(--muted, #5d5a78); animation: ptLine .5s cubic-bezier(.2, .8, .2, 1) both; }
+
+@keyframes ptSheen { 0%, 55% { transform: translateX(-70%); } 100% { transform: translateX(70%); } }
+@keyframes ptRing { 0% { opacity: .75; transform: scale(1); } 100% { opacity: 0; transform: scale(1.65); } }
+@keyframes ptSwing { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
+@keyframes ptHold { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-2px) scale(1.1); } }
+@keyframes ptBeat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.22); } 30% { transform: scale(1); } 45% { transform: scale(1.14); } 60% { transform: scale(1); } }
+@keyframes ptRise { 0% { opacity: 0; transform: translate(var(--x), 6px) scale(.4); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--x), -34px) scale(1); } }
+@keyframes ptOrbit { from { opacity: .95; transform: rotate(0) translateX(var(--orb, 31px)); } to { opacity: .95; transform: rotate(360deg) translateX(var(--orb, 31px)); } }
+@keyframes ptTwinkle { 0%, 100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(.3); } 50% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1.2); } }
+@keyframes ptBurst { 0% { opacity: 1; transform: rotate(calc(var(--k) * 60deg)) translateY(0) scale(1); } 100% { opacity: 0; transform: rotate(calc(var(--k) * 60deg)) translateY(-44px) scale(.4); } }
+@keyframes ptLine { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 560px) {
+  .ptab { padding: 12px 4px 10px; gap: 6px; }
+  .ptab-txt small { display: none; }
+  .ptab-txt b { font-size: .8rem; }
+  .ptab-txt b .long { display: none; }
+  .ptab-txt b .short { display: inline; }
+  .ptab-art, .ptab-ic { width: 44px; height: 44px; }
+  .ptab-burst { top: 34px; }
+  .ptab-fx { --orb: 25px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ptabs-glider, .ptabs-glider i, .ptab-ic, .ptab-ic svg { transition: none; }
+  .ptabs-glider::after, .ptab .ptab-ring, .ptab .ptab-ic svg, .ptab .ptab-fx i, .ptab-burst i, .ptabs-line { animation: none !important; }
+}
+html[data-mode='dark'] .ptabs-track { background: linear-gradient(180deg, #221d3d, #1b1733); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .08), 0 18px 34px -26px #000; }
+html[data-mode='dark'] .ptab { color: #f2f0ff; }
+html[data-mode='dark'] .ptab-txt small, html[data-mode='dark'] .ptabs-label, html[data-mode='dark'] .ptabs-line { color: #b5b1d6; }
+html[data-mode='dark'] .ptab:not(.on) .ptab-ic { background: color-mix(in srgb, var(--g1) 22%, #1b1733); color: color-mix(in srgb, var(--g1) 55%, #fff); }

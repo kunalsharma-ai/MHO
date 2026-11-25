@@ -11,7 +11,7 @@ import { validateEmail, auth, track } from '../utils/helpers.js';
 import { syncPendingAnswers } from '../utils/pendingAnswers.js';
 import { useGuestOnly } from '../utils/session.js';
 import Persona from '../components/Persona.jsx';
-import { PanelPicker } from '../components/R8.jsx';
+import PanelTabs from '../components/PanelTabs.jsx';
 import { visit } from '../utils/dismissed.js';
 
 // Each panel restyles the whole log-in page: its own palette, scene and floating details.
@@ -178,7 +178,7 @@ export default function Login() {
             <h1>{view === 'forgot' ? 'Reset your password' : 'Welcome back'}</h1>
             <p>{view === 'forgot' ? 'Enter your registered email and we will send you a link to create a new password.' : 'Log in with your email and password.'}</p>
           </div>
-          {view === 'login' && state !== 'done' && <PanelPicker value={panel} onChange={setPanel} label="I am logging in as" />}
+          {view === 'login' && state !== 'done' && <PanelTabs value={panel} onChange={setPanel} label="I am logging in as" lines={Object.fromEntries(Object.entries(SCENES).map(([k, v]) => [k, v.line]))} />}
           {state === 'done' ? (
             <div className="lc-done" role="status">
               <Icon name="check" size={30} stroke={3} />
