@@ -10,6 +10,7 @@ import { referralCode, forgetReferral } from '../utils/referral.js';
 import { useGuestOnly } from '../utils/session.js';
 import { visit } from '../utils/dismissed.js';
 import { SCREENER } from '../data/hcpForm.js';
+import SocialLogin from '../components/SocialLogin.jsx';
 import { AccountShell, Steps, TextField, SearchSelect, ServerCaptcha, Alert, accountCall, NETWORK_ERROR } from '../components/AccountKit.jsx';
 
 const STEPS = ['About you', 'Where you live', 'Your panel', 'Review'];
@@ -21,6 +22,43 @@ const SEGMENTS = [
 const EMPTY = { firstName: '', middleName: '', lastName: '', dob: '', email: '', parentEmail: '', phone: '', country: '', state: '', city: '', postalCode: '', postalNA: false, segment: '', worksInHealthcare: '', clinician: '', website: '' };
 const yn = (label) => (label === 'Yes' ? 'yes' : label === 'No' ? 'no' : '');
 const today = () => new Date().toISOString().slice(0, 10);
+
+/**
+ * Details handed back by a social sign-in. The API sends a new person to "/?signup=1&name=…&email=…" and the app forwards
+ * that to /join (utils/helpers.js socialReturnTarget); an existing account whose email is not confirmed yet comes back
+ * as "/join/?verifyemail=…". Read once, then removed from the address bar so the name and email don't stay in the URL
+ * or the browser history.
+ */
+function readSocialReturn() {
+  if (typeof window === 'undefined') return null;
+  let q;
+  try { q = new URLSearchParams(window.location.search); } catch { return null; }
+  const pick = (...keys) => keys.map((k) => (q.get(k) || '').trim()).find(Boolean) || '';
+  const out = {
+    verify: pick('verifyemail').toLowerCase(),
+    name: pick('name'),
+    first: pick('given_name', 'first_name', 'firstName'),
+    last: pick('family_name', 'last_name', 'lastName'),
+    email: pick('email').toLowerCase(),
+  };
+  if (!out.verify && !out.name && !out.first && !out.last && !out.email) return null;
+  try {
+    ['verifyemail', 'name', 'given_name', 'first_name', 'firstName', 'family_name', 'last_name', 'lastName', 'email', 'signup', 'picture', 'provider'].forEach((k) => q.delete(k));
+    const rest = q.toString();
+    window.history.replaceState(window.history.state, '', window.location.pathname + (rest ? `?${rest}` : '') + window.location.hash);
+  } catch { /* the form still works */ }
+  return out;
+}
+
+/** "Asha Rani Test" → first / middle / last, the same split the old sign-up used. Separate first and last names win. */
+function namesFrom(r) {
+  const parts = r.name.split(/\s+/).filter(Boolean);
+  return {
+    firstName: r.first || parts[0] || '',
+    middleName: !r.first && parts.length === 3 ? parts[1] : '',
+    lastName: r.last || (parts.length > 1 ? parts[parts.length - 1] : ''),
+  };
+}
 
 /** Location lists from the API (one dataset for countries, states and cities, the same one the server validates with). */
 function useLocation(country, state) {
@@ -57,7 +95,8 @@ export default function Register() {
   const [step, setStep] = useState(0);
   const [err, setErr] = useState({});
   const [alert, setAlert] = useState('');
-  const [state, setState] = useState('form'); // form | sending | sent | screened
+  const [state, setState] = useState('form'); // form | sending | sent | screened | unverified
+  const [social, setSocial] = useState(false); // name and email came from a social sign-in
   const [cap, setCap] = useState({ id: '', answer: '' });
   const [capKey, setCapKey] = useState(0);
   const head = useRef(null);
@@ -65,6 +104,23 @@ export default function Register() {
   const { countries, states, cities, loading } = useLocation(f.country, f.state);
   const country = countries.find((c) => c.code === f.country);
   const stateRow = states.find((s) => s.code === f.state);
+  // Back from a social sign-in: fill in what the provider gave us. The person can still change it, and the email is
+  // confirmed by the usual link before the account works.
+  useEffect(() => {
+    const r = readSocialReturn();
+    if (!r) return;
+    if (r.verify) { setF((s) => ({ ...s, email: r.verify })); setState('unverified'); return; }
+    const n = namesFrom(r);
+    setF((s) => ({
+      ...s,
+      firstName: s.firstName || n.firstName.slice(0, 60),
+      middleName: s.middleName || n.middleName.slice(0, 60),
+      lastName: s.lastName || n.lastName.slice(0, 60),
+      email: s.email || (validateEmail(r.email) ? '' : r.email),
+    }));
+    setSocial(true);
+    track('sign_up_social_return');
+  }, []);
   // Under 18: the patient panel only, from the age the server allows (the "minor patient" rule), with a parent's approval
   const [teenMin, setTeenMin] = useState(null);
   useEffect(() => {
@@ -199,6 +255,7 @@ export default function Register() {
   );
 
   if (state === 'sent') return <Sent email={f.email} tone={tone} aside={aside} teen={isTeen} />;
+  if (state === 'unverified') return <Sent email={f.email} tone={tone} aside={aside} unverified />;
   if (state === 'screened') {
     return (
       <AccountShell tone="hcp" aside={aside}>
@@ -226,6 +283,9 @@ export default function Register() {
         {/* honeypot for bots: hidden from people and screen readers */}
         <div className="acx-hp" aria-hidden="true"><label>Website<input tabIndex={-1} autoComplete="off" value={f.website} onChange={(e) => set('website')(e.target.value)} /></label></div>
 
+        {step === 0 && social && (
+          <Alert kind="ok">We’ve filled in your name and email from your social account. Please check them and add the rest.</Alert>
+        )}
         {step === 0 && (
           <div className="acx-fields">
             <TextField id="r-fn" label="First name" required value={f.firstName} onChange={set('firstName')} error={err.firstName} autoComplete="given-name" maxLength={60} />
@@ -324,6 +384,7 @@ export default function Register() {
           </button>
         </div>
       </form>
+      {step === 0 && !social && <SocialLogin label="Or sign up with" />}
       <p className="acx-alt">Already a member? <Link to="/login">Log in</Link></p>
     </AccountShell>
   );
@@ -357,7 +418,7 @@ function YesNo({ name, q, value, onChange, error }) {
 }
 
 /** "Check your inbox": the link in the email confirms the address and opens the create-password page. */
-function Sent({ email, tone, aside, teen }) {
+function Sent({ email, tone, aside, teen, unverified }) {
   useEffect(() => { try { window.scrollTo(0, 0); } catch { /* ignore */ } }, []);
   const [cap, setCap] = useState({ id: '', answer: '' });
   const [capKey, setCapKey] = useState(0);
@@ -378,10 +439,12 @@ function Sent({ email, tone, aside, teen }) {
     <AccountShell tone={tone} aside={aside}>
       <div className="acx-done" role="status">
         <span className="acx-done-ic"><Icon name="mail" size={28} /></span>
-        <h1>Check your inbox</h1>
-        <p>We’ve sent a link to <strong>{email}</strong> to confirm the address and create your password. The link works once and expires in 24 hours.</p>
+        <h1>{unverified ? 'Please confirm your email' : 'Check your inbox'}</h1>
+        {unverified
+          ? <p>There is already an account for <strong>{email}</strong>, but the address hasn’t been confirmed yet. Open the link we emailed you, or ask for a new one below.</p>
+          : <p>We’ve sent a link to <strong>{email}</strong> to confirm the address and create your password. The link works once and expires in 24 hours.</p>}
         {teen && <p>Once you’ve confirmed it, we’ll email your parent or guardian a link to approve your account. You can log in meanwhile, but you can answer profile questions only after they approve.</p>}
-        <p className="acx-small">Already have an account with this address? <Link to="/login">Log in</Link> or use “Forgot password?” there.</p>
+        {!unverified && <p className="acx-small">Already have an account with this address? <Link to="/login">Log in</Link> or use “Forgot password?” there.</p>}
         <p className="acx-small">It can take a minute to arrive. Check your spam or promotions folder too.</p>
       </div>
       {st === 'sent' ? (
