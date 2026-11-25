@@ -18,7 +18,7 @@ const SEGMENTS = [
   { id: 'caregiver', title: 'Caregiver', sub: 'You look after a family member or someone close to you', icon: 'hands' },
   { id: 'patient', title: 'Patient', sub: 'You want to share your own experience of a health condition', icon: 'heart' },
 ];
-const EMPTY = { firstName: '', middleName: '', lastName: '', dob: '', email: '', phone: '', country: '', state: '', city: '', postalCode: '', postalNA: false, segment: '', worksInHealthcare: '', clinician: '', website: '' };
+const EMPTY = { firstName: '', middleName: '', lastName: '', dob: '', email: '', parentEmail: '', phone: '', country: '', state: '', city: '', postalCode: '', postalNA: false, segment: '', worksInHealthcare: '', clinician: '', website: '' };
 const yn = (label) => (label === 'Yes' ? 'yes' : label === 'No' ? 'no' : '');
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -65,6 +65,16 @@ export default function Register() {
   const { countries, states, cities, loading } = useLocation(f.country, f.state);
   const country = countries.find((c) => c.code === f.country);
   const stateRow = states.find((s) => s.code === f.state);
+  // Under 18: the patient panel only, from the age the server allows (the "minor patient" rule), with a parent's approval
+  const [teenMin, setTeenMin] = useState(null);
+  useEffect(() => {
+    let live = true;
+    accountCall('GET', '/eligibility').then((r) => { if (live && r.ok) setTeenMin(r.data?.teen?.minAge ?? null); });
+    return () => { live = false; };
+  }, []);
+  const ageNow = f.dob && f.dob <= today() ? ageFrom(f.dob) : null;
+  const isTeen = teenMin != null && ageNow != null && !Number.isNaN(ageNow) && ageNow < MIN_AGE && ageNow >= teenMin;
+  useEffect(() => { if (isTeen && f.segment !== 'patient') setF((s) => ({ ...s, segment: 'patient', worksInHealthcare: '', clinician: '' })); }, [isTeen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Panel chosen earlier in this visit (home page picker or ?panel=) preselects the segment; the person can still change it.
   useEffect(() => {
@@ -95,10 +105,16 @@ export default function Register() {
       else {
         const age = ageFrom(f.dob);
         if (age === null || Number.isNaN(age) || f.dob > today()) e.dob = 'Please enter a valid date of birth.';
-        else if (age < MIN_AGE) e.dob = `You must be at least ${MIN_AGE} years old to join.`;
+        else if (age < MIN_AGE && !(teenMin != null && age >= teenMin)) e.dob = teenMin != null ? `You must be at least ${teenMin} years old to join.` : `You must be at least ${MIN_AGE} years old to join.`;
         else if (age > 120) e.dob = 'Please check the year of birth.';
       }
       const em = validateEmail(f.email); if (em) e.email = em;
+      if (isTeen) {
+        const pe = validateEmail(f.parentEmail);
+        if (!f.parentEmail.trim()) e.parentEmail = 'Please enter your parent’s or guardian’s email address.';
+        else if (pe) e.parentEmail = pe;
+        else if (f.parentEmail.trim().toLowerCase() === f.email.trim().toLowerCase()) e.parentEmail = 'Please enter your parent’s or guardian’s own email address, not yours.';
+      }
     }
     if (i === 1) {
       if (!f.country) e.country = 'Please choose your country.';
@@ -115,6 +131,7 @@ export default function Register() {
     }
     if (i === 2) {
       if (!f.segment) e.segment = 'Please choose the panel that describes you.';
+      else if (isTeen && f.segment !== 'patient') e.segment = 'Members under 18 can join the patient panel only.';
       if (f.segment === 'hcp') {
         if (!f.worksInHealthcare) e.worksInHealthcare = 'Please answer this question.';
         else if (f.worksInHealthcare === 'Yes' && !f.clinician) e.clinician = 'Please answer this question.';
@@ -124,7 +141,7 @@ export default function Register() {
   };
 
   // Server errors name fields; open the first step that holds one.
-  const FIELD_STEP = { firstName: 0, middleName: 0, lastName: 0, dob: 0, email: 0, country: 1, phone: 1, state: 1, city: 1, postalCode: 1, segment: 2, worksInHealthcare: 2, clinician: 2 };
+  const FIELD_STEP = { firstName: 0, middleName: 0, lastName: 0, dob: 0, email: 0, parentEmail: 0, country: 1, phone: 1, state: 1, city: 1, postalCode: 1, segment: 2, worksInHealthcare: 2, clinician: 2 };
 
   const next = (e) => {
     e.preventDefault();
@@ -147,7 +164,7 @@ export default function Register() {
       postalCode: f.postalNA ? '' : f.postalCode.trim(), postalCodeNotApplicable: f.postalNA, segment: f.segment,
       screening: f.segment === 'hcp' ? { worksInHealthcare: yn(f.worksInHealthcare), clinician: yn(f.clinician) } : undefined,
       timezone: (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch { return ''; } })(),
-      captcha: cap, website: f.website, ...(ref ? { referredBy: ref } : {}),
+      captcha: cap, website: f.website, ...(ref ? { referredBy: ref } : {}), ...(isTeen ? { parentEmail: f.parentEmail.trim() } : {}),
     });
     setCapKey((k) => k + 1);
     if (r.ok) { forgetReferral(); track('sign_up', { method: 'email', role: f.segment }); setState('sent'); return; }
@@ -171,7 +188,7 @@ export default function Register() {
 
   const aside = (
     <div className="acx-aside-copy">
-      <p className="acx-kicker">Free to join · 18+</p>
+      <p className="acx-kicker">{teenMin != null ? `Free to join · 18+, or ${teenMin}+ with a parent’s approval` : 'Free to join · 18+'}</p>
       <h2>Your health opinions, <span>rewarded</span>.</h2>
       <ul>
         <li><Icon name="mail" size={16} /> Confirm your email, then create your password</li>
@@ -181,7 +198,7 @@ export default function Register() {
     </div>
   );
 
-  if (state === 'sent') return <Sent email={f.email} tone={tone} aside={aside} />;
+  if (state === 'sent') return <Sent email={f.email} tone={tone} aside={aside} teen={isTeen} />;
   if (state === 'screened') {
     return (
       <AccountShell tone="hcp" aside={aside}>
@@ -216,8 +233,12 @@ export default function Register() {
               <TextField id="r-mn" label="Middle name" optional value={f.middleName} onChange={set('middleName')} error={err.middleName} autoComplete="additional-name" maxLength={60} />
               <TextField id="r-ln" label="Last name" optional value={f.lastName} onChange={set('lastName')} error={err.lastName} autoComplete="family-name" maxLength={60} />
             </div>
-            <TextField id="r-dob" label="Date of birth" required type="date" value={f.dob} onChange={set('dob')} error={err.dob} autoComplete="bday" max={today()} min="1900-01-01" hint={`You must be ${MIN_AGE} or older to join.`} />
+            <TextField id="r-dob" label="Date of birth" required type="date" value={f.dob} onChange={set('dob')} error={err.dob} autoComplete="bday" max={today()} min="1900-01-01" hint={teenMin != null ? `You must be ${MIN_AGE} or older to join, or ${teenMin} to 17 for the patient panel with a parent’s or guardian’s approval.` : `You must be ${MIN_AGE} or older to join.`} />
             <TextField id="r-em" label="Email address" required type="email" value={f.email} onChange={set('email')} error={err.email} autoComplete="email" icon="mail" maxLength={254} hint="We’ll send a link to confirm it’s yours." />
+            {isTeen && (
+              <TextField id="r-pe" label="Parent’s or guardian’s email" required type="email" value={f.parentEmail} onChange={set('parentEmail')} error={err.parentEmail} autoComplete="off" icon="mail" maxLength={254}
+                hint="You’re under 18, so a parent or guardian approves your account from their own login. We email them after you confirm your own email." />
+            )}
           </div>
         )}
 
@@ -256,15 +277,15 @@ export default function Register() {
             <fieldset className={`acx-seg ${err.segment ? 'has-error' : ''}`}>
               <legend>Which panel describes you? <b aria-hidden="true">*</b></legend>
               {SEGMENTS.map((s) => (
-                <label key={s.id} className={`acx-seg-opt seg-${s.id} ${f.segment === s.id ? 'on' : ''}`}>
-                  <input type="radio" name="segment" value={s.id} checked={f.segment === s.id} onChange={() => setF((x) => ({ ...x, segment: s.id, worksInHealthcare: '', clinician: '' }))} />
+                <label key={s.id} className={`acx-seg-opt seg-${s.id} ${f.segment === s.id ? 'on' : ''} ${isTeen && s.id !== 'patient' ? 'is-disabled' : ''}`}>
+                  <input type="radio" name="segment" value={s.id} checked={f.segment === s.id} disabled={isTeen && s.id !== 'patient'} onChange={() => setF((x) => ({ ...x, segment: s.id, worksInHealthcare: '', clinician: '' }))} />
                   <span className="acx-seg-ic"><Icon name={s.icon} size={22} /></span>
                   <span><strong>{s.title}</strong><em>{s.sub}</em></span>
                   <span className="acx-seg-tick" aria-hidden="true"><Icon name="check" size={14} stroke={3} /></span>
                 </label>
               ))}
               {err.segment && <p className="acx-err" role="alert"><Icon name="info" size={13} /> {err.segment}</p>}
-              <p className="acx-hint">Each panel has its own surveys and consent form. You can belong to one panel per account.</p>
+              <p className="acx-hint">{isTeen ? 'Members under 18 can join the patient panel only, with a parent’s or guardian’s approval.' : 'Each panel has its own surveys and consent form. You can belong to one panel per account.'}</p>
             </fieldset>
             {f.segment === 'hcp' && (
               <>
@@ -281,6 +302,7 @@ export default function Register() {
               <Row k="Name" v={[f.firstName, f.middleName, f.lastName].filter(Boolean).join(' ')} edit={() => setStep(0)} />
               <Row k="Date of birth" v={f.dob} edit={() => setStep(0)} />
               <Row k="Email" v={f.email} edit={() => setStep(0)} />
+              {isTeen && <Row k="Parent or guardian" v={f.parentEmail} edit={() => setStep(0)} />}
               <Row k="Phone" v={`${country?.dial || ''} ${f.phone}`} edit={() => setStep(1)} />
               <Row k="Location" v={[f.city, stateRow?.name, country?.name].filter(Boolean).join(', ')} edit={() => setStep(1)} />
               <Row k="Postal code" v={f.postalNA ? 'Not applicable' : f.postalCode} edit={() => setStep(1)} />
@@ -335,7 +357,7 @@ function YesNo({ name, q, value, onChange, error }) {
 }
 
 /** "Check your inbox": the link in the email confirms the address and opens the create-password page. */
-function Sent({ email, tone, aside }) {
+function Sent({ email, tone, aside, teen }) {
   useEffect(() => { try { window.scrollTo(0, 0); } catch { /* ignore */ } }, []);
   const [cap, setCap] = useState({ id: '', answer: '' });
   const [capKey, setCapKey] = useState(0);
@@ -358,6 +380,7 @@ function Sent({ email, tone, aside }) {
         <span className="acx-done-ic"><Icon name="mail" size={28} /></span>
         <h1>Check your inbox</h1>
         <p>We’ve sent a link to <strong>{email}</strong> to confirm the address and create your password. The link works once and expires in 24 hours.</p>
+        {teen && <p>Once you’ve confirmed it, we’ll email your parent or guardian a link to approve your account. You can log in meanwhile, but you can answer profile questions only after they approve.</p>}
         <p className="acx-small">Already have an account with this address? <Link to="/login">Log in</Link> or use “Forgot password?” there.</p>
         <p className="acx-small">It can take a minute to arrive. Check your spam or promotions folder too.</p>
       </div>

@@ -1,5 +1,6 @@
 import { ConsentRecord } from "../model/index.js";
 import { segmentFor } from "./segments.js";
+import { isMinor, latestLink } from "./guardian.js";
 
 /** Latest consent record of the member (accept or decline), or null. */
 export const latestConsent = (userId) => ConsentRecord.findOne({ user: userId }).sort({ acceptedAt: -1, _id: -1 }).lean();
@@ -26,6 +27,12 @@ export async function journeyFor(user) {
     if (isAdmin) return { ...out, next: "admin", nextUrl: "/admin/dashboard" };
     if (!segment) return { ...out, next: "support", nextUrl: "/member/support" };
     if (!emailVerified) return { ...out, next: "verify-email", nextUrl: "/login?verify=1" };
+    if (isMinor(user)) {
+        // a teen member waits for their parent or guardian to approve the account (routes/api/Guardian.js)
+        const link = await latestLink(user._id, user.origin);
+        out.guardian = { status: link?.status || "missing" };
+        if (link?.status !== "approved") return { ...out, next: "guardian", nextUrl: "/member/guardian" };
+    }
 
     const last = await latestConsent(user._id);
     const lastAccept = last?.action === "accept" ? last : await ConsentRecord.findOne({ user: user._id, action: "accept" }).sort({ acceptedAt: -1 }).lean();

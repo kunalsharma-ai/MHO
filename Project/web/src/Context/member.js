@@ -79,6 +79,12 @@ class ValidUser {
           this.router.replace("/login?verify=1"); // no email address in the URL
           return false;
         }
+        if (j.next === "guardian") {
+          // a teen member waits on this page until their parent or guardian approves the account
+          if (pathname.startsWith("/member/guardian")) return true;
+          this.router.replace("/member/guardian");
+          return false;
+        }
         if (j.next === "consent") {
           window.location.replace(j.nextUrl); // static consent page served by the marketing site
           return false;

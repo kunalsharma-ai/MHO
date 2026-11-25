@@ -27,6 +27,7 @@ import changeEmail from "./api/changeEmail.js"
 import contentRouter from "./api/Content.js";
 import accountRouter from "./api/Account.js";
 import meJourneyRouter from "./api/MeJourney.js";
+import guardianRouter from "./api/Guardian.js";
 const router = express.Router();
 router
     // every answer gets the browser security headers; member routes run in their own request context (so two
@@ -52,6 +53,7 @@ router
     .use("/api/v1/project-dev", requireAdmin, projectRouter)
     .use("/api/v1/rewards", isAuthenticated, rewardsRouter)
     .use("/api/v1/account", accountRouter)
+    .use("/api/v1/guardian", isAuthenticated, guardianRouter)
     .use("/api/v1/me", isAuthenticated, meJourneyRouter)
     .use("/api/v1/me", isAuthenticated, meRouter)
     .use("/api/v1/response", isAuthenticated, meResponse)

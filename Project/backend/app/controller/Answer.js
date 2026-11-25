@@ -1,34 +1,22 @@
 import { CrudController, Mutate } from "../../utils/index.js";
+import { writeAnswers } from "../lib/guardian.js";
+import { clientIp } from "../lib/security.js";
 import {
     Answers as answerModel,
     Question as questionModel
 } from "../model/index.js";
 
 class Answer extends CrudController {
+    /**
+     * Saves the signed-in member's own answers. Who may change which answer (teen members and their parents) is
+     * decided in lib/guardian.js, which also logs every change. Returns { saved, refused }.
+     */
     async save(data) {
-    const origin = this.request.origin;
-    const user = this.request.user._id;
-
-    const ops = data.map(info => ({
-        updateOne: {
-            filter: {
-                question: info.question,
-                user,
-                origin
-            },
-            update: {
-                $set: {
-                    question: info.question,
-                    answer: info.answer,   // overwrite every time
-                    user,
-                    origin
-                }
-            },
-            upsert: true
-        }
-    }));
-    return await answerModel.bulkWrite(ops);
-}
+        const req = this.request;
+        const values = {};
+        for (const info of data) values[info.question] = info.answer;
+        return writeAnswers({ subject: req.user, actorId: req.user._id, role: "self", values, origin: req.origin, ip: clientIp(req) });
+    }
     async getAnswers(data) {
         let query = this.commonFilters;
         let questions = Mutate(await questionModel.find({ ...query, type: "multiselect", name: data.question })).map(que => que.name);

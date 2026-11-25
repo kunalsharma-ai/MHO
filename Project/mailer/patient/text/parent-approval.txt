@@ -1,0 +1,20 @@
+Approve {{ teen.first }}'s MyHealthOpinions account
+
+Hello,
+
+{{ teen.first }} signed up to the MyHealthOpinions Patients panel and gave this email address for their parent or guardian. Members under 18 need a parent or guardian to approve their account.
+
+You approve from your own MyHealthOpinions login, using this email address. If you do not have an account yet, the page lets you create one.
+
+Review and approve: {{ approve_url }}
+
+This link expires 7 days after it was sent.
+
+Once you approve, you can answer profile questions for {{ teen.first }} from your own login, and they can answer from theirs. Each answer shows who gave it. Only that person can change it, and every change is logged.
+
+Don't know {{ teen.first }}? Choose Decline on the approval page, or ignore this email. Nothing is linked without your approval.
+
+The MyHealthOpinions Patients team
+support@myhealthopinions.com
+
+Sent to {{ to }}

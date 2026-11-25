@@ -35,6 +35,20 @@ export async function categoryForAge(segment, age, origin) {
 }
 
 /**
+ * Teen sign-up (Kunal, 2026-11-25): members under 18 may join the patient panel only, with a parent's or guardian's
+ * approval. The youngest age allowed is the "minor patient" category's own age rule in the database; when that
+ * category has no age rule below 18, teens cannot sign up. Returns { min, category } or null.
+ */
+export const MINOR_CATEGORY = "minor patient";
+export async function teenRule(segment, origin) {
+    if (segment !== "patient") return null;
+    const doc = await Category.findOne({ name: MINOR_CATEGORY, origin, isDeleted: { $ne: true } }).lean();
+    const min = Number(doc?.age?.min);
+    if (!Number.isFinite(min) || min <= 0 || min >= MIN_SIGNUP_AGE) return null;
+    return { min, category: MINOR_CATEGORY };
+}
+
+/**
  * Validates the new registration form. Returns { errors, value } where errors maps field → message.
  * Every rule here is enforced on the server, whatever the browser sent.
  */
@@ -57,6 +71,7 @@ export function validateRegistration(body = {}) {
         worksInHealthcare: clean(body.screening?.worksInHealthcare).toLowerCase(),
         clinician: clean(body.screening?.clinician).toLowerCase(),
         timezone: clean(body.timezone),
+        parentEmail: clean(body.parentEmail).toLowerCase(), // members under 18 only
     };
 
     if (!v.firstName) errors.firstName = "Please enter your first name.";
@@ -102,6 +117,9 @@ export function validateRegistration(body = {}) {
         } else v.postalCode = "";
         if (!v.timezone) v.timezone = country.timezones?.[0]?.zoneName || "UTC";
     }
+
+    if (v.parentEmail && (!EMAIL_RE.test(v.parentEmail) || v.parentEmail.length > 254)) errors.parentEmail = "Please enter a valid email address for your parent or guardian.";
+    else if (v.parentEmail && v.parentEmail === v.email) errors.parentEmail = "Please enter your parent’s or guardian’s own email address, not yours.";
 
     if (!SEGMENTS[v.segment]) errors.segment = "Please choose whether you are a healthcare professional, a caregiver or a patient.";
     if (v.segment === "hcp") {

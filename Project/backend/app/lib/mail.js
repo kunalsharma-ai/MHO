@@ -61,3 +61,26 @@ export async function sendSegmentMail(user, template, extra = {}) {
         return false;
     }
 }
+
+/**
+ * Asks a teen member's parent or guardian to approve the account (patient mailer "parent-approval").
+ * Sent to the parent's email, never the teen's. Only the teen's first name goes into the mail.
+ */
+export async function sendParentApprovalMail(minor, link, code) {
+    const to = link.parentEmail;
+    const subject = `${minor.name?.first || "Your teen"} asked you to approve their MyHealthOpinions account`;
+    const approve_url = `https://${minor.origin}/auth/guardian-approve?link=${link._id}&code=${encodeURIComponent(code)}`;
+    const data = { teen: { first: minor.name?.first || "" }, approve_url, to, preferences_url: `https://${minor.origin}/member/settings`, link: { _id: String(link._id) }, otp: { code } };
+    if (process.env.NODE_ENV === "test") {
+        testOutbox.push({ to, segment: "patient", template: "parent-approval", subject, data });
+        return true;
+    }
+    try {
+        const mailer = await getMailer("patient", "parent-approval", data, { origin: minor.origin });
+        await sendMail({ origin: minor.origin, "content-type": "application/json" }, to, subject, mailer.data);
+        return true;
+    } catch (error) {
+        fsLogger.Log(`Mail patient/parent-approval failed for teen ${minor._id}: ${error.message}`);
+        return false;
+    }
+}

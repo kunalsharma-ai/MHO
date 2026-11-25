@@ -86,7 +86,7 @@ export default function Login() {
     await Promise.race([syncPendingAnswers({ email: email.trim().toLowerCase() }), new Promise((r) => setTimeout(r, 6000))]);
     // The journey decides the next page: consent form for this member's segment, or the dashboard.
     // replace(), not assign(): the log-in page must not stay in the browser history.
-    window.location.replace(res.data?.journey?.nextUrl || '/member/dashboard');
+    window.location.replace(approvalReturn() || res.data?.journey?.nextUrl || '/member/dashboard');
   };
 
   const [resendState, setResendState] = useState('');
@@ -240,4 +240,17 @@ export default function Login() {
       </div>
     </section>
   );
+}
+
+/**
+ * A parent who opened a teen's approval link before logging in goes back to it (the member area stores it as
+ * mho.returnTo for a day). Only that page is accepted, so the value cannot send anyone elsewhere.
+ */
+function approvalReturn() {
+  try {
+    const v = JSON.parse(localStorage.getItem('mho.returnTo') || 'null');
+    localStorage.removeItem('mho.returnTo');
+    if (v && typeof v.url === 'string' && /^\/auth\/guardian-approve\?[\w=&%.-]+$/.test(v.url) && Date.now() - Number(v.at) < 864e5) return v.url;
+  } catch { /* storage blocked */ }
+  return '';
 }

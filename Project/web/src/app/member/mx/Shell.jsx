@@ -20,6 +20,7 @@ import "./fx.css";
 import "./prism.css";
 import "./story.css";
 import "./panels.css";
+import "./family.css";
 
 const MUI_COLORS = { hcp: ["#5B4BFF", "#FF5A78"], caregiver: ["#9B1E4E", "#F2611B"], patient: ["#0F7EA8", "#F2611B"] };
 
@@ -287,7 +288,7 @@ function Nav({ onNavigate }) {
   const path = usePathname() || "";
   const total = d?.profile?.sections?.length || 0;
   const done = (d?.profile?.sections || []).filter((s) => s.status === "complete").length;
-  const { tickets } = useMx();
+  const { tickets, family } = useMx();
   const [seen] = useSeen();
   const unread = buildInbox({ d, notes, tickets: tickets.list }).filter((m) => !seen.has(m.key)).length;
   const counts = { "/member/surveys": d?.surveys?.counts?.available || 0, "/member/messages": unread, "/member/notifications": notes.filter((n) => n.level === "action").length };
@@ -295,11 +296,11 @@ function Nav({ onNavigate }) {
     <nav className="mx-nav" aria-label="Member pages">
       <Link href="/member/dashboard" className="mx-navbrand" aria-label="My Health Opinions, dashboard" tabIndex={-1}><img src={LOGO} alt="" width="114" height="32" /></Link>
       <span className="cap">{t("menu")}</span>
-      {NAV.map(([label, href, icon, tour, key], i) => {
+      {NAV.filter(([, href]) => href !== "/member/guardian" || family?.isTeen || family?.children > 0).map(([label, href, icon, tour, key], i) => {
         const on = path === href || path.startsWith(`${href}/`) || (href === "/member/myaccount" && path.startsWith("/member/settings"));
         return (
           <Link key={href} href={href} data-tour={tour} aria-current={on ? "page" : undefined} style={{ "--i": i }} onClick={onNavigate}>
-            <span className="ic"><Icon name={icon} size={18} /></span><span className="lbl">{t(key) || label}</span>
+            <span className="ic"><Icon name={icon} size={18} /></span><span className="lbl">{(t(key) !== key && t(key)) || label}</span>
             {counts[href] > 0 && <span className="n" aria-label={`${counts[href]} new`}>{counts[href]}</span>}
           </Link>
         );
