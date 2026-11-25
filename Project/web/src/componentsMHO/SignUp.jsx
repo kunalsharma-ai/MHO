@@ -42,6 +42,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import PopUp from "./PopUp";
 import { Form, RequiredLabel } from "@/components";
+import SocialSignIn from "./SocialSignIn";
 import { api, loadData, Page } from "@/util";
 import user from "@/validators/user";
 import { useToast } from "@/hooks";
@@ -208,13 +209,6 @@ export default function SignUp({
     setFocus,
     formState: { errors, isDirty },
   } = form;
-  const [providers, setProviders] = React.useState([]);
-
-  React.useEffect(() => {
-    api.post("/api/v1/auth/socials", {}).then((resp) => {
-      setProviders(resp?.data ?? []);
-    });
-  }, []);
   React.useEffect(() => {
     if (emailUnverified) {
       setStatus("unverified");
@@ -256,13 +250,6 @@ export default function SignUp({
     if ("email" in query) userInfo.mail = query?.email;
     form.reset(userInfo);
   }, [query]);
-  const authProviders = providers.map((provider) => ({
-    label: `Continue with ${
-      provider.name.charAt(0).toUpperCase() + provider.name.slice(1)
-    }`,
-    icon: providerIcons[provider.name?.toLowerCase()] || <LoginIcon />,
-    href: provider.authUrl,
-  }));
   
   React.useEffect(() => {
     if (!telemetry) return;
@@ -1050,81 +1037,7 @@ export default function SignUp({
                       </motion.div>
                       {!query?.email && (
                         <>
-                          {authProviders.length > 0 && (
-                            <Box
-                              sx={{
-                                width: "100%",
-                                mt: 1,
-                                p: 2.5,
-                                border: "1px solid",
-                                borderColor: "divider",
-                                borderRadius: 3,
-                                bgcolor: "#fafbfc",
-                              }}
-                            >
-                              <Typography
-                                sx={{
-                                  textAlign: "center",
-                                  fontWeight: 600,
-                                  color: "text.secondary",
-                                  mb: 2,
-                                }}
-                              >
-                                Continue with
-                              </Typography>
-                              <Grid container spacing={1.5}>
-                                {authProviders.map((provider, i) => (
-                                  <MotionGrid
-                                    initial={{ opacity: 0, y: 12 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.08 }}
-                                    key={i}
-                                    size={
-                                      authProviders.length <= 2
-                                        ? { xs: 12 }
-                                        : authProviders.length === 3
-                                          ? { xs: 12, sm: 4 }
-                                          : { xs: 6, sm: 3 }
-                                    }
-                                  >
-                                    <motion.div
-                                      whileHover={{ y: -2 }}
-                                      whileTap={{ scale: 0.98 }}
-                                    >
-                                      <Page.MuiButton
-                                        component="a"
-                                        href={provider.href}
-                                        fullWidth
-                                        variant="outlined"
-                                        startIcon={provider.icon}
-                                        sx={{
-                                          height: 48,
-                                          borderRadius: 2.5,
-                                          textTransform: "none",
-                                          fontWeight: 600,
-                                          bgcolor: "#fff",
-                                          borderColor: "#d9e2ec",
-                                          "&:hover": {
-                                            bgcolor: "#fff",
-                                            borderColor: "secondary.main",
-                                            boxShadow:
-                                              "0 8px 20px rgba(0,0,0,.08)",
-                                            transform: "translateY(-2px)",
-                                          },
-                                        }}
-                                      >
-                                        {provider.name ??
-                                          provider.label.replace(
-                                            "Continue with ",
-                                            "",
-                                          )}
-                                      </Page.MuiButton>
-                                    </motion.div>
-                                  </MotionGrid>
-                                ))}
-                              </Grid>
-                            </Box>
-                          )}
+                          <Grid size={12}><SocialSignIn label="Or sign up with" /></Grid>
                         </>
                       )}
                       <Grid size={12} mt={2}>
