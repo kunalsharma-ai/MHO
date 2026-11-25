@@ -23,6 +23,10 @@ services:
       - mho
   backend:
     image: registry.sampledge.com/turn2opinion/backend:1.0.1
+    # `docker compose build backend` builds this repo's API (stages: base, build, development, production).
+    build:
+      context: Project/backend
+      target: development
     restart: unless-stopped
     networks:
       - db
