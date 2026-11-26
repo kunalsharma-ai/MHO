@@ -16,10 +16,20 @@ export function inkLetters(svg) {
     return svg.replace(/<path fill="#[0-9a-fA-F]{3,8}"/g, () => `<path fill="${INK[i++ % INK.length]}"`);
 }
 
-export async function issueChallenge() {
+// mode "image": letters drawn as SVG paths. mode "math": a small sum as plain text ("What is 7 + 5?"), the accessible
+// choice behind "Use a maths question" on the sign-up and log-in forms. Both are checked the same way, once, on the server.
+export async function issueChallenge(mode = "image") {
+    if (mode === "math") {
+        const a = 2 + Math.floor(Math.random() * 9), b = 1 + Math.floor(Math.random() * 9);
+        const text = String(a + b);
+        const doc = await CaptchaChallenge.create({ answerHash: hashSecret(text), expiresAt: new Date(Date.now() + TTL) });
+        const out = { id: String(doc._id), question: `${a} + ${b}`, mode: "math", expiresIn: TTL / 1000 };
+        if (process.env.NODE_ENV === "test") out.testAnswer = text;
+        return out;
+    }
     const c = svgCaptcha.create({ size: 5, noise: 3, color: true, ignoreChars: "0oO1iIlL", width: 180, height: 60 });
     const doc = await CaptchaChallenge.create({ answerHash: hashSecret(c.text.toLowerCase()), expiresAt: new Date(Date.now() + TTL) });
-    const out = { id: String(doc._id), svg: inkLetters(c.data), expiresIn: TTL / 1000 };
+    const out = { id: String(doc._id), svg: inkLetters(c.data), mode: "image", expiresIn: TTL / 1000 };
     if (process.env.NODE_ENV === "test") out.testAnswer = c.text; // automated tests only; never set NODE_ENV=test in production
     return out;
 }

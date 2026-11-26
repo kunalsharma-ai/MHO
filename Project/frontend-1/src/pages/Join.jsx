@@ -3,7 +3,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import ProfileAvatar from '../components/ProfileAvatar.jsx';
 import { Logo } from '../components/Brand.jsx';
-import { Field, CountrySelect, PhoneInput, DobPicker, Captcha } from '../components/FormKit.jsx';
+import { Field, CountrySelect, PhoneInput, DobPicker, HumanCheck } from '../components/FormKit.jsx';
+import { accountCall } from '../components/AccountKit.jsx';
 import { LiveZone } from '../components/ui.jsx';
 import SocialLogin from '../components/SocialLogin.jsx';
 import { buildSignupAnswers } from '../data/dbMap.js';
@@ -217,18 +218,6 @@ const browserTimezone = () => {
   try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch { return 'UTC'; }
 };
 
-async function categoryForAge(name, dob) {
-  const res = await apiRequest('POST', API.category, { showOnRegistration: true });
-  const list = res.ok && Array.isArray(res.data?.data) ? res.data.data : [];
-  const rule = list.find((c) => c.name === name)?.age;
-  const age = ageFrom(dob);
-  if (!rule || age === null || Number.isNaN(age)) return name;
-  if (rule.min > age) return rule.underfall || '';
-  if (rule.max < age) return rule.overfall || '';
-  return name;
-}
-
-
 /** Role card of a backend category name ('' when it cannot be told). */
 function roleFromCategory(category) {
   const c = String(category || '').trim().toLowerCase();
@@ -345,7 +334,7 @@ export default function Join({ mode = 'signup' }) {
   const [thanksLeft, setThanksLeft] = useState(THANKS_SECONDS);
   const [f, setF] = useState(EMPTY);
   const [err, setErr] = useState({});
-  const [human, setHuman] = useState(false);
+  const [cap, setCap] = useState({ id: '', answer: '' }); // the human check: { id, answer }, checked on the server
   const [capKey, setCapKey] = useState(0);
   const [state, setState] = useState(complete ? 'loading' : 'form'); // loading | form | sending | done | rejected | rate
   const [alert, setAlert] = useState('');
@@ -499,12 +488,19 @@ export default function Join({ mode = 'signup' }) {
     return () => clearTimeout(t);
   }, [cooldown]);
 
+  // POST /api/v1/account/resend-verification: a new confirmation link (needs a fresh human check, same answer for every address)
   const resend = async () => {
     if (cooldown > 0) return;
-    setCooldown(RESEND_SECONDS);
+    if (!String(cap.answer || '').trim()) { setResendMsg('Please complete the human check first.'); return; }
     setResendMsg('');
-    const res = await apiRequest('POST', API.resend, { mail: f.email.trim().toLowerCase() });
-    setResendMsg(res.ok ? 'We sent the confirmation email again.' : res.data?.message || 'We could not resend the email. Please try again shortly.');
+    const res = await accountCall('POST', '/resend-verification', { email: f.email.trim().toLowerCase(), captcha: cap });
+    setCapKey((k) => k + 1);
+    if (res.code === 'CAPTCHA_FAILED') { setResendMsg('The human check did not match. Please try the new one.'); return; }
+    if (res.ok) setCooldown(RESEND_SECONDS);
+    setResendMsg(res.ok ? 'We sent the confirmation email again. Please check your inbox and spam folder.'
+      : res.status === 0 ? 'We could not reach the server. Check your connection and try again.'
+        : res.code === 'RATE_LIMITED' ? 'Too many requests. Please try again in an hour.'
+          : res.message || 'We could not resend the email. Please try again shortly.');
   };
 
   // the terms of the member's category (same rules as web-1's terms page: "accept all", required terms, Accept only when something changed)
@@ -531,7 +527,7 @@ export default function Join({ mode = 'signup' }) {
       const g = validateDob(f.dob); if (g) e.dob = g;
       need(e, 'gender');
       if (!complete) { // the last sign-up step: the human check and the consents that used to be the "Account" step
-        if (!human) e.captcha = 'Please complete the human check.';
+        if (!String(cap.answer || '').trim()) e.captcha = 'Please complete the human check.';
         if (!f.terms) e.terms = 'Please accept the Terms of Use to continue.';
         if (!f.privacy) e.privacy = 'Please agree to the Privacy Policy to continue.';
       }
@@ -708,32 +704,46 @@ export default function Join({ mode = 'signup' }) {
     if (msg) { setErr((x) => ({ ...x, email: msg })); return; }
     setState('sending');
     setAlert('');
-    const fail = (msg) => {
+    const fail = (msg, fieldErrors) => {
       setState('form');
       setAlert(msg);
-      setCapKey((k) => k + 1);
-      setHuman(false);
+      if (fieldErrors) setErr((x) => ({ ...x, ...fieldErrors }));
+      setCapKey((k) => k + 1); // every human check is spent on its first try
     };
-    const category = await categoryForAge(CATEGORY_BY_ROLE[f.role], f.dob);
-    if (!category) return fail('Based on the information provided, you are not eligible to register. Please contact support if you think this is a mistake.');
-    const payload = {
-      category,
-      name: { first: f.firstName.trim(), last: f.lastName.trim(), ...(f.middleName ? { middle: f.middleName } : {}) },
-      gender: backendGender(f.gender),
-      dob: dobToISO(f.dob),
-      mail: f.email.trim().toLowerCase(),
-      phone: phoneDigits(f.phoneCc, f.phone),
-      timezone: browserTimezone(),
-      address: [{ tag: 'home', country: f.country }],
-    };
+    // POST /api/v1/account/register: checks the human check on the server, creates the account (pending) and emails
+    // the confirmation link (double opt-in). The password is created from that link (/set-password).
+    const mail = f.email.trim().toLowerCase();
     const ref = referralCode();
-    if (ref) payload.referredBy = ref;
-    const res = await apiRequest('PUT', API.register, payload);
-    if (res.ok) forgetReferral();
+    const res = await accountCall('POST', '/register', {
+      segment: f.role,
+      firstName: f.firstName.trim(),
+      middleName: f.middleName || '',
+      lastName: f.lastName.trim(),
+      gender: backendGender(f.gender),
+      dob: f.dob,
+      email: mail,
+      phone: `+${phoneDigits(f.phoneCc, f.phone)}`,
+      phoneCountry: f.phoneCc || f.country,
+      country: f.country,
+      addressLater: true, // state, city and postal code are asked in the profile, as before
+      timezone: browserTimezone(),
+      ...(f.role === 'hcp' ? { screening: { worksInHealthcare: String(f.industry).toLowerCase(), clinician: String(f.clinician || '').toLowerCase() } } : {}),
+      marketingOptIn: f.updates === true,
+      captcha: cap,
+      website: f.website,
+      ...(ref ? { referredBy: ref } : {}),
+    });
     if (!res.ok) {
-      const msg = res.data?.message || '';
-      return fail(res.status === 0 ? 'We could not reach the server. Check your connection and try again.' : /duplicate/i.test(msg) ? 'An account with this email already exists. Try logging in instead.' : msg || 'Something went wrong. Please try again in a moment.');
+      const map = { firstName: 'firstName', lastName: 'lastName', email: 'email', phone: 'phone', country: 'country', dob: 'dob', captcha: 'captcha' };
+      const fe = Object.fromEntries(Object.entries(res.errors || {}).filter(([k]) => map[k]).map(([k, m]) => [map[k], m]));
+      if (res.status === 0) return fail('We could not reach the server. Check your connection and try again.');
+      if (res.code === 'CAPTCHA_FAILED') return fail('', { captcha: 'The human check did not match. Please try the new one.' });
+      if (res.code === 'NOT_ELIGIBLE' && f.role === 'hcp' && /criteria/i.test(res.message)) { setState('rejected'); setCount(10); return; }
+      if (res.code === 'RATE_LIMITED') return fail('Too many sign-up attempts. Please wait a few minutes and try again.');
+      return fail(res.message || 'Something went wrong. Please try again in a moment.', fe);
     }
+    forgetReferral();
+    const payload = { mail };
     // The questions answered here wait in this browser; they are saved to the account at the first log-in (pendingAnswers.js).
     const answers = buildSignupAnswers(f);
     if (Object.keys(answers).length) savePendingAnswers(payload.mail, answers);
@@ -741,6 +751,7 @@ export default function Join({ mode = 'signup' }) {
     pop(0.18);
     setCooldown(RESEND_SECONDS);
     setState('done');
+    requestAnimationFrame(goTop); // the confirmation card is shorter than the form: bring it into view
   };
 
   const pickRole = (id) => { setF((s) => ({ ...s, role: id, dbq: {} })); clearErr('role'); };
@@ -844,6 +855,7 @@ export default function Join({ mode = 'signup' }) {
                 <li>Log in, accept the terms and complete your profile</li>
                 <li>Watch for your first invitation</li>
               </ol>
+              {cooldown <= 0 && <HumanCheck value={cap} onChange={setCap} resetKey={capKey} />}
               <button type="button" className="btn btn-ghost" onClick={resend} disabled={cooldown > 0}><span className="btn-label">{cooldown > 0 ? `Resend email in ${cooldown}s` : unverified ? 'Send me a new confirmation email' : 'Resend confirmation email'}</span></button>
               {resendMsg && <p className="step-note" role="status">{resendMsg}</p>}
               <Link to="/how-it-works" className="btn btn-ghost"><span className="btn-label">What happens next</span><Icon name="arrow" size={18} /></Link>
@@ -924,7 +936,7 @@ export default function Join({ mode = 'signup' }) {
                     {!complete && (
                       <>
                         <p className="step-note"><Icon name="mail" size={14} /> We will email you a confirmation link. After you confirm, you create your password.</p>
-                        <Captcha onChange={setHuman} invalid={!!err.captcha} resetKey={capKey} />
+                        <HumanCheck value={cap} onChange={(c) => { setCap(c); if (c.answer) clearErr('captcha'); }} invalid={!!err.captcha} resetKey={capKey} />
                         <Err msg={err.captcha} />
                         <div className="consents">
                           <label className={err.terms ? 'has-error' : ''}><input type="checkbox" checked={f.terms} onChange={set('terms')} /><span className="cbox" aria-hidden="true"><Icon name="check" size={12} stroke={3.5} /></span>I am 18+ and accept the <a href={toHref('/terms')} target="_blank" rel="noopener">Terms of Use</a> *</label>

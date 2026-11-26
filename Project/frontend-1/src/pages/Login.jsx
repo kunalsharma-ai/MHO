@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import { HeartMark } from '../components/Brand.jsx';
-import { Field, PasswordField } from '../components/FormKit.jsx';
-import { ServerCaptcha, accountCall, NETWORK_ERROR } from '../components/AccountKit.jsx';
+import { Field, PasswordField, HumanCheck } from '../components/FormKit.jsx';
+import { accountCall, NETWORK_ERROR } from '../components/AccountKit.jsx';
 import { LiveZone } from '../components/ui.jsx';
 import SocialLogin from '../components/SocialLogin.jsx';
 import { Link } from '../router.jsx';
@@ -11,7 +11,7 @@ import { validateEmail, auth, track } from '../utils/helpers.js';
 import { syncPendingAnswers } from '../utils/pendingAnswers.js';
 import { useGuestOnly } from '../utils/session.js';
 import Persona from '../components/Persona.jsx';
-import PanelTabs from '../components/PanelTabs.jsx';
+import { PanelPicker } from '../components/R8.jsx';
 import { visit } from '../utils/dismissed.js';
 
 // Each panel restyles the whole log-in page: its own palette, scene and floating details.
@@ -57,7 +57,7 @@ export default function Login() {
     const x = {};
     const em = validateEmail(email); if (em) x.email = em;
     if (!pw) x.password = 'Please enter your password.';
-    if (!cap.answer.trim()) x.captcha = 'Please type the security code.';
+    if (!cap.answer.trim()) x.captcha = 'Please complete the human check.';
     setErr(x);
     if (Object.keys(x).length) return;
     setState('sending');
@@ -71,7 +71,7 @@ export default function Login() {
       setState('form');
       setCapKey((k) => k + 1);
       if (res.status === 0) setAlert(NETWORK_ERROR);
-      else if (res.code === 'CAPTCHA_FAILED') setErr({ captcha: 'That security code was not right. Try the new one.' });
+      else if (res.code === 'CAPTCHA_FAILED') setErr({ captcha: 'The human check did not match. Please try the new one.' });
       else if (res.code === 'EMAIL_UNVERIFIED') { setUnverified(true); setAlert('Please confirm your email address first. Open the link we emailed you, or ask for a new one below.'); }
       else if (res.code === 'RATE_LIMITED') setAlert('Too many attempts. Please wait a few minutes and try again.');
       else if (res.code === 'ACCOUNT_INACTIVE') setAlert('This account is not active. Please contact support.');
@@ -91,12 +91,12 @@ export default function Login() {
 
   const [resendState, setResendState] = useState('');
   const resend = async () => {
-    if (!cap.answer.trim()) { setErr({ captcha: 'Type the new security code first, then ask for the link.' }); return; }
+    if (!cap.answer.trim()) { setErr({ captcha: 'Complete the new human check first, then ask for the link.' }); return; }
     setErr({});
     setResendState('sending');
     const r = await accountCall('POST', '/resend-verification', { email: email.trim().toLowerCase(), captcha: cap });
     setCapKey((k) => k + 1);
-    if (r.code === 'CAPTCHA_FAILED') { setResendState(''); setErr({ captcha: 'That security code was not right. Try the new one.' }); return; }
+    if (r.code === 'CAPTCHA_FAILED') { setResendState(''); setErr({ captcha: 'The human check did not match. Please try the new one.' }); return; }
     setResendState(r.ok ? 'sent' : ''); // same answer whatever the account state, so nobody can probe which emails exist
     if (!r.ok) setAlert(r.status === 0 ? NETWORK_ERROR : r.code === 'RATE_LIMITED' ? 'Too many requests. Please try again in an hour.' : r.message);
   };
@@ -178,7 +178,7 @@ export default function Login() {
             <h1>{view === 'forgot' ? 'Reset your password' : 'Welcome back'}</h1>
             <p>{view === 'forgot' ? 'Enter your registered email and we will send you a link to create a new password.' : 'Log in with your email and password.'}</p>
           </div>
-          {view === 'login' && state !== 'done' && <PanelTabs value={panel} onChange={setPanel} label="I am logging in as" lines={Object.fromEntries(Object.entries(SCENES).map(([k, v]) => [k, v.line]))} />}
+          {view === 'login' && state !== 'done' && <PanelPicker value={panel} onChange={setPanel} label="I am logging in as" />}
           {state === 'done' ? (
             <div className="lc-done" role="status">
               <Icon name="check" size={30} stroke={3} />
@@ -218,7 +218,8 @@ export default function Login() {
                 <label className="lc-remember"><input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} /><span aria-hidden="true" />Keep me signed in</label>
                 <a href="/login" onClick={openForgot}>Forgot password?</a>
               </div>
-              <ServerCaptcha value={cap} onChange={setCap} error={err.captcha} resetKey={capKey} />
+              <HumanCheck value={cap} onChange={setCap} invalid={!!err.captcha} resetKey={capKey} />
+              {err.captcha && <p className="field-error" role="alert"><Icon name="info" size={14} /> {err.captcha}</p>}
               {alert && <p className="form-alert" role="alert">{alert}</p>}
               {unverified && (
                 <button type="button" className="btn btn-ghost btn-block" onClick={resend} disabled={resendState !== ''}>

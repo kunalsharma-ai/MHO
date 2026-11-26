@@ -54,6 +54,11 @@ export default mongooseModel(
       type: String,
       enum: ["Male", "Female", "Other"],
     },
+    marketingOptIn: {
+      // "Send me occasional tips and community news" at sign-up; unticked by default
+      type: Boolean,
+      default: false,
+    },
     postalCodeApplicable: {
       // false when the member ticked "Postal code not applicable" at sign-up
       type: Boolean,

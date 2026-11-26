@@ -125,4 +125,4 @@
 .social-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
 
 .q-choice label .ck svg { color: inherit; }
-.q-choice label.on .ck svg { color: inherit; }
+.q-choice label.on .ck svg { color: inherit; }.captcha-wait { color: var(--muted, #64748b); font-size: .85rem; }

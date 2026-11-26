@@ -5,8 +5,8 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import Icon from './Icon.jsx';
 import { Flag } from './ui.jsx';
 import { ALL_COUNTRIES, countryByCode } from '../data/countries.js';
-import { passwordStrength } from '../utils/helpers.js';
-import { MIN_AGE } from '../config/site.js';
+import { passwordStrength, apiRequest } from '../utils/helpers.js';
+import { MIN_AGE, API } from '../config/site.js';
 
 export function Field({ label, error, hint, required, children, htmlFor, className = '', icon }) {
   return (
@@ -365,6 +365,86 @@ export function Captcha({ onChange, invalid, resetKey = 0 }) {
         />
         <span className="captcha-tick" aria-hidden="true"><Icon name="check" size={18} stroke={3} /></span>
       </div>
+    </div>
+  );
+}
+
+
+/**
+ * HumanCheck: the classic "Human check" box of the sign-up and log-in forms (picture code, or "Use a maths question"),
+ * now checked on the server. GET /api/v1/account/captcha[?mode=math] gives { id, svg | question }; the form sends
+ * { id, answer } and the API spends it once. value / onChange carry that { id, answer } pair.
+ */
+export function HumanCheck({ value, onChange, invalid, resetKey = 0 }) {
+  const uid = useId();
+  const [mode, setMode] = useState('image');
+  const [img, setImg] = useState('');
+  const [question, setQuestion] = useState('');
+  const [state, setState] = useState('loading'); // loading | ready | error
+  const [why, setWhy] = useState('');
+  const seq = useRef(0);
+  const base = String(API.account || '/api/v1/account').replace(/\/$/, '');
+
+  const load = async (m = mode, retried = false) => {
+    const mine = ++seq.current;
+    setState('loading');
+    setWhy('');
+    onChange?.({ id: '', answer: '' }); // an old id is never sent with a new challenge
+    const res = await apiRequest('GET', `${base}/captcha${m === 'math' ? '?mode=math' : ''}`);
+    if (mine !== seq.current) return;
+    const d = res.data?.data;
+    if (!res.ok || !d?.id || (m === 'math' ? !d.question : !d.svg)) {
+      if (!retried && res.status !== 429) { setTimeout(() => { if (mine === seq.current) load(m, true); }, 1200); return; }
+      setWhy(res.status === 429 ? 'Too many requests. Please wait a minute and try again.'
+        : res.status === 0 ? 'We could not reach the server. Check your connection and try again.'
+          : 'We could not load the human check. Press the refresh button to try again.');
+      setState('error');
+      return;
+    }
+    if (m === 'math') setQuestion(d.question);
+    else setImg(`data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(d.svg)))}`);
+    onChange?.({ id: d.id, answer: '' });
+    setState('ready');
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { load(mode); }, [resetKey]);
+
+  const switchMode = () => { const m = mode === 'image' ? 'math' : 'image'; setMode(m); load(m); };
+  const answer = value?.answer || '';
+  return (
+    <div className={`captcha ${invalid || state === 'error' ? 'invalid' : ''}`}>
+      <div className="captcha-top">
+        <span className="captcha-badge"><Icon name="shieldCheck" size={16} /> Human check</span>
+        <button type="button" className="captcha-switch" onClick={switchMode}>
+          {mode === 'image' ? 'Use a maths question' : 'Use an image code'}
+        </button>
+      </div>
+      <div className="captcha-body">
+        {state === 'ready' && mode === 'image' ? (
+          <img className="captcha-canvas" src={img} alt="Security code: type the characters shown. Switch to the maths question if you cannot read it." style={{ width: 170, height: 52 }} />
+        ) : state === 'ready' ? (
+          <div className="captcha-math" aria-live="polite">What is <b>{question}</b>?</div>
+        ) : (
+          <div className="captcha-math captcha-wait" aria-live="polite">{state === 'error' ? 'Not loaded' : 'Loading…'}</div>
+        )}
+        <button type="button" className="captcha-refresh" onClick={() => load(mode)} aria-label="Get a new challenge">
+          <Icon name="refresh" size={18} />
+        </button>
+        <input
+          id={uid}
+          value={answer}
+          onChange={(e) => onChange?.({ ...(value || {}), answer: e.target.value.slice(0, 8) })}
+          placeholder={mode === 'image' ? 'Type the code' : 'Answer'}
+          aria-label={mode === 'image' ? 'Type the characters shown' : `Answer: what is ${question}`}
+          autoComplete="off"
+          autoCapitalize="off"
+          spellCheck="false"
+          inputMode={mode === 'math' ? 'numeric' : 'text'}
+          maxLength={8}
+          disabled={state !== 'ready'}
+        />
+      </div>
+      {why && <p className="field-error" role="alert"><Icon name="info" size={14} /> {why}</p>}
     </div>
   );
 }

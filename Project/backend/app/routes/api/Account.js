@@ -1,6 +1,6 @@
 // Registration, email verification, password creation/reset and login for the 2026-11 redesign.
 //
-//   GET  /api/v1/account/captcha                     new server-side CAPTCHA (SVG)
+//   GET  /api/v1/account/captcha[?mode=math]         new server-side CAPTCHA (SVG letters, or a small sum)
 //   GET  /api/v1/account/location/countries          countries with flag, dialling code, postal-code rule
 //   GET  /api/v1/account/location/:country/states    states / provinces
 //   GET  /api/v1/account/location/:country/:state/cities
@@ -50,7 +50,7 @@ const GENERIC_EMAIL_SENT = "If an account needs it, we’ve sent an email with a
 /* ---------- CAPTCHA and location lists ---------- */
 router.get("/captcha", limits.captcha, wrap(async (req, res) => {
     res.set("Cache-Control", "no-store");
-    ok(res, "", await issueChallenge());
+    ok(res, "", await issueChallenge(req.query.mode === "math" ? "math" : "image"));
 }));
 
 const COUNTRIES = Object.values(world)
@@ -137,6 +137,8 @@ router.post("/register", limits.register, wrap(async (req, res) => {
         timezone: v.timezone,
         address: [{ tag: "home", country: v.country.toLowerCase(), state: v.state.toLowerCase(), city: v.city, zipcode: v.postalCode }],
         postalCodeApplicable: !v.postalCodeNotApplicable,
+        ...(v.gender ? { gender: v.gender } : {}),
+        marketingOptIn: v.marketingOptIn,
         referredBy: /^[\w-]{1,64}$/.test(String(req.body.referredBy || "")) ? String(req.body.referredBy) : null,
         accountStatus: "pending",
         origin: req.origin,
