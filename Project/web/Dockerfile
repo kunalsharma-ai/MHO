@@ -23,6 +23,8 @@ RUN npm install
 
 COPY . .
 
+# public/ is gitignored at the repo root, so a clean checkout has none and the production COPY below failed.
+RUN mkdir -p public
 RUN npm run build
 # RUN npm ci --omit=dev
 

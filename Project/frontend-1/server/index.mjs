@@ -13,7 +13,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { mkdir, readFile, rename, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { isPortalPath, isSharedPath, localFile, proxyToPortal } from './portal-proxy.mjs';
+import { isPortalPath, isSharedPath, localFile, proxyToPortal } from './proxy.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ENV = process.env;
