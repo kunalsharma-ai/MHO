@@ -34,6 +34,9 @@ services:
     networks:
       - db
       - mho
+    # MHO_TRUSTED_PROXIES (in the env file): proxies allowed to report the visitor's address for rate limits and
+    # audit logs (utils/clientIp.js). Default "loopback,uniquelocal" = only this gateway on the docker network.
+    # If a CDN or load balancer sits in front of the gateway, add its address ranges there.
     env_file:
       - ./environment/${PROJECT}.env
     container_name: ${PROJECT}-api-auth
@@ -52,7 +55,11 @@ services:
     volumes:
       - ./Project/mailer:/app/mailer
     networks:
-      - mho
+      mho:
+        # The API calls the template service as http://api-email-template:8080 (utils/getMailer.js). Without this
+        # alias the name did not resolve and invites failed with "getaddrinfo EAI_AGAIN api-email-template" (#35).
+        aliases:
+          - api-email-template
   db:
     image: registry.sampledge.com/db/mongo
     container_name: ${PROJECT}-mongodb

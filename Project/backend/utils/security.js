@@ -1,7 +1,7 @@
 // Request hardening shared by every member route (added Nov 2026, "keep the portal safe from hackers and bots").
 //   securityHeaders  browser security headers on every answer, and no caching of API answers
 //   sanitizeInput    drops Mongo operators that run code, reach other collections or scan text from bodies and queries
-//   clientIp         the visitor's address as the gateway saw it (nginx sets X-Real-IP to $remote_addr)
+//   clientIp         the visitor's address, trusting forwarding headers only from MHO_TRUSTED_PROXIES (clientIp.js)
 //   limit            a per-address rate limit with a friendly 429
 import rateLimit from "express-rate-limit";
 
@@ -51,8 +51,8 @@ export function sanitizeInput(req, res, next) {
     next();
 }
 
-export const clientIp = (req) =>
-    String(req.headers["x-real-ip"] || req.socket?.remoteAddress || req.ip || "").trim();
+import { clientIp } from "./clientIp.js";
+export { clientIp };
 
 export const limit = (max, minutes, message = "Too many attempts. Please wait a few minutes and try again.") => rateLimit({
     windowMs: minutes * 60 * 1000, max, standardHeaders: true, legacyHeaders: false, validate: false,

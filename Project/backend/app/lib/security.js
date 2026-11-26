@@ -35,5 +35,5 @@ export function passwordProblem(password, { email } = {}) {
     return "";
 }
 
-/** The caller's IP as the gateway reports it (express-pureip sets clientIP). */
-export const clientIp = (req) => req.clientIP || req.ip || req.socket?.remoteAddress || "";
+/** The caller's IP, read only through proxies listed in MHO_TRUSTED_PROXIES (see utils/clientIp.js). */
+export { clientIp } from "../../utils/clientIp.js";
