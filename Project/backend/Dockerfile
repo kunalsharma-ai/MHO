@@ -20,8 +20,8 @@ COPY package.json package-lock.json* ./
 
 FROM base AS build
 RUN npm ci || npm install
-COPY app ./app
-COPY utils ./utils
+# The whole folder (app, utils, package files); .dockerignore leaves out node_modules and logs.
+COPY . .
 # app/utils is a link to ../utils. Docker copies it as it is; rebuild it in case a checkout made it a plain file.
 RUN rm -rf app/utils && ln -s ../utils app/utils
 # The test suite needs MongoDB, so it is not run here. Keep only what production needs.
@@ -42,6 +42,7 @@ WORKDIR /app
 RUN chown node:node /app
 ENV NODE_ENV=production
 ENV port=3000
+# Copy the built folder: it holds node_modules, which a plain `COPY . .` here would not (they are dockerignored).
 COPY --from=build --chown=node:node /app ./
 USER node
 EXPOSE 3000
