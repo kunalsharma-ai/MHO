@@ -31,6 +31,7 @@ import {
   YouTube,
   Instagram,
 } from "@mui/icons-material";
+import SocialSignIn from "./SocialSignIn";
 import { api, loadData, Page, submitWithAjax } from "@/util";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
@@ -213,12 +214,6 @@ function LoginCard({ onClose, setCardType, setOpenSignUp, socials }) {
   const [btnDisabled, setBtnDisabled] = React.useState(true);
   const [captchaTries, setCaptchaTries] = React.useState(0);
 
-  const [providers, setProviders] = React.useState([]);
-  React.useEffect(() => {
-    api.post("/api/v1/auth/socials", {}).then((resp) => {
-      setProviders(resp?.data ?? []);
-    });
-  }, []);
 
   React.useEffect(() => {
     if (!telemetry) return;
@@ -245,13 +240,6 @@ function LoginCard({ onClose, setCardType, setOpenSignUp, socials }) {
     microsoft: <Microsoft />,
   };
 
-  const authProviders = providers.map((provider) => ({
-    label: `Continue with ${
-      provider.name.charAt(0).toUpperCase() + provider.name.slice(1)
-    }`,
-    icon: providerIcons[provider.name?.toLowerCase()] || <LoginIcon />,
-    href: provider.authUrl,
-  }));
 
   return (
     <Box
@@ -833,95 +821,7 @@ function LoginCard({ onClose, setCardType, setOpenSignUp, socials }) {
             </Page.MuiButton>
           </motion.div>
 
-          {authProviders.length > 0 && (
-            <>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 2,
-                  my: 1,
-                }}
-              >
-                <Box
-                  sx={{
-                    flex: 1,
-                    height: "1px",
-                    minHeight: "1px",
-                    alignSelf: "center",
-                    bgcolor: "divider",
-                  }}
-                />
-
-                <Typography
-                  sx={{
-                    px: 1,
-                    fontSize: 13,
-                    color: "text.secondary",
-                    fontWeight: 500,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  or continue with
-                </Typography>
-
-                <Box
-                  sx={{
-                    flex: 1,
-                    height: "1px",
-                    minHeight: "1px",
-                    alignSelf: "center",
-                    bgcolor: "divider",
-                  }}
-                />
-              </Box>
-
-              <Grid container spacing={1.5}>
-                {authProviders.map((provider, i) => (
-                  <MotionGrid
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.08 }}
-                    key={i}
-                    size={
-                      authProviders.length <= 2
-                        ? { xs: 12 }
-                        : authProviders.length === 3
-                          ? { xs: 12, sm: 4 }
-                          : { xs: 6, sm: 3 }
-                    }
-                  >
-                    <Page.MuiButton
-                      component="a"
-                      href={provider.href}
-                      fullWidth
-                      startIcon={provider.icon}
-                      variant="outlined"
-                      sx={{
-                        height: 48,
-                        borderRadius: 3,
-                        textTransform: "none",
-                        fontWeight: 600,
-                        bgcolor: "#fff",
-                        borderColor: "#d9e2ec",
-                        color: "text.primary",
-
-                        "&:hover": {
-                          bgcolor: "#fff",
-                          borderColor: "secondary.main",
-                          transform: "translateY(-2px)",
-                          boxShadow: "0 10px 22px rgba(0,0,0,.08)",
-                        },
-                      }}
-                    >
-                      {provider.name ??
-                        provider.label.replace("Continue with ", "")}
-                    </Page.MuiButton>
-                  </MotionGrid>
-                ))}
-              </Grid>
-            </>
-          )}
+          <SocialSignIn label="Or log in with" />
 
           <Box
             sx={{
