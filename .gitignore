@@ -15,7 +15,8 @@ Project/api/auth/app/logs
 tasks
 logs
 logs/activities
-uploads# The profile section packages load these at runtime (data, translations, images, fonts); the web image builds from them.
+uploads
+# The profile section packages load these at runtime (data, translations, images, fonts); the web image builds from them.
 !Project/sections/*/public
 Project/sections/*/dist
 Project/sections/*/dist-embed
