@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import fileUpload from "express-fileupload";
-import pureIP from "express-pureip";
+import { realIp } from "../utils/clientIp.js";
 import mongoose from "mongoose";
 import "./events/index.js";
 import {
@@ -43,7 +43,7 @@ import {
             express.urlencoded({
                 extended: true
             }),
-            pureIP,
+            realIp,
             fileUpload(),
             setOrigin,
             routes
