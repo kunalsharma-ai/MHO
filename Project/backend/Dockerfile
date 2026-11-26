@@ -9,8 +9,9 @@
 #   development  every dependency plus nodemon; restarts on file changes (mount app/ and utils/ over /app)
 #   production   a small image with the built folder from "build", run as the node user
 #
-# (The live stack currently runs the prebuilt registry.sampledge.com/turn2opinion/backend:1.0.1 image,
-#  which does not include the changes in this folder.)
+# docker-compose.yml builds the development stage as mho-api:dev on every `docker compose up` (pull_policy: build).
+# Before that it ran the prebuilt registry.sampledge.com/turn2opinion/backend:1.0.1 image, which lacks this
+# folder's routes (e.g. /api/v1/account/captcha, used by the site's login and sign-up).
 
 FROM node:22-alpine AS base
 WORKDIR /app
