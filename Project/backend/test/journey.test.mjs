@@ -430,6 +430,66 @@ test("dashboard: each profile section is counted once, even where the bank holds
     assert.equal(new Set(names).size, names.length, `duplicate sections: ${names.join(", ")}`);
 });
 
+// The classic sign-up form (restored 2026-11-26) asks for the country only, gender, and the news opt-in.
+const classic = (over = {}) => {
+    const { state, city, postalCode, ...rest } = person({ addressLater: true, lastName: "Rao", gender: "Female", marketingOptIn: true, ...over });
+    return rest;
+};
+
+test("classic sign-up: country only (state, city, postal code later), gender and news opt-in are stored", async () => {
+    const p = classic();
+    const r = await call("POST", "/account/register", { ...p, captcha: await captcha() });
+    assert.equal(r.status, 200, JSON.stringify(r.body));
+    const u = await db.collection("User").findOne({ mail: p.email });
+    assert.equal(u.gender, "Female");
+    assert.equal(u.marketingOptIn, true);
+    assert.equal(u.address[0].country, "in");
+    assert.equal(u.accountStatus, "pending");
+    // double opt-in: the confirmation mail is sent, and login waits for it
+    const [mail] = await outbox(p.email);
+    assert.equal(mail.template, "respondent");
+    const blocked = await call("POST", "/account/login", { email: p.email, password: PASSWORD, captcha: await captcha() });
+    assert.equal(blocked.body.code, "EMAIL_UNVERIFIED");
+    const s = await call("POST", "/account/set-password", { ...linkFrom(mail), password: PASSWORD, confirmPassword: PASSWORD });
+    assert.equal(s.status, 200, JSON.stringify(s.body));
+    const l = await call("POST", "/account/login", { email: p.email, password: PASSWORD, captcha: await captcha() });
+    assert.equal(l.status, 200, JSON.stringify(l.body));
+});
+
+test("classic sign-up: a state or postal code that is sent is still checked; without addressLater they stay required", async () => {
+    const bad = await call("POST", "/account/register", { ...classic(), state: "ZZ", postalCode: "12", captcha: await captcha() });
+    assert.equal(bad.status, 422);
+    assert.ok(bad.body.errors.state && bad.body.errors.postalCode, JSON.stringify(bad.body.errors));
+    const { addressLater, ...strict } = classic();
+    const r = await call("POST", "/account/register", { ...strict, captcha: await captcha() });
+    assert.equal(r.status, 422);
+    assert.ok(r.body.errors.state, JSON.stringify(r.body.errors));
+});
+
+test("captcha: the maths question is checked on the server once, like the picture code", async () => {
+    const c = (await call("GET", "/account/captcha?mode=math")).body.data;
+    assert.match(c.question, /^\d+ \+ \d+$/);
+    assert.equal(c.svg, undefined);
+    const [a, b] = c.question.split(" + ").map(Number);
+    assert.equal(String(a + b), c.testAnswer);
+    const wrong = await call("POST", "/account/register", { ...classic(), captcha: { id: c.id, answer: String(a + b + 1) } });
+    assert.equal(wrong.body.code, "CAPTCHA_FAILED");
+    const c2 = (await call("GET", "/account/captcha?mode=math")).body.data;
+    const p = classic();
+    const ok = await call("POST", "/account/register", { ...p, captcha: { id: c2.id, answer: c2.testAnswer } });
+    assert.equal(ok.status, 200, JSON.stringify(ok.body));
+    const reuse = await call("POST", "/account/register", { ...classic(), captcha: { id: c2.id, answer: c2.testAnswer } });
+    assert.equal(reuse.body.code, "CAPTCHA_FAILED");
+});
+
+test("classic sign-up: HCP screening answers go with it; 'No' is screened out", async () => {
+    const out = await call("POST", "/account/register", { ...classic({ segment: "hcp", screening: { worksInHealthcare: "no" } }), captcha: await captcha() });
+    assert.equal(out.body.code, "NOT_ELIGIBLE");
+    const p = classic({ segment: "hcp", screening: { worksInHealthcare: "yes", clinician: "no" } });
+    const r = await call("POST", "/account/register", { ...p, captcha: await captcha() });
+    assert.equal(r.status, 200, JSON.stringify(r.body));
+});
+
 // last: it uses up the CAPTCHA allowance for this minute, which every sign-up and login above needs
 test("rate limiting: the CAPTCHA endpoint answers 429 past its limit", async () => {
     let last;

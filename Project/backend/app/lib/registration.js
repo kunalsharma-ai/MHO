@@ -5,6 +5,7 @@ import { countryOf, statesOf, stateOf, postalPattern } from "./world.js";
 
 const NAME_RE = /^[\p{L}\p{M}][\p{L}\p{M}' .-]{0,59}$/u;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const GENDERS = { male: "Male", female: "Female", other: "Other", "non-binary / other": "Other", "non-binary": "Other" };
 const clean = (v) => (typeof v === "string" ? v.trim().replace(/\s+/g, " ") : "");
 
 export const HCP_SCREEN_OUT =
@@ -72,6 +73,11 @@ export function validateRegistration(body = {}) {
         clinician: clean(body.screening?.clinician).toLowerCase(),
         timezone: clean(body.timezone),
         parentEmail: clean(body.parentEmail).toLowerCase(), // members under 18 only
+        // The classic sign-up form (Kunal, 2026-11-26) asks country only; state, city and postal code are asked
+        // later in the profile. When it is set, those three are optional here, but still checked when sent.
+        addressLater: body.addressLater === true,
+        gender: GENDERS[clean(body.gender).toLowerCase()] || "",
+        marketingOptIn: body.marketingOptIn === true,
     };
 
     if (!v.firstName) errors.firstName = "Please enter your first name.";
@@ -100,16 +106,17 @@ export function validateRegistration(body = {}) {
 
     if (country) {
         const states = statesOf(v.country);
-        if (states.length) {
+        if (states.length && !(v.addressLater && !v.state)) {
             if (!v.state) errors.state = "Please choose your state or province.";
             else if (!stateOf(v.country, v.state)) errors.state = "Please choose a state or province from the list.";
         } else v.state = "";
         const st = stateOf(v.country, v.state);
-        if (st?.cities?.length) {
+        if (st?.cities?.length && !v.addressLater) {
             if (!v.city) errors.city = "Please choose your city.";
         }
         if (v.city.length > 100) errors.city = "Please shorten the city name.";
-        if (!v.postalCodeNotApplicable) {
+        if (v.addressLater && !v.postalCode) v.postalCode = "";
+        else if (!v.postalCodeNotApplicable) {
             const re = postalPattern(v.country);
             if (!v.postalCode) errors.postalCode = "Please enter your postal code, or tick “Postal code not applicable”.";
             else if (re ? !re.test(v.postalCode) : !/^[A-Z0-9][A-Z0-9 -]{1,11}$/.test(v.postalCode))
