@@ -205,11 +205,29 @@ test("HCP screening: not working in healthcare is screened out; a valid HCP stor
     assert.deepEqual(a.map((x) => x.question).sort(), ["clinician", "works_in_healthcare"]);
 });
 
-test("duplicate email: same generic answer, no second account", async () => {
+test("duplicate email, not confirmed yet: no second account, the confirmation link is sent again", async () => {
     const first = await register();
     const dup = await call("POST", "/account/register", { ...first.p, captcha: await captcha() });
     assert.equal(dup.status, 200);
+    assert.equal(dup.body.data.alreadyRegistered, true);
+    assert.equal(dup.body.data.unverified, true);
+    assert.match(dup.body.message, /already registered but not confirmed/);
+    assert.equal((await outbox(first.p.email)).length, 2);
     assert.equal(await db.collection("User").countDocuments({ mail: first.p.email }), 1);
+});
+
+test("duplicate email, active account (issue #37): 'already registered, please log in', no second account, no email", async () => {
+    const { p } = await activeMember();
+    const before = (await outbox(p.email)).length;
+    const dup = await call("POST", "/account/register", { ...p, email: p.email.toUpperCase(), captcha: await captcha() });
+    assert.equal(dup.status, 409);
+    assert.equal(dup.body.code, "EMAIL_TAKEN");
+    assert.equal(dup.body.errors.email, "This email is already registered. Please log in.");
+    assert.equal(await db.collection("User").countDocuments({ mail: p.email }), 1);
+    assert.equal((await outbox(p.email)).length, before);
+    // still behind the human check: a wrong answer says nothing about the address
+    const bot = await call("POST", "/account/register", { ...p, captcha: { id: "0".repeat(24), answer: "x" } });
+    assert.equal(bot.body.code, "CAPTCHA_FAILED");
 });
 
 /* ---------- email verification and password ---------- */
