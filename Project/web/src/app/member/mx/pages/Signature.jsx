@@ -22,7 +22,7 @@ const useSections = () => {
 
 /* ---------------------------------------------------------------- HCP: research console */
 export function ResearchConsole() {
-  const { d, member } = useMx();
+  const { d, member, balance } = useMx();
   const { secs, done, next, overall } = useSections();
   const counts = d?.surveys?.counts || {};
   const o = useCountUp(overall);
@@ -33,6 +33,7 @@ export function ResearchConsole() {
     ["STUDIES", String(counts.completed ?? 0), "surveys completed"],
     ["OPEN", String(counts.available ?? 0), "surveys for you now"],
     ["QS", String(Number(member?.qualityScore) || 0), "quality score"],
+    ["POINTS", balance.points.toLocaleString(), balance.pending > 0 ? `${balance.pending.toLocaleString()} awaiting approval` : "reward balance"],
   ];
   return (
     <section className="mx-sig mx-console" aria-labelledby="mx-con-h">
@@ -54,7 +55,7 @@ export function ResearchConsole() {
               <span className="code">S{String(i + 1).padStart(2, "0")}</span>
               <span className="nm">{sectionTitle(s)}</span>
               <span className="bar" aria-hidden="true"><i /></span>
-              <span className="val">{s.status === "complete" ? "DONE" : `${s.answered}/${s.total}`}</span>
+              <span className="val">{s.status === "complete" ? (Number(s.points) > 0 ? `+${s.points}` : "DONE") : `${s.answered}/${s.total}`}</span>
             </Link>
           </li>
         ))}
@@ -65,7 +66,7 @@ export function ResearchConsole() {
 
 /* ---------------------------------------------------------------- Caregiver: circle of care */
 export function CircleOfCare() {
-  const { panel, member, d } = useMx();
+  const { panel, member, d, balance } = useMx();
   const { secs, done, next } = useSections();
   if (!secs.length) return null;
   const n = secs.length;
@@ -88,7 +89,7 @@ export function CircleOfCare() {
             );
           })}
         </svg>
-        <div className="mid"><b>{done}</b><small>of {n}</small><em>{name}</em></div>
+        <div className="mid"><b>{done}</b><small>of {n}</small><em>{name}</em>{balance.points > 0 && <span className="pts"><Icon name="coin" size={11} />{balance.points.toLocaleString()} pts</span>}</div>
       </div>
       <div className="txt">
         <span className="mx-eyebrow">Your circle of care</span>
@@ -97,7 +98,7 @@ export function CircleOfCare() {
         <ul>
           {secs.map((s, i) => (
             <li key={s.slug} style={{ "--i": i }} className={s.status === "complete" ? "ok" : ""}>
-              <Link href={sectionHref(s)}><img src={sectionArt(panel, s.slug, s.name)} alt="" width="28" height="28" /><span>{sectionTitle(s)}</span><small>{s.status === "complete" ? "Done" : s.answered ? `${Math.round(pctOf(s) * 100)}%` : "Start"}</small></Link>
+              <Link href={sectionHref(s)}><img src={sectionArt(panel, s.slug, s.name)} alt="" width="28" height="28" /><span>{sectionTitle(s)}</span><small>{s.status === "complete" ? (Number(s.points) > 0 ? `+${s.points} pts` : "Done") : s.answered ? `${Math.round(pctOf(s) * 100)}%` : Number(s.points) > 0 ? `${s.points} pts` : "Start"}</small></Link>
             </li>
           ))}
         </ul>
@@ -109,7 +110,7 @@ export function CircleOfCare() {
 
 /* ---------------------------------------------------------------- Patient: journey path */
 export function JourneyPath() {
-  const { panel } = useMx();
+  const { panel, balance } = useMx();
   const { secs, done, next } = useSections();
   const track = React.useRef(null);
   React.useEffect(() => {
@@ -133,7 +134,10 @@ export function JourneyPath() {
     <section className="mx-sig mx-journey" aria-labelledby="mx-jp-h">
       <div className="hd">
         <div><span className="mx-eyebrow">Your health journey</span><h2 id="mx-jp-h">{done === secs.length ? "You reached the end of the path" : `Stop ${upto + 1} of ${secs.length}`}</h2></div>
-        <span className="pill"><Icon name="check" size={14} stroke={3} /> {done} complete</span>
+        <span className="mx-row" style={{ gap: 8 }}>
+          <span className="pill"><Icon name="check" size={14} stroke={3} /> {done} complete</span>
+          <span className="pill gold"><Icon name="coin" size={14} /> {balance.points.toLocaleString()} points</span>
+        </span>
       </div>
       <div className="track" ref={track}>
         <div className="road" style={{ width }}>
@@ -145,6 +149,7 @@ export function JourneyPath() {
             <Link key={s.slug} href={sectionHref(s)} className={`stop ${s.status === "complete" ? "ok" : ""} ${next && s.slug === next.slug ? "now" : ""}`} style={{ left: i * W + W / 2, top: y(i), "--i": i }} aria-label={`${sectionTitle(s)}: ${s.status === "complete" ? "complete" : `${s.answered} of ${s.total} answered`}`}>
               <span className="pin"><img src={sectionArt(panel, s.slug, s.name)} alt="" width="30" height="30" />{s.status === "complete" && <i><Icon name="check" size={10} stroke={3.5} /></i>}</span>
               <small>{sectionTitle(s)}</small>
+              {Number(s.points) > 0 && <em className={`pts${s.status === "complete" ? " ok" : ""}`}>{s.status === "complete" ? `+${s.points}` : `${s.points} pts`}</em>}
             </Link>
           ))}
         </div>

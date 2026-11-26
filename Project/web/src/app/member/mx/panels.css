@@ -181,3 +181,17 @@
 @media (prefers-reduced-motion: reduce) {
   .mx-dash > .ga, .mx-sig, .mx-sig * { animation: none !important; }
 }
+
+/* ---- points everywhere they are earned (2026-11-26): profile cards, vault art, signature pieces ---------------------- */
+.mx-ptag { display: inline-flex; align-items: center; gap: 5px; align-self: flex-start; margin-top: 6px; padding: 3px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 800; line-height: 1.4; color: #7A4A00; background: linear-gradient(90deg, #FFE7A8, #FFD27A); box-shadow: inset 0 0 0 1px rgba(160, 100, 0, .18); }
+.mx-ptag.ok { color: #0B5B45; background: linear-gradient(90deg, #C9F7E6, #A6EFD5); box-shadow: inset 0 0 0 1px rgba(10, 120, 90, .2); }
+.mx-dna text.pt, .mx-ecg text.pt { font-family: var(--f-num); font-size: 12px; font-weight: 800; fill: #FFD27A; animation: mxPtIn .6s var(--ease) backwards; animation-delay: calc(.8s + var(--i, 0) * 90ms); }
+.mx-beads text.pt { font: 800 13px/1 var(--f-num); fill: #FFE3D6; }
+.mx-circle .mid .pts { display: inline-flex; align-items: center; justify-content: center; gap: 4px; margin-top: 6px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; color: #7A4A00; background: #FFE7A8; }
+.mx .mx-journey .hd .pill.gold { color: #5A3600; background: linear-gradient(90deg, #FFD27A, #FFB020); }
+.mx-journey .stop .pts { font-style: normal; font-size: 10.5px; font-weight: 800; padding: 1px 7px; border-radius: 999px; color: #7A4A00; background: #FFE7A8; }
+.mx-journey .stop .pts.ok { color: #0B5B45; background: #C9F7E6; }
+.mx-console .matrix li.ok .val { color: #FFD27A; }
+@keyframes mxPtIn { from { opacity: 0; transform: translateY(6px); } }
+.mx[data-mode="dark"] .mx-ptag { filter: saturate(.9) brightness(.95); }
+@media (prefers-reduced-motion: reduce) { .mx-dna text.pt, .mx-ecg text.pt { animation: none; } }

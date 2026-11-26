@@ -155,10 +155,13 @@ services:
       - ./Project/web/package.json:/app/package.json
       - ./uploads:/app/public/social/screenshots
   web-prod:
-    image: registry.sampledge.com/${PROJECT}/web:prod-0.0.1
+    # Always built from this repo on `docker compose up -d --build web-prod`. The old pinned registry image
+    # (web:prod-0.0.1) predated the new member area and had no /mho-sections bundles.
+    image: mho-web:prod
+    pull_policy: build
     build:
-      context: ./Project/web
-      dockerfile: Dockerfile
+      context: ./Project
+      dockerfile: web/Dockerfile.prod
       target: production
     container_name: ${PROJECT}-web-prod
     restart: always

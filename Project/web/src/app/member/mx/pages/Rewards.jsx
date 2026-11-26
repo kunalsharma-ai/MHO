@@ -12,7 +12,7 @@ import { Icon, Empty, Field, Modal, useToast, apiOk, apiMessage, fmtDate, cap } 
 import { loadRewardRows, fmtLoi, SOCIAL_POINTS, REFERRAL_POINTS } from "../rewardsData";
 import { sectionArt, pageArt } from "../art";
 
-const STATUS = { complete: ["Completed", "ok"], approved: ["Approved", "ok"], credited: ["Credited", "ok"], terminate: ["Did not qualify", "bad"], overquota: ["Quota full", "warn"], dropout: ["Not finished", "info"] };
+const STATUS = { complete: ["Completed", "ok"], approved: ["Approved", "ok"], credited: ["Credited", "ok"], pending: ["Awaiting approval", "warn"], rejected: ["Not approved", "bad"], paid: ["Paid out", "info"], terminate: ["Did not qualify", "bad"], overquota: ["Quota full", "warn"], dropout: ["Not finished", "info"] };
 const PAY_LABEL = { "wire-transfer": "Bank transfer", upi: "UPI", paypal: "PayPal", "amazon-gift-card": "Amazon gift card", "healthcare-report": "Healthcare report" };
 
 function RequestPayout({ open, onClose, points, worth, method }) {
@@ -51,7 +51,8 @@ function RequestPayout({ open, onClose, points, worth, method }) {
 }
 
 const SRC = [["Survey", "surveys", "coral"], ["Profile", "profile", "violet"], ["Referral", "share", "pink"], ["Social", "megaphone", "teal"]];
-const TYPE_ICON = { Survey: "surveys", Profile: "profile", Referral: "share", Social: "megaphone" };
+const TYPE_ICON = { Survey: "surveys", Profile: "profile", Referral: "share", Social: "megaphone", Payout: "gift", Reward: "gift" };
+const signed = (n) => (n > 0 ? `+${n.toLocaleString()}` : n < 0 ? `−${Math.abs(n).toLocaleString()}` : "—");
 
 /** Where the points came from: totals per activity type, from the full rewards history. */
 function Sources({ rows, ready }) {
@@ -105,21 +106,25 @@ export default function Rewards() {
     if (!uid) return undefined;
     let live = true;
     setState((s) => ({ ...s, loading: true }));
-    loadRewardRows(uid, range[0] && range[1] ? range : []).then((r) => live && setState({ loading: false, ...r })).catch(() => live && setState({ loading: false, rows: [], failed: true }));
+    const dated = range[0] && range[1];
+    // without dates the member area already holds the ledger with the balance; with dates the rows are read for that range
+    if (!dated && !balance.history) return undefined;
+    loadRewardRows(uid, dated ? range : [], dated ? undefined : balance.history).then((r) => live && setState({ loading: false, ...r })).catch(() => live && setState({ loading: false, rows: [], failed: true }));
     return () => { live = false; };
-  }, [uid, rk]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [uid, rk, balance.history]); // eslint-disable-line react-hooks/exhaustive-deps
   const rows = state.rows.filter((r) => type === "All" || r.type === type);
-  const earned = state.rows.reduce((n, r) => n + (r.points || 0), 0);
+  const earned = rows.reduce((n, r) => n + Math.max(0, r.points || 0), 0);
   const types = ["All", ...new Set(state.rows.map((r) => r.type))];
   const worth = balance.rate ? (balance.points * balance.rate).toFixed(2) : null;
-  const ready = balance.threshold > 0 && balance.points >= balance.threshold;
+  // a payout uses approved points only: survey points wait for the research team's check
+  const ready = balance.threshold > 0 && balance.approved >= balance.threshold;
   const [pay] = useAnswers(["payment-method-primary", "payment-method"]);
   const method = pay["payment-method-primary"] || pay["payment-method"] || "";
   return (
     <>
       <PageHead icon="gift" title="Rewards" art={pageArt(panel, "rewards")}
         lead="Your points, what they are worth, and every activity that earned them."
-        facts={[["Balance", `${balance.points.toLocaleString()} pts`], ...(worth ? [["Worth about", `$${worth}`]] : []), ...(balance.threshold ? [["Payout at", `${balance.threshold.toLocaleString()} pts`]] : [])]} />
+        facts={[["Balance", `${balance.points.toLocaleString()} pts`], ...(balance.pending > 0 ? [["Awaiting approval", `${balance.pending.toLocaleString()} pts`]] : []), ...(worth ? [["Worth about", `$${worth}`]] : []), ...(balance.threshold ? [["Payout at", `${balance.threshold.toLocaleString()} pts`]] : [])]} />
       <Vault compact />
       <Sources rows={activity.rows} ready={activity.ready} />
       <WaysToEarn />
@@ -128,9 +133,9 @@ export default function Rewards() {
           <span className="mx-eyebrow">Payout</span>
           <h2 id="mx-redeem-h" style={{ marginTop: 6, fontSize: 21 }}>{ready ? "You can request a payout" : "Progress to your first payout"}</h2>
           <p className="mx-muted" style={{ marginTop: 8, fontSize: 14, lineHeight: 1.6 }}>
-            {balance.threshold ? (ready ? "Your balance has reached the payout level. Send a request and the support team will process it." : `${Math.max(0, balance.threshold - balance.points).toLocaleString()} more points until you can request a payout.`) : "The payout level could not be read right now."}
+            {balance.threshold ? (ready ? "Your balance has reached the payout level. Send a request and the support team will process it." : `${Math.max(0, balance.threshold - balance.approved).toLocaleString()} more approved points until you can request a payout.${balance.pending > 0 ? ` ${balance.pending.toLocaleString()} survey points are awaiting approval.` : ""}`) : "The payout level could not be read right now."}
           </p>
-          {balance.threshold > 0 && <div className="mx-meter" style={{ margin: "14px 0" }}><i style={{ "--p": Math.min(1, balance.points / balance.threshold) }} /></div>}
+          {balance.threshold > 0 && <div className="mx-meter" style={{ margin: "14px 0" }}><i style={{ "--p": Math.min(1, Math.max(0, balance.approved) / balance.threshold) }} /></div>}
           <div className="mx-row">
             {ready ? <button type="button" className="mx-btn" onClick={() => setPayout(true)}><Icon name="gift" size={18} />Request a payout</button>
               : <Link className="mx-btn" href="/member/surveys"><Icon name="surveys" size={18} />Earn more with surveys</Link>}
@@ -166,7 +171,7 @@ export default function Rewards() {
               <thead><tr><th scope="col">Type</th><th scope="col">Activity</th><th scope="col">Date</th><th scope="col">Length</th><th scope="col">Status</th><th scope="col">Points</th></tr></thead>
               <tbody>
                 {rows.map((r) => {
-                  const [l, t] = STATUS[r.status] || [cap(r.status || "—"), ""];
+                  const [l, t] = STATUS[r.approval || r.status] || [cap(r.status || "—"), ""];
                   const resumable = r.type === "Survey" && r.status === "dropout" && r.source !== "external" && r.slug;
                   return (
                     <tr key={r.id}>
@@ -175,7 +180,7 @@ export default function Rewards() {
                       <td data-l="Date">{fmtDate(r.date)}</td>
                       <td data-l="Length">{fmtLoi(r.loiMs)}</td>
                       <td data-l="Status">{resumable ? <a className="mx-btn sm" href={`/survey?name=${encodeURIComponent(r.slug)}`}>Continue</a> : <span className={`mx-chip ${t}`}>{l}</span>}</td>
-                      <td data-l="Points"><b className={r.points ? "mx-plus" : ""}>{r.points ? `+${r.points.toLocaleString()}` : "—"}</b></td>
+                      <td data-l="Points"><b className={r.points > 0 ? "mx-plus" : ""}>{signed(r.points || 0)}</b></td>
                     </tr>
                   );
                 })}
@@ -184,7 +189,7 @@ export default function Rewards() {
           </div>
         ) : <Empty icon="gift" title="No rewards in this view yet">Complete profiles and surveys, have a friend join with your link, or follow MHO on social media to earn points.</Empty>}
       </section>
-      <RequestPayout open={payout} onClose={() => setPayout(false)} points={balance.points} worth={worth} method={method} />
+      <RequestPayout open={payout} onClose={() => setPayout(false)} points={balance.approved} worth={worth} method={method} />
     </>
   );
 }

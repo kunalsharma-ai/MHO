@@ -1,0 +1,452 @@
+{
+  "fixedParents": [
+    {
+      "question": "employment-jobrole",
+      "declared": "(none)",
+      "used": "department"
+    },
+    {
+      "question": "organization-revenue",
+      "declared": "country_of_practice",
+      "used": "country"
+    },
+    {
+      "question": "obesity-treatment-category",
+      "declared": "obesity-severity",
+      "used": "obesity-mesures"
+    },
+    {
+      "question": "anidra-treatment-category",
+      "declared": "anidra-tratment-status",
+      "used": "anidra-treatment-status"
+    },
+    {
+      "question": "exercises",
+      "declared": "(none)",
+      "used": "do-exercise"
+    }
+  ],
+  "unmatchedParentValues": [],
+  "droppedQuestions": [],
+  "labelFixes": [
+    {
+      "question": "rural",
+      "from": "What type of area do you currently live in",
+      "to": "What type of area do you currently live in?"
+    },
+    {
+      "question": "use-fitness-mobile-app",
+      "from": "Do you use any mobile apps or wearable devices to track your health (e.g., Fitbit, Apple Health, MyFitnessPal)?",
+      "to": "Do you use any apps or wearables to track your health (e.g. Fitbit, Apple Health, MyFitnessPal)?"
+    },
+    {
+      "question": "use-devices",
+      "from": "Which of the following devices do you currently own and use regularly?",
+      "to": "Which of these devices do you own and use regularly?"
+    },
+    {
+      "question": "health-management-app",
+      "from": "Which types of mobile apps to manage your health or condition?",
+      "to": "Which types of mobile apps do you use to manage your health or condition?"
+    },
+    {
+      "question": "health-service",
+      "from": "Which digital health services would you are using currently",
+      "to": "Which digital health services are you currently using?"
+    },
+    {
+      "question": "employment-status",
+      "from": "Employment Status",
+      "to": "What is your current employment status?"
+    },
+    {
+      "question": "jobseeker-patient",
+      "from": "Are you seeking a job?",
+      "to": "Are you currently looking for a job?"
+    },
+    {
+      "question": "availing-pension",
+      "from": "Are you availing pension facility?",
+      "to": "Are you currently receiving a pension?"
+    },
+    {
+      "question": "industry",
+      "from": "Industry?",
+      "to": "Which industry do you work in?"
+    },
+    {
+      "question": "patient-sector",
+      "from": "In which sector you are working at",
+      "to": "Which sector do you work in?"
+    },
+    {
+      "question": "department",
+      "from": "What is your department?",
+      "to": "Which department do you work in?"
+    },
+    {
+      "question": "organization-revenue",
+      "from": "What is overall annual revenue of your organization",
+      "to": "What is your organization’s approximate annual revenue (in local currency)?"
+    },
+    {
+      "question": "patient-orgoverseas",
+      "from": "How many branches your organization has in abroad",
+      "to": "How many branches does your organization have abroad?"
+    },
+    {
+      "question": "patient-orgsize",
+      "from": "Total Number of Employees (all branches)",
+      "to": "How many people does your organization employ (all branches)?"
+    },
+    {
+      "question": "hw",
+      "from": "Which role you play in your homemaking?",
+      "to": "Which roles do you play in running your home?"
+    },
+    {
+      "question": "experience-patient",
+      "from": "Approximate how much experience you have under your current designation?",
+      "to": "Approximately how much experience do you have in your current role?"
+    },
+    {
+      "question": "orgdecision-patient",
+      "from": "Which of the following statements best describes your involvement in decision making in your Organization?",
+      "to": "Which statement best describes your involvement in decision-making at your organization?"
+    },
+    {
+      "question": "freelancer-patient",
+      "from": "If you are a Freelancer, please specify you job profile",
+      "to": "Which best describes your freelance work?"
+    },
+    {
+      "question": "survey-participation-frequency",
+      "from": "How often do you participate in surveys",
+      "to": "How often do you participate in surveys?"
+    },
+    {
+      "question": "survey-participation-category",
+      "from": "What type of surveys have you participated in, before?",
+      "to": "What types of survey have you taken part in before?"
+    },
+    {
+      "question": "survey-mode",
+      "from": "How do you prefer to participate in Survey?",
+      "to": "How do you prefer to participate in surveys?"
+    },
+    {
+      "question": "survey-participation-time-duration",
+      "from": "How much time are you comfortable spending on a survey",
+      "to": "How much time are you comfortable spending on a survey?"
+    },
+    {
+      "question": "willingness-survey-participation",
+      "from": "Are you willing to participate in future market research studies",
+      "to": "Are you willing to participate in future market research studies?"
+    },
+    {
+      "question": "survey-type-interested-in",
+      "from": "What types of study would you be open to join",
+      "to": "What types of study would you be open to joining?"
+    },
+    {
+      "question": "share-consent",
+      "from": "Are you comfortable sharing your health related experiences for research purposes (confidentially)",
+      "to": "Are you comfortable sharing your health experiences for research purposes (confidentially)?"
+    },
+    {
+      "question": "survey-participation-motivation",
+      "from": "What motivates you to participate in surveys",
+      "to": "What motivates you to participate in surveys?"
+    },
+    {
+      "question": "video-survey-participation-consent",
+      "from": "Are you comfortable participating in online video interviews or discussions (via Zoom, Teams etc.)",
+      "to": "Are you comfortable taking part in online video interviews or discussions (e.g. Zoom, Teams)?"
+    },
+    {
+      "question": "mode-of-payment",
+      "from": "What type of rewards do you prefer",
+      "to": "What type of rewards do you prefer?"
+    },
+    {
+      "question": "survey-participation-timeslot",
+      "from": "What is your preferred time of day to participate in Survey",
+      "to": "What is your preferred time of day to take surveys?"
+    },
+    {
+      "question": "recontact-consent",
+      "from": "Do you agree to be re-contacted for future studies",
+      "to": "Do you agree to be re-contacted for future studies?"
+    },
+    {
+      "question": "payment-method",
+      "from": "How do you like to receive payments",
+      "to": "How would you like to receive payments?"
+    },
+    {
+      "question": "diagnosed-condition",
+      "from": "How was your main condition diagnosed?",
+      "to": "Who or what first diagnosed your main condition?"
+    },
+    {
+      "question": "disease-types",
+      "from": "Which of the following conditions have you ever been diagnosed with?",
+      "to": "Which of these conditions have you ever been diagnosed with? (Select all that apply)"
+    },
+    {
+      "question": "primary-health-condition",
+      "from": "Which condition is currently your primary health condition?",
+      "to": "Which condition is currently your main (primary) health condition?"
+    },
+    {
+      "question": "experience-symptoms-releted-to-primary-condition",
+      "from": "How frequently do you currently experience symptoms related to your primary condition?",
+      "to": "How often do you currently have symptoms related to your primary condition?"
+    },
+    {
+      "question": "chronic-conditions",
+      "from": "Have you been diagnosed/suffering with any of the following chronic health conditions?",
+      "to": "Have you been diagnosed with any of these chronic conditions? (Select all that apply)"
+    },
+    {
+      "question": "cholesterol-type",
+      "from": "Type of cholesterol issue diagnosed",
+      "to": "Which type of cholesterol problem were you diagnosed with?"
+    },
+    {
+      "question": "asthma-diagnosis",
+      "from": "How would you describe the severity of your asthma?",
+      "to": "Are you currently taking any medication for asthma?"
+    },
+    {
+      "question": "asthma-severity",
+      "from": "Are you currently taking any medications for asthma?",
+      "to": "How would you describe the severity of your asthma?"
+    },
+    {
+      "question": "obesity-age",
+      "from": "How long have you been diagnosed?",
+      "to": "How long ago were you diagnosed with obesity?"
+    },
+    {
+      "question": "bmi",
+      "from": "Current BMI (if known)",
+      "to": "What is your current BMI? (optional, if you know it)"
+    },
+    {
+      "question": "cancer-category",
+      "from": "What type of cancer have you been diagnosed with?",
+      "to": "What type of cancer have you been diagnosed with? (Select all that apply)"
+    },
+    {
+      "question": "anidra-category",
+      "from": "Which type Sleep Apnea you are suffering ?",
+      "to": "Which type of sleep apnea have you been diagnosed with?"
+    },
+    {
+      "question": "anidra-age",
+      "from": "How long have you had Sleep Apnea?",
+      "to": "How long have you had sleep apnea?"
+    },
+    {
+      "question": "anidra-severity",
+      "from": "How severe is your Condition?",
+      "to": "How severe is your sleep apnea?"
+    },
+    {
+      "question": "anidra-treatment-status",
+      "from": "Are you currently undergoing treatment for Sleep Apnea?",
+      "to": "Are you currently undergoing treatment for sleep apnea?"
+    },
+    {
+      "question": "skin-condition",
+      "from": "What type of skin condition do you have?",
+      "to": "Which skin condition do you have?"
+    },
+    {
+      "question": "stomach-condition",
+      "from": "What type of condition do you have?",
+      "to": "Which digestive, kidney or urinary condition do you have?"
+    },
+    {
+      "question": "neuro-condition",
+      "from": "What type of condition do you have?",
+      "to": "Which neurological condition do you have?"
+    },
+    {
+      "question": "neuro-sevirity",
+      "from": "How severe is your condition?",
+      "to": "How severe is your neurological condition?"
+    },
+    {
+      "question": "vision-condition-treatment-category",
+      "from": "What type Vision / Hearing Impairments you have ?",
+      "to": "Which treatments or aids do you use for your vision or hearing impairment?"
+    },
+    {
+      "question": "hearing-device",
+      "from": "Which device do you use?",
+      "to": "Which hearing device do you use?"
+    },
+    {
+      "question": "blood-condition",
+      "from": "What type of condition do you have?",
+      "to": "Which autoimmune or blood condition do you have?"
+    },
+    {
+      "question": "spine-condition",
+      "from": "Which type of disorder do you have?",
+      "to": "Which bone, muscle or spine condition do you have?"
+    },
+    {
+      "question": "sex-condition",
+      "from": "Which condition(s) do you have?",
+      "to": "Which men’s or women’s health condition do you have?"
+    },
+    {
+      "question": "hiv-age",
+      "from": "When were you diagnosed with your primary condition?",
+      "to": "When were you diagnosed with HIV?"
+    },
+    {
+      "question": "doctor-visit-category",
+      "from": "Type of Doctor Visited Most Often",
+      "to": "Which type of doctor do you visit most often?"
+    },
+    {
+      "question": "health-insurance-type",
+      "from": "What type of insurance do you have?",
+      "to": "What type of health insurance do you have?"
+    },
+    {
+      "question": "covid-vaccine",
+      "from": "Are you up to date with your vaccinations (e.g., flu, COVID-19, etc.)?",
+      "to": "Are you up to date with your vaccinations (e.g. flu, COVID-19)?"
+    },
+    {
+      "question": "types-of-test-received",
+      "from": "Which types of tests have you received?",
+      "to": "Which types of tests have you had?"
+    },
+    {
+      "question": "consume-alcohlic-beverages",
+      "from": "Do you currently consume alcoholic beverages?",
+      "to": "How often do you drink alcohol?"
+    },
+    {
+      "question": "smoke-category",
+      "from": "What type of tobacco product do you use most often?",
+      "to": "Which tobacco product do you use most often?"
+    },
+    {
+      "question": "suppliment",
+      "from": "Do you consume any of the following for health or energy purposes?",
+      "to": "Do you consume any of these for health or energy?"
+    },
+    {
+      "question": "sport-category",
+      "from": "Which type(s) of sports or activities do you play most often?",
+      "to": "Which sports or activities do you do most often?"
+    }
+  ],
+  "optionFixes": [
+    {
+      "question": "health-service",
+      "dropped": [
+        "Survey Participation & Rewards Preferences"
+      ]
+    },
+    {
+      "question": "primary-health-condition",
+      "replaced": [
+        "Select from conditions selected above",
+        "Other",
+        "None"
+      ],
+      "with": [
+        "Other",
+        "None"
+      ]
+    },
+    {
+      "question": "cholesterol-treatment",
+      "dropped": [
+        "No"
+      ]
+    },
+    {
+      "question": "lense-type",
+      "added": [
+        "I wear glasses only (no contact lenses)"
+      ]
+    },
+    {
+      "question": "hearing-device",
+      "added": [
+        "Hearing aid"
+      ]
+    },
+    {
+      "question": "hiv-treatment",
+      "replaced": [],
+      "with": [
+        "Every month or more often",
+        "Every 2–3 months",
+        "Every 4–6 months",
+        "Once a year",
+        "Less than once a year",
+        "Only when I have symptoms"
+      ]
+    },
+    {
+      "question": "doctor-visit-category",
+      "split": "Nurse practitioner or physician assistant Alternative medicine practitioner (Ayurvedic, Homeopathic, etc.)",
+      "into": [
+        "Nurse practitioner or physician assistant",
+        "Alternative medicine practitioner (Ayurvedic, Homeopathic, etc.)"
+      ]
+    },
+    {
+      "question": "descrive-typical-diet",
+      "replaced": [
+        "Very active",
+        "Moderately active",
+        "Somewhat active",
+        "Slightly active",
+        "Not active"
+      ],
+      "with": [
+        "Very healthy and balanced",
+        "Mostly healthy",
+        "Average / mixed",
+        "Mostly unhealthy",
+        "Very unhealthy"
+      ]
+    },
+    {
+      "question": "hours-sleep",
+      "replaced": [
+        "Less than 4",
+        "4-5",
+        "6",
+        "7-8",
+        "9-10",
+        "More than 10"
+      ],
+      "with": [
+        "Less than 4 hours",
+        "4–5 hours",
+        "6 hours",
+        "7–8 hours",
+        "9–10 hours",
+        "More than 10 hours"
+      ]
+    }
+  ],
+  "notes": [
+    "Question \"employment-jobrole\" is used in a profile but missing from the question bank – defined here: \"What is your job title?\"",
+    "Question \"food-allergy\" is used in a profile but missing from the question bank – defined here: \"Please list your food allergies or intolerances\"",
+    "Departments without job titles (the job-title question is skipped for them): military-enthusiast, reservist-active, spouse-reserve-guard, veteran, individual-ready-reserve"
+  ]
+}

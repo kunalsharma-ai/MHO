@@ -117,6 +117,8 @@ export async function profileStatus(user) {
             answered,
             total,
             percent,
+            // points the member is credited when the section is complete (lib/points.js); 50 unless the admin set others
+            points: Number(p.points) > 0 ? Number(p.points) : 50,
             status: total && answered === total ? "complete" : answered > 0 ? "in-progress" : "not-started",
             missing: names.filter((n) => !done(n)).slice(0, 5).map((n) => qBy[n]?.label || n),
             // nothing applies YET because an earlier answer (e.g. the caregiving role) is still missing: keep the

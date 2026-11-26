@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /data/
+Sitemap: https://www.myhealthopinions.com/healthcare-professionals/sitemap.xml

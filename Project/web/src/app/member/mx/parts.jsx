@@ -70,7 +70,13 @@ export function ProfileCards({ sections, limit }) {
         const title = meta?.title || sectionTitle(s);
         const label = done ? "Review" : s.answered ? "Continue" : "Start";
         const num = `${panel === "hcp" ? "P" : "Profile"}-${String(idx + 1).padStart(2, "0")}`;
-        const metaRow = <span className="meta"><span>{s.answered} of {s.total} answered</span><b>{Math.round(pct * 100)}%</b></span>;
+        const pts = Number(s.points) || 0;
+        const metaRow = (
+          <>
+            <span className="meta"><span>{s.answered} of {s.total} answered</span><b>{Math.round(pct * 100)}%</b></span>
+            {pts > 0 && <span className={`mx-ptag${done ? " ok" : ""}`}><Icon name="coin" size={12} />{done ? `+${pts} points credited` : `Earn ${pts} points`}</span>}
+          </>
+        );
         const body = panel === "caregiver" ? (
           <>
             <div className="txt">
@@ -96,7 +102,7 @@ export function ProfileCards({ sections, limit }) {
         );
         return (
           <Link key={s.slug} href={sectionHref(s)} className={`mx-pcard${done ? " done" : ""}`} style={{ "--p1": p1, "--p2": p2, "--i": i }} onPointerMove={tilt} onPointerLeave={untilt}
-            aria-label={`${title}: ${s.answered} of ${s.total} answered. ${label}`}>
+            aria-label={`${title}: ${s.answered} of ${s.total} answered.${pts ? (done ? ` ${pts} points credited.` : ` Worth ${pts} points.`) : ""} ${label}`}>
             {body}
           </Link>
         );
@@ -144,13 +150,14 @@ function Genome({ sections }) {
             <line x1={x(i)} x2={x(i)} y1={y1} y2={y2} stroke="rgba(160,190,255,.25)" strokeWidth="2" />
             <circle className="node" cx={x(i)} cy={H / 2} r={on ? 13 : 10} fill={on ? "#2EE6C5" : mid ? "#FFB020" : "#1E2A60"} stroke={on ? "#fff" : "rgba(160,190,255,.5)"} strokeWidth="2" />
             <text x={x(i)} y={H - 6} textAnchor="middle">{String(i + 1).padStart(2, "0")}</text>
+            {on && Number(s.points) > 0 && <text className="pt" x={x(i)} y={16} textAnchor="middle" style={{ "--i": i }}>+{s.points}</text>}
           </g>
         );
       })}
     </svg>
   );
 }
-function Circle({ sections, surveys }) {
+function Circle({ sections, surveys, points }) {
   const beads = [...sections.map((s) => s.status), ...Array.from({ length: Math.max(0, surveys) }, () => "complete")];
   const n = Math.max(beads.length, 1);
   return (
@@ -164,6 +171,7 @@ function Circle({ sections, surveys }) {
         })}
       </g>
       <path d="M200 150C200 150 160 126 160 100 160 86 170 76 182 76c8 0 14 4 18 10 4-6 10-10 18-10 12 0 22 10 22 24 0 26-40 50-40 50z" fill="url(#mxBead)" stroke="#FFE3D6" strokeWidth="2" />
+      {points > 0 && <text className="pt" x="200" y="226" textAnchor="middle">{points.toLocaleString()} points earned</text>}
     </svg>
   );
 }
@@ -179,6 +187,7 @@ function Pulse({ sections }) {
     <svg className="mx-ecg" viewBox={`0 0 ${W} 120`} preserveAspectRatio="none" role="img" aria-label={`${sections.filter((s) => s.status === "complete").length} of ${sections.length} profiles complete`}>
       {Array.from({ length: 11 }, (_, i) => <line key={i} x1={i * 100} x2={i * 100} y1="0" y2="120" stroke="rgba(255,255,255,.05)" />)}
       <path className="line" d={d} />
+      {sections.map((s, i) => s.status === "complete" && Number(s.points) > 0 && <text key={s.slug} className="pt" x={(i * W) / n + (W / n) * 0.4} y={10} textAnchor="middle" style={{ "--i": i }}>+{s.points}</text>)}
     </svg>
   );
 }
@@ -190,7 +199,7 @@ export function Vault({ compact }) {
   const pts = useCountUp(balance.points);
   const qs = Number(member?.qualityScore) || 0;
   const surveysDone = d?.surveys?.counts?.completed || 0;
-  const left = balance.threshold ? Math.max(0, balance.threshold - balance.points) : 0;
+  const left = balance.threshold ? Math.max(0, balance.threshold - balance.approved) : 0;
   const next = d?.profile?.next;
   return (
     <section className="mx-vault mx-rise" aria-labelledby="mx-vault-h" style={{ "--i": 2 }}>
@@ -198,15 +207,15 @@ export function Vault({ compact }) {
       <h2 id="mx-vault-h" style={{ marginTop: 6 }}>{P.vault}</h2>
       {!compact && <p className="sub">{P.vaultSub}</p>}
       <div className="mx-vtiles">
-        <div className="mx-vtile"><small>Reward points</small><b><span className="mx-coin"><Icon name="coin" size={15} /></span>{pts.toLocaleString()}</b><span>{balance.rate ? `Worth about $${(balance.points * balance.rate).toFixed(2)}` : "Points balance"}</span></div>
+        <div className="mx-vtile"><small>Reward points</small><b><span className="mx-coin"><Icon name="coin" size={15} /></span>{pts.toLocaleString()}</b><span>{balance.pending > 0 ? `${balance.pending.toLocaleString()} awaiting survey approval` : balance.rate ? `Worth about $${(balance.points * balance.rate).toFixed(2)}` : "Points balance"}</span></div>
         <div className="mx-vtile"><small>Quality score</small><b><span className="mx-qs"><Icon name="heart" size={14} /></span>{qs}</b><span>Shown on your member record</span></div>
         <div className="mx-vtile"><small>{panel === "hcp" ? "Genome sequenced" : panel === "caregiver" ? "Beads lit" : "Profiles complete"}</small><b>{done}<span style={{ fontSize: 15, color: "var(--v-muted)" }}> / {sections.length || "—"}</span></b><Meter value={sections.length ? done / sections.length : 0} label="Profiles complete" /></div>
-        <div className="mx-vtile"><small>{left > 0 ? "Left to redeem" : "Surveys completed"}</small><b>{left > 0 ? left.toLocaleString() : surveysDone}</b><span>{left > 0 ? `${balance.threshold.toLocaleString()} points unlock a payout request` : "Completed research surveys"}</span></div>
+        <div className="mx-vtile"><small>{left > 0 ? "Left to redeem" : "Surveys completed"}</small><b>{left > 0 ? left.toLocaleString() : surveysDone}</b><span>{left > 0 ? `${balance.threshold.toLocaleString()} approved points unlock a payout` : "Completed research surveys"}</span></div>
       </div>
       {!compact && sections.length > 0 && (
         <div className="mx-vart" aria-hidden={false}>
           {panel === "hcp" && <Genome sections={sections} />}
-          {panel === "caregiver" && <Circle sections={sections} surveys={surveysDone} />}
+          {panel === "caregiver" && <Circle sections={sections} surveys={surveysDone} points={balance.points} />}
           {panel === "patient" && <Pulse sections={sections} />}
         </div>
       )}

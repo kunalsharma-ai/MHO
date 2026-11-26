@@ -1,0 +1,640 @@
+{
+ "note": "Alt text for every image file on the MyHealthOpinions patient site. In the running site, chapter-illustration alt text is translated (translated chapter title + “illustration” / “completion badge”); flag alt text uses the English language name. The 3D orb, helix, vital cards, particles, emoji, the Health Rewards Card face and the ink stamps on the reward board (drawn in CSS/SVG, not image files) are decorative and marked aria-hidden; the card, stamp buttons, points counter and tiers carry translated labels instead. \"longAlt\" is a fuller description for documentation or CMS use.",
+ "site": "https://patients.myhealthopinions.com/",
+ "count": 97,
+ "images": [
+  {
+   "file": "favicon.ico",
+   "alt": "MyHealthOpinions heart logo",
+   "usedIn": "Browser tab icon (16/32/48 px)",
+   "type": "decorative-system"
+  },
+  {
+   "file": "images/brand/favicon.svg",
+   "alt": "MyHealthOpinions heart logo with heartbeat line",
+   "usedIn": "Browser tab icon (vector)",
+   "type": "decorative-system"
+  },
+  {
+   "file": "images/brand/apple-touch-icon.png",
+   "alt": "MyHealthOpinions heart logo",
+   "usedIn": "iPhone/iPad home-screen icon",
+   "type": "decorative-system"
+  },
+  {
+   "file": "images/brand/icon-192.png",
+   "alt": "MyHealthOpinions heart logo",
+   "usedIn": "Web app manifest icon 192 px",
+   "type": "decorative-system"
+  },
+  {
+   "file": "images/brand/icon-512.png",
+   "alt": "MyHealthOpinions heart logo",
+   "usedIn": "Web app manifest icon 512 px",
+   "type": "decorative-system"
+  },
+  {
+   "file": "images/brand/mho-logo.png",
+   "alt": "MyHealthOpinions logo",
+   "usedIn": "Top bar, chapter header, footer (1x screens); organisation logo for search engines (JSON-LD)",
+   "type": "informative"
+  },
+  {
+   "file": "images/brand/mho-logo@2x.png",
+   "alt": "MyHealthOpinions logo",
+   "usedIn": "Top bar, chapter header, footer (high-density screens, via srcset)",
+   "type": "informative"
+  },
+  {
+   "file": "images/og-image.png",
+   "alt": "MyHealthOpinions patient panel: a glowing glass orb with a DNA helix and the words Your health story shapes tomorrow’s care.",
+   "usedIn": "Social sharing preview (og:image, twitter:image)",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/basic.svg",
+   "alt": "About You illustration",
+   "longAlt": "A patient ID card with a smiling avatar and a location pin inside a blue glass orb",
+   "usedIn": "Chapter card and chapter header for “About You”; also shown as “About You completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/digital.svg",
+   "alt": "Technology & Digital Health illustration",
+   "longAlt": "A smartphone with a health app and a chat bubble",
+   "usedIn": "Chapter card and chapter header for “Technology & Digital Health”; also shown as “Technology & Digital Health completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/education.svg",
+   "alt": "Education illustration",
+   "longAlt": "A graduation cap resting above an open book",
+   "usedIn": "Chapter card and chapter header for “Education”; also shown as “Education completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/work.svg",
+   "alt": "Work & Profession illustration",
+   "longAlt": "A briefcase with a green tick badge",
+   "usedIn": "Chapter card and chapter header for “Work & Profession”; also shown as “Work & Profession completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/survey.svg",
+   "alt": "Survey Preferences illustration",
+   "longAlt": "A gift box with a golden bow and confetti",
+   "usedIn": "Chapter card and chapter header for “Survey Preferences”; also shown as “Survey Preferences completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/social.svg",
+   "alt": "Social Media & Payouts illustration",
+   "longAlt": "A wallet with a bank card, gold coins and a chat bubble with a heart",
+   "usedIn": "Chapter card and chapter header for “Social Media & Payouts”; also shown as “Social Media & Payouts completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/general-health.svg",
+   "alt": "General Health illustration",
+   "longAlt": "A smiling sun rising behind a cloud with a small red heart",
+   "usedIn": "Chapter card and chapter header for “General Health”; also shown as “General Health completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/conditions.svg",
+   "alt": "Medical Conditions illustration",
+   "longAlt": "A medical clipboard with ticked boxes and a stethoscope",
+   "usedIn": "Chapter card and chapter header for “Medical Conditions”; also shown as “Medical Conditions completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/symptoms.svg",
+   "alt": "Symptoms & Severity illustration",
+   "longAlt": "A red thermometer with warm waves around it",
+   "usedIn": "Chapter card and chapter header for “Symptoms & Severity”; also shown as “Symptoms & Severity completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/personal-health.svg",
+   "alt": "Personal Health illustration",
+   "longAlt": "A glossy heart with a sticking plaster and a heartbeat line",
+   "usedIn": "Chapter card and chapter header for “Personal Health”; also shown as “Personal Health completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/treatment.svg",
+   "alt": "Treatment illustration",
+   "longAlt": "A syringe with a drop of medicine",
+   "usedIn": "Chapter card and chapter header for “Treatment”; also shown as “Treatment completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/medication.svg",
+   "alt": "Medication & Pharmacy illustration",
+   "longAlt": "A two-tone capsule, a round tablet and a blister pack of pills",
+   "usedIn": "Chapter card and chapter header for “Medication & Pharmacy”; also shown as “Medication & Pharmacy completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/providers.svg",
+   "alt": "Healthcare Providers illustration",
+   "longAlt": "A smiling doctor with a head mirror, white coat and stethoscope",
+   "usedIn": "Chapter card and chapter header for “Healthcare Providers”; also shown as “Healthcare Providers completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/diagnostics.svg",
+   "alt": "Diagnostic Testing illustration",
+   "longAlt": "A laboratory microscope with a sample slide of cells",
+   "usedIn": "Chapter card and chapter header for “Diagnostic Testing”; also shown as “Diagnostic Testing completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/devices.svg",
+   "alt": "Medical Devices & Apps illustration",
+   "longAlt": "A smartwatch showing a heart and a heart rate of 72 bpm",
+   "usedIn": "Chapter card and chapter header for “Medical Devices & Apps”; also shown as “Medical Devices & Apps completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/hospital.svg",
+   "alt": "Hospital Visits illustration",
+   "longAlt": "A hospital building with a red cross sign",
+   "usedIn": "Chapter card and chapter header for “Hospital Visits”; also shown as “Hospital Visits completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/insurance.svg",
+   "alt": "Insurance & Costs illustration",
+   "longAlt": "A blue shield with a white tick and a gold coin",
+   "usedIn": "Chapter card and chapter header for “Insurance & Costs”; also shown as “Insurance & Costs completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/lifestyle.svg",
+   "alt": "Lifestyle & Habits illustration",
+   "longAlt": "A blooming lotus flower on calm water",
+   "usedIn": "Chapter card and chapter header for “Lifestyle & Habits”; also shown as “Lifestyle & Habits completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/food.svg",
+   "alt": "Food, Drink & Fitness illustration",
+   "longAlt": "A bowl of fresh salad with tomatoes and greens next to an apple",
+   "usedIn": "Chapter card and chapter header for “Food, Drink & Fitness”; also shown as “Food, Drink & Fitness completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/decisions.svg",
+   "alt": "Treatment Decisions illustration",
+   "longAlt": "A golden balance scale weighing a pill against a heart",
+   "usedIn": "Chapter card and chapter header for “Treatment Decisions”; also shown as “Treatment Decisions completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/info.svg",
+   "alt": "Health Information illustration",
+   "longAlt": "A web page about heart health under a magnifying glass",
+   "usedIn": "Chapter card and chapter header for “Health Information”; also shown as “Health Information completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/research.svg",
+   "alt": "Research Experience illustration",
+   "longAlt": "A laboratory flask with bubbling liquid next to a DNA strand",
+   "usedIn": "Chapter card and chapter header for “Research Experience”; also shown as “Research Experience completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/eligibility.svg",
+   "alt": "Study Eligibility illustration",
+   "longAlt": "A target with an arrow in the bullseye and a green tick",
+   "usedIn": "Chapter card and chapter header for “Study Eligibility”; also shown as “Study Eligibility completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/verification.svg",
+   "alt": "Verification illustration",
+   "longAlt": "A document with a round verification stamp and a tick",
+   "usedIn": "Chapter card and chapter header for “Verification”; also shown as “Verification completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/profiles/additional.svg",
+   "alt": "Additional Details illustration",
+   "longAlt": "A glowing ringed planet with golden sparkles",
+   "usedIn": "Chapter card and chapter header for “Additional Details”; also shown as “Additional Details completion badge” in the completion animation",
+   "type": "informative"
+  },
+  {
+   "file": "images/flags/gb.svg",
+   "alt": "English language flag",
+   "usedIn": "Hero flag dock, language picker, top bar",
+   "type": "informative"
+  },
+  {
+   "file": "images/flags/cn.svg",
+   "alt": "Chinese language flag",
+   "usedIn": "Hero flag dock, language picker",
+   "type": "informative"
+  },
+  {
+   "file": "images/flags/es.svg",
+   "alt": "Spanish language flag",
+   "usedIn": "Hero flag dock, language picker",
+   "type": "informative"
+  },
+  {
+   "file": "images/flags/in.svg",
+   "alt": "Hindi language flag",
+   "usedIn": "Hero flag dock, language picker",
+   "type": "informative"
+  },
+  {
+   "file": "images/flags/ae.svg",
+   "alt": "Arabic language flag",
+   "usedIn": "Hero flag dock, language picker",
+   "type": "informative"
+  },
+  {
+   "file": "images/flags/fr.svg",
+   "alt": "French language flag",
+   "usedIn": "Hero flag dock, language picker",
+   "type": "informative"
+  },
+  {
+   "file": "images/flags/de.svg",
+   "alt": "German language flag",
+   "usedIn": "Hero flag dock, language picker",
+   "type": "informative"
+  },
+  {
+   "file": "images/flags/br.svg",
+   "alt": "Portuguese language flag",
+   "usedIn": "Hero flag dock, language picker",
+   "type": "informative"
+  },
+  {
+   "file": "images/flags/jp.svg",
+   "alt": "Japanese language flag",
+   "usedIn": "Hero flag dock, language picker",
+   "type": "informative"
+  },
+  {
+   "file": "images/flags/kr.svg",
+   "alt": "Korean language flag",
+   "usedIn": "Hero flag dock, language picker",
+   "type": "informative"
+  },
+  {
+   "file": "images/flags/ru.svg",
+   "alt": "Russian language flag",
+   "usedIn": "Hero flag dock, language picker",
+   "type": "informative"
+  },
+  {
+   "file": "images/flags/it.svg",
+   "alt": "Italian language flag",
+   "usedIn": "Hero flag dock, language picker",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-0.jpg",
+   "alt": "Classic MyHealth Rewards card showing a balance of 0 points, cash value $0.00 and 0 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 0 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 0 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-1.jpg",
+   "alt": "Classic MyHealth Rewards card showing a balance of 100 points, cash value $0.10 and 1 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 1 chapter (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 100 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-2.jpg",
+   "alt": "Classic MyHealth Rewards card showing a balance of 200 points, cash value $0.20 and 2 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 2 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 200 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-3.jpg",
+   "alt": "Classic MyHealth Rewards card showing a balance of 300 points, cash value $0.30 and 3 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 3 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 300 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-4.jpg",
+   "alt": "Classic MyHealth Rewards card showing a balance of 400 points, cash value $0.40 and 4 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 4 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 400 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-5.jpg",
+   "alt": "Plus MyHealth Rewards card showing a balance of 500 points, cash value $0.50 and 5 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 5 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 500 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-6.jpg",
+   "alt": "Plus MyHealth Rewards card showing a balance of 600 points, cash value $0.60 and 6 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 6 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 600 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-7.jpg",
+   "alt": "Plus MyHealth Rewards card showing a balance of 700 points, cash value $0.70 and 7 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 7 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 700 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-8.jpg",
+   "alt": "Plus MyHealth Rewards card showing a balance of 800 points, cash value $0.80 and 8 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 8 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 800 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-9.jpg",
+   "alt": "Plus MyHealth Rewards card showing a balance of 900 points, cash value $0.90 and 9 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 9 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 900 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-10.jpg",
+   "alt": "Gold MyHealth Rewards card showing a balance of 1,000 points, cash value $1.00 and 10 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 10 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 1,000 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-11.jpg",
+   "alt": "Gold MyHealth Rewards card showing a balance of 1,100 points, cash value $1.10 and 11 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 11 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 1,100 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-12.jpg",
+   "alt": "Gold MyHealth Rewards card showing a balance of 1,200 points, cash value $1.20 and 12 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 12 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 1,200 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-13.jpg",
+   "alt": "Gold MyHealth Rewards card showing a balance of 1,300 points, cash value $1.30 and 13 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 13 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 1,300 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-14.jpg",
+   "alt": "Gold MyHealth Rewards card showing a balance of 1,400 points, cash value $1.40 and 14 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 14 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 1,400 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-15.jpg",
+   "alt": "Elite MyHealth Rewards card showing a balance of 1,500 points, cash value $1.50 and 15 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 15 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 1,500 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-16.jpg",
+   "alt": "Elite MyHealth Rewards card showing a balance of 1,600 points, cash value $1.60 and 16 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 16 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 1,600 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-17.jpg",
+   "alt": "Elite MyHealth Rewards card showing a balance of 1,700 points, cash value $1.70 and 17 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 17 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 1,700 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-18.jpg",
+   "alt": "Elite MyHealth Rewards card showing a balance of 1,800 points, cash value $1.80 and 18 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 18 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 1,800 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-19.jpg",
+   "alt": "Elite MyHealth Rewards card showing a balance of 1,900 points, cash value $1.90 and 19 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 19 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 1,900 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-20.jpg",
+   "alt": "Elite MyHealth Rewards card showing a balance of 2,000 points, cash value $2.00 and 20 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 20 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 2,000 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-21.jpg",
+   "alt": "Elite MyHealth Rewards card showing a balance of 2,100 points, cash value $2.10 and 21 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 21 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 2,100 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-22.jpg",
+   "alt": "Elite MyHealth Rewards card showing a balance of 2,200 points, cash value $2.20 and 22 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 22 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 2,200 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-23.jpg",
+   "alt": "Elite MyHealth Rewards card showing a balance of 2,300 points, cash value $2.30 and 23 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 23 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 2,300 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-24.jpg",
+   "alt": "Elite MyHealth Rewards card showing a balance of 2,400 points, cash value $2.40 and 24 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 24 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 2,400 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/card-25.jpg",
+   "alt": "Aurora MyHealth Rewards card showing a balance of 2,500 points, cash value $2.50 and 25 of 25 stamps",
+   "usedIn": "Hero of the “Health Rewards Card” reminder e-mail for patients who have completed 25 chapters (in the e-mail the alt text is the translated headline, e.g. “Your card balance: 2,500 points”)",
+   "type": "informative"
+  },
+  {
+   "file": "images/email/stamp-basic.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the About You colours with the text “Health Rewards · +100” around the rim and the 🪪 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for About You. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-digital.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Technology & Digital Health colours with the text “Health Rewards · +100” around the rim and the 📱 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Technology & Digital Health. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-education.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Education colours with the text “Health Rewards · +100” around the rim and the 🎓 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Education. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-work.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Work & Profession colours with the text “Health Rewards · +100” around the rim and the 💼 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Work & Profession. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-survey.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Survey Preferences colours with the text “Health Rewards · +100” around the rim and the 🎁 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Survey Preferences. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-social.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Social Media & Payouts colours with the text “Health Rewards · +100” around the rim and the 💳 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Social Media & Payouts. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-general-health.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the General Health colours with the text “Health Rewards · +100” around the rim and the 🌤️ emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for General Health. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-conditions.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Medical Conditions colours with the text “Health Rewards · +100” around the rim and the 🩺 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Medical Conditions. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-symptoms.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Symptoms & Severity colours with the text “Health Rewards · +100” around the rim and the 🌡️ emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Symptoms & Severity. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-personal-health.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Personal Health colours with the text “Health Rewards · +100” around the rim and the ❤️‍🩹 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Personal Health. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-treatment.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Treatment colours with the text “Health Rewards · +100” around the rim and the 💉 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Treatment. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-medication.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Medication & Pharmacy colours with the text “Health Rewards · +100” around the rim and the 💊 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Medication & Pharmacy. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-providers.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Healthcare Providers colours with the text “Health Rewards · +100” around the rim and the 👩‍⚕️ emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Healthcare Providers. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-diagnostics.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Diagnostic Testing colours with the text “Health Rewards · +100” around the rim and the 🔬 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Diagnostic Testing. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-devices.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Medical Devices & Apps colours with the text “Health Rewards · +100” around the rim and the ⌚ emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Medical Devices & Apps. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-hospital.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Hospital Visits colours with the text “Health Rewards · +100” around the rim and the 🏥 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Hospital Visits. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-insurance.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Insurance & Costs colours with the text “Health Rewards · +100” around the rim and the 🛡️ emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Insurance & Costs. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-lifestyle.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Lifestyle & Habits colours with the text “Health Rewards · +100” around the rim and the 🧘 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Lifestyle & Habits. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-food.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Food, Drink & Fitness colours with the text “Health Rewards · +100” around the rim and the 🥗 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Food, Drink & Fitness. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-decisions.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Treatment Decisions colours with the text “Health Rewards · +100” around the rim and the ⚖️ emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Treatment Decisions. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-info.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Health Information colours with the text “Health Rewards · +100” around the rim and the 🔎 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Health Information. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-research.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Research Experience colours with the text “Health Rewards · +100” around the rim and the 🧪 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Research Experience. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-eligibility.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Study Eligibility colours with the text “Health Rewards · +100” around the rim and the 🎯 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Study Eligibility. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-verification.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Verification colours with the text “Health Rewards · +100” around the rim and the 📄 emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Verification. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-additional.png",
+   "alt": "",
+   "longAlt": "A round ink stamp in the Additional Details colours with the text “Health Rewards · +100” around the rim and the ✨ emoji in the centre",
+   "usedIn": "Reminder e-mail: stamp grid and “stamps waiting for you” row for Additional Details. Decorative there (empty alt), because the chapter name or the stamp count is written next to it",
+   "type": "decorative"
+  },
+  {
+   "file": "images/email/stamp-empty.png",
+   "alt": "",
+   "longAlt": "An empty dashed stamp spot marked +100",
+   "usedIn": "Reminder e-mail: stamp grid spot for a chapter that is not complete yet (decorative; the count is written below the grid)",
+   "type": "decorative"
+  }
+ ]
+}

@@ -72,7 +72,8 @@ export function levelOf(panel, earned = 0) {
   return { n: i + 1, name: names[i], next: to !== null ? names[i + 1] : null, from, to, p: to ? (earned - from) / (to - from) : 1, left: to ? to - earned : 0, all: names.map((nm, k) => ({ name: nm, at: BANDS[k] })) };
 }
 /** Points earned so far, from the rewards history (falls back to the balance when the history is empty). */
-export const earnedOf = (rows = [], balance = 0) => Math.max(balance, rows.reduce((a, r) => a + (Number(r.points) || 0), 0));
+// lifetime points earned (payouts are negative rows and do not lower a level)
+export const earnedOf = (rows = [], balance = 0) => Math.max(balance, rows.reduce((a, r) => a + Math.max(0, Number(r.points) || 0), 0));
 
 const BADGE_WORDS = {
   hcp: { firstProfile: "First gene", allProfiles: "Full genome", firstSurvey: "First study", fiveSurveys: "Five studies", tenSurveys: "Research regular" },
@@ -103,7 +104,7 @@ export function badgesOf({ panel, d, balance, rows = [], joined = 0, streak }) {
     { id: "so1", name: "Social star", icon: "megaphone", tone: "violet", ...q(socials, 1), how: "Follow MHO and get it approved" },
     { id: "st3", name: "On a roll", icon: "flame", tone: "coral", ...q(streak?.best || 0, 3), how: "Be active 3 weeks in a row" },
     { id: "k1", name: "1,000 points", icon: "coin", tone: "amber", ...q(pts, 1000), how: "Reach 1,000 points" },
-    { id: "pay", name: "Payout ready", icon: "gift", tone: "teal", ...q(pts, t || 1), how: t ? `Reach ${t.toLocaleString()} points` : "Reach the payout level" },
+    { id: "pay", name: "Payout ready", icon: "gift", tone: "teal", ...q(Math.max(0, balance?.approved || 0), t || 1), how: t ? `Reach ${t.toLocaleString()} approved points` : "Reach the payout level" },
   ];
   return list.map((b) => ({ ...b, got: b.p >= 1 && (b.id !== "pay" || t > 0) }));
 }

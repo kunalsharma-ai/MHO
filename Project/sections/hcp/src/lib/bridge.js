@@ -75,6 +75,19 @@ let dynamicNames = [];
 let rawFound = {};
 const docOf = (slug) => docs.find((x) => x.slug === slug);
 
+// The member area reports finished profiles by this package's card ids AND by the database slug / name of every section
+// the server counts as complete and has credited (web ProfileSection.jsx progress()). Keep them under this package's ids.
+const normKey = (v) => String(v ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
+function ownIds(map, cards) {
+  const byKey = new Map(Object.entries(map || {}).map(([k, v]) => [normKey(k), v]));
+  const out = {};
+  for (const { id, aliases } of cards) {
+    const hit = [id, ...aliases].filter(Boolean).map(normKey).find((k) => byKey.has(k));
+    if (hit !== undefined) out[id] = byKey.get(hit);
+  }
+  return out;
+}
+
 const emptyBuild = (OPTIONS) => build({ PROFILES: [], QUESTIONS: [], OPTIONS: byId(OPTIONS) });
 const sourceCache = new Map();
 
@@ -211,7 +224,17 @@ function valuesOf(profile, questions) {
 }
 
 export async function boot() {
-  docs = (await call('POST', '/api/v1/profile', { category: host().category })).data;
+  // The database keeps older copies of some HCP profiles (same name, slug = the name). Show each profile once, the copy
+  // with a known slug first, as the server's completion count does (backend lib/profileStatus.js). Without this the
+  // section listed 19 cards for 10 profiles and asked the same questions twice.
+  const raw = (await call('POST', '/api/v1/profile', { category: host().category })).data || [];
+  const keep = new Map();
+  for (const d of raw) {
+    const k = normKey(d.name || d.slug);
+    const cur = keep.get(k);
+    if (!cur || (!ORDER.includes(cur.slug) && ORDER.includes(d.slug))) keep.set(k, d);
+  }
+  docs = raw.filter((d) => keep.get(normKey(d.name || d.slug)) === d);
   allNames = [...new Set(docs.flatMap(namesOf))];
   const orderNames = new Set(docs.filter((d) => ORDER.includes(d.slug)).flatMap(namesOf));
   dynamicNames = allNames.filter((n) => !orderNames.has(n));
@@ -248,8 +271,9 @@ export async function boot() {
     const qs = Number(doc?.qualityScore ?? doc?.quality ?? doc?.qs);
     if (qs > 0) itemQuality[p.slug] = qs;
   }
-  setPoints(itemPoints, state.points, itemQuality);
-  return { answers, completed: state.completed || {} };
+  const cards = skeleton.profiles.map((p) => ({ id: p.slug, aliases: [docOf(p.slug)?.name] }));
+  setPoints(itemPoints, ownIds(state.points, cards), itemQuality);
+  return { answers, completed: ownIds(state.completed, cards) };
 }
 
 export async function ensureProfile(slug) {

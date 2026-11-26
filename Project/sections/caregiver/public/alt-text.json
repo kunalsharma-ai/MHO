@@ -1,0 +1,238 @@
+{
+  "note": "Alt text used for every image on the MyHealthOpinions caregiver dashboard section (v2.0). In the running section, profile-illustration alt text is translated (translated profile title + ' illustration' / ' completion badge'); language-flag alt text uses the English language name; the 3D heart, carousel backs, background objects, sparkles and emoji are decorative and marked aria-hidden. The Circle of Care (glass heart, orbits, beads, bonds), the reward tokens (heart-coin, rosette star) and the care locket are inline SVG / CSS and decorative; every bead is a button whose accessible name is the item title and its reward state, and the counters carry text labels.",
+  "images": [
+    {
+      "file": "favicon.ico",
+      "alt": "MyHealthOpinions heart logo",
+      "usedIn": "Browser tab icon (16/32/48 px)",
+      "type": "decorative-system"
+    },
+    {
+      "file": "images/brand/favicon.svg",
+      "alt": "MyHealthOpinions heart logo with heartbeat line",
+      "usedIn": "Browser tab icon (vector)",
+      "type": "decorative-system"
+    },
+    {
+      "file": "images/brand/apple-touch-icon.png",
+      "alt": "MyHealthOpinions heart logo",
+      "usedIn": "iPhone/iPad home-screen icon",
+      "type": "decorative-system"
+    },
+    {
+      "file": "images/brand/icon-192.png",
+      "alt": "MyHealthOpinions heart logo",
+      "usedIn": "Web app manifest icon 192 px",
+      "type": "decorative-system"
+    },
+    {
+      "file": "images/brand/icon-512.png",
+      "alt": "MyHealthOpinions heart logo",
+      "usedIn": "Web app manifest icon 512 px",
+      "type": "decorative-system"
+    },
+    {
+      "file": "images/brand/mho-logo.png",
+      "alt": "MyHealthOpinions logo",
+      "usedIn": "Top bar, profile panel, footer (1x screens); organisation logo for search engines (JSON-LD)",
+      "type": "informative"
+    },
+    {
+      "file": "images/brand/mho-logo@2x.png",
+      "alt": "MyHealthOpinions logo",
+      "usedIn": "Top bar, profile panel, footer (high-density screens, via srcset)",
+      "type": "informative"
+    },
+    {
+      "file": "images/og-image.png",
+      "alt": "MyHealthOpinions caregiver profiles: Your care. Your voice. A beating 3D heart above caregiving scene cards",
+      "usedIn": "Social sharing preview (og:image)",
+      "type": "informative"
+    },
+    {
+      "file": "images/flags/gb.svg",
+      "alt": "English language flag",
+      "usedIn": "Language picker, hero language strip, top bar",
+      "type": "informative"
+    },
+    {
+      "file": "images/flags/cn.svg",
+      "alt": "Chinese language flag",
+      "usedIn": "Language picker",
+      "type": "informative"
+    },
+    {
+      "file": "images/flags/es.svg",
+      "alt": "Spanish language flag",
+      "usedIn": "Language picker",
+      "type": "informative"
+    },
+    {
+      "file": "images/flags/in.svg",
+      "alt": "Hindi language flag",
+      "usedIn": "Language picker",
+      "type": "informative"
+    },
+    {
+      "file": "images/flags/ae.svg",
+      "alt": "Arabic language flag",
+      "usedIn": "Language picker",
+      "type": "informative"
+    },
+    {
+      "file": "images/flags/fr.svg",
+      "alt": "French language flag",
+      "usedIn": "Language picker",
+      "type": "informative"
+    },
+    {
+      "file": "images/flags/de.svg",
+      "alt": "German language flag",
+      "usedIn": "Language picker",
+      "type": "informative"
+    },
+    {
+      "file": "images/flags/br.svg",
+      "alt": "Portuguese language flag",
+      "usedIn": "Language picker",
+      "type": "informative"
+    },
+    {
+      "file": "images/flags/jp.svg",
+      "alt": "Japanese language flag",
+      "usedIn": "Language picker",
+      "type": "informative"
+    },
+    {
+      "file": "images/flags/kr.svg",
+      "alt": "Korean language flag",
+      "usedIn": "Language picker",
+      "type": "informative"
+    },
+    {
+      "file": "images/flags/ru.svg",
+      "alt": "Russian language flag",
+      "usedIn": "Language picker",
+      "type": "informative"
+    },
+    {
+      "file": "images/flags/it.svg",
+      "alt": "Italian language flag",
+      "usedIn": "Language picker",
+      "type": "informative"
+    },
+    {
+      "file": "images/scenes/walk.svg",
+      "alt": "A caregiver walking arm in arm with an elderly man who uses a cane",
+      "usedIn": "Hero 3D carousel (scene card around the beating heart)",
+      "type": "informative"
+    },
+    {
+      "file": "images/scenes/meds.svg",
+      "alt": "A caregiver handing medicine and water to an older woman in an armchair",
+      "usedIn": "Hero 3D carousel (scene card around the beating heart)",
+      "type": "informative"
+    },
+    {
+      "file": "images/scenes/story.svg",
+      "alt": "A parent reading a bedtime story to a sleepy child",
+      "usedIn": "Hero 3D carousel (scene card around the beating heart)",
+      "type": "informative"
+    },
+    {
+      "file": "images/scenes/wheel.svg",
+      "alt": "A caregiver pushing a smiling man in a wheelchair through a park",
+      "usedIn": "Hero 3D carousel (scene card around the beating heart)",
+      "type": "informative"
+    },
+    {
+      "file": "images/scenes/meal.svg",
+      "alt": "A caregiver carrying a tray with a warm bowl of soup",
+      "usedIn": "Hero 3D carousel (scene card around the beating heart)",
+      "type": "informative"
+    },
+    {
+      "file": "images/scenes/hug.svg",
+      "alt": "A daughter hugging her elderly mother",
+      "usedIn": "Hero 3D carousel (scene card around the beating heart)",
+      "type": "informative"
+    },
+    {
+      "file": "images/profiles/care-role.svg",
+      "alt": "Your Caregiving Role illustration: two caring hands cradling the red MyHealthOpinions heart with a heartbeat line, on a round clay pedestal",
+      "usedIn": "Profile card, profile side panel, completion card",
+      "type": "informative"
+    },
+    {
+      "file": "images/profiles/basic.svg",
+      "alt": "Basic Profile illustration: an identity card with a smiling avatar and a red location pin, on a teal pedestal",
+      "usedIn": "Profile card, profile side panel, completion card",
+      "type": "informative"
+    },
+    {
+      "file": "images/profiles/education.svg",
+      "alt": "Education & Care Skills illustration: a stack of colourful books topped with a graduation cap and a rolled diploma",
+      "usedIn": "Profile card, profile side panel, completion card",
+      "type": "informative"
+    },
+    {
+      "file": "images/profiles/professional.svg",
+      "alt": "Professional Profile illustration: a teal medical bag with a red cross beside a clipboard",
+      "usedIn": "Profile card, profile side panel, completion card",
+      "type": "informative"
+    },
+    {
+      "file": "images/profiles/health.svg",
+      "alt": "Personal Health illustration: a red heart with a heartbeat line wrapped by a stethoscope, with a green plus sign",
+      "usedIn": "Profile card, profile side panel, completion card",
+      "type": "informative"
+    },
+    {
+      "file": "images/profiles/insurance.svg",
+      "alt": "Health Insurance illustration: a blue shield with a white tick sheltered by an umbrella",
+      "usedIn": "Profile card, profile side panel, completion card",
+      "type": "informative"
+    },
+    {
+      "file": "images/profiles/food.svg",
+      "alt": "Food & Lifestyle illustration: a bowl of fresh salad with an apple and a glass of juice",
+      "usedIn": "Profile card, profile side panel, completion card",
+      "type": "informative"
+    },
+    {
+      "file": "images/profiles/fitness.svg",
+      "alt": "Sports & Fitness illustration: a dumbbell, a running shoe and a stopwatch with an energy bolt",
+      "usedIn": "Profile card, profile side panel, completion card",
+      "type": "informative"
+    },
+    {
+      "file": "images/profiles/tech.svg",
+      "alt": "Technology & Digital Health illustration: a smartphone showing a heart-rate graph next to a smartwatch",
+      "usedIn": "Profile card, profile side panel, completion card",
+      "type": "informative"
+    },
+    {
+      "file": "images/profiles/survey.svg",
+      "alt": "Survey & Reward Preferences illustration: a clipboard with ticked boxes and a wrapped gift",
+      "usedIn": "Profile card, profile side panel, completion card",
+      "type": "informative"
+    },
+    {
+      "file": "images/profiles/social.svg",
+      "alt": "Social Media & Payouts illustration: a green wallet with a payment card, gold coins and a chat bubble",
+      "usedIn": "Profile card, profile side panel, completion card",
+      "type": "informative"
+    },
+    {
+      "file": "images/profiles/additional.svg",
+      "alt": "Additional Details illustration: a rocket launching from a pedestal with sparkles and a small planet",
+      "usedIn": "Profile card, profile side panel, completion card",
+      "type": "informative"
+    },
+    {
+      "file": "images/email/circle-of-care.gif",
+      "alt": "An animated circle of care: twelve coloured beads light up one by one on an orbit around a glass heart that fills with warm light, on a plum night sky with tiny stars",
+      "usedIn": "Banner of the “Your Circle of Care is waiting” reminder e-mail (decorative; the care ledger is written underneath; in the e-mail the alt text is the translated “Your Circle of Care”)"
+    }
+  ]
+}

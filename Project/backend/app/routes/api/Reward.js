@@ -1,6 +1,11 @@
 import express from "express";
 import { Rewards as rewardsController } from "../../controller/index.js";
 import { expressRoute, expressView, isAuthenticated, fsLogger } from "../../../utils/index.js"
+import { requireAdmin, ADMIN_ROLES } from "../../../utils/access.js";
+import { User } from "../../model/index.js";
+
+// The admin Responses page sends "Approve" / "Reject"; the ledger stores "Approved" / "Rejected".
+const STATUS = { approve: "Approved", approved: "Approved", reject: "Rejected", rejected: "Rejected", pending: "Pending" };
 Date.prototype.resetTime = function (type = "start") {
     if (type === "end") {
         this.setHours(23);
@@ -51,8 +56,9 @@ router
     ))
     .put(expressRoute(
         async req => {
-            // Create new entry
-            throw new Error("under development")
+            // Members never credit themselves: the server credits surveys, profiles and referrals from its own records
+            // (lib/points.js, POST /api/v1/me/points/sync). Admins approve or reject credits below.
+            throw new Error("Rewards are credited by the server. Use POST /api/v1/me/points/sync.")
         },
         rewardsController
     ))
@@ -60,23 +66,30 @@ router
     .route('/:id')
     .get(expressRoute(
         async req => {
-            // read single entry
+            // read single entry: the member's own, or any for an admin
             let message = "";
             let data = await rewardsController.read(req.params.id);
+            if (data && String(data.user?._id ?? data.user) !== String(req.user._id)) {
+                const me = await User.findById(req.user._id).select("+role").lean();
+                if (!ADMIN_ROLES.includes(String(me?.role || "").toLowerCase())) throw new Error("Not found");
+            }
             return { message, data };
         },
         rewardsController
     ))
-    .put(expressRoute(
+    // approving, rejecting or changing a credit is an admin task (a member could set their own points before)
+    .put(requireAdmin, expressRoute(
         async req => {
-            // update single entry
+            // update single entry: only the status can change
             let message = "";
-            let data = await rewardsController.update(req.params.id, req.body)
+            const status = STATUS[String(req.body?.status || "").trim().toLowerCase()];
+            if (!status) throw new Error("Unknown status");
+            let data = await rewardsController.update(req.params.id, { status })
             return { message, data };
         },
         rewardsController
     ))
-    .delete(expressRoute(
+    .delete(requireAdmin, expressRoute(
         async req => {
             // delete single entry
             let message = "";

@@ -10,6 +10,7 @@ import {
 } from "@/hooks/useRewardsRefresh";
 
 const BASE = "/mho-sections";
+const PROFILE_REWARD = { pointsPerProfile: 50, qualityPerProfile: 1 };
 const SECTIONS = {
   patient: {
     folder: "patient",
@@ -124,21 +125,23 @@ export default function ProfileSection({ view = "all", categories, onFail, onIte
         }
         window.location.replace(target || "/");
       },
+      // profiles that are done and paid: the cards the package already celebrated (kept on the account), plus every
+      // section the server counts as complete and credited (by its database slug and name; each package's bridge maps
+      // them to its own card ids). So the package's own points, genome / circle / pulse and badges match the header.
       progress: async () => {
-        const paid = await readPaidProfiles(user);
+        const [paid, server] = await Promise.all([readPaidProfiles(user), api.get("/api/v1/me/points").catch(() => null)]);
+        const points = { ...(paid || {}) };
+        for (const p of server?.data?.profiles || []) for (const k of [p.slug, p.name]) if (k) points[k] = Number(p.points) || PROFILE_REWARD.pointsPerProfile;
         const now = Date.now();
-        return {
-          completed: Object.fromEntries(Object.keys(paid || {}).map((slug) => [slug, now])),
-          points: paid || {},
-        };
+        return { completed: Object.fromEntries(Object.keys(points).map((k) => [k, now])), points };
       },
+      // a profile card was finished: the server checks the answers and credits the profile's points (backend lib/points.js),
+      // then the header, dashboard and rewards read the new balance (bumpRewards) and the coin animation plays
       complete: async (slug, points, quality) => {
-        const paid = await creditCardRewards(user, [{ slug, name: slug, points: points || 50 }]);
+        await creditCardRewards(user, [{ slug, name: slug, points: points || 50 }]);
         const scored = await creditQualityScore(user, [slug], quality || 1);
-        if (paid || scored) {
-          bumpRewards();
-          await user?.Reload?.();
-        }
+        bumpRewards();
+        if (scored) await user?.Reload?.();
       },
     };
     if (section.style) loadStyle(root + section.style);
@@ -147,6 +150,10 @@ export default function ProfileSection({ view = "all", categories, onFail, onIte
         if (cancelled) return;
         mounted = await window[section.global].mount(hostRef.current, {
           assetBase: root,
+          // what the server credits per profile (backend lib/points.js; an admin can set other points on a profile),
+          // so the package shows the same numbers as the header
+          config: { rewards: PROFILE_REWARD },
+          rewards: PROFILE_REWARD,
           view,
           // a soft sound on every answer, as in the original section packages; the member can turn it off
           sound,

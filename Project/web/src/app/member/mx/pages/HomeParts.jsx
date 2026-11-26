@@ -9,7 +9,6 @@ import { api } from "@/util";
 import { useMx, useAnswers } from "../data";
 import { Icon, Empty, fmtDate, useToast, apiOk, apiMessage } from "../kit";
 import { sectionHref, sectionTitle } from "../parts";
-import { loadRewardRows } from "../rewardsData";
 
 const n = (v) => Number(v) || 0;
 
@@ -145,7 +144,9 @@ export function Opportunities() {
 export function PayoutDial() {
   const { balance } = useMx();
   const t = balance.threshold || 0;
-  const p = t ? Math.min(1, balance.points / t) : 0;
+  // a payout uses approved points; survey points count once the research team has checked them
+  const ok = Math.max(0, balance.approved);
+  const p = t ? Math.min(1, ok / t) : 0;
   const ticks = Array.from({ length: 24 }, (_, i) => i);
   return (
     <section className="mx-dialcard mx-rise" aria-labelledby="mx-dial-h" style={{ "--i": 5 }}>
@@ -159,7 +160,8 @@ export function PayoutDial() {
         </svg>
         <span className="face"><b>{balance.points.toLocaleString()}</b><small>points</small></span>
       </div>
-      <p className="note">{!t ? "The payout level could not be read right now." : p >= 1 ? "You can request a payout." : `${(t - balance.points).toLocaleString()} points to unlock your payout`}</p>
+      <p className="note">{!t ? "The payout level could not be read right now." : p >= 1 ? "You can request a payout." : `${(t - ok).toLocaleString()} approved points to unlock your payout`}</p>
+      {balance.pending > 0 && <p className="note" style={{ marginTop: -4, opacity: .8 }}>{balance.pending.toLocaleString()} points awaiting approval</p>}
       <Link className="mx-btn sm" href="/member/rewards">{p >= 1 ? "Request a payout" : "View rewards"}</Link>
     </section>
   );
@@ -229,7 +231,7 @@ export function Milestones() {
     ["First survey", "surveys", doneS >= 1, `${Math.min(doneS, 1)} of 1`],
     ["5 surveys", "star", doneS >= 5, `${Math.min(doneS, 5)} of 5`],
     ["First friend", "share", joined >= 1, `${Math.min(joined, 1)} of 1`],
-    ["Payout ready", "gift", t > 0 && balance.points >= t, t ? `${Math.min(100, Math.round((balance.points / t) * 100))}%` : "—"],
+    ["Payout ready", "gift", t > 0 && balance.approved >= t, t ? `${Math.min(100, Math.round((Math.max(0, balance.approved) / t) * 100))}%` : "—"],
   ];
   const earned = list.filter((m) => m[2]).length;
   return (
@@ -248,17 +250,12 @@ export function Milestones() {
 }
 
 const ACT = { Survey: "surveys", Profile: "profile", Referral: "share", Social: "star" };
-const ST = { complete: ["ok", "check", "Completed"], terminate: ["bad", "x", "Screened out"], overquota: ["warn", "clock", "Quota full"], dropout: ["info", "clock", "Not finished"], approved: ["ok", "check", "Approved"], credited: ["ok", "check", "Credited"] };
+const ST = { complete: ["ok", "check", "Completed"], terminate: ["bad", "x", "Screened out"], overquota: ["warn", "clock", "Quota full"], dropout: ["info", "clock", "Not finished"], approved: ["ok", "check", "Approved"], credited: ["ok", "check", "Credited"], pending: ["warn", "clock", "Awaiting approval"], rejected: ["bad", "x", "Not approved"], paid: ["info", "gift", "Paid out"] };
 /** Recent activity: the newest entries of the rewards history. */
 export function RecentActivity() {
-  const { member } = useMx();
-  const [rows, setRows] = React.useState(null);
-  React.useEffect(() => {
-    if (!member?._id) return undefined;
-    let live = true;
-    loadRewardRows(member._id, []).then((r) => live && setRows(r.rows.slice(0, 5))).catch(() => live && setRows([]));
-    return () => { live = false; };
-  }, [member?._id]);
+  const { activity } = useMx();
+  // the same history the member area loads with the balance (data.jsx), newest first
+  const rows = activity.ready ? activity.rows.slice(0, 5) : null;
   return (
     <section className="mx-card mx-recent mx-rise" aria-labelledby="mx-ra-h" style={{ "--i": 9 }}>
       <div className="mx-sec-h"><div><span className="mx-eyebrow">Your impact</span><h2 id="mx-ra-h" style={{ marginTop: 6 }}>Recent activity</h2></div>
@@ -268,13 +265,13 @@ export function RecentActivity() {
       ) : (
         <ol>
           {rows.map((r, i) => {
-            const [tone, ic, label] = ST[r.status] || ["info", ACT[r.type] || "spark", r.status || ""];
+            const [tone, ic, label] = ST[r.approval || r.status] || ["info", ACT[r.type] || "spark", r.status || ""];
             return (
               <li key={r.id} style={{ "--i": i }} className={tone}>
                 <span className="ic"><Icon name={ic} size={16} /></span>
                 <small>{r.date ? fmtDate(r.date) : ""}</small>
                 <b>{r.activity}</b>
-                <span>{r.points ? `+${r.points} points` : label}</span>
+                <span>{r.points > 0 ? `+${r.points.toLocaleString()} points${r.approval === "pending" ? " · awaiting approval" : ""}` : r.points < 0 ? `${r.points.toLocaleString()} points paid out` : label}</span>
               </li>
             );
           })}

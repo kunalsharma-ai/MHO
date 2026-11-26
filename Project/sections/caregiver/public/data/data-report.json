@@ -1,0 +1,169 @@
+{
+  "fixedParents": [
+    {
+      "question": "sport-category",
+      "declared": "do-sport-participation",
+      "used": "cg-sport-participation"
+    }
+  ],
+  "unmatchedParentValues": [
+    {
+      "question": "employment-industry",
+      "option": "Agriculture",
+      "parent": "empstat-homeuser",
+      "value": "disabled"
+    },
+    {
+      "question": "employment-industry",
+      "option": "Manufacturing",
+      "parent": "empstat-homeuser",
+      "value": "disabled"
+    },
+    {
+      "question": "employment-industry",
+      "option": "Service",
+      "parent": "empstat-homeuser",
+      "value": "disabled"
+    }
+  ],
+  "droppedQuestions": [
+    {
+      "profile": "professional",
+      "question": "other-specify"
+    },
+    {
+      "profile": "professional",
+      "question": "freelancer"
+    },
+    {
+      "profile": "professional",
+      "question": "orgspend"
+    }
+  ],
+  "labelFixes": [
+    {
+      "question": "rural",
+      "from": "What type of area do you currently live in",
+      "to": "What type of area do you currently live in?"
+    },
+    {
+      "question": "additional-certification",
+      "from": "Have you completed any additional certifications",
+      "to": "Have you completed any additional certifications?"
+    },
+    {
+      "question": "pension-homeuser",
+      "from": "Are you availing pension facility?",
+      "to": "Are you currently receiving a pension?"
+    },
+    {
+      "question": "employment-industry",
+      "from": "please select your industry",
+      "to": "Please select your industry"
+    },
+    {
+      "question": "cg-jobrole",
+      "from": "Job Title",
+      "to": "What is your job title?"
+    },
+    {
+      "question": "orgoverseas",
+      "from": "How many branches your organization has in abroad?",
+      "to": "How many branches does your organization have abroad?"
+    },
+    {
+      "question": "experience-caregiver",
+      "from": "Approximate how much experience you have under your current designation?",
+      "to": "Approximately how much experience do you have in your current designation?"
+    },
+    {
+      "question": "health-insurance-services-used-past-12-months",
+      "from": "Which health insurance services have you used in the past 12 months",
+      "to": "Which health insurance services have you used in the past 12 months?"
+    },
+    {
+      "question": "cg-alcohol-category",
+      "from": "which types of alcoholic drinks do you usually consume? (Select all that apply)",
+      "to": "Which types of alcoholic drinks do you usually consume? (Select all that apply)"
+    },
+    {
+      "question": "online-food-grocery-lifestyle-purchase-platforms",
+      "from": "Which online platforms to purchase food, groceries, or lifestyle products?",
+      "to": "Which online platforms do you use to purchase food, groceries, or lifestyle products?"
+    },
+    {
+      "question": "health-management-app",
+      "from": "Which types of mobile apps to manage your health or condition?",
+      "to": "Which types of mobile apps do you use to manage your health or condition?"
+    },
+    {
+      "question": "health-service",
+      "from": "Which digital health services would you are using currently",
+      "to": "Which digital health services are you currently using?"
+    },
+    {
+      "question": "survey-participation-frequency",
+      "from": "How often do you participate in surveys",
+      "to": "How often do you participate in surveys?"
+    },
+    {
+      "question": "survey-mode",
+      "from": "How do you prefer to participate in Survey?",
+      "to": "How do you prefer to participate in surveys?"
+    },
+    {
+      "question": "survey-participation-time-duration",
+      "from": "How much time are you comfortable spending on a survey",
+      "to": "How much time are you comfortable spending on a survey?"
+    },
+    {
+      "question": "willingness-survey-participation",
+      "from": "Are you willing to participate in future market research studies",
+      "to": "Are you willing to participate in future market research studies?"
+    },
+    {
+      "question": "survey-type-interested-in",
+      "from": "What types of study would you be open to join",
+      "to": "What types of study would you be open to joining?"
+    },
+    {
+      "question": "share-consent",
+      "from": "Are you comfortable sharing your health related experiences for research purposes (confidentially)",
+      "to": "Are you comfortable sharing your health-related experiences for research purposes (confidentially)?"
+    },
+    {
+      "question": "survey-participation-motivation",
+      "from": "What motivates you to participate in surveys",
+      "to": "What motivates you to participate in surveys?"
+    },
+    {
+      "question": "video-survey-participation-consent",
+      "from": "Are you comfortable participating in online video interviews or discussions (via Zoom, Teams etc.)",
+      "to": "Are you comfortable participating in online video interviews or discussions (via Zoom, Teams etc.)?"
+    },
+    {
+      "question": "mode-of-payment",
+      "from": "What type of rewards do you prefer",
+      "to": "What type of rewards do you prefer?"
+    },
+    {
+      "question": "survey-participation-timeslot",
+      "from": "What is your preferred time of day to participate in Survey",
+      "to": "What is your preferred time of day to participate in surveys?"
+    },
+    {
+      "question": "recontact-consent",
+      "from": "Do you agree to be re-contacted for future studies",
+      "to": "Do you agree to be re-contacted for future studies?"
+    },
+    {
+      "question": "payment-method",
+      "from": "How do you like to receive payments",
+      "to": "How would you like to receive payments?"
+    }
+  ],
+  "notes": [
+    "Question \"department\" is used in a profile but missing from the question bank – label added: \"Which department do you work in?\"",
+    "Question \"hw\" is used in a profile but missing from the question bank – label added: \"Which household responsibilities do you mainly manage?\""
+  ]
+}
