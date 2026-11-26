@@ -348,6 +348,7 @@ export default function Join({ mode = 'signup' }) {
   const [unverified, setUnverified] = useState(false); // came back with an e-mail that is not confirmed yet
   const [taken, setTaken] = useState(''); // this email already has an active account (shows "Log in instead")
   const [again, setAgain] = useState(false); // this email was registered before but not confirmed: a new link was sent
+  const [mailFailed, setMailFailed] = useState(false); // the account is saved but the confirmation email did not go out (#42)
   const cardRef = useRef(null);
   const clearErr = (...ks) => setErr((e) => (ks.some((k) => e[k]) ? Object.fromEntries(Object.entries(e).filter(([k]) => !ks.includes(k))) : e));
   const set = (k) => (v) => { setF((s) => ({ ...s, [k]: v && v.target ? (v.target.type === 'checkbox' ? v.target.checked : v.target.value) : v })); clearErr(k); };
@@ -753,6 +754,7 @@ export default function Join({ mode = 'signup' }) {
     forgetReferral();
     // registered before but never confirmed: the API sent a new confirmation link instead of making a second account
     setAgain(!!res.data?.alreadyRegistered);
+    setMailFailed(res.data?.mailSent === false);
     const payload = { mail };
     // The questions answered here wait in this browser; they are saved to the account at the first log-in (pendingAnswers.js).
     const answers = buildSignupAnswers(f);
@@ -856,8 +858,10 @@ export default function Join({ mode = 'signup' }) {
           ) : state === 'done' ? (
             <div className="join-done">
               <div className="envelope" aria-hidden="true"><span className="env-flap" /><span className="env-letter"><Icon name="check" size={28} stroke={3} /></span></div>
-              <h2>{unverified ? 'Please confirm your email' : again ? 'This email is already registered' : `Check your inbox${f.firstName ? `, ${f.firstName}` : ''}!`}</h2>
-              {again && !unverified
+              <h2>{unverified ? 'Please confirm your email' : mailFailed ? 'Your account is saved' : again ? 'This email is already registered' : `Check your inbox${f.firstName ? `, ${f.firstName}` : ''}!`}</h2>
+              {mailFailed && !unverified
+                ? <p className="step-note warn" role="alert"><Icon name="info" size={14} /> <span style={{ textAlign: 'left', textAlignLast: 'auto' }}>We couldn’t send the confirmation email to <b>{f.email}</b> just now. Please press “Resend confirmation email” in a few minutes, or write to <a href="mailto:support@myhealthopinions.com">support@myhealthopinions.com</a>.</span></p>
+                : again && !unverified
                 ? <p>An account with <b>{f.email}</b> was created earlier but the email is not confirmed yet, so we did not make a second one. We sent a new confirmation link: click it to activate your account and create your password.</p>
                 : unverified
                 ? <p>Your email <b>{f.email}</b> is not confirmed yet. Use the button below to get a new confirmation link, then click it to activate your account.</p>

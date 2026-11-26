@@ -62,12 +62,12 @@ export default function HumanCheck({ onChange, resetKey = 0 }) {
         value={answer}
         onChange={(e) => type(e.target.value)}
         label={challenge?.mode === "text" ? "Your answer" : "Type the code in the picture"}
-        inputProps={{ maxLength: 10, spellCheck: false, autoCapitalize: "characters", "aria-describedby": "human-check-help" }}
+        inputProps={{ maxLength: 10, spellCheck: false, autoCapitalize: "off", "aria-describedby": "human-check-help" }}
       />
       <Button size="small" sx={{ alignSelf: "flex-start", textTransform: "none", p: 0 }} onClick={() => setMode(mode === "image" ? "text" : "image")}>
         {mode === "image" ? "Answer a question instead" : "Use a picture code instead"}
       </Button>
-      <Typography id="human-check-help" fontSize={12} color="text.secondary">Each check works once. A new one appears if sign-in doesn't go through.</Typography>
+      <Typography id="human-check-help" fontSize={12} color="text.secondary">Capital and small letters both work. Each check works once. A new one appears if sign-in doesn't go through.</Typography>
     </Box>
   );
 }

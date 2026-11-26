@@ -8,8 +8,57 @@ function getOrigin(data) {
     if (/^https?:\/\//i.test(data)) {
         return new URL(data).hostname; // 'domain.tld'
     }
-    return data;
+    return String(data || "").replace(/:\d+$/, "").toLowerCase();
 }
+
+// Issue #42 (no verification email at sign-up): SMTP settings for a site come from config/<site>.json. The files for
+// myhealthopinions.com and www.myhealthopinions.com were empty, so JSON.parse threw on every request, the service
+// answered with an HTML 500 page, and the API counted the mail as sent. Now:
+//   - config/<site>.json, then the same name with or without "www.", and only a file that parses and names a host;
+//   - otherwise the SMTP_* settings from the environment file (SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER,
+//     SMTP_PASS, SMTP_FROM, SMTP_FROM_NAME, SMTP_REPLY_TO), so the password does not have to live in git;
+//   - every failure is a JSON error with a real HTTP status, and the reason is in the log (never the password).
+function readConfig(name) {
+    const file = `config/${name}.json`;
+    if (!/^[a-z0-9.-]+$/.test(name) || !fs.existsSync(file)) return null;
+    try {
+        const text = fs.readFileSync(file, "utf-8").trim();
+        if (!text) { console.error(`[email] ${file} is empty: no SMTP settings for ${name}`); return null; }
+        const c = JSON.parse(text);
+        if (!c || !c.host) { console.error(`[email] ${file} has no "host": no SMTP settings for ${name}`); return null; }
+        return c;
+    } catch (error) {
+        console.error(`[email] ${file} is not valid JSON (${error.message})`);
+        return null;
+    }
+}
+function fromEnv() {
+    const e = process.env;
+    if (!e.SMTP_HOST) return null;
+    const port = Number(e.SMTP_PORT) || 587;
+    return {
+        host: e.SMTP_HOST,
+        port,
+        secure: e.SMTP_SECURE ? ["true", "1", "ssl", "tls"].includes(String(e.SMTP_SECURE).toLowerCase()) : port === 465,
+        ...(e.SMTP_USER ? { auth: { user: e.SMTP_USER, pass: e.SMTP_PASS || "" } } : {}),
+        from: e.SMTP_FROM || e.SMTP_USER,
+        name: e.SMTP_FROM_NAME || "My Health Opinions",
+        replyTo: e.SMTP_REPLY_TO || undefined,
+    };
+}
+function smtpFor(origin) {
+    const site = String(origin || "");
+    const names = [site, site.startsWith("www.") ? site.slice(4) : `www.${site}`].filter(Boolean);
+    for (const n of names) {
+        const c = readConfig(n);
+        if (c) return c;
+    }
+    return fromEnv();
+}
+const sender = (c) => {
+    const from = c.from || c.auth?.user;
+    return c.name && from ? `${c.name} <${from}>` : from;
+};
 
 (async () => {
     const app = express();
@@ -17,20 +66,11 @@ function getOrigin(data) {
         .use([
             (req, res, next) => {
                 req.origin = getOrigin(req.headers.origin ?? req.headers.host);
-                if(!fs.existsSync(`config/${req.origin}.json`)){
-                    return next();
-                }
-                req.creds=JSON.parse(
-                    fs.readFileSync(`config/${req.origin}.json`,"utf-8")
-                )
+                req.creds = smtpFor(req.origin);
                 next();
             },
             express.static('public'),
             express.json(),
-            (r,s,n)=>{
-                console.log("yahan tak theek hai")
-                n();
-            },
             express.urlencoded({
                 extended: true,
             }),
@@ -63,7 +103,6 @@ function getOrigin(data) {
         })
         .use("/email", async (r, s, n) => {
             try {
-                console.log({creds:r.creds})
                 if(r.creds)return n();
                 if (r?.headers?.creds) {
                     const creds = r.headers.creds.split(".");
@@ -72,7 +111,6 @@ function getOrigin(data) {
                         data: creds[1],
                         tag: creds[3]
                     }, Buffer.from(creds[2], "base64"))
-                    console.log(temp)
                     let data = JSON.parse(temp)
                     if (data.origin !== r.origin)
                         return s.status(403).json({
@@ -91,13 +129,15 @@ function getOrigin(data) {
                     };
                     return n();
                 }
-                return s.status(405).json({
-                    headers: r.headers
+                console.error(`[email] no SMTP settings for ${r.origin}: add config/${r.origin}.json or SMTP_* to the env file`);
+                return s.status(503).json({
+                    status: "error",
+                    message: `No SMTP settings for ${r.origin}.`
                 })
 
             } catch (error) {
                 console.log(error);
-                return s.json({ message: error.message })
+                return s.status(400).json({ status: "error", message: error.message })
             }
         })
         .get("/email", async (r, s) => {
@@ -136,7 +176,7 @@ function getOrigin(data) {
             try {
                 console.log(`[${new Date()}] Sending Mail to ${r.body.to}`);
                 const mail = new Mail(r.creds);
-                const from = `${r.creds.name} <${r.creds.from}>`;
+                const from = sender(r.creds);
                 const to = r.body.to;
                 const subject = r.body.subject;
                 const message = r.body.message ?? { html: r.body.content };
@@ -166,9 +206,9 @@ function getOrigin(data) {
                 })
 
             } catch (error) {
-                console.log(r.creds)
-                console.log(error)
-                return s.json({ error: error.message, status: "error", message: "Unable to send email." })
+                // never log r.creds: it holds the SMTP password
+                console.error(`[email] sending to ${r.body?.to} for ${r.origin} failed: ${error.message}`)
+                return s.status(502).json({ error: error.message, status: "error", message: "Unable to send email." })
             }
         })
     app.listen(port, () => {
