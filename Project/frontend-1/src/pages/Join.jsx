@@ -346,6 +346,8 @@ export default function Join({ mode = 'signup' }) {
   const [resendMsg, setResendMsg] = useState('');
   const [social, setSocial] = useState(false); // came back from a social log-in: name / e-mail are pre-filled
   const [unverified, setUnverified] = useState(false); // came back with an e-mail that is not confirmed yet
+  const [taken, setTaken] = useState(''); // this email already has an active account (shows "Log in instead")
+  const [again, setAgain] = useState(false); // this email was registered before but not confirmed: a new link was sent
   const cardRef = useRef(null);
   const clearErr = (...ks) => setErr((e) => (ks.some((k) => e[k]) ? Object.fromEntries(Object.entries(e).filter(([k]) => !ks.includes(k))) : e));
   const set = (k) => (v) => { setF((s) => ({ ...s, [k]: v && v.target ? (v.target.type === 'checkbox' ? v.target.checked : v.target.value) : v })); clearErr(k); };
@@ -740,9 +742,17 @@ export default function Join({ mode = 'signup' }) {
       if (res.code === 'CAPTCHA_FAILED') return fail('', { captcha: 'The human check did not match. Please try the new one.' });
       if (res.code === 'NOT_ELIGIBLE' && f.role === 'hcp' && /criteria/i.test(res.message)) { setState('rejected'); setCount(10); return; }
       if (res.code === 'RATE_LIMITED') return fail('Too many sign-up attempts. Please wait a few minutes and try again.');
+      if (res.code === 'EMAIL_TAKEN') { // issue #37: this email already has an active account, so no second one is made
+        fail('', { email: res.message || 'This email is already registered. Please log in.' });
+        setTaken(mail);
+        requestAnimationFrame(() => document.getElementById('j-em')?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+        return;
+      }
       return fail(res.message || 'Something went wrong. Please try again in a moment.', fe);
     }
     forgetReferral();
+    // registered before but never confirmed: the API sent a new confirmation link instead of making a second account
+    setAgain(!!res.data?.alreadyRegistered);
     const payload = { mail };
     // The questions answered here wait in this browser; they are saved to the account at the first log-in (pendingAnswers.js).
     const answers = buildSignupAnswers(f);
@@ -846,8 +856,10 @@ export default function Join({ mode = 'signup' }) {
           ) : state === 'done' ? (
             <div className="join-done">
               <div className="envelope" aria-hidden="true"><span className="env-flap" /><span className="env-letter"><Icon name="check" size={28} stroke={3} /></span></div>
-              <h2>{unverified ? 'Please confirm your email' : `Check your inbox${f.firstName ? `, ${f.firstName}` : ''}!`}</h2>
-              {unverified
+              <h2>{unverified ? 'Please confirm your email' : again ? 'This email is already registered' : `Check your inbox${f.firstName ? `, ${f.firstName}` : ''}!`}</h2>
+              {again && !unverified
+                ? <p>An account with <b>{f.email}</b> was created earlier but the email is not confirmed yet, so we did not make a second one. We sent a new confirmation link: click it to activate your account and create your password.</p>
+                : unverified
                 ? <p>Your email <b>{f.email}</b> is not confirmed yet. Use the button below to get a new confirmation link, then click it to activate your account.</p>
                 : <p>We sent a confirmation link to <b>{f.email}</b>. Click it to activate your account (double opt-in) and start receiving paid surveys.</p>}
               <ol className="done-next">
@@ -910,6 +922,11 @@ export default function Join({ mode = 'signup' }) {
                     <Field label={f.role === 'hcp' ? 'Email (work email speeds up verification)' : 'Email'} required htmlFor="j-em" error={err.email} icon="mail">
                       <input id="j-em" type="email" value={f.email} onChange={set('email')} onBlur={checkEmailNow} autoComplete="email" aria-invalid={!!err.email} />
                     </Field>
+                    {taken && taken === f.email.trim().toLowerCase() && (
+                      <p className="step-note join-taken" role="status">
+                        <Icon name="user" size={14} /> <Link to="/login">Log in</Link> with this email, or use <Link to="/login">Forgot password?</Link> there if you don’t remember it.
+                      </p>
+                    )}
                     <div className="form-row">
                       <Field label="Country of residence" required htmlFor="j-ct" error={err.country} icon="globe">
                         <CountrySelect id="j-ct" value={f.country} onChange={(c) => { setF((s) => ({ ...s, country: c, phoneCc: c, practiceCountry: s.practiceCountry || (COVERAGE_LIST.some((x) => x.code === c) ? c : '') })); clearErr('country'); }} invalid={!!err.country} />

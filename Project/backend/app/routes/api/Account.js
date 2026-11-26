@@ -119,14 +119,7 @@ router.post("/register", limits.register, wrap(async (req, res) => {
     if (!category) return fail(res, 403, "NOT_ELIGIBLE", "Based on your date of birth you’re not eligible to join this panel yet.", { errors: { dob: "You’re not eligible to join this panel yet." } });
 
     const existing = await User.findOne({ mail: v.email, origin: req.origin });
-    if (existing) {
-        // Do not reveal whether the address is registered. If that account is still unverified, its link is re-sent.
-        if (existing.isVerified?.email !== "verified") {
-            const raw = await issueToken(existing._id, "verify-email", req.origin, clientIp(req));
-            await sendSegmentMail(existing, "respondent", { otp: { code: raw } });
-        }
-        return ok(res, GENERIC_EMAIL_SENT, { email: v.email });
-    }
+    if (existing) return alreadyRegistered(req, res, existing, v.email);
 
     const user = new User({
         category,
@@ -147,7 +140,10 @@ router.post("/register", limits.register, wrap(async (req, res) => {
     try {
         await user.save();
     } catch (error) {
-        if (error?.code === 11000) return ok(res, GENERIC_EMAIL_SENT, { email: v.email });
+        if (error?.code === 11000) { // a second sign-up with the same email in the same moment
+            const twin = await User.findOne({ mail: v.email, origin: req.origin });
+            return twin ? alreadyRegistered(req, res, twin, v.email) : ok(res, GENERIC_EMAIL_SENT, { email: v.email });
+        }
         if (error?.name === "ValidationError") {
             const map = { mail: "email", "name.first": "firstName", dob: "dob", phone: "phone" };
             const errs = Object.fromEntries(Object.entries(error.errors).map(([k, e]) => [map[k] || k, e.message]));
@@ -168,6 +164,20 @@ router.post("/register", limits.register, wrap(async (req, res) => {
     eventStream.emitEvent("account-registered", { _id: String(user._id), segment: v.segment });
     ok(res, GENERIC_EMAIL_SENT, { email: v.email });
 }));
+
+// Issue #37: the sign-up form tells the person when the email already has an account, so no duplicate is made.
+// Only here, after a solved human check and within the register rate limit (no lookup on the email field itself).
+//   verified account    → 409 EMAIL_TAKEN: "This email is already registered. Please log in."
+//   unconfirmed account → its confirmation link is sent again; 200 with data.alreadyRegistered
+async function alreadyRegistered(req, res, user, email) {
+    if (user.isVerified?.email === "verified") {
+        const message = "This email is already registered. Please log in.";
+        return fail(res, 409, "EMAIL_TAKEN", message, { errors: { email: message } });
+    }
+    const raw = await issueToken(user._id, "verify-email", req.origin, clientIp(req));
+    await sendSegmentMail(user, "respondent", { otp: { code: raw } });
+    return ok(res, "This email is already registered but not confirmed yet. We’ve sent you a new confirmation link.", { email, alreadyRegistered: true, unverified: true });
+}
 
 router.post("/resend-verification", limits.email, wrap(async (req, res) => {
     if (!(await captchaPassed(req.body?.captcha, clientIp(req)))) return CAPTCHA_FAILED(res);
