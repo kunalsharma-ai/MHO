@@ -22,8 +22,11 @@ services:
     networks:
       - mho
   backend:
+    # Always this repo's API, built on `docker compose up` (pull_policy: build) and tagged with the registry name.
+    # The old prebuilt turn2opinion/backend:1.0.1 image has no /api/v1/account/* routes, so the site's login and
+    # sign-up showed "Could not load the check" (issue 16).
     image: registry.sampledge.com/my-health-opinions/backend:1.0.1
-    # `docker compose build backend` builds this repo's API (stages: base, build, development, production).
+    pull_policy: build
     build:
       context: Project/backend
       target: development

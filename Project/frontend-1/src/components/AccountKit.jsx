@@ -216,23 +216,43 @@ export function ServerCaptcha({ value, onChange, error, resetKey = 0 }) {
   const uid = useId();
   const [img, setImg] = useState('');
   const [state, setState] = useState('loading');
-  const load = async () => {
+  const [why, setWhy] = useState('');
+  const seq = useRef(0);
+  const load = async (retried = false) => {
+    const mine = ++seq.current;
     setState('loading');
+    setWhy('');
+    onChange({ id: '', answer: '' }); // an old id is never sent with a new picture
     const r = await accountCall('GET', '/captcha');
-    if (!r.ok || !r.data?.svg) { setState('error'); return; }
+    if (mine !== seq.current) return; // a newer request (refresh button, resetKey) has taken over
+    if (!r.ok || !r.data?.svg || !r.data?.id) {
+      // One quiet retry covers a blip (cold API container, dropped connection) before showing the error.
+      if (!retried && r.status !== 429) { setTimeout(() => { if (mine === seq.current) load(true); }, 1200); return; }
+      setWhy(r.status === 429 ? (r.message || 'Too many requests. Please wait a minute and try again.')
+        : r.status === 0 ? NETWORK_ERROR
+          : r.status === 404 ? 'The security check is not available on the server right now. Please try again shortly.'
+            : 'We could not load the security check. Please try again.');
+      setState('error');
+      return;
+    }
     setImg(`data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(r.data.svg)))}`);
     onChange({ id: r.data.id, answer: '' });
     setState('ready');
   };
   useEffect(() => { load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [resetKey]);
+  const busy = state === 'loading';
   return (
-    <div className={`acx-field acx-captcha ${error ? 'has-error' : ''}`}>
+    <div className={`acx-field acx-captcha ${error || state === 'error' ? 'has-error' : ''}`}>
       <label htmlFor={`cap-${uid}`}>Security check <b aria-hidden="true">*</b></label>
       <div className="acx-captcha-row">
-        <div className="acx-captcha-img" aria-live="polite">
-          {state === 'ready' ? <img src={img} alt="Security code: type the characters shown. Use the refresh button for a new code." width="180" height="60" /> : state === 'error' ? <span>Could not load the check.</span> : <span className="acx-spin" aria-label="Loading security check" />}
+        <div className={`acx-captcha-img is-${state}`} aria-live="polite">
+          {state === 'ready'
+            ? <img src={img} alt="Security code: type the characters shown. Use the refresh button for a new code." width="180" height="60" />
+            : state === 'error'
+              ? <button type="button" className="acx-captcha-retry" onClick={() => load()}><Icon name="refresh" size={14} /> Load the code</button>
+              : <span className="acx-spin" aria-label="Loading security check" />}
         </div>
-        <button type="button" className="acx-icon-btn" onClick={load} aria-label="Show a new security code"><Icon name="refresh" size={18} /></button>
+        <button type="button" className="acx-icon-btn" onClick={() => load()} disabled={busy} aria-label="Show a new security code"><Icon name="refresh" size={18} /></button>
         <input
           id={`cap-${uid}`}
           className="acx-captcha-input"
@@ -242,11 +262,12 @@ export function ServerCaptcha({ value, onChange, error, resetKey = 0 }) {
           autoCapitalize="off"
           spellCheck="false"
           placeholder="Type the code"
+          disabled={state === 'error'}
           aria-invalid={error ? true : undefined}
-          aria-describedby={error ? `cap-${uid}-err` : undefined}
+          aria-describedby={error || why ? `cap-${uid}-err` : undefined}
         />
       </div>
-      {error && <p className="acx-err" id={`cap-${uid}-err`} role="alert"><Icon name="info" size={13} /> {error}</p>}
+      {(error || why) && <p className="acx-err" id={`cap-${uid}-err`} role="alert"><Icon name="info" size={13} /> {why || error}</p>}
     </div>
   );
 }

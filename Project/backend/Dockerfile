@@ -9,8 +9,9 @@
 #   development  every dependency plus nodemon; restarts on file changes (mount app/ and utils/ over /app)
 #   production   a small image with the built folder from "build", run as the node user
 #
-# (The live stack currently runs the prebuilt registry.sampledge.com/turn2opinion/backend:1.0.1 image,
-#  which does not include the changes in this folder.)
+# docker-compose.yml builds the development stage as mho-api:dev on every `docker compose up` (pull_policy: build).
+# Before that it ran the prebuilt registry.sampledge.com/turn2opinion/backend:1.0.1 image, which lacks this
+# folder's routes (e.g. /api/v1/account/captcha, used by the site's login and sign-up).
 
 FROM node:22-alpine AS base
 WORKDIR /app
@@ -19,11 +20,10 @@ COPY package.json package-lock.json* ./
 
 FROM base AS build
 RUN npm ci || npm install
-# COPY app ./app
-# COPY utils ./utils
-COPY . . 
+# The whole folder (app, utils, package files); .dockerignore leaves out node_modules and logs.
+COPY . .
 # app/utils is a link to ../utils. Docker copies it as it is; rebuild it in case a checkout made it a plain file.
-# RUN rm -rf app/utils && ln -s ../utils app/utils
+RUN rm -rf app/utils && ln -s ../utils app/utils
 # The test suite needs MongoDB, so it is not run here. Keep only what production needs.
 RUN npm prune --omit=dev
 
@@ -42,8 +42,8 @@ WORKDIR /app
 RUN chown node:node /app
 ENV NODE_ENV=production
 ENV port=3000
-# COPY --from=build --chown=node:node /app ./
-COPY . .
+# Copy the built folder: it holds node_modules, which a plain `COPY . .` here would not (they are dockerignored).
+COPY --from=build --chown=node:node /app ./
 USER node
 EXPOSE 3000
 CMD ["node", "app/server.js"]
