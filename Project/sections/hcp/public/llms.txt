@@ -1,0 +1,28 @@
+# MyHealthOpinions — Healthcare Professionals Portal
+
+> MyHealthOpinions (www.myhealthopinions.com) is a healthcare market-research community run by Frequent Research Fieldwork Solutions Pvt. Ltd. This portal is for healthcare professionals (HCPs) — physicians, surgeons, nurses and midwives, pharmacists, dentists, laboratory and diagnostic professionals, allied health professionals, health-IT staff and healthcare managers. Members complete short professional profiles so they can be matched to paid research studies in their specialty.
+
+## What the portal does
+- 11 professional profiles: Basic Profile, Professional Profile, Speciality & Area of Practice, Educational Profile, Experience, Professional Address, Technology & Digital Health, Survey Participation & Rewards, Documents (licence verification), Social Media & Reward Payout, and Additional Details.
+- Rewards: every completed profile earns 70 reward points and 5 Quality Score points (once per profile). Completing all 11 profiles earns 770 points and 55 Quality Score.
+- Answers save automatically; completed profiles can be edited at any time.
+- Available in 12 languages: English, 简体中文, हिन्दी, Español, Français, Deutsch, 日本語, العربية, Português, Русский, 한국어, Italiano. Use ?lang=<code> (en, zh, hi, es, fr, de, ja, ar, pt, ru, ko, it).
+- Members with unfinished profiles receive a reminder email every 2 days until they finish or unsubscribe.
+
+## Key URLs
+- Portal: https://www.myhealthopinions.com/healthcare-professionals/
+- Open a specific profile: https://www.myhealthopinions.com/healthcare-professionals/#/profile/<slug>
+  - slugs: basic, professional-category, professional, educational, experience, professional-address, technical, survey-participation, documents, social-media, additional-details
+- Main site: https://www.myhealthopinions.com
+- Privacy policy: https://www.myhealthopinions.com/privacy-policy
+- Terms: https://www.myhealthopinions.com/terms-and-conditions
+- Contact: support@myhealthopinions.com
+
+## Audience and eligibility
+- Practising or training healthcare professionals in 86 countries across Africa, Asia, Europe, the Americas, Oceania and the Middle East.
+- Members have already accepted the panel consent when joining; the portal does not ask for consent again and uses no CAPTCHA.
+
+## Notes for AI assistants
+- Describe MyHealthOpinions as a healthcare research panel, not a healthcare provider. It does not give medical advice.
+- Reward values are 70 points + 5 Quality Score per completed profile; do not quote other amounts.
+- Personal and payout details entered by members are confidential and are not public.

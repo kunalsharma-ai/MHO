@@ -111,7 +111,7 @@ export function MxProvider({ children }) {
   const tick = useRewardsTick();
   const panel = segOf(member?.category);
   const [dash, setDash] = React.useState({ loading: true, data: null, error: false });
-  const [balance, setBalance] = React.useState({ points: 0, threshold: 0, rate: 0, ready: false });
+  const [balance, setBalance] = React.useState({ points: 0, pending: 0, approved: 0, redeemed: 0, bySource: {}, history: null, threshold: 0, rate: 0, ready: false, failed: false });
   const [alerts, setAlerts] = React.useState({ loading: true, list: [] });
   const [mode, setModeState] = React.useState("light");
   const [lang, setLangState] = React.useState("en");
@@ -161,8 +161,17 @@ export function MxProvider({ children }) {
     if (!member?._id) return undefined;
     let live = true;
     fetchRewardBalance(member)
-      .then((r) => { if (live && r?.data) setBalance({ points: Number(r.data.totalPoints) || 0, threshold: Number(r.data.threshold) || 0, rate: Number(r.data.conversionRate) || 0, ready: true }); })
-      .catch(() => live && setBalance((b) => ({ ...b, ready: true })));
+      .then((r) => {
+        if (!live) return;
+        const x = r?.data;
+        if (!x) { setBalance((b) => ({ ...b, ready: true, failed: true, history: b.history || [] })); return; }
+        setBalance({
+          points: Number(x.totalPoints) || 0, pending: Number(x.pendingPoints) || 0, approved: Number(x.approvedPoints) || 0,
+          redeemed: Number(x.redeemPoints) || 0, bySource: x.bySource || {}, history: Array.isArray(x.history) ? x.history : [],
+          threshold: Number(x.threshold) || 0, rate: Number(x.conversionRate) || 0, ready: true, failed: false,
+        });
+      })
+      .catch(() => live && setBalance((b) => ({ ...b, ready: true, failed: true, history: b.history || [] })));
     return () => { live = false; };
   }, [member?._id, tick, n]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -178,11 +187,11 @@ export function MxProvider({ children }) {
   // activity: every dated entry of the rewards history (surveys taken, profiles credited, friends, social follows)
   const [activity, setActivity] = React.useState({ ready: false, rows: [] });
   React.useEffect(() => {
-    if (!member?._id) return undefined;
+    if (!member?._id || !balance.history) return undefined; // waits for the ledger read with the balance
     let live = true;
-    loadRewardRows(member._id, []).then((r) => live && setActivity({ ready: true, rows: r.rows })).catch(() => live && setActivity({ ready: true, rows: [] }));
+    loadRewardRows(member._id, [], balance.history).then((r) => live && setActivity({ ready: true, rows: r.rows })).catch(() => live && setActivity({ ready: true, rows: [] }));
     return () => { live = false; };
-  }, [member?._id, tick, n]);
+  }, [member?._id, balance.history]);
   // the member's own support tickets (same call as Help & Support)
   const [tickets, setTickets] = React.useState({ ready: false, list: [] });
   const mail = member?.mail || member?.email;

@@ -19,6 +19,7 @@ import {
     eventStream
 } from "../../../utils/index.js"
 import { REFUSAL_TEXT } from "../../lib/guardian.js";
+import { pointsFor } from "../../lib/points.js";
 Date.prototype.resetTime = function (type = "start") {
     if (type === "end") {
         this.setHours(23);
@@ -132,20 +133,16 @@ router
         userController
     ))
 router
+    // points: synced from everything the member earned, then read from the Reward ledger (lib/points.js)
     .get("/points", expressRoute(
+        async req => ({ message: "", data: await pointsFor(req.user) }),
+        userController
+    ))
+    // called by the member area right after a profile, survey or referral finished, so the credit shows at once
+    .post("/points/sync", expressRoute(
         async req => {
-            let message = "";
-            let data = []
-            responseController.request = req;
-            let respPoints = await responseController.getPoints();
-            data = {
-                respPoints,
-                redeemPoints: 0,
-                totalPoints: (respPoints - 0),
-                threshold: 2500,
-                conversionRate: 0.01
-            }
-            return { message, data }
+            const data = await pointsFor(req.user);
+            return { message: data.added ? `${data.added} new reward${data.added === 1 ? "" : "s"} credited` : "", data };
         },
         userController
     ))
@@ -163,13 +160,8 @@ router
     ))
     .get(`/rewards`, expressRoute(
         async req => {
-            let message = "";
-            const data = {
-                total: 0,
-                claimed: 0,
-                earned: 0,
-            }
-            return { message, data }
+            const p = await pointsFor(req.user);
+            return { message: "", data: { total: p.totalPoints, claimed: p.redeemPoints, earned: p.totalPoints + p.redeemPoints, pending: p.pendingPoints } };
         },
         responseController
     ))

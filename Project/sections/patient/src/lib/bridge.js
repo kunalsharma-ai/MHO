@@ -243,6 +243,23 @@ const guess = (name, resp) => {
   return { v: list[0], ...(specify ? { o: specify } : {}) };
 };
 
+// The member area reports finished profiles by this package's card ids AND by the database slug / name of every section
+// the server counts as complete and has credited (web ProfileSection.jsx progress()). Keep them under this package's ids.
+const normKey = (v) => String(v ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
+function ownIds(map, cards) {
+  const byKey = new Map(Object.entries(map || {}).map(([k, v]) => [normKey(k), v]));
+  const out = {};
+  for (const { id, aliases } of cards) {
+    const hit = [id, ...aliases].filter(Boolean).map(normKey).find((k) => byKey.has(k));
+    if (hit !== undefined) out[id] = byKey.get(hit);
+  }
+  return out;
+}
+const cardsOf = (survey) => survey.profiles.map((p) => {
+  const d = docs.find((x) => same(x.name, normKey(p.source)) || same(x.slug, normKey(p.source)));
+  return { id: p.id, aliases: [p.source, d?.slug, d?.name] };
+});
+
 export async function hydrate(survey, store) {
   const names = [...new Set([...Object.keys(survey.questions), ...docs.flatMap(namesOf)])];
   const keys = names.flatMap((n) => [n, `${n}_specify`]);
@@ -256,8 +273,9 @@ export async function hydrate(survey, store) {
     const a = guess(n, rawFound);
     if (a) answers[n] = a;
   }
-  const completed = state.completed || {};
-  store.set({ answers, meta: { completed, started: { ...completed } }, delivered: { ...completed } });  return state.points || {};
+  const cards = cardsOf(survey);
+  const completed = ownIds(state.completed, cards);
+  store.set({ answers, meta: { completed, started: { ...completed } }, delivered: { ...completed } });  return ownIds(state.points, cards);
 }
 
 export async function ensureProfile(survey, id, store) {

@@ -1,0 +1,39 @@
+# MyHealthOpinions – Caregiver Profiles
+
+> MyHealthOpinions runs a paid market-research panel. This site is the profile area for **caregivers**: people who look after a family member, a friend or clients (paid or unpaid). Caregivers complete short profiles so they can be matched with relevant healthcare surveys and earn rewards. The site is available in 12 languages.
+
+The site is a single-page web app. Respondents have already given consent when they joined the panel, so the profile pages contain no consent forms and no captcha.
+
+## What a visitor can do
+
+- Choose one of 12 languages: English, 中文 (Chinese), Español, हिन्दी (Hindi), العربية (Arabic), Français, Deutsch, Português, 日本語 (Japanese), 한국어 (Korean), Русский (Russian), Italiano. A link can force a language with `?lang=xx`, for example `?lang=zh`.
+- Switch between light and dark theme and turn sound effects on or off.
+- Complete 12 caregiver profiles, which show up in separate "To complete", "Continue" and "Completed" sections. Answers can be edited after a profile is completed.
+- Open a profile directly with `#profile=<id>`.
+
+## Rewards
+
+- Every completed profile earns **100 Care Points** (awarded once; editing a profile does not add points). **1,000 points = 1 USD**, so all 12 profiles = 1,200 points = $1.20.
+- The section lives in the "My Profile" tab of the MyHealthOpinions caregiver dashboard. About You profiles come first; caregiver surveys stay sealed until every profile is complete and then open one at a time.
+- Every completed profile or survey earns 50 Care Points and 1 Quality Score, shown in the "Circle of Care" ([#rewards](https://caregivers.myhealthopinions.com/#rewards)): a glass heart that fills as the Quality Score grows, surrounded by one glowing bead per completed item, with care levels from Newcomer to Luminary.
+- Caregivers with unfinished items receive a reminder e-mail every 2 days ("Your Circle of Care is waiting") listing only what is still open, until they finish or unsubscribe.
+
+## Profiles
+
+- [Your Caregiving Role](https://caregivers.myhealthopinions.com/#profile=care-role): whether and how the person provides care (unpaid, paid or both)
+- [Basic Profile](https://caregivers.myhealthopinions.com/#profile=basic): name, date of birth, email, country, region, city, postcode, area type, income, family
+- [Education & Care Skills](https://caregivers.myhealthopinions.com/#profile=education): education, nursing qualifications, certifications, care responsibilities
+- [Professional Profile](https://caregivers.myhealthopinions.com/#profile=professional): caregiving job role (20 roles), setting, experience, employment
+- [Personal Health](https://caregivers.myhealthopinions.com/#profile=health): check-ups, vaccinations, insurance, allergies
+- [Health Insurance](https://caregivers.myhealthopinions.com/#profile=insurance): own cover and cover managed for the care recipient
+- [Food & Lifestyle](https://caregivers.myhealthopinions.com/#profile=food): grocery, beverage, tobacco and wellness purchasing
+- [Sports & Fitness](https://caregivers.myhealthopinions.com/#profile=fitness): exercise, sports, sleep, fitness technology
+- [Technology & Digital Health](https://caregivers.myhealthopinions.com/#profile=tech): devices, health apps, digital health services
+- [Survey & Reward Preferences](https://caregivers.myhealthopinions.com/#profile=survey): survey history, preferred modes, time and rewards
+- [Social Media & Payouts](https://caregivers.myhealthopinions.com/#profile=social): optional social handles and payout method
+- [Additional Details](https://caregivers.myhealthopinions.com/#profile=additional): languages, household, caregiving hours and challenges, a short self-description
+
+## Optional
+
+- [Main website](https://www.myhealthopinions.com)
+- [Image alt text](https://caregivers.myhealthopinions.com/alt-text.json)

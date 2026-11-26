@@ -1,0 +1,2888 @@
+[
+  {
+    "file": "apple-touch-icon.png",
+    "alt": "MyHealthOpinions heart icon",
+    "usage": "Browser tab / home-screen icon (no alt rendered)",
+    "decorative": false
+  },
+  {
+    "file": "favicon.ico",
+    "alt": "MyHealthOpinions heart icon",
+    "usage": "Browser tab / home-screen icon (no alt rendered)",
+    "decorative": false
+  },
+  {
+    "file": "images/brand/favicon.svg",
+    "alt": "MyHealthOpinions logo — a red-to-orange heart with a heartbeat line beside the MyHealthOpinions wordmark",
+    "usage": "Animated logo (header, Synapse core, pop-ups, completion badge, footer, e-mail)",
+    "decorative": false
+  },
+  {
+    "file": "images/brand/mho-heart.png",
+    "alt": "MyHealthOpinions heart icon with a heartbeat line",
+    "usage": "Animated logo (header, Synapse core, pop-ups, completion badge, footer, e-mail)",
+    "decorative": false
+  },
+  {
+    "file": "images/brand/mho-logo.png",
+    "alt": "MyHealthOpinions logo — a red-to-orange heart with a heartbeat line beside the MyHealthOpinions wordmark",
+    "usage": "Animated logo (header, Synapse core, pop-ups, completion badge, footer, e-mail)",
+    "decorative": false
+  },
+  {
+    "file": "images/brand/mho-logo@2x.png",
+    "alt": "MyHealthOpinions logo — a red-to-orange heart with a heartbeat line beside the MyHealthOpinions wordmark",
+    "usage": "Animated logo (header, Synapse core, pop-ups, completion badge, footer, e-mail)",
+    "decorative": false
+  },
+  {
+    "file": "images/email/additional-details.png",
+    "alt": "Additional Details icon",
+    "usage": "Reminder email profile card",
+    "decorative": false
+  },
+  {
+    "file": "images/email/basic.png",
+    "alt": "Basic Profile icon",
+    "usage": "Reminder email profile card",
+    "decorative": false
+  },
+  {
+    "file": "images/email/documents.png",
+    "alt": "Documents Required icon",
+    "usage": "Reminder email profile card",
+    "decorative": false
+  },
+  {
+    "file": "images/email/educational.png",
+    "alt": "Educational Profile icon",
+    "usage": "Reminder email profile card",
+    "decorative": false
+  },
+  {
+    "file": "images/email/experience.png",
+    "alt": "Experience icon",
+    "usage": "Reminder email profile card",
+    "decorative": false
+  },
+  {
+    "file": "images/email/professional-address.png",
+    "alt": "Professional Address icon",
+    "usage": "Reminder email profile card",
+    "decorative": false
+  },
+  {
+    "file": "images/email/professional-category.png",
+    "alt": "Professional Profile icon",
+    "usage": "Reminder email profile card",
+    "decorative": false
+  },
+  {
+    "file": "images/email/professional.png",
+    "alt": "Speciality And Area of Practice icon",
+    "usage": "Reminder email profile card",
+    "decorative": false
+  },
+  {
+    "file": "images/email/social-media.png",
+    "alt": "Social Media and Reward Reclaim icon",
+    "usage": "Reminder email profile card",
+    "decorative": false
+  },
+  {
+    "file": "images/email/survey-participation.png",
+    "alt": "Survey Participation and Reward Preferences icon",
+    "usage": "Reminder email profile card",
+    "decorative": false
+  },
+  {
+    "file": "images/email/synapse.png",
+    "alt": "Animated Synapse network: hexagon neurons light up one after another around the Evidence Core",
+    "usage": "Reminder e-mail banner",
+    "decorative": false
+  },
+  {
+    "file": "images/email/technical.png",
+    "alt": "Technology and Digital Health icon",
+    "usage": "Reminder email profile card",
+    "decorative": false
+  },
+  {
+    "file": "images/flags/ae.svg",
+    "alt": "Flag of United Arab Emirates (UAE)",
+    "usage": "Country lists",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/br.svg",
+    "alt": "Flag of Brazil",
+    "usage": "Language picker (Português) + country lists",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/cn.svg",
+    "alt": "Flag of China",
+    "usage": "Language picker (简体中文) + country lists",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/de.svg",
+    "alt": "Flag of Germany",
+    "usage": "Language picker (Deutsch) + country lists",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/es.svg",
+    "alt": "Flag of Spain",
+    "usage": "Language picker (Español) + country lists",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/fr.svg",
+    "alt": "Flag of France",
+    "usage": "Language picker (Français) + country lists",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/gb.svg",
+    "alt": "Flag of United Kingdom",
+    "usage": "Language picker (English) + country lists",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/in.svg",
+    "alt": "Flag of India",
+    "usage": "Language picker (हिन्दी) + country lists",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/it.svg",
+    "alt": "Flag of Italy",
+    "usage": "Language picker (Italiano) + country lists",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/jp.svg",
+    "alt": "Flag of Japan",
+    "usage": "Language picker (日本語) + country lists",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/kr.svg",
+    "alt": "Flag of South Korea",
+    "usage": "Language picker (한국어) + country lists",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/ru.svg",
+    "alt": "Flag of Russia",
+    "usage": "Language picker (Русский) + country lists",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/sa.svg",
+    "alt": "Flag of Saudi Arabia",
+    "usage": "Language picker (العربية) + country lists",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/AU-ACT.webp",
+    "alt": "Flag of the region AU-ACT (Australia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/AU-NSW.webp",
+    "alt": "Flag of the region AU-NSW (Australia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/AU-NT.webp",
+    "alt": "Flag of the region AU-NT (Australia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/AU-QLD.webp",
+    "alt": "Flag of the region AU-QLD (Australia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/AU-SA.webp",
+    "alt": "Flag of the region AU-SA (Australia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/AU-TAS.webp",
+    "alt": "Flag of the region AU-TAS (Australia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/AU-VIC.webp",
+    "alt": "Flag of the region AU-VIC (Australia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/AU-WA.webp",
+    "alt": "Flag of the region AU-WA (Australia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CA-AB.webp",
+    "alt": "Flag of the region CA-AB (Canada)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CA-BC.webp",
+    "alt": "Flag of the region CA-BC (Canada)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CA-MB.webp",
+    "alt": "Flag of the region CA-MB (Canada)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CA-NB.webp",
+    "alt": "Flag of the region CA-NB (Canada)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CA-NL.webp",
+    "alt": "Flag of the region CA-NL (Canada)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CA-NS.webp",
+    "alt": "Flag of the region CA-NS (Canada)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CA-NT.webp",
+    "alt": "Flag of the region CA-NT (Canada)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CA-NU.webp",
+    "alt": "Flag of the region CA-NU (Canada)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CA-ON.webp",
+    "alt": "Flag of the region CA-ON (Canada)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CA-PE.webp",
+    "alt": "Flag of the region CA-PE (Canada)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CA-QC.webp",
+    "alt": "Flag of the region CA-QC (Canada)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CA-SK.webp",
+    "alt": "Flag of the region CA-SK (Canada)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CA-YT.webp",
+    "alt": "Flag of the region CA-YT (Canada)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-AMA.webp",
+    "alt": "Flag of the region CO-AMA (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-ANT.webp",
+    "alt": "Flag of the region CO-ANT (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-ARA.webp",
+    "alt": "Flag of the region CO-ARA (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-ATL.webp",
+    "alt": "Flag of the region CO-ATL (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-BOL.webp",
+    "alt": "Flag of the region CO-BOL (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-BOY.webp",
+    "alt": "Flag of the region CO-BOY (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-CAL.webp",
+    "alt": "Flag of the region CO-CAL (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-CAQ.webp",
+    "alt": "Flag of the region CO-CAQ (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-CAS.webp",
+    "alt": "Flag of the region CO-CAS (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-CAU.webp",
+    "alt": "Flag of the region CO-CAU (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-CES.webp",
+    "alt": "Flag of the region CO-CES (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-CHO.webp",
+    "alt": "Flag of the region CO-CHO (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-COR.webp",
+    "alt": "Flag of the region CO-COR (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-CUN.webp",
+    "alt": "Flag of the region CO-CUN (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-DC.webp",
+    "alt": "Flag of the region CO-DC (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-GUA.webp",
+    "alt": "Flag of the region CO-GUA (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-GUV.webp",
+    "alt": "Flag of the region CO-GUV (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-HUI.webp",
+    "alt": "Flag of the region CO-HUI (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-LAG.webp",
+    "alt": "Flag of the region CO-LAG (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-MAG.webp",
+    "alt": "Flag of the region CO-MAG (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-MET.webp",
+    "alt": "Flag of the region CO-MET (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-NAR.webp",
+    "alt": "Flag of the region CO-NAR (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-NSA.webp",
+    "alt": "Flag of the region CO-NSA (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-PUT.webp",
+    "alt": "Flag of the region CO-PUT (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-QUI.webp",
+    "alt": "Flag of the region CO-QUI (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-RIS.webp",
+    "alt": "Flag of the region CO-RIS (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-SAN.webp",
+    "alt": "Flag of the region CO-SAN (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-SAP.webp",
+    "alt": "Flag of the region CO-SAP (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-SUC.webp",
+    "alt": "Flag of the region CO-SUC (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-TOL.webp",
+    "alt": "Flag of the region CO-TOL (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-VAC.webp",
+    "alt": "Flag of the region CO-VAC (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-VAU.webp",
+    "alt": "Flag of the region CO-VAU (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/CO-VID.webp",
+    "alt": "Flag of the region CO-VID (Colombia)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-BB.webp",
+    "alt": "Flag of the region DE-BB (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-BE.webp",
+    "alt": "Flag of the region DE-BE (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-BW.webp",
+    "alt": "Flag of the region DE-BW (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-BY.webp",
+    "alt": "Flag of the region DE-BY (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-HB.webp",
+    "alt": "Flag of the region DE-HB (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-HE.webp",
+    "alt": "Flag of the region DE-HE (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-HH.webp",
+    "alt": "Flag of the region DE-HH (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-MV.webp",
+    "alt": "Flag of the region DE-MV (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-NI.webp",
+    "alt": "Flag of the region DE-NI (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-NW.webp",
+    "alt": "Flag of the region DE-NW (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-RP.webp",
+    "alt": "Flag of the region DE-RP (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-SH.webp",
+    "alt": "Flag of the region DE-SH (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-SL.webp",
+    "alt": "Flag of the region DE-SL (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-SN.webp",
+    "alt": "Flag of the region DE-SN (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-ST.webp",
+    "alt": "Flag of the region DE-ST (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/DE-TH.webp",
+    "alt": "Flag of the region DE-TH (Germany)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-AN.webp",
+    "alt": "Flag of the region ES-AN (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-AR.webp",
+    "alt": "Flag of the region ES-AR (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-AS.webp",
+    "alt": "Flag of the region ES-AS (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-CB.webp",
+    "alt": "Flag of the region ES-CB (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-CE.webp",
+    "alt": "Flag of the region ES-CE (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-CL.webp",
+    "alt": "Flag of the region ES-CL (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-CM.webp",
+    "alt": "Flag of the region ES-CM (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-CN.webp",
+    "alt": "Flag of the region ES-CN (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-CT.webp",
+    "alt": "Flag of the region ES-CT (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-EX.webp",
+    "alt": "Flag of the region ES-EX (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-GA.webp",
+    "alt": "Flag of the region ES-GA (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-MC.webp",
+    "alt": "Flag of the region ES-MC (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-MD.webp",
+    "alt": "Flag of the region ES-MD (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-ML.webp",
+    "alt": "Flag of the region ES-ML (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-NC.webp",
+    "alt": "Flag of the region ES-NC (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-PV.webp",
+    "alt": "Flag of the region ES-PV (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-RI.webp",
+    "alt": "Flag of the region ES-RI (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/ES-VC.webp",
+    "alt": "Flag of the region ES-VC (Spain)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/GB-ENG.webp",
+    "alt": "Flag of the region GB-ENG (United Kingdom)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/GB-NIR.webp",
+    "alt": "Flag of the region GB-NIR (United Kingdom)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/GB-SCT.webp",
+    "alt": "Flag of the region GB-SCT (United Kingdom)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/GB-WLS.webp",
+    "alt": "Flag of the region GB-WLS (United Kingdom)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-AGU.webp",
+    "alt": "Flag of the region MX-AGU (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-BCN.webp",
+    "alt": "Flag of the region MX-BCN (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-BCS.webp",
+    "alt": "Flag of the region MX-BCS (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-CAM.webp",
+    "alt": "Flag of the region MX-CAM (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-CHH.webp",
+    "alt": "Flag of the region MX-CHH (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-CHP.webp",
+    "alt": "Flag of the region MX-CHP (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-COA.webp",
+    "alt": "Flag of the region MX-COA (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-COL.webp",
+    "alt": "Flag of the region MX-COL (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-DUR.webp",
+    "alt": "Flag of the region MX-DUR (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-GRO.webp",
+    "alt": "Flag of the region MX-GRO (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-GUA.webp",
+    "alt": "Flag of the region MX-GUA (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-HID.webp",
+    "alt": "Flag of the region MX-HID (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-JAL.webp",
+    "alt": "Flag of the region MX-JAL (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-MEX.webp",
+    "alt": "Flag of the region MX-MEX (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-MIC.webp",
+    "alt": "Flag of the region MX-MIC (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-MOR.webp",
+    "alt": "Flag of the region MX-MOR (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-NAY.webp",
+    "alt": "Flag of the region MX-NAY (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-NLE.webp",
+    "alt": "Flag of the region MX-NLE (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-OAX.webp",
+    "alt": "Flag of the region MX-OAX (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-PUE.webp",
+    "alt": "Flag of the region MX-PUE (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-QUE.webp",
+    "alt": "Flag of the region MX-QUE (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-ROO.webp",
+    "alt": "Flag of the region MX-ROO (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-SIN.webp",
+    "alt": "Flag of the region MX-SIN (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-SLP.webp",
+    "alt": "Flag of the region MX-SLP (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-SON.webp",
+    "alt": "Flag of the region MX-SON (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-TAB.webp",
+    "alt": "Flag of the region MX-TAB (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-TAM.webp",
+    "alt": "Flag of the region MX-TAM (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-TLA.webp",
+    "alt": "Flag of the region MX-TLA (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-VER.webp",
+    "alt": "Flag of the region MX-VER (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-YUC.webp",
+    "alt": "Flag of the region MX-YUC (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/MX-ZAC.webp",
+    "alt": "Flag of the region MX-ZAC (Mexico)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-AK.webp",
+    "alt": "Flag of the region US-AK (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-AL.webp",
+    "alt": "Flag of the region US-AL (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-AR.webp",
+    "alt": "Flag of the region US-AR (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-AZ.webp",
+    "alt": "Flag of the region US-AZ (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-CA.webp",
+    "alt": "Flag of the region US-CA (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-CO.webp",
+    "alt": "Flag of the region US-CO (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-CT.webp",
+    "alt": "Flag of the region US-CT (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-DC.webp",
+    "alt": "Flag of the region US-DC (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-DE.webp",
+    "alt": "Flag of the region US-DE (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-FL.webp",
+    "alt": "Flag of the region US-FL (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-GA.webp",
+    "alt": "Flag of the region US-GA (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-HI.webp",
+    "alt": "Flag of the region US-HI (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-IA.webp",
+    "alt": "Flag of the region US-IA (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-ID.webp",
+    "alt": "Flag of the region US-ID (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-IL.webp",
+    "alt": "Flag of the region US-IL (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-IN.webp",
+    "alt": "Flag of the region US-IN (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-KS.webp",
+    "alt": "Flag of the region US-KS (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-KY.webp",
+    "alt": "Flag of the region US-KY (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-LA.webp",
+    "alt": "Flag of the region US-LA (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-MA.webp",
+    "alt": "Flag of the region US-MA (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-MD.webp",
+    "alt": "Flag of the region US-MD (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-ME.webp",
+    "alt": "Flag of the region US-ME (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-MI.webp",
+    "alt": "Flag of the region US-MI (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-MN.webp",
+    "alt": "Flag of the region US-MN (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-MO.webp",
+    "alt": "Flag of the region US-MO (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-MS.webp",
+    "alt": "Flag of the region US-MS (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-MT.webp",
+    "alt": "Flag of the region US-MT (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-NC.webp",
+    "alt": "Flag of the region US-NC (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-ND.webp",
+    "alt": "Flag of the region US-ND (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-NE.webp",
+    "alt": "Flag of the region US-NE (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-NH.webp",
+    "alt": "Flag of the region US-NH (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-NJ.webp",
+    "alt": "Flag of the region US-NJ (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-NM.webp",
+    "alt": "Flag of the region US-NM (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-NV.webp",
+    "alt": "Flag of the region US-NV (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-NY.webp",
+    "alt": "Flag of the region US-NY (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-OH.webp",
+    "alt": "Flag of the region US-OH (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-OK.webp",
+    "alt": "Flag of the region US-OK (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-OR.webp",
+    "alt": "Flag of the region US-OR (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-PA.webp",
+    "alt": "Flag of the region US-PA (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-RI.webp",
+    "alt": "Flag of the region US-RI (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-SC.webp",
+    "alt": "Flag of the region US-SC (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-SD.webp",
+    "alt": "Flag of the region US-SD (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-TN.webp",
+    "alt": "Flag of the region US-TN (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-TX.webp",
+    "alt": "Flag of the region US-TX (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-UT.webp",
+    "alt": "Flag of the region US-UT (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-VA.webp",
+    "alt": "Flag of the region US-VA (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-VT.webp",
+    "alt": "Flag of the region US-VT (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-WA.webp",
+    "alt": "Flag of the region US-WA (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-WI.webp",
+    "alt": "Flag of the region US-WI (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-WV.webp",
+    "alt": "Flag of the region US-WV (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/states/US-WY.webp",
+    "alt": "Flag of the region US-WY (United States)",
+    "usage": "State / province list",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ac.webp",
+    "alt": "Flag of Ascension Island",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ad.webp",
+    "alt": "Flag of Andorra",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ae.webp",
+    "alt": "Flag of United Arab Emirates (UAE)",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/af.webp",
+    "alt": "Flag of Afghanistan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ag.webp",
+    "alt": "Flag of Antigua & Barbuda",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ai.webp",
+    "alt": "Flag of Anguilla",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/al.webp",
+    "alt": "Flag of Albania",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/am.webp",
+    "alt": "Flag of Armenia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ao.webp",
+    "alt": "Flag of Angola",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/aq.webp",
+    "alt": "Flag of Antarctica",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ar.webp",
+    "alt": "Flag of Argentina",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/as.webp",
+    "alt": "Flag of American Samoa",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/at.webp",
+    "alt": "Flag of Austria",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/au.webp",
+    "alt": "Flag of Australia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/aw.webp",
+    "alt": "Flag of Aruba",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ax.webp",
+    "alt": "Flag of Åland Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/az.webp",
+    "alt": "Flag of Azerbaijan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ba.webp",
+    "alt": "Flag of Bosnia and Herzegovina",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bb.webp",
+    "alt": "Flag of Barbados",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bd.webp",
+    "alt": "Flag of Bangladesh",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/be.webp",
+    "alt": "Flag of Belgium",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bf.webp",
+    "alt": "Flag of Burkina Faso",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bg.webp",
+    "alt": "Flag of Bulgaria",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bh.webp",
+    "alt": "Flag of Bahrain",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bi.webp",
+    "alt": "Flag of Burundi",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bj.webp",
+    "alt": "Flag of Benin",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bl.webp",
+    "alt": "Flag of St. Barthélemy",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bm.webp",
+    "alt": "Flag of Bermuda",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bn.webp",
+    "alt": "Flag of Brunei",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bo.webp",
+    "alt": "Flag of Bolivia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bq.webp",
+    "alt": "Flag of Caribbean Netherlands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/br.webp",
+    "alt": "Flag of Brazil",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bs.webp",
+    "alt": "Flag of Bahamas",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bt.webp",
+    "alt": "Flag of Bhutan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bv.webp",
+    "alt": "Flag of Bouvet Island",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bw.webp",
+    "alt": "Flag of Botswana",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/by.webp",
+    "alt": "Flag of Belarus",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/bz.webp",
+    "alt": "Flag of Belize",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ca.webp",
+    "alt": "Flag of Canada",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cc.webp",
+    "alt": "Flag of Cocos (Keeling) Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cd.webp",
+    "alt": "Flag of Congo - Kinshasa",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cf.webp",
+    "alt": "Flag of Central African Republic",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cg.webp",
+    "alt": "Flag of Congo - Brazzaville",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ch.webp",
+    "alt": "Flag of Switzerland",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ci.webp",
+    "alt": "Flag of Côte d’Ivoire",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ck.webp",
+    "alt": "Flag of Cook Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cl.webp",
+    "alt": "Flag of Chile",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cm.webp",
+    "alt": "Flag of Cameroon",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cn.webp",
+    "alt": "Flag of China",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/co.webp",
+    "alt": "Flag of Colombia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cp.webp",
+    "alt": "Flag of Clipperton Island",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cq.webp",
+    "alt": "Flag of Sark",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cr.webp",
+    "alt": "Flag of Costa Rica",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cu.webp",
+    "alt": "Flag of Cuba",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cv.webp",
+    "alt": "Flag of Cape Verde",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cw.webp",
+    "alt": "Flag of Curaçao",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cx.webp",
+    "alt": "Flag of Christmas Island",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cy.webp",
+    "alt": "Flag of Cyprus",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/cz.webp",
+    "alt": "Flag of Czechia/Czech Republic",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/de.webp",
+    "alt": "Flag of Germany",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/dg.webp",
+    "alt": "Flag of Diego Garcia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/dj.webp",
+    "alt": "Flag of Djibouti",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/dk.webp",
+    "alt": "Flag of Denmark",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/dm.webp",
+    "alt": "Flag of Dominica",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/do.webp",
+    "alt": "Flag of Dominican Republic",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/dz.webp",
+    "alt": "Flag of Algeria",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ea.webp",
+    "alt": "Flag of Ceuta & Melilla",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ec.webp",
+    "alt": "Flag of Ecuador",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ee.webp",
+    "alt": "Flag of Estonia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/eg.webp",
+    "alt": "Flag of Egypt",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/eh.webp",
+    "alt": "Flag of Western Sahara",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/er.webp",
+    "alt": "Flag of Eritrea",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/es.webp",
+    "alt": "Flag of Spain",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/et.webp",
+    "alt": "Flag of Ethiopia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/eu.webp",
+    "alt": "Flag of European Union",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/fi.webp",
+    "alt": "Flag of Finland",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/fj.webp",
+    "alt": "Flag of Fiji",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/fk.webp",
+    "alt": "Flag of Falkland Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/fm.webp",
+    "alt": "Flag of Micronesia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/fo.webp",
+    "alt": "Flag of Faroe Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/fr.webp",
+    "alt": "Flag of France",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ga.webp",
+    "alt": "Flag of Gabon",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gb.webp",
+    "alt": "Flag of United Kingdom",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gd.webp",
+    "alt": "Flag of Grenada",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ge.webp",
+    "alt": "Flag of Georgia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gf.webp",
+    "alt": "Flag of French Guiana",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gg.webp",
+    "alt": "Flag of Guernsey",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gh.webp",
+    "alt": "Flag of Ghana",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gi.webp",
+    "alt": "Flag of Gibraltar",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gl.webp",
+    "alt": "Flag of Greenland",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gm.webp",
+    "alt": "Flag of Gambia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gn.webp",
+    "alt": "Flag of Guinea",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gp.webp",
+    "alt": "Flag of Guadeloupe",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gq.webp",
+    "alt": "Flag of Equatorial Guinea",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gr.webp",
+    "alt": "Flag of Greece",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gs.webp",
+    "alt": "Flag of South Georgia & South Sandwich Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gt.webp",
+    "alt": "Flag of Guatemala",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gu.webp",
+    "alt": "Flag of Guam",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gw.webp",
+    "alt": "Flag of Guinea-Bissau",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/gy.webp",
+    "alt": "Flag of Guyana",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/hk.webp",
+    "alt": "Flag of Hong Kong",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/hm.webp",
+    "alt": "Flag of Heard & McDonald Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/hn.webp",
+    "alt": "Flag of Honduras",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/hr.webp",
+    "alt": "Flag of Croatia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ht.webp",
+    "alt": "Flag of Haiti",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/hu.webp",
+    "alt": "Flag of Hungary",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ic.webp",
+    "alt": "Flag of Canary Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/id.webp",
+    "alt": "Flag of Indonesia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ie.webp",
+    "alt": "Flag of Ireland",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/il.webp",
+    "alt": "Flag of Israel",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/im.webp",
+    "alt": "Flag of Isle of Man",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/in.webp",
+    "alt": "Flag of India",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/io.webp",
+    "alt": "Flag of British Indian Ocean Territory",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/iq.webp",
+    "alt": "Flag of Iraq",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ir.webp",
+    "alt": "Flag of Iran",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/is.webp",
+    "alt": "Flag of Iceland",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/it.webp",
+    "alt": "Flag of Italy",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/je.webp",
+    "alt": "Flag of Jersey",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/jm.webp",
+    "alt": "Flag of Jamaica",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/jo.webp",
+    "alt": "Flag of Jordan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/jp.webp",
+    "alt": "Flag of Japan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ke.webp",
+    "alt": "Flag of Kenya",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/kg.webp",
+    "alt": "Flag of Kyrgyzstan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/kh.webp",
+    "alt": "Flag of Cambodia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ki.webp",
+    "alt": "Flag of Kiribati",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/km.webp",
+    "alt": "Flag of Comoros",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/kn.webp",
+    "alt": "Flag of St. Kitts & Nevis",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/kp.webp",
+    "alt": "Flag of North Korea",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/kr.webp",
+    "alt": "Flag of South Korea",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/kw.webp",
+    "alt": "Flag of Kuwait",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ky.webp",
+    "alt": "Flag of Cayman Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/kz.webp",
+    "alt": "Flag of Kazakhstan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/la.webp",
+    "alt": "Flag of Laos",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/lb.webp",
+    "alt": "Flag of Lebanon",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/lc.webp",
+    "alt": "Flag of St. Lucia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/li.webp",
+    "alt": "Flag of Liechtenstein",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/lk.webp",
+    "alt": "Flag of Sri Lanka",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/lr.webp",
+    "alt": "Flag of Liberia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ls.webp",
+    "alt": "Flag of Lesotho",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/lt.webp",
+    "alt": "Flag of Lithuania",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/lu.webp",
+    "alt": "Flag of Luxembourg",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/lv.webp",
+    "alt": "Flag of Latvia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ly.webp",
+    "alt": "Flag of Libya",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ma.webp",
+    "alt": "Flag of Morocco",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mc.webp",
+    "alt": "Flag of Monaco",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/md.webp",
+    "alt": "Flag of Moldova",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/me.webp",
+    "alt": "Flag of Montenegro",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mf.webp",
+    "alt": "Flag of St. Martin",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mg.webp",
+    "alt": "Flag of Madagascar",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mh.webp",
+    "alt": "Flag of Marshall Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mk.webp",
+    "alt": "Flag of North Macedonia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ml.webp",
+    "alt": "Flag of Mali",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mm.webp",
+    "alt": "Flag of Myanmar (Burma)",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mn.webp",
+    "alt": "Flag of Mongolia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mo.webp",
+    "alt": "Flag of Macao SAR China",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mp.webp",
+    "alt": "Flag of Northern Mariana Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mq.webp",
+    "alt": "Flag of Martinique",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mr.webp",
+    "alt": "Flag of Mauritania",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ms.webp",
+    "alt": "Flag of Montserrat",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mt.webp",
+    "alt": "Flag of Malta",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mu.webp",
+    "alt": "Flag of Mauritius",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mv.webp",
+    "alt": "Flag of Maldives",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mw.webp",
+    "alt": "Flag of Malawi",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mx.webp",
+    "alt": "Flag of Mexico",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/my.webp",
+    "alt": "Flag of Malaysia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/mz.webp",
+    "alt": "Flag of Mozambique",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/na.webp",
+    "alt": "Flag of Namibia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/nc.webp",
+    "alt": "Flag of New Caledonia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ne.webp",
+    "alt": "Flag of Niger",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/nf.webp",
+    "alt": "Flag of Norfolk Island",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ng.webp",
+    "alt": "Flag of Nigeria",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ni.webp",
+    "alt": "Flag of Nicaragua",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/nl.webp",
+    "alt": "Flag of Netherlands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/no.webp",
+    "alt": "Flag of Norway",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/np.webp",
+    "alt": "Flag of Nepal",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/nr.webp",
+    "alt": "Flag of Nauru",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/nu.webp",
+    "alt": "Flag of Niue",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/nz.webp",
+    "alt": "Flag of New Zealand",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/om.webp",
+    "alt": "Flag of Oman",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/pa.webp",
+    "alt": "Flag of Panama",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/pe.webp",
+    "alt": "Flag of Peru",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/pf.webp",
+    "alt": "Flag of French Polynesia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/pg.webp",
+    "alt": "Flag of Papua New Guinea",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ph.webp",
+    "alt": "Flag of Philippines",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/pk.webp",
+    "alt": "Flag of Pakistan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/pl.webp",
+    "alt": "Flag of Poland",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/pm.webp",
+    "alt": "Flag of St. Pierre & Miquelon",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/pn.webp",
+    "alt": "Flag of Pitcairn Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/pr.webp",
+    "alt": "Flag of Puerto Rico",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ps.webp",
+    "alt": "Flag of Palestinian Territories",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/pt.webp",
+    "alt": "Flag of Portugal",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/pw.webp",
+    "alt": "Flag of Palau",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/py.webp",
+    "alt": "Flag of Paraguay",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/qa.webp",
+    "alt": "Flag of Qatar",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/re.webp",
+    "alt": "Flag of Réunion",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ro.webp",
+    "alt": "Flag of Romania",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/rs.webp",
+    "alt": "Flag of Serbia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ru.webp",
+    "alt": "Flag of Russia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/rw.webp",
+    "alt": "Flag of Rwanda",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sa.webp",
+    "alt": "Flag of Saudi Arabia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sb.webp",
+    "alt": "Flag of Solomon Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sc.webp",
+    "alt": "Flag of Seychelles",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sd.webp",
+    "alt": "Flag of Sudan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/se.webp",
+    "alt": "Flag of Sweden",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sg.webp",
+    "alt": "Flag of Singapore",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sh.webp",
+    "alt": "Flag of St. Helena",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/si.webp",
+    "alt": "Flag of Slovenia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sj.webp",
+    "alt": "Flag of Svalbard & Jan Mayen",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sk.webp",
+    "alt": "Flag of Slovakia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sl.webp",
+    "alt": "Flag of Sierra Leone",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sm.webp",
+    "alt": "Flag of San Marino",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sn.webp",
+    "alt": "Flag of Senegal",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/so.webp",
+    "alt": "Flag of Somalia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sr.webp",
+    "alt": "Flag of Suriname",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ss.webp",
+    "alt": "Flag of South Sudan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/st.webp",
+    "alt": "Flag of São Tomé & Príncipe",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sv.webp",
+    "alt": "Flag of El Salvador",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sx.webp",
+    "alt": "Flag of Sint Maarten",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sy.webp",
+    "alt": "Flag of Syria",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/sz.webp",
+    "alt": "Flag of Eswatini",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ta.webp",
+    "alt": "Flag of Tristan da Cunha",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/tc.webp",
+    "alt": "Flag of Turks & Caicos Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/td.webp",
+    "alt": "Flag of Chad",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/tf.webp",
+    "alt": "Flag of French Southern Territories",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/tg.webp",
+    "alt": "Flag of Togo",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/th.webp",
+    "alt": "Flag of Thailand",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/tj.webp",
+    "alt": "Flag of Tajikistan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/tk.webp",
+    "alt": "Flag of Tokelau",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/tl.webp",
+    "alt": "Flag of Timor-Leste",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/tm.webp",
+    "alt": "Flag of Turkmenistan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/tn.webp",
+    "alt": "Flag of Tunisia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/to.webp",
+    "alt": "Flag of Tonga",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/tr.webp",
+    "alt": "Flag of Turkey",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/tt.webp",
+    "alt": "Flag of Trinidad & Tobago",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/tv.webp",
+    "alt": "Flag of Tuvalu",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/tw.webp",
+    "alt": "Flag of Taiwan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/tz.webp",
+    "alt": "Flag of Tanzania",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ua.webp",
+    "alt": "Flag of Ukraine",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ug.webp",
+    "alt": "Flag of Uganda",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/um.webp",
+    "alt": "Flag of U.S. Outlying Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/un.webp",
+    "alt": "Flag of United Nations",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/us.webp",
+    "alt": "Flag of United States of America",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/uy.webp",
+    "alt": "Flag of Uruguay",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/uz.webp",
+    "alt": "Flag of Uzbekistan",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/va.webp",
+    "alt": "Flag of Vatican City",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/vc.webp",
+    "alt": "Flag of St. Vincent & Grenadines",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ve.webp",
+    "alt": "Flag of Venezuela",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/vg.webp",
+    "alt": "Flag of British Virgin Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/vi.webp",
+    "alt": "Flag of U.S. Virgin Islands",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/vn.webp",
+    "alt": "Flag of Vietnam",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/vu.webp",
+    "alt": "Flag of Vanuatu",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/wf.webp",
+    "alt": "Flag of Wallis & Futuna",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ws.webp",
+    "alt": "Flag of Samoa",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/xk.webp",
+    "alt": "Flag of Kosovo",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/xx.webp",
+    "alt": "Flag of XX",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/ye.webp",
+    "alt": "Flag of Yemen",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/yt.webp",
+    "alt": "Flag of Mayotte",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/za.webp",
+    "alt": "Flag of South Africa",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/zm.webp",
+    "alt": "Flag of Zambia",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/flags/w/zw.webp",
+    "alt": "Flag of Zimbabwe",
+    "usage": "Country lists, phone country picker",
+    "decorative": true
+  },
+  {
+    "file": "images/icon-192.png",
+    "alt": "MyHealthOpinions heart icon",
+    "usage": "Browser tab / home-screen icon (no alt rendered)",
+    "decorative": false
+  },
+  {
+    "file": "images/icon-32.png",
+    "alt": "MyHealthOpinions heart icon",
+    "usage": "Browser tab / home-screen icon (no alt rendered)",
+    "decorative": false
+  },
+  {
+    "file": "images/icon-512.png",
+    "alt": "MyHealthOpinions heart icon",
+    "usage": "Browser tab / home-screen icon (no alt rendered)",
+    "decorative": false
+  },
+  {
+    "file": "images/mho-logo.png",
+    "alt": "MyHealthOpinions logo — a red-to-orange heart with a heartbeat line beside the MyHealthOpinions wordmark",
+    "usage": "Header + footer logo, emails",
+    "decorative": false
+  },
+  {
+    "file": "images/og-image.png",
+    "alt": "MyHealthOpinions for Healthcare Professionals — your clinical insight shapes tomorrow’s medicine",
+    "usage": "Social share preview (Open Graph)",
+    "decorative": false
+  },
+  {
+    "file": "images/profiles/additional-details.svg",
+    "alt": "Illustration of a molecule and DNA strand for the Additional Details survey",
+    "usage": "Profile card + review screen",
+    "decorative": false
+  },
+  {
+    "file": "images/profiles/basic.svg",
+    "alt": "Illustration of an ID card with a heartbeat line for the Basic Profile",
+    "usage": "Profile card + review screen",
+    "decorative": false
+  },
+  {
+    "file": "images/profiles/documents.svg",
+    "alt": "Illustration of a shield with a check mark over a licence document for Documents",
+    "usage": "Profile card + review screen",
+    "decorative": false
+  },
+  {
+    "file": "images/profiles/educational.svg",
+    "alt": "Illustration of a graduation cap and diploma for the Educational Profile",
+    "usage": "Profile card + review screen",
+    "decorative": false
+  },
+  {
+    "file": "images/profiles/experience.svg",
+    "alt": "Illustration of a medal with a star for the Experience profile",
+    "usage": "Profile card + review screen",
+    "decorative": false
+  },
+  {
+    "file": "images/profiles/professional-address.svg",
+    "alt": "Illustration of a map pin over a city map for the Professional Address profile",
+    "usage": "Profile card + review screen",
+    "decorative": false
+  },
+  {
+    "file": "images/profiles/professional-category.svg",
+    "alt": "Illustration of a hospital building with a medical cross for the Professional Profile",
+    "usage": "Profile card + review screen",
+    "decorative": false
+  },
+  {
+    "file": "images/profiles/professional.svg",
+    "alt": "Illustration of a stethoscope for Speciality and Area of Practice",
+    "usage": "Profile card + review screen",
+    "decorative": false
+  },
+  {
+    "file": "images/profiles/social-media.svg",
+    "alt": "Illustration of gold coins and a social heart for Social Media and Reward Payout",
+    "usage": "Profile card + review screen",
+    "decorative": false
+  },
+  {
+    "file": "images/profiles/survey-participation.svg",
+    "alt": "Illustration of chat bubbles and a checklist for Survey Participation and Rewards",
+    "usage": "Profile card + review screen",
+    "decorative": false
+  },
+  {
+    "file": "images/profiles/technical.svg",
+    "alt": "Illustration of a laptop showing a heartbeat for Technology and Digital Health",
+    "usage": "Profile card + review screen",
+    "decorative": false
+  }
+]

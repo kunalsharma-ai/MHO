@@ -17,6 +17,7 @@ export const PORTAL_PREFIXES = [
   '/member', '/admin', '/survey', '/face', '/testing',
   '/auth/terms', '/auth/parent-consent', '/auth/change-email', // NOT /auth/password: that page is this site's
   '/_next', '/imagesmfr',
+  '/mho-sections', // the member area's profile and survey section bundles (web image, public/mho-sections)
 ];
 // Public-folder folders both apps have. A file that exists in THIS site wins; anything else goes to the portal.
 export const SHARED_PREFIXES = ['/images', '/css', '/videos'];

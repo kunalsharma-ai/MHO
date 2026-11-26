@@ -1,10 +1,11 @@
-// Reward history rows, ported from the previous Rewards page (same sources and rules), plus the profile rewards that
-// the balance is made of (/api/v1/rewards, category "profile"), which the previous table did not list.
-//   surveys   POST /api/v1/response {status: {$nin: ["invited"]}, dateRange}: points only when status is "complete"
-//   socials   GET  /api/v1/follow-social/verify: only the member's own, only once an admin approved or rewarded it (50 pts)
-//   referrals GET  /api/v1/me/referrals: only friends whose email is verified (100 pts). The previous page used
-//             POST /api/v1/user, which is admin only: for a member it answered 401 and signed them out.
-//   profiles  GET  /api/v1/rewards: rows the API paid for completed profiles
+// Reward history rows. The balance is the server's Reward ledger (GET /api/v1/me/points, backend lib/points.js), so the
+// rows that carry points come from that same ledger and always add up to the balance in the header:
+//   surveys   POST /api/v1/response {status: {$nin: ["invited"]}, dateRange}: every attempt with its length; a completed
+//             one shows the points of its ledger credit and whether an admin approved it yet
+//   profiles  ledger rows the server credited for completed profile sections
+//   referrals ledger rows for friends who joined with the member's link and verified their email
+//   payouts   ledger rows paid out (negative)
+//   socials   GET  /api/v1/follow-social/verify: only the member's own, once an admin approved or rewarded it (50 pts)
 import { api } from "@/util";
 
 export const SOCIAL_POINTS = 50;
@@ -25,18 +26,24 @@ export const inRange = (date, dateRange) => {
   return t >= from && t <= to;
 };
 const socialAction = (platform = "") => ({ facebook: "like", youtube: "subscription" })[String(platform).toLowerCase()] ?? "follow";
-const tagName = (remarks) => (/\[profile:([^\]]+)\]/.exec(String(remarks || "")) || [])[1];
+const LEDGER_TYPE = { profile: "Profile", referral: "Referral", payout: "Payout", other: "Reward" };
 
-export function buildRewardRows({ responses = [], socials = [], referred = [], profiles = [], dateRange = [] }) {
+export function buildRewardRows({ responses = [], socials = [], ledger = [], dateRange = [] }) {
   const rows = [];
+  const credit = Object.fromEntries(ledger.filter((l) => l.kind === "survey" && l.reference).map((l) => [String(l.reference), l]));
   responses.forEach((r, i) => {
     const start = asTime(r?.timeline?.start);
     const end = asTime(r?.updatedAt);
+    const c = credit[String(r?._id)];
+    const done = r?.status === "complete";
     rows.push({
       id: `survey-${r?._id ?? i}`, type: "Survey", source: r?.source, slug: r?.survey?.slug,
       activity: r?.survey?.name ?? "Survey", date: r?.timeline?.start ?? r?.createdAt ?? null,
       loiMs: start !== null && end !== null && end >= start ? end - start : null,
-      status: r?.status, points: r?.status === "complete" ? Number(r?.points) || 0 : 0,
+      status: r?.status,
+      // a completed survey's credit: "pending" until the research team approves it, then "approved" (or "rejected")
+      approval: done ? (c?.status === "Approved" ? "approved" : c?.status === "Rejected" ? "rejected" : "pending") : null,
+      points: done ? (c ? (c.status === "Rejected" ? 0 : c.points) : Number(r?.points) || 0) : 0,
     });
   });
   socials.forEach((s, i) => {
@@ -46,26 +53,23 @@ export function buildRewardRows({ responses = [], socials = [], referred = [], p
     const platform = s?.platform ?? s?.name ?? "social";
     rows.push({ id: `social-${s?._id ?? platform ?? i}`, type: "Social", activity: `${platform} ${socialAction(platform)} (verified by admin)`, date, loiMs: null, status: "approved", points: SOCIAL_POINTS });
   });
-  referred.forEach((u, i) => {
-    if (!u?.verified) return;
-    if (!inRange(u?.joinedAt, dateRange)) return;
-    rows.push({ id: `referral-${i}-${u?.joinedAt}`, type: "Referral", activity: `${u?.name || u?.email || "A friend"} joined via your referral`, date: u?.joinedAt ?? null, loiMs: null, status: "approved", points: REFERRAL_POINTS });
-  });
-  profiles.forEach((p, i) => {
-    if (!inRange(p?.createdAt, dateRange)) return;
-    const name = tagName(p?.remarks);
-    rows.push({ id: `profile-${p?._id ?? i}`, type: "Profile", activity: name ? `Completed profile: ${name.replace(/-/g, " ")}` : p?.remarks || "Profile reward", date: p?.createdAt ?? null, loiMs: null, status: "credited", points: Number(p?.points) || 0 });
+  ledger.forEach((l, i) => {
+    if (l.kind === "survey" || !inRange(l.createdAt, dateRange)) return;
+    rows.push({
+      id: `${l.kind}-${l._id ?? i}`, type: LEDGER_TYPE[l.kind] || "Reward", activity: l.activity || "Reward", date: l.createdAt ?? null, loiMs: null,
+      status: l.status === "Approved" ? (l.points < 0 ? "paid" : "credited") : String(l.status || "").toLowerCase(), points: l.status === "Rejected" ? 0 : l.points,
+    });
   });
   return rows.sort((a, b) => (asTime(b.date) ?? 0) - (asTime(a.date) ?? 0));
 }
 
-export async function loadRewardRows(userId, dateRange) {
+/** ledger = the history of GET /api/v1/me/points when the caller already has it (the member area does), else it is read here */
+export async function loadRewardRows(userId, dateRange, ledger) {
   const filters = { status: { $nin: ["invited"] }, ...(dateRange?.length === 2 && dateRange[0] && dateRange[1] ? { dateRange } : {}) };
   const results = await Promise.allSettled([
     api.post("/api/v1/response", filters),
     api.get("/api/v1/follow-social/verify"),
-    api.get("/api/v1/me/referrals"),
-    api.get("/api/v1/rewards"),
+    Array.isArray(ledger) ? Promise.resolve({ data: { history: ledger } }) : api.get("/api/v1/me/points"),
   ]);
   const list = (i) => {
     if (results[i].status !== "fulfilled") return [];
@@ -75,8 +79,8 @@ export async function loadRewardRows(userId, dateRange) {
   const failed = results.slice(0, 1).every((r) => r.status !== "fulfilled" || r.value?.status === "error");
   const myId = String(userId);
   const socials = list(1).filter((s) => String(s?.created?.By?._id ?? s?.created?.By) === myId);
-  const profiles = list(3).filter((r) => String(r?.category || "").toLowerCase() === "profile" && (!r.user || String(r.user?._id ?? r.user) === myId));
-  return { rows: buildRewardRows({ responses: list(0), socials, referred: list(2), profiles, dateRange }), failed };
+  const history = results[2].status === "fulfilled" ? results[2].value?.data?.history : null;
+  return { rows: buildRewardRows({ responses: list(0), socials, ledger: Array.isArray(history) ? history : [], dateRange }), failed };
 }
 
 export const fmtLoi = (ms) => {
