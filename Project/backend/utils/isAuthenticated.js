@@ -1,6 +1,6 @@
 import API from "./API.js";
 import { verify } from "./token.js";
-import {User as userModel} from "./app/model/index.js"
+import {User as userModel} from "../app/model/index.js"
 export default async function isAuthenticated(req, res, next) {
     const authtoken = req.headers.authorization;
 

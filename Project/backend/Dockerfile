@@ -19,10 +19,11 @@ COPY package.json package-lock.json* ./
 
 FROM base AS build
 RUN npm ci || npm install
-COPY app ./app
-COPY utils ./utils
+# COPY app ./app
+# COPY utils ./utils
+COPY . . 
 # app/utils is a link to ../utils. Docker copies it as it is; rebuild it in case a checkout made it a plain file.
-RUN rm -rf app/utils && ln -s ../utils app/utils
+# RUN rm -rf app/utils && ln -s ../utils app/utils
 # The test suite needs MongoDB, so it is not run here. Keep only what production needs.
 RUN npm prune --omit=dev
 
@@ -41,7 +42,8 @@ WORKDIR /app
 RUN chown node:node /app
 ENV NODE_ENV=production
 ENV port=3000
-COPY --from=build --chown=node:node /app ./
+# COPY --from=build --chown=node:node /app ./
+COPY . .
 USER node
 EXPOSE 3000
 CMD ["node", "app/server.js"]
