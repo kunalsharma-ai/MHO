@@ -28,7 +28,13 @@ import {
         .use([
             express.static("/src/public"),
             cors({
-                origin: ["https://mho.sampledge.duckdns.org", "https://admin.sampledge.duckdns.org"],
+                origin: [
+                    "https://www.myhealthopinions.com",
+                    "https://madp.sampledge.com",
+                    "https://supply360.sampledge.com",
+                    "https://mho.sampledge.duckdns.org", 
+                    "https://admin.sampledge.duckdns.org"
+                ],
                 credentials: true,
                 allowedHeaders: ["Content-Type", "Authorization", "test"],
                 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]

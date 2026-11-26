@@ -10,7 +10,7 @@
 // not readable from the markup.
 import crypto from "node:crypto";
 import mongoose from "mongoose";
-import { OTP as otpModel } from "../app/model/index.js";
+import { OTP as otpModel } from "./app/model/index.js";
 
 const CHARS = "ABCDEFGHJKLMNPRSTUVWXYZ2345678";
 const TTL_MS = 5 * 60 * 1000;

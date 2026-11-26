@@ -1,5 +1,5 @@
 // Per-account limits on guessing: sign-in passwords, emailed codes and reset e-mails.
-import AuthThrottle from "../app/model/AuthThrottle.js";
+import AuthThrottle from "./app/model/AuthThrottle.js";
 
 const MIN = 60 * 1000;
 
