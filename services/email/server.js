@@ -55,6 +55,31 @@ function smtpFor(origin) {
     }
     return fromEnv();
 }
+// Issue #46 ("unable to send mail"): the log only showed the SMTP settings (password included) and never said why the
+// send failed. At start-up, log in once to every SMTP server this service knows and print one line per site:
+// "SMTP ok" or the server's own reason (wrong password, port blocked, ...). Never the password.
+async function smtpSelfCheck() {
+    const sites = new Map();
+    let files = [];
+    try { files = fs.readdirSync("config").filter((f) => f.endsWith(".json")); } catch { /* no config folder */ }
+    for (const f of files) {
+        const name = f.slice(0, -5);
+        const c = readConfig(name);
+        if (c) sites.set(name, c);
+    }
+    const env = fromEnv();
+    if (env) sites.set("SMTP_* env", env);
+    if (!sites.size) console.error("[email] no SMTP settings at all: add config/<site>.json or SMTP_* to the env file");
+    for (const [site, c] of sites) {
+        const where = `${c.host}:${c.port || 587}${c.secure ? " (ssl)" : ""} as ${c.auth?.user || "(no login)"}`;
+        try {
+            await new Mail(c).verify();
+            console.log(`[email] SMTP ok for ${site}: ${where}`);
+        } catch (error) {
+            console.error(`[email] SMTP FAILED for ${site}: ${where}: ${error.code || ""} ${error.message}`);
+        }
+    }
+}
 const sender = (c) => {
     const from = c.from || c.auth?.user;
     return c.name && from ? `${c.name} <${from}>` : from;
@@ -213,5 +238,6 @@ const sender = (c) => {
         })
     app.listen(port, () => {
         console.log(`[${new Date()}]: Started on port ${port}`);
+        smtpSelfCheck();
     })
 })();
