@@ -71,7 +71,7 @@ async function smtpSelfCheck() {
     if (env) sites.set("SMTP_* env", env);
     if (!sites.size) console.error("[email] no SMTP settings at all: add config/<site>.json or SMTP_* to the env file");
     for (const [site, c] of sites) {
-        const where = `${c.host}:${c.port || 587}${c.secure ? " (ssl)" : ""} as ${c.auth?.user || "(no login)"}`;
+        const where = `${c.host}:${c.port || 587}${c.secure ? " (ssl)" : ""} as ${c.auth?.user && c.auth?.pass ? c.auth.user : "(no login)"}`;
         try {
             await new Mail(c).verify();
             console.log(`[email] SMTP ok for ${site}: ${where}`);

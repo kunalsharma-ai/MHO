@@ -81,6 +81,7 @@ export async function sendSegmentMail(user, template, extra = {}) {
     } catch (error) {
         // log the template and user id only, never the link
         fsLogger.Log(`Mail ${segment.id}/${template} failed for user ${user._id}: ${error.message}`);
+        console.error(`[mail] ${segment.id}/${template} to user ${user._id} failed: ${error.message}`); // shows in docker compose logs
         return false;
     }
 }

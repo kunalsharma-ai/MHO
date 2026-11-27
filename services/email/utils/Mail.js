@@ -7,6 +7,9 @@ class Mail {
     // hostname it greets the SMTP server with, and a strict server refuses "HELO My Health Opinions" (#42). So only
     // the connection settings go to the transport; the display name is used in the From line by server.js.
     const { name, from, replyTo, ...smtp } = credentials || {};
+    // A relay that needs no login (like config/mho.localhost.json: a user but no password) must get no `auth` at all:
+    // with a user and no password nodemailer stops with 'Missing credentials for "PLAIN"' and nothing is sent.
+    if (smtp.auth && !(smtp.auth.user && smtp.auth.pass)) delete smtp.auth;
     this.#replyTo = replyTo || undefined;
     this.#transporter = nodemailer.createTransport({
       connectionTimeout: 10000,

@@ -49,7 +49,8 @@ const GENERIC_EMAIL_SENT = "If an account needs it, we’ve sent an email with a
 // Mail that could not go out is an error answer (HTTP 502, code MAIL_NOT_SENT), never a success with a flag in data.
 // Mail answers carry data as an array, like the rest of the API: [] or [{ email }].
 const MAIL_DOWN = "We couldn’t send the email just now. Please try again in a few minutes, or write to support@myhealthopinions.com.";
-const MAIL_FAILED = (res, message, email) => fail(res, 502, "MAIL_NOT_SENT", message, { data: email ? [{ email }] : [] });
+// Same shape as the rest of the API, { status, message, data: [] }, nothing else: HTTP 502 tells the site it failed.
+const MAIL_FAILED = (res, message) => res.status(502).json({ status: "error", message, data: [] });
 const MAIL_NOT_SENT = "Your account is saved, but we couldn’t send the confirmation email just now. Please use “Resend confirmation email” in a few minutes, or write to support@myhealthopinions.com.";
 
 /* ---------- CAPTCHA and location lists ---------- */
@@ -147,7 +148,7 @@ router.post("/register", limits.register, wrap(async (req, res) => {
     } catch (error) {
         if (error?.code === 11000) { // a second sign-up with the same email in the same moment
             const twin = await User.findOne({ mail: v.email, origin: req.origin });
-            return twin ? alreadyRegistered(req, res, twin, v.email) : ok(res, GENERIC_EMAIL_SENT, [{ email: v.email }]);
+            return twin ? alreadyRegistered(req, res, twin, v.email) : ok(res, GENERIC_EMAIL_SENT);
         }
         if (error?.name === "ValidationError") {
             const map = { mail: "email", "name.first": "firstName", dob: "dob", phone: "phone" };
@@ -168,14 +169,14 @@ router.post("/register", limits.register, wrap(async (req, res) => {
     const mailSent = await sendSegmentMail(user, "respondent", { otp: { code: raw } });
     eventStream.emitEvent("account-registered", { _id: String(user._id), segment: v.segment });
     // issue #42: say so when the confirmation email could not be sent, instead of "check your inbox" for a mail that never left
-    if (!mailSent) return MAIL_FAILED(res, MAIL_NOT_SENT, v.email);
-    ok(res, GENERIC_EMAIL_SENT, [{ email: v.email }]);
+    if (!mailSent) return MAIL_FAILED(res, MAIL_NOT_SENT);
+    ok(res, GENERIC_EMAIL_SENT);
 }));
 
 // Issue #37: the sign-up form tells the person when the email already has an account, so no duplicate is made.
 // Only here, after a solved human check and within the register rate limit (no lookup on the email field itself).
 //   verified account    → 409 EMAIL_TAKEN: "This email is already registered. Please log in."
-//   unconfirmed account → its confirmation link is sent again; 200 with code ALREADY_REGISTERED
+//   unconfirmed account → its confirmation link is sent again; 200, the message says so
 async function alreadyRegistered(req, res, user, email) {
     if (user.isVerified?.email === "verified") {
         const message = "This email is already registered. Please log in.";
@@ -183,8 +184,8 @@ async function alreadyRegistered(req, res, user, email) {
     }
     const raw = await issueToken(user._id, "verify-email", req.origin, clientIp(req));
     const mailSent = await sendSegmentMail(user, "respondent", { otp: { code: raw } });
-    if (!mailSent) return MAIL_FAILED(res, "This email is already registered but not confirmed yet, and we couldn’t send a new confirmation email just now. Please try “Resend confirmation email” in a few minutes, or write to support@myhealthopinions.com.", email);
-    return ok(res, "This email is already registered but not confirmed yet. We’ve sent you a new confirmation link.", [{ email }], { code: "ALREADY_REGISTERED" });
+    if (!mailSent) return MAIL_FAILED(res, "This email is already registered but not confirmed yet, and we couldn’t send a new confirmation email just now. Please try “Resend confirmation email” in a few minutes, or write to support@myhealthopinions.com.");
+    return ok(res, "This email is already registered but not confirmed yet. We’ve sent you a new confirmation link.");
 }
 
 router.post("/resend-verification", limits.email, wrap(async (req, res) => {
