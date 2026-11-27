@@ -209,8 +209,8 @@ test("duplicate email, not confirmed yet: no second account, the confirmation li
     const first = await register();
     const dup = await call("POST", "/account/register", { ...first.p, captcha: await captcha() });
     assert.equal(dup.status, 200);
-    assert.equal(dup.body.data.alreadyRegistered, true);
-    assert.equal(dup.body.data.unverified, true);
+    assert.equal(dup.body.code, "ALREADY_REGISTERED");
+    assert.deepEqual(dup.body.data, [{ email: first.p.email }]);
     assert.match(dup.body.message, /already registered but not confirmed/);
     assert.equal((await outbox(first.p.email)).length, 2);
     assert.equal(await db.collection("User").countDocuments({ mail: first.p.email }), 1);
@@ -258,7 +258,7 @@ test("set password: mismatch and weak passwords are refused; the link then works
     const link = linkFrom(mail);
     const check = await call("POST", "/account/link", { kind: "verify", ...link });
     assert.equal(check.status, 200);
-    assert.equal(check.body.data.firstName, "Asha");
+    assert.equal(check.body.data[0].firstName, "Asha");
     const mismatch = await call("POST", "/account/set-password", { ...link, password: PASSWORD, confirmPassword: "other" });
     assert.ok(mismatch.body.errors.confirmPassword);
     const weak = await call("POST", "/account/set-password", { ...link, password: "password", confirmPassword: "password" });

@@ -8,11 +8,16 @@ import { apiRequest } from '../utils/helpers.js';
 
 export const ACCOUNT = String(API.account || '/api/v1/account').replace(/\/$/, '');
 
-/** POST/GET to /api/v1/account/*: resolves to { ok, status, code, message, errors, data, body }. */
+/**
+ * POST/GET to /api/v1/account/*: resolves to { ok, status, code, message, errors, data, row, body }.
+ * The API sends `data` as an array ([] or [{ email }]); `row` is its first entry ({} when there is none).
+ * A mail that could not go out is an error answer with code MAIL_NOT_SENT (never a flag inside data).
+ */
 export async function accountCall(method, path, body) {
   const res = await apiRequest(method, `${ACCOUNT}${path}`, body);
   const b = res.data || {};
-  return { ok: res.ok && b.status !== 'error', status: res.status, code: b.code || '', message: b.message || '', errors: b.errors || {}, data: b.data, body: b };
+  const row = Array.isArray(b.data) ? (b.data[0] || {}) : (b.data && typeof b.data === 'object' ? b.data : {});
+  return { ok: res.ok && b.status !== 'error', status: res.status, code: b.code || '', message: b.message || '', errors: b.errors || {}, data: b.data, row, body: b };
 }
 
 export const NETWORK_ERROR = 'We could not reach the server. Check your connection and try again.';
