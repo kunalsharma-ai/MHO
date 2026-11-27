@@ -209,8 +209,7 @@ test("duplicate email, not confirmed yet: no second account, the confirmation li
     const first = await register();
     const dup = await call("POST", "/account/register", { ...first.p, captcha: await captcha() });
     assert.equal(dup.status, 200);
-    assert.equal(dup.body.code, "ALREADY_REGISTERED");
-    assert.deepEqual(dup.body.data, [{ email: first.p.email }]);
+    assert.deepEqual(dup.body.data, []);
     assert.match(dup.body.message, /already registered but not confirmed/);
     assert.equal((await outbox(first.p.email)).length, 2);
     assert.equal(await db.collection("User").countDocuments({ mail: first.p.email }), 1);

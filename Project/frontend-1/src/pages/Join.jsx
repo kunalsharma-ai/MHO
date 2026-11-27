@@ -737,7 +737,8 @@ export default function Join({ mode = 'signup' }) {
       ...(ref ? { referredBy: ref } : {}),
     });
     // the account was saved but the confirmation email could not go out: show the "account saved" card with Resend
-    const mailDown = !res.ok && res.code === 'MAIL_NOT_SENT';
+    // (the API answers { status: "error", message, data: [] } with HTTP 502 when the mail could not go out)
+    const mailDown = !res.ok && res.status === 502;
     if (!res.ok && !mailDown) {
       const map = { firstName: 'firstName', lastName: 'lastName', email: 'email', phone: 'phone', country: 'country', dob: 'dob', captcha: 'captcha' };
       const fe = Object.fromEntries(Object.entries(res.errors || {}).filter(([k]) => map[k]).map(([k, m]) => [map[k], m]));
@@ -755,7 +756,7 @@ export default function Join({ mode = 'signup' }) {
     }
     forgetReferral();
     // registered before but never confirmed: the API sent a new confirmation link instead of making a second account
-    setAgain(res.code === 'ALREADY_REGISTERED' || (mailDown && /already registered/i.test(res.message)));
+    setAgain(/already registered/i.test(res.message));
     setMailFailed(mailDown);
     const payload = { mail };
     // The questions answered here wait in this browser; they are saved to the account at the first log-in (pendingAnswers.js).
