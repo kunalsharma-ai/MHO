@@ -243,6 +243,11 @@ test("sign up: a visitor can't choose their own role, verification or brand", as
 // SOCIAL_JWT_SECRET. The API only checks that token, so the same rules hold for every provider.
 const social = (token) => call("GET", `/auth/social?token=${encodeURIComponent(token)}`);
 const socialToken = (claims, opts = {}) => jwt.sign(claims, SOCIAL_KEY, { algorithm: "HS256", expiresIn: "10m", ...opts });
+// The browser is redirected (issue #47: it used to get a JSON page). A good sign-in goes to "/#social-token=<jwt>".
+const sessionFrom = (r) => {
+    const m = /#social-token=([^&]+)/.exec(r.headers.location || "");
+    return m ? decodeURIComponent(m[1]) : undefined;
+};
 
 test("social sign-in: the sign-in options list Google, LinkedIn and X from the sign-on service", async () => {
     const r = await call("POST", "/auth/socials");
@@ -254,8 +259,9 @@ for (const provider of ["google", "linkedin", "x"]) {
     test(`social sign-in (${provider}): a valid token for a verified member signs in that member`, async () => {
         const m = await member();
         const r = await social(socialToken({ email: m.mail, provider }));
-        assert.equal(r.status, 200, JSON.stringify(r.body));
-        const t = decode(r.body.token);
+        assert.equal(r.status, 302, JSON.stringify(r.body));
+        assert.match(r.headers.location, /^\/#social-token=/);
+        const t = decode(sessionFrom(r));
         assert.equal(t._id, m.id);
         assert.equal(t.email, m.mail);
     });
@@ -278,19 +284,26 @@ test("social sign-in: forged, tampered, old or wrong-kind tokens sign nobody in"
     };
     for (const [name, token] of Object.entries(cases)) {
         const r = await social(token);
-        assert.equal(r.body.token, undefined, `${name}: no session`);
+        assert.equal(r.status, 302, name);
+        assert.equal(sessionFrom(r), undefined, `${name}: no session`);
+        assert.match(r.headers.location, /^\/\?signup=1/, name);
     }
-    assert.ok(decode((await social(good)).body.token), "the untouched token still works");
+    assert.ok(decode(sessionFrom(await social(good))), "the untouched token still works");
 });
 
 test("social sign-in: unknown and unverified emails get no session", async () => {
     const unknown = await social(socialToken({ email: `new.${Date.now()}@example.com`, provider: "linkedin" }));
-    assert.equal(unknown.body.token, undefined);
+    assert.equal(sessionFrom(unknown), undefined);
+    assert.match(unknown.headers.location, /^\/\?signup=1&email=new\./, "a new person goes on to sign up with the email filled in");
     const noEmail = await social(socialToken({ provider: "x" }));
-    assert.equal(noEmail.body.token, undefined);
+    assert.equal(sessionFrom(noEmail), undefined);
     const unverified = await member({ verified: false });
     const u = await social(socialToken({ email: unverified.mail, provider: "google" }));
-    assert.equal(u.body.token, undefined);
+    assert.equal(sessionFrom(u), undefined);
+    // issue #47: the browser is sent to the "confirm your email" screen, and the account record is never shown
+    assert.equal(u.status, 302);
+    assert.equal(u.headers.location, `/?verifyemail=${encodeURIComponent(unverified.mail)}`);
+    assert.deepEqual(u.body, {}, "no JSON body with the member's details");
 });
 
 /* ================= Throttling (per network) ================= */

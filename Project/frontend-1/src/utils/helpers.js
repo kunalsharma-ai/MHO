@@ -271,6 +271,16 @@ export async function loadProviders() {
  * Where the backend sends people after a social log-in: "/?signup=1&name=…&email=…" (new person) or "/?verifyemail=<mail>"
  * (e-mail not confirmed yet). Returns the matching page of this site ('/join/…'), or '' for any other address.
  */
+/**
+ * After a good social sign-in the backend sends the browser to "/#social-token=<jwt>" (issue #47: it used to print the
+ * token as JSON and never sign the person in). Returns the token, or '' when the address has none.
+ */
+export function socialTokenFromHash(hash) {
+  const m = /(?:^#|&)social-token=([^&]+)/.exec(hash || '');
+  if (!m) return '';
+  try { return decodeURIComponent(m[1]); } catch { return ''; }
+}
+
 export function socialReturnTarget(search) {
   let q;
   try { q = new URLSearchParams(search || ''); } catch { return ''; }
