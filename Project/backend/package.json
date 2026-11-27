@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "npm install ; nodemon app/server.js",
     "start": "npm install && node app/server.js",
-    "test": "node --test test/"
+    "test": "node --test --test-force-exit test/*.mjs"
   },
   "keywords": [
     "express",

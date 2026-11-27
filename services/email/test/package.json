@@ -1,0 +1,15 @@
+{
+  "name": "email-service-tests",
+  "private": true,
+  "type": "module",
+  "description": "Tests for services/email (the Dockerfile installs the latest of the same packages; keep these majors in step). Run: npm install && npm test",
+  "scripts": {
+    "test": "node --test --test-force-exit email.test.mjs"
+  },
+  "dependencies": {
+    "encryption-aes": "1.0.1",
+    "express": "^5.3.0",
+    "express-fileupload": "^1.6.0",
+    "nodemailer": "^10.6.1"
+  }
+}
