@@ -126,11 +126,15 @@ export default function Login() {
     setNotice('');
     const em = validateEmail(email);
     if (em) { setErr({ email: em }); return; }
+    // the API needs a solved human check here too: without it every reset request was refused
+    if (!cap.answer.trim()) { setErr({ captcha: 'Please complete the human check.' }); return; }
     setErr({});
     setFpState('sending');
-    const res = await accountCall('POST', '/forgot-password', { email: email.trim().toLowerCase() });
+    const res = await accountCall('POST', '/forgot-password', { email: email.trim().toLowerCase(), captcha: cap });
+    setCapKey((k) => k + 1);
     if (!res.ok) {
       setFpState('form');
+      if (res.code === 'CAPTCHA_FAILED') { setErr({ captcha: 'The human check did not match. Please try the new one.' }); return; }
       setAlert(res.status === 0 ? NETWORK_ERROR : res.code === 'RATE_LIMITED' ? 'Too many requests. Please try again in an hour.' : res.message || 'We could not send the reset link right now. Please try again shortly.');
       return;
     }
@@ -199,6 +203,8 @@ export default function Login() {
                 <Field label="Registered email address" required htmlFor="fp-em" error={err.email} icon="mail">
                   <input id="fp-em" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" aria-invalid={!!err.email} placeholder="you@example.com" />
                 </Field>
+                <HumanCheck value={cap} onChange={setCap} invalid={!!err.captcha} resetKey={capKey} />
+                {err.captcha && <p className="field-error" role="alert"><Icon name="info" size={14} /> {err.captcha}</p>}
                 {alert && <p className="form-alert" role="alert">{alert}</p>}
                 <button className="btn btn-primary btn-block" type="submit" disabled={fpState === 'sending'}>
                   <span className="btn-label">{fpState === 'sending' ? 'Sending…' : 'Send reset link'}</span>

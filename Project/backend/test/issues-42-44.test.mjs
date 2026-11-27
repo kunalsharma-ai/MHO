@@ -85,15 +85,42 @@ test("#42 sign-up says so when the confirmation email could not be sent, and the
     try {
         const p = { firstName: "Ravi", dob: "1985-01-20", email: email("nomail"), phone: "+91 98765 43210", phoneCountry: "IN", country: "IN", segment: "patient", addressLater: true };
         const r = await call("POST", "/account/register", { ...p, captcha: await captcha() });
-        assert.equal(r.status, 200, JSON.stringify(r.body));
-        assert.equal(r.body.data.mailSent, false);
+        // an error answer with its own code, not a success with a mailSent flag; data stays an array
+        assert.equal(r.status, 502, JSON.stringify(r.body));
+        assert.equal(r.body.status, "error");
+        assert.equal(r.body.code, "MAIL_NOT_SENT");
+        assert.deepEqual(r.body.data, [{ email: p.email }]);
         assert.match(r.body.message, /couldn’t send the confirmation email/);
         assert.ok(await db.collection("User").findOne({ mail: p.email }), "the account is saved, so Resend can send the link later");
     } finally {
         await call("POST", "/account/__test/mail-failure", { on: false });
     }
-    const ok = await call("POST", "/account/register", { firstName: "Ravi", dob: "1985-01-20", email: email("mail"), phone: "+91 98765 43210", phoneCountry: "IN", country: "IN", segment: "patient", addressLater: true, captcha: await captcha() });
-    assert.equal(ok.body.data.mailSent, true);
+    const okMail = email("mail");
+    const ok = await call("POST", "/account/register", { firstName: "Ravi", dob: "1985-01-20", email: okMail, phone: "+91 98765 43210", phoneCountry: "IN", country: "IN", segment: "patient", addressLater: true, captcha: await captcha() });
+    assert.equal(ok.status, 200);
+    assert.ok(Array.isArray(ok.body.data), "data is an array");
+    assert.equal(ok.body.data[0].email, okMail);
+    assert.equal("mailSent" in ok.body.data[0], false, "no mailSent field");
+});
+
+// resend and forgot-password said "we've sent an email" even when the mail could not go out
+test("resend and forgot-password answer MAIL_NOT_SENT when the mail could not go out", async () => {
+    const p = { firstName: "Meera", dob: "1990-03-02", email: email("later"), phone: "+91 98765 43210", phoneCountry: "IN", country: "IN", segment: "patient", addressLater: true };
+    assert.equal((await call("POST", "/account/register", { ...p, captcha: await captcha() })).status, 200);
+    await call("POST", "/account/__test/mail-failure", { on: true });
+    try {
+        for (const path of ["/account/resend-verification", "/account/forgot-password"]) {
+            const r = await call("POST", path, { email: p.email, captcha: await captcha() });
+            assert.equal(r.status, 502, `${path}: ${JSON.stringify(r.body)}`);
+            assert.equal(r.body.code, "MAIL_NOT_SENT", path);
+            assert.deepEqual(r.body.data, [], path);
+        }
+    } finally {
+        await call("POST", "/account/__test/mail-failure", { on: false });
+    }
+    const r = await call("POST", "/account/resend-verification", { email: p.email, captcha: await captcha() });
+    assert.equal(r.status, 200);
+    assert.deepEqual(r.body.data, []);
 });
 
 // #43: the picture shows capital and small letters; either case must pass

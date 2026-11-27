@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import { HeartMark } from '../components/Brand.jsx';
-import { Field, PasswordField } from '../components/FormKit.jsx';
+import { Field, PasswordField, HumanCheck } from '../components/FormKit.jsx';
 import { LiveZone } from '../components/ui.jsx';
 import { Link, useRouter } from '../router.jsx';
 import { API } from '../config/site.js';
@@ -28,6 +28,8 @@ export default function Password() {
   const [left, setLeft] = useState(REDIRECT_SECONDS);
   // when the link is not valid: ask for a fresh one (same API as "Forgot password?")
   const [email, setEmail] = useState('');
+  const [cap, setCap] = useState({ id: '', answer: '' });
+  const [capKey, setCapKey] = useState(0);
   const [reqState, setReqState] = useState('form'); // form | sending | sent
   const [reqAlert, setReqAlert] = useState('');
   const [reqNotice, setReqNotice] = useState('');
@@ -51,7 +53,7 @@ export default function Password() {
     if (!legacy) {
       accountCall('POST', '/link', { kind, user, code }).then((r) => {
         if (!live) return;
-        if (r.ok) { setLink((l) => ({ ...l, email: r.data?.email || '', firstName: r.data?.firstName || '' })); setState('form'); return; }
+        if (r.ok) { setLink((l) => ({ ...l, email: r.row.email || '', firstName: r.row.firstName || '' })); setState('form'); return; }
         const why = r.status === 0 ? NETWORK_ERROR : r.code === 'LINK_EXPIRED' ? 'This link has expired.' : r.code === 'LINK_USED' ? 'This link has already been used.' : 'This link is not valid.';
         setAlert(`${why} Request a new link below.`);
         setState('invalid');
@@ -117,12 +119,16 @@ export default function Password() {
     setReqAlert('');
     const em = validateEmail(email);
     if (em) { setErr({ email: em }); return; }
+    // the API needs a solved human check here too: without it every request was refused
+    if (!String(cap.answer || '').trim()) { setErr({ captcha: 'Please complete the human check.' }); return; }
     setErr({});
     setReqState('sending');
     // Unverified accounts get a fresh confirmation link, verified ones a reset link; the answer is the same for every address.
-    const res = await accountCall('POST', '/forgot-password', { email: email.trim().toLowerCase() });
+    const res = await accountCall('POST', '/forgot-password', { email: email.trim().toLowerCase(), captcha: cap });
+    setCapKey((k) => k + 1);
     if (!res.ok) {
       setReqState('form');
+      if (res.code === 'CAPTCHA_FAILED') { setErr({ captcha: 'The human check did not match. Please try the new one.' }); return; }
       setReqAlert(res.status === 0 ? NETWORK_ERROR : res.code === 'RATE_LIMITED' ? 'Too many requests. Please try again in an hour.' : res.message || 'We could not send a new link right now. Please try again shortly.');
       return;
     }
@@ -166,6 +172,8 @@ export default function Password() {
                   <Field label="Registered email address" required htmlFor="p-em" error={err.email} icon="mail">
                     <input id="p-em" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" aria-invalid={!!err.email} placeholder="you@example.com" />
                   </Field>
+                  <HumanCheck value={cap} onChange={setCap} invalid={!!err.captcha} resetKey={capKey} />
+                  {err.captcha && <p className="field-error" role="alert"><Icon name="info" size={14} /> {err.captcha}</p>}
                   {reqAlert && <p className="form-alert" role="alert">{reqAlert}</p>}
                   <button className="btn btn-primary btn-block" type="submit" disabled={reqState === 'sending'}>
                     <span className="btn-label">{reqState === 'sending' ? 'Sending…' : 'Send me a new link'}</span>
