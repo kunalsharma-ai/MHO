@@ -10,7 +10,8 @@ import { useMounted } from './components/ui.jsx';
 import { loaded, loadPage, pageKeyFor } from './pages/registry.js';
 import { postCache } from './data/blogs/postStore.js';
 import { getMeta, applyHead } from './seo/head.js';
-import { track, socialReturnTarget } from './utils/helpers.js';
+import { track, socialReturnTarget, socialTokenFromHash, auth } from './utils/helpers.js';
+import { nextUrl } from './utils/session.js';
 import { syncPendingAnswersSoon } from './utils/pendingAnswers.js';
 import AnimationGate from './components/AnimationGate.jsx';
 import { I18nProvider } from './i18n/I18nProvider.jsx';
@@ -81,8 +82,18 @@ function Shell() {
 
   // After a social sign-in the backend sends the browser to "/?signup=1&name=…&email=…" or "/?verifyemail=…".
   // Sign-up lives on /join here, so forward those links (only from the home address).
+  // A good social sign-in comes back as "/#social-token=…": keep the token like a normal log-in, wipe it from the address bar
+  // and history, then go to the member's next step (consent form or dashboard).
   useEffect(() => {
     if (path !== '/') return;
+    const token = socialTokenFromHash(window.location.hash);
+    if (token) {
+      try { window.history.replaceState(null, '', '/'); } catch { /* ignore */ }
+      auth.setToken(token);
+      track('login', { method: 'social' });
+      nextUrl().then((to) => window.location.replace(to || '/member/dashboard'));
+      return;
+    }
     const to = socialReturnTarget(window.location.search);
     if (to) window.location.replace(to);
     // eslint-disable-next-line react-hooks/exhaustive-deps

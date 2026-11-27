@@ -31,6 +31,8 @@ export default function Login() {
   // Sent here from the member area (?verify=1) or after a declined consent (?consent=declined on the home page is separate).
   useEffect(() => {
     try {
+      // back from a social sign-in to an account that is suspended or closed
+      if (new URLSearchParams(window.location.search).get('inactive') === '1') setAlert('This account is not active. Please contact support.');
       if (new URLSearchParams(window.location.search).get('verify') === '1') {
         setUnverified(true);
         setAlert('Please confirm your email address first. Open the link we emailed you, or enter your email and ask for a new one below.');
