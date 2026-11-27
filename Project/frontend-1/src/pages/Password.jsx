@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import { HeartMark } from '../components/Brand.jsx';
 import { Field, PasswordField } from '../components/FormKit.jsx';
@@ -32,10 +32,14 @@ export default function Password() {
   const [reqAlert, setReqAlert] = useState('');
   const [reqNotice, setReqNotice] = useState('');
 
+  const linkQuery = useRef(null);
   // Verify the link as soon as the page opens.
   useEffect(() => {
     let live = true;
-    const q = new URLSearchParams(window.location.search);
+    // read once: the address bar is cleared below, and React may run this effect twice (dev StrictMode, remounts),
+    // which then found no code and showed "This link is incomplete" for a good link
+    if (!linkQuery.current) linkQuery.current = new URLSearchParams(window.location.search);
+    const q = linkQuery.current;
     const user = (q.get('user') || '').trim();
     const code = (q.get('code') || '').trim();
     if (!user || !code) { setAlert('This link is incomplete. Request a new link below.'); setState('invalid'); return undefined; }

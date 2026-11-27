@@ -32,6 +32,29 @@ const SUBJECTS = {
 
 // Automated tests read sent mail from here instead of a mail server.
 export const testOutbox = [];
+// Tests can make the next sends fail, as when the mail service has no SMTP settings for the site (issue #42).
+export const testMailFailure = { on: false };
+
+/**
+ * Issue #42: utils/API resolves every HTTP answer, so a template or SMTP failure (a 404, a 500 from an empty SMTP
+ * settings file, or the mail service's own { status: "error" }) used to count as "sent" and nothing was logged.
+ * Now any of those is an error, the caller returns false and the failure is in the log.
+ */
+function checked(step, resp) {
+    const body = resp?.data;
+    const status = Number(resp?.status) || 0;
+    if (status < 200 || status >= 300 || (body && typeof body === "object" && body.status === "error")) {
+        const why = body && typeof body === "object" ? body.error || body.message || "" : String(body || "").replace(/<[^>]+>/g, " ").trim().slice(0, 120);
+        throw new Error(`${step} answered ${status || "no status"}${why ? `: ${why}` : ""}`);
+    }
+    return body;
+}
+async function deliver(segment, template, to, subject, data, origin) {
+    const mailer = checked("email-template", await getMailer(segment, template, data, { origin }));
+    const html = typeof mailer === "string" ? mailer : mailer?.html || mailer?.data || "";
+    if (!html || typeof html !== "string") throw new Error(`email-template gave no HTML for ${segment}/${template}`);
+    checked("email service", await sendMail({ origin, "content-type": "application/json" }, to, subject, html));
+}
 
 /** Only the fields the templates use: never the whole user record (no DOB, phone, address or health data). */
 const mailUser = (user) => ({
@@ -48,12 +71,12 @@ export async function sendSegmentMail(user, template, extra = {}) {
     const subject = SUBJECTS[segment.id][template];
     const data = { user: mailUser(user), preferences_url: `https://${user.origin}/member/settings`, ...extra };
     if (process.env.NODE_ENV === "test") {
+        if (testMailFailure.on) return false;
         testOutbox.push({ to: user.mail, segment: segment.id, template, subject, data });
         return true;
     }
     try {
-        const mailer = await getMailer(segment.mailer, template, data, { origin: user.origin });
-        await sendMail({ origin: user.origin, "content-type": "application/json" }, user.mail, subject, mailer.data);
+        await deliver(segment.mailer, template, user.mail, subject, data, user.origin);
         return true;
     } catch (error) {
         // log the template and user id only, never the link
@@ -76,8 +99,7 @@ export async function sendParentApprovalMail(minor, link, code) {
         return true;
     }
     try {
-        const mailer = await getMailer("patient", "parent-approval", data, { origin: minor.origin });
-        await sendMail({ origin: minor.origin, "content-type": "application/json" }, to, subject, mailer.data);
+        await deliver("patient", "parent-approval", to, subject, data, minor.origin);
         return true;
     } catch (error) {
         fsLogger.Log(`Mail patient/parent-approval failed for teen ${minor._id}: ${error.message}`);

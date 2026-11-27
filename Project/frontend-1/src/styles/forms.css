@@ -90,7 +90,8 @@
 .captcha-math { width: 170px; height: 52px; display: grid; place-items: center; border-radius: 12px; background: #fff; border: 1px solid var(--line); font-size: 1.05rem; }
 .captcha-refresh { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: #fff; border: 1px solid var(--line); color: var(--ink); transition: transform .4s var(--ease); }
 .captcha-refresh:hover { transform: rotate(180deg); }
-.captcha-body input { flex: 1; min-width: 120px; min-height: 46px; padding: 10px 14px; border-radius: 12px; border: 1.5px solid var(--line); font-weight: 700; letter-spacing: .2em; text-transform: uppercase; background: #fff; }
+.captcha-body input { flex: 1; min-width: 120px; min-height: 46px; padding: 10px 14px; border-radius: 12px; border: 1.5px solid var(--line); font-weight: 700; letter-spacing: .2em; background: #fff; }
+.captcha-case { margin: 8px 0 0; }
 .captcha-body input:focus { outline: none; border-color: var(--blue); }
 .captcha-tick { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--green); color: #fff; transform: scale(0); transition: transform .35s var(--ease); }
 .captcha.is-ok .captcha-tick { transform: scale(1); }

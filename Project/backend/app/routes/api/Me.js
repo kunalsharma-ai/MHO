@@ -20,6 +20,7 @@ import {
 } from "../../../utils/index.js"
 import { REFUSAL_TEXT } from "../../lib/guardian.js";
 import { pointsFor } from "../../lib/points.js";
+import { fillFromAccount } from "../../lib/accountAnswers.js";
 Date.prototype.resetTime = function (type = "start") {
     if (type === "end") {
         this.setHours(23);
@@ -90,8 +91,10 @@ router
             let message = "";
             let data = Mutate(await userController.read(req.user._id))
             data.whatsapp = data.phone;
-            let temp = Mutate(await answerController.getAnswers({ user: req.user._id, question: { $in: [...req.body.questions] } }))
-            return { message, data: { ...data, ...temp } };
+            const asked = Array.isArray(req.body?.questions) ? req.body.questions.map(String) : [];
+            let temp = Mutate(await answerController.getAnswers({ user: req.user._id, question: { $in: asked } }))
+            // the address given at sign-up, for questions the member has not answered in a profile yet (#44)
+            return { message, data: { ...data, ...fillFromAccount(data, asked, temp), ...temp } };
         },
         userController
     ))

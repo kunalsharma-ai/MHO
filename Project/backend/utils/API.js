@@ -57,10 +57,8 @@ class API {
     return this.request("GET", path, null, headers);
   }
 
+  // no logging of the body here: it carries verification codes, reset links and members' details
   post(path, body, headers = {}) {
-    console.log(
-      {body,headers}
-    )
     return this.request("POST", path, body, headers);
   }
 

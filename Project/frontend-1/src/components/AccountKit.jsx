@@ -261,7 +261,7 @@ export function ServerCaptcha({ value, onChange, error, resetKey = 0 }) {
           autoComplete="off"
           autoCapitalize="off"
           spellCheck="false"
-          placeholder="Type the code"
+          placeholder="Type the code (any case)"
           disabled={state === 'error'}
           aria-invalid={error ? true : undefined}
           aria-describedby={error || why ? `cap-${uid}-err` : undefined}

@@ -436,6 +436,7 @@ export function HumanCheck({ value, onChange, invalid, resetKey = 0 }) {
           onChange={(e) => onChange?.({ ...(value || {}), answer: e.target.value.slice(0, 8) })}
           placeholder={mode === 'image' ? 'Type the code' : 'Answer'}
           aria-label={mode === 'image' ? 'Type the characters shown' : `Answer: what is ${question}`}
+          aria-describedby={mode === 'image' ? `${uid}-case` : undefined}
           autoComplete="off"
           autoCapitalize="off"
           spellCheck="false"
@@ -444,6 +445,7 @@ export function HumanCheck({ value, onChange, invalid, resetKey = 0 }) {
           disabled={state !== 'ready'}
         />
       </div>
+      {mode === 'image' && state === 'ready' && <p className="field-hint captcha-case" id={`${uid}-case`}>Capital and small letters both work.</p>}
       {why && <p className="field-error" role="alert"><Icon name="info" size={14} /> {why}</p>}
     </div>
   );

@@ -46,6 +46,7 @@ const wrap = (fn) => async (req, res) => {
 const CAPTCHA_FAILED = (res) => fail(res, 400, "CAPTCHA_FAILED", "The security check didn’t match. Please try the new one.", { errors: { captcha: "The security check didn’t match." } });
 const lowerEmail = (v) => (typeof v === "string" ? v.trim().toLowerCase() : "");
 const GENERIC_EMAIL_SENT = "If an account needs it, we’ve sent an email with a link. Please check your inbox and spam folder.";
+const MAIL_NOT_SENT = "Your account is saved, but we couldn’t send the confirmation email just now. Please use “Resend confirmation email” in a few minutes, or write to support@myhealthopinions.com.";
 
 /* ---------- CAPTCHA and location lists ---------- */
 router.get("/captcha", limits.captcha, wrap(async (req, res) => {
@@ -160,9 +161,11 @@ router.post("/register", limits.register, wrap(async (req, res) => {
     // cannot send mail to a stranger
     if (teen) await GuardianLink.create({ minor: user._id, parentEmail: v.parentEmail, origin: req.origin, status: "pending" });
     const raw = await issueToken(user._id, "verify-email", req.origin, clientIp(req));
-    await sendSegmentMail(user, "respondent", { otp: { code: raw } });
+    const mailSent = await sendSegmentMail(user, "respondent", { otp: { code: raw } });
     eventStream.emitEvent("account-registered", { _id: String(user._id), segment: v.segment });
-    ok(res, GENERIC_EMAIL_SENT, { email: v.email });
+    // issue #42: say so when the confirmation email could not be sent, instead of "check your inbox" for a mail that never left
+    if (!mailSent) return ok(res, MAIL_NOT_SENT, { email: v.email, mailSent: false });
+    ok(res, GENERIC_EMAIL_SENT, { email: v.email, mailSent: true });
 }));
 
 // Issue #37: the sign-up form tells the person when the email already has an account, so no duplicate is made.
@@ -175,8 +178,9 @@ async function alreadyRegistered(req, res, user, email) {
         return fail(res, 409, "EMAIL_TAKEN", message, { errors: { email: message } });
     }
     const raw = await issueToken(user._id, "verify-email", req.origin, clientIp(req));
-    await sendSegmentMail(user, "respondent", { otp: { code: raw } });
-    return ok(res, "This email is already registered but not confirmed yet. We’ve sent you a new confirmation link.", { email, alreadyRegistered: true, unverified: true });
+    const mailSent = await sendSegmentMail(user, "respondent", { otp: { code: raw } });
+    if (!mailSent) return ok(res, MAIL_NOT_SENT, { email, alreadyRegistered: true, unverified: true, mailSent: false });
+    return ok(res, "This email is already registered but not confirmed yet. We’ve sent you a new confirmation link.", { email, alreadyRegistered: true, unverified: true, mailSent: true });
 }
 
 router.post("/resend-verification", limits.email, wrap(async (req, res) => {
@@ -286,6 +290,11 @@ if (process.env.NODE_ENV === "test") {
     router.get("/__test/outbox", async (req, res) => {
         const { testOutbox } = await import("../../lib/mail.js");
         ok(res, "", testOutbox.filter((m) => !req.query.to || m.to === req.query.to));
+    });
+    router.post("/__test/mail-failure", async (req, res) => {
+        const { testMailFailure } = await import("../../lib/mail.js");
+        testMailFailure.on = req.body?.on === true;
+        ok(res, "", testMailFailure);
     });
 }
 
