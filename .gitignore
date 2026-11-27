@@ -1,3 +1,6 @@
+# Dependencies are installed by npm ci (see Project/backend/Dockerfile); never commit them (issue #49).
+node_modules/
+
 db
 environment
 ollama-agent
