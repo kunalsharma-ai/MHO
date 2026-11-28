@@ -4,7 +4,6 @@ import Icon from '../components/Icon.jsx';
 import ProfileAvatar from '../components/ProfileAvatar.jsx';
 import { Logo } from '../components/Brand.jsx';
 import { Field, CountrySelect, PhoneInput, DobPicker, HumanCheck } from '../components/FormKit.jsx';
-import { accountCall } from '../components/AccountKit.jsx';
 import { LiveZone } from '../components/ui.jsx';
 import SocialLogin from '../components/SocialLogin.jsx';
 import { buildSignupAnswers } from '../data/dbMap.js';
@@ -209,6 +208,8 @@ const CATEGORY_BY_ROLE = { hcp: 'healthcare professional', caregiver: 'care give
 const RESEND_SECONDS = 60;
 
 
+// profile picked on the first step → the backend category name (backend app/lib/segments.js)
+const ROLE_CATEGORY = { hcp: 'healthcare professional', caregiver: 'care giver', patient: 'patient' };
 const backendGender = (g) => (g === 'Male' || g === 'Female' ? g : 'Other');
 
 
@@ -491,19 +492,16 @@ export default function Join({ mode = 'signup' }) {
     return () => clearTimeout(t);
   }, [cooldown]);
 
-  // POST /api/v1/account/resend-verification: a new confirmation link (needs a fresh human check, same answer for every address)
+  // POST /api/v1/user/resend { mail }: the old resend (same as web-1). The backend sends the register/respondent mail again.
   const resend = async () => {
     if (cooldown > 0) return;
-    if (!String(cap.answer || '').trim()) { setResendMsg('Please complete the human check first.'); return; }
     setResendMsg('');
-    const res = await accountCall('POST', '/resend-verification', { email: f.email.trim().toLowerCase(), captcha: cap });
-    setCapKey((k) => k + 1);
-    if (res.code === 'CAPTCHA_FAILED') { setResendMsg('The human check did not match. Please try the new one.'); return; }
+    const res = await apiRequest('POST', API.resend, { mail: f.email.trim().toLowerCase(), action: 'resend-otp' });
     if (res.ok) setCooldown(RESEND_SECONDS);
     setResendMsg(res.ok ? 'We sent the confirmation email again. Please check your inbox and spam folder.'
       : res.status === 0 ? 'We could not reach the server. Check your connection and try again.'
-        : res.code === 'RATE_LIMITED' ? 'Too many requests. Please try again in an hour.'
-          : res.message || 'We could not resend the email. Please try again shortly.');
+        : res.status === 429 ? 'Too many requests. Please try again in an hour.'
+          : res.data?.message || 'We could not resend the email. Please try again shortly.');
   };
 
   // the terms of the member's category (same rules as web-1's terms page: "accept all", required terms, Accept only when something changed)
@@ -713,54 +711,45 @@ export default function Join({ mode = 'signup' }) {
       if (fieldErrors) setErr((x) => ({ ...x, ...fieldErrors }));
       setCapKey((k) => k + 1); // every human check is spent on its first try
     };
-    // POST /api/v1/account/register: checks the human check on the server, creates the account (pending) and emails
-    // the confirmation link (double opt-in). The password is created from that link (/set-password).
+    // PUT /api/v1/user: the old create-account call (same as web-1). The backend checks the human check, saves the
+    // account and sends the verification email (register/respondent mail, link to /create-password).
     const mail = f.email.trim().toLowerCase();
     const ref = referralCode();
-    const res = await accountCall('POST', '/register', {
-      segment: f.role,
-      firstName: f.firstName.trim(),
-      middleName: f.middleName || '',
-      lastName: f.lastName.trim(),
+    const res = await apiRequest('PUT', API.register, {
+      category: ROLE_CATEGORY[f.role],
+      name: { first: f.firstName.trim(), ...(f.middleName ? { middle: f.middleName.trim() } : {}), last: f.lastName.trim() },
       gender: backendGender(f.gender),
-      dob: f.dob,
-      email: mail,
-      phone: `+${phoneDigits(f.phoneCc, f.phone)}`,
-      phoneCountry: f.phoneCc || f.country,
-      country: f.country,
-      addressLater: true, // state, city and postal code are asked in the profile, as before
+      dob: f.dob, // YYYY-MM-DD
+      mail,
+      phone: phoneDigits(f.phoneCc, f.phone), // digits only: the model rejects a leading "+"
       timezone: browserTimezone(),
-      ...(f.role === 'hcp' ? { screening: { worksInHealthcare: String(f.industry).toLowerCase(), clinician: String(f.clinician || '').toLowerCase() } } : {}),
+      address: [{ tag: 'home', country: String(f.country || '').toLowerCase() }],
       marketingOptIn: f.updates === true,
       captcha: cap,
-      website: f.website,
       ...(ref ? { referredBy: ref } : {}),
     });
-    // the account was saved but the confirmation email could not go out: show the "account saved" card with Resend
-    // (the API answers { status: "error", message, data: [] } with HTTP 502 when the mail could not go out)
-    const mailDown = !res.ok && res.status === 502;
-    if (!res.ok && !mailDown) {
-      const map = { firstName: 'firstName', lastName: 'lastName', email: 'email', phone: 'phone', country: 'country', dob: 'dob', captcha: 'captcha' };
-      const fe = Object.fromEntries(Object.entries(res.errors || {}).filter(([k]) => map[k]).map(([k, m]) => [map[k], m]));
+    if (!res.ok) {
+      const msg = String(res.data?.message || '');
       if (res.status === 0) return fail('We could not reach the server. Check your connection and try again.');
-      if (res.code === 'CAPTCHA_FAILED') return fail('', { captcha: 'The human check did not match. Please try the new one.' });
-      if (res.code === 'NOT_ELIGIBLE' && f.role === 'hcp' && /criteria/i.test(res.message)) { setState('rejected'); setCount(10); return; }
-      if (res.code === 'RATE_LIMITED') return fail('Too many sign-up attempts. Please wait a few minutes and try again.');
-      if (res.code === 'EMAIL_TAKEN') { // issue #37: this email already has an active account, so no second one is made
-        fail('', { email: res.message || 'This email is already registered. Please log in.' });
+      if (res.status === 429) return fail('Too many sign-up attempts. Please wait a few minutes and try again.');
+      if (/human check/i.test(msg)) return fail('', { captcha: 'The human check did not match. Please try the new one.' });
+      if (/duplicate|already registered/i.test(msg)) { // this email already has an account (unique mail + site)
+        fail('', { email: 'This email is already registered. Please log in.' });
         setTaken(mail);
         requestAnimationFrame(() => document.getElementById('j-em')?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
         return;
       }
-      return fail(res.message || 'Something went wrong. Please try again in a moment.', fe);
+      return fail(msg || 'Something went wrong. Please try again in a moment.');
     }
     forgetReferral();
     // registered before but never confirmed: the API sent a new confirmation link instead of making a second account
-    setAgain(/already registered/i.test(res.message));
-    setMailFailed(mailDown);
+    setAgain(false);
+    setMailFailed(false);
     const payload = { mail };
     // The questions answered here wait in this browser; they are saved to the account at the first log-in (pendingAnswers.js).
     const answers = buildSignupAnswers(f);
+    // HCP screening: the old PUT /api/v1/user has no place for it, so it is saved with the other sign-up answers at the first log-in
+    if (f.role === 'hcp' && f.industry) { answers.works_in_healthcare = String(f.industry).toLowerCase(); if (f.clinician) answers.clinician = String(f.clinician).toLowerCase(); }
     if (Object.keys(answers).length) savePendingAnswers(payload.mail, answers);
     track('sign_up', { method: 'email', role: f.role });
     pop(0.18);
@@ -874,7 +863,6 @@ export default function Join({ mode = 'signup' }) {
                 <li>Log in, accept the terms and complete your profile</li>
                 <li>Watch for your first invitation</li>
               </ol>
-              {cooldown <= 0 && <HumanCheck value={cap} onChange={setCap} resetKey={capKey} />}
               <button type="button" className="btn btn-ghost" onClick={resend} disabled={cooldown > 0}><span className="btn-label">{cooldown > 0 ? `Resend email in ${cooldown}s` : unverified ? 'Send me a new confirmation email' : 'Resend confirmation email'}</span></button>
               {resendMsg && <p className="step-note" role="status">{resendMsg}</p>}
               <Link to="/how-it-works" className="btn btn-ghost"><span className="btn-label">What happens next</span><Icon name="arrow" size={18} /></Link>

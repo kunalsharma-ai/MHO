@@ -100,3 +100,54 @@ test("#56 POST /user/check with no or a bad email answers data: [0], never an er
         assert.deepEqual(r.body.data, [0], JSON.stringify(body));
     }
 });
+
+// Kunal (2026-11-28): sign-up uses the old process again: PUT /api/v1/user creates the account and the "user-created"
+// event sends the register/respondent mail (link /create-password?user=&code=), POST /api/v1/user/resend sends it
+// again, PATCH /api/v1/user sets the password. The sign-up form's Human check comes from /api/v1/account/captcha.
+const oldSignup = (over = {}) => ({
+    category: "patient", name: { first: "Neha", last: "Rao" }, gender: "Female", dob: "1991-02-03", mail: email("old"),
+    phone: "919876543210", timezone: "Asia/Kolkata", address: [{ tag: "home", country: "in" }], marketingOptIn: false, ...over,
+});
+test("old sign-up: PUT /user creates the account and answers { status, message, data: [] }", async () => {
+    const body = oldSignup();
+    const r = await call("PUT", "/user", { ...body, captcha: await captcha() });
+    assert.equal(r.status, 200, JSON.stringify(r.body));
+    assert.deepEqual(Object.keys(r.body).sort(), ["data", "message", "status"]);
+    assert.equal(r.body.status, "success");
+    assert.deepEqual(r.body.data, []);
+    const user = await db.collection("User").findOne({ mail: body.mail });
+    assert.ok(user, "account saved");
+    assert.notEqual(user.role, "admin");
+    assert.deepEqual((await call("POST", "/user/check", { mail: body.mail })).body.data, [1]);
+
+    // the same email again is refused (unique mail + site), the form shows "already registered"
+    // (the API builds the unique { mail, origin } index in the background on a brand-new test database: wait for it)
+    for (let i = 0; i < 100 && !(await db.collection("User").indexes()).some((x) => x.unique && x.key.mail && x.key.origin); i++) await new Promise((r) => setTimeout(r, 100));
+    const again = await call("PUT", "/user", { ...body, captcha: await captcha() });
+    assert.equal(again.body.status, "error");
+    assert.match(again.body.message, /duplicate/i);
+
+    // a wrong or missing human check is refused
+    const bad = await call("PUT", "/user", { ...oldSignup(), captcha: { id: (await captcha()).id, answer: "nope" } });
+    assert.equal(bad.body.status, "error");
+    assert.match(bad.body.message, /human check/i);
+
+    // resend (old route) answers the same shape
+    const rs = await call("POST", "/user/resend", { mail: body.mail, action: "resend-otp" });
+    assert.equal(rs.status, 200, JSON.stringify(rs.body));
+    assert.deepEqual(rs.body, { status: "success", message: "Please check your email to proceed.", data: [] });
+    const none = await call("POST", "/user/resend", { mail: email("nobody") });
+    assert.deepEqual(none.body.data, []);
+
+    // the link in the mail (/create-password?user=&code=) sets the password with the old PATCH /user, then log-in works
+    let otp = null;
+    for (let i = 0; i < 40 && !otp; i++) {
+        otp = await db.collection("OTP").findOne({ user: user._id, channel: "email" }, { sort: { _id: -1 } });
+        if (!otp) await new Promise((r) => setTimeout(r, 100));
+    }
+    assert.ok(otp, "the verification code was made by the user-created / user-resend-otp event");
+    const pw = await call("PATCH", "/user", { userID: String(user._id), emailOTP: otp.code, password: PASSWORD, confirmPassword: PASSWORD });
+    assert.equal(pw.body.status, "success", JSON.stringify(pw.body));
+    const l = await call("POST", "/account/login", { email: body.mail, password: PASSWORD, captcha: await captcha() });
+    assert.equal(l.status, 200, JSON.stringify(l.body));
+});

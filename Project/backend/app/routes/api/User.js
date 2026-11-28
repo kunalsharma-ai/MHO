@@ -79,11 +79,9 @@ router
                 data
             )
 
-            return {
-                message, data: {
-                    _id: data._id
-                }
-            };
+            // { status, message, data: [] } like every mail answer; the verification mail goes out from the
+            // "user-created" event (app/events/user.js: register/respondent template, link to /create-password)
+            return { message: "Please check your email to proceed.", data: [] };
         },
         userController
     ))
@@ -241,15 +239,16 @@ router
         },
         userController
     ))
-    .post(`/resend`, expressRoute(
+    .post(`/resend`, limit(5, 60), expressRoute(
         async req => {
-            // update single entry
-            let message = req.body.action;
-            let data = await userController.findOne({ mail: req.body.mail, origin: req.origin });
-
-            eventStream.emitEvent("user-resend-otp",
-                data
-            )
+            // the old resend: the "user-resend-otp" event sends the register/respondent mail again (app/events/user.js).
+            // Only for an account that exists and is not confirmed yet; the answer is the same either way.
+            const mail = typeof req.body?.mail === "string" ? req.body.mail.trim().toLowerCase() : "";
+            const data = mail ? await UserModel.findOne({ mail, origin: req.origin }) : null;
+            if (data && data.isVerified?.email !== "verified")
+                eventStream.emitEvent("user-resend-otp",
+                    data
+                )
             // // if (req.body.action === "resend-otp") {
             // let otp = await otpController.generate(
             //     data._id,
