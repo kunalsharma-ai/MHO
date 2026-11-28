@@ -11,6 +11,7 @@
 import crypto from "node:crypto";
 import mongoose from "mongoose";
 import { OTP as otpModel } from "../app/model/index.js";
+import { captchaPassed as accountCaptchaPassed } from "../app/lib/captcha.js";
 
 const CHARS = "ABCDEFGHJKLMNPRSTUVWXYZ2345678";
 const TTL_MS = 5 * 60 * 1000;
@@ -142,6 +143,9 @@ export async function requireCaptcha(req) {
         if (process.env.CAPTCHA_REQUIRED === "true") throw new Error("Complete the human check.");
         return;
     }
-    const ok = await verifyCaptcha(req.origin, String(c.id || ""), typeof c.answer === "string" ? c.answer : "");
+    // the sign-up form's Human check comes from GET /api/v1/account/captcha (app/lib/captcha.js): accept that one too,
+    // so the old PUT /api/v1/user sign-up works with the same box as log-in
+    const ok = await verifyCaptcha(req.origin, String(c.id || ""), typeof c.answer === "string" ? c.answer : "")
+        || await accountCaptchaPassed(c, req.ip);
     if (!ok) throw new Error("The human check didn’t match or has expired. Please try the new code.");
 }

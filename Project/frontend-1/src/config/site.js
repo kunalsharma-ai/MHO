@@ -43,7 +43,7 @@ export const API = {
   account: env('ACCOUNT_URL', '/api/v1/account'),
   journey: env('JOURNEY_URL', '/api/v1/me/journey'), // GET → { next, nextUrl, consent, emailVerified } where the member goes next
   login: env('LOGIN_URL', '/api/v1/user/login'), // POST { mail, password, remember } → { status, token }
-  resend: env('RESEND_URL', '/api/v1/user'), // POST { mail } → re-sends the verification email
+  resend: env('RESEND_URL', '/api/v1/user/resend'), // POST { mail } → re-sends the verification email
   forgot: env('FORGOT_URL', '/api/v1/forgot-password'), // POST { user: <email> } → reset link by email
   category: env('CATEGORY_URL', '/api/v1/category'), // POST { showOnRegistration: true } → categories + age rules
   socials: env('SOCIALS_URL', '/api/v1/auth/socials'), // POST {} → { data: [{ name, authUrl }] } the social log-in providers (Google, LinkedIn, X ...)
