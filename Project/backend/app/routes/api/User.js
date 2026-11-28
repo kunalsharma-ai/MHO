@@ -31,6 +31,7 @@ import {
 import { lockedFor, fail, clear, norm } from "../../../utils/throttle.js";
 import { createCaptcha, requireCaptcha } from "../../../utils/captcha.js";
 import { limit } from "../../../utils/security.js";
+import { User as UserModel } from "../../model/index.js";
 
 // What a visitor may never set when registering (role, verification, status, points...): an admin role from the
 // sign-up form would have made the visitor an admin.
@@ -114,6 +115,18 @@ router
     // a new human check (picture, or ?mode=text for a small sum); each one can be checked once, within 5 minutes
     .get("/captcha", limit(60, 10), expressRoute(
         async req => ({ message: "", data: await createCaptcha(req.origin, req.query.mode === "text" ? "text" : "image") }),
+        userController
+    ))
+    // Issue #56: the sign-up forms (frontend-1 Join, web SignUp) ask POST /api/v1/user/check { mail } whether the email is
+    // already registered. The route was missing, so "check" fell through to POST /:id and answered 404. Same shape as
+    // every answer: { status, message, data: [<number of accounts with this email on this site>] }. Rate limited.
+    .post("/check", limit(30, 10), expressRoute(
+        async req => {
+            const mail = typeof req.body?.mail === "string" ? req.body.mail.trim().toLowerCase() : "";
+            if (!mail || mail.length > 254) return { message: "", data: [0] };
+            const count = await UserModel.countDocuments({ mail, origin: req.origin });
+            return { message: "", data: [count] };
+        },
         userController
     ))
     .post("/login", limit(30, 10), expressRoute(
