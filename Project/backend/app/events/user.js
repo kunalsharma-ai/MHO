@@ -13,6 +13,21 @@ const who = (d) => {
     return { _id: u?._id ? String(u._id) : undefined, category: u?.category, ...(d?.message ? { message: d.message } : {}) };
 };
 
+// The email service answers HTTP 200 with { status: "error", message: "Unable to send email.", error } when the SMTP
+// send fails, 405 when it has no SMTP settings for the site (email service API contract). Say so in the log instead of
+// "OTP Sent" for a mail that never left. Never the code or the link.
+function mailResult(template, user, resp) {
+    const body = resp?.data;
+    const status = Number(resp?.status) || 0;
+    if (status >= 200 && status < 300 && body?.message === "message sent") {
+        fsLogger.Log("OTP Sent to user", who(user));
+        return;
+    }
+    const why = body && typeof body === "object" ? body.error || body.message || (body.headers ? "no SMTP settings for this site" : "") : "";
+    console.error(`[mail] ${template} to user ${user?._id} failed: email service answered ${status || "no status"}${why ? `: ${why}` : ""}`);
+    fsLogger.Log("OTP mail not sent", { ...who(user), message: `${status} ${why}` });
+}
+
 eventStream.onEvent("user-changed-password", (data) => {
     fsLogger.Log(`Password Changed`, who(data))
 })
@@ -49,16 +64,12 @@ eventStream.onEvent("user-created", async data => {
             otp
         }
     )
-    await sendMail(
+    mailResult("register/respondent", data, await sendMail(
         { origin: data.origin, "content-type": "application/json" },
         data.mail,
         "My Health Opinions: Registration",
         mailer.data
-    )
-    fsLogger.Log(
-        "OTP Sent to user",
-        who(data)
-    )
+    ))
 })
 eventStream.onEvent("user-resend-otp", async data => {
     let otp = await otpController.generate(
@@ -75,16 +86,12 @@ eventStream.onEvent("user-resend-otp", async data => {
             otp
         }
     )
-    await sendMail(
+    mailResult("register/respondent", data, await sendMail(
         { origin: data.origin, "content-type": "application/json" },
         data.mail,
         "My Health Opinions: Registration",
         mailer.data
-    )
-    fsLogger.Log(
-        "OTP Sent to user",
-        who(data)
-    )
+    ))
 })
 eventStream.onEvent("user-password-reset", data => {
     fsLogger.Log(

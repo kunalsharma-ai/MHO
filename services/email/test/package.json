@@ -1,0 +1,14 @@
+{
+  "name": "email-service-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test --test-force-exit *.test.mjs"
+  },
+  "dependencies": {
+    "encryption-aes": "*",
+    "express": "*",
+    "express-fileupload": "*",
+    "nodemailer": "*"
+  }
+}
