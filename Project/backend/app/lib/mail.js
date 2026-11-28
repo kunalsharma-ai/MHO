@@ -53,7 +53,10 @@ async function deliver(segment, template, to, subject, data, origin) {
     const mailer = checked("email-template", await getMailer(segment, template, data, { origin }));
     const html = typeof mailer === "string" ? mailer : mailer?.html || mailer?.data || "";
     if (!html || typeof html !== "string") throw new Error(`email-template gave no HTML for ${segment}/${template}`);
-    checked("email service", await sendMail({ origin, "content-type": "application/json" }, to, subject, html));
+    // email service contract: success is { message: "message sent", data: <nodemailer info> }; a failed send is HTTP 200
+    // with status "error", a site without SMTP settings 405 { headers }, a bad creds header { message }
+    const sent = checked("email service", await sendMail({ origin, "content-type": "application/json" }, to, subject, html));
+    if (sent?.message !== "message sent") throw new Error(`email service answered: ${sent?.error || sent?.message || "no confirmation"}`);
 }
 
 /** Only the fields the templates use: never the whole user record (no DOB, phone, address or health data). */
